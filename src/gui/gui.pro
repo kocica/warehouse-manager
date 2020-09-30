@@ -3,22 +3,15 @@ TARGET            = warehouse_manager_gui
 QT               += core gui widgets
 QMAKE_CXXFLAGS   += -std=c++17
 DEFINES          += QT_DEPRECATED_WARNINGS
-DEFINES          += "GUI"
+DEFINES          += "WHM_GUI"
 
-OBJECTS += ../Grid.o \
-           ../Cell.o \
-           ../TAV.o \
-           ../Args.o
+OBJECTS += ../Utils.o
 
 SOURCES +=  ../main.cpp \
-            mainwindow.cpp \
-            GridUI.cpp \
-            RightClickButton.cpp \
-            ImageWidget.cpp
+            MainWindow.cpp
 
-HEADERS +=  mainwindow.h \
-            GridUI.h \
-            RightClickButton.h \
-            ImageWidget.h
+HEADERS +=  MainWindow.h
 
-RESOURCES += resources.qrc
+#
+# RESOURCES += resources.qrc
+#

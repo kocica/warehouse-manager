@@ -3,11 +3,12 @@
 # @author  Filip Kocica                                       #
 # @date    09/30/2020                                         #
 #                                                             #
-# Warehou manager makefile                                    #
+# Warehouse manager makefile                                  #
 ###############################################################
 
 ################## Build constants ##############
-BIN_NAME   = warehouse_manager
+BIN_NAME     = warehouse_manager
+BIN_NAME_GUI = warehouse_manager_gui
 
 README     = README
 
@@ -38,12 +39,12 @@ all: $(BIN_NAME)
 $(BIN_NAME): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
-debug: CFLAGS += -DDEBUG -g -DIMS_DEBUG
+debug: CFLAGS += -DDEBUG -g -DWM_DEBUG
 debug: all
 
 gui: $(HEADERS) $(SOURCES) $(OBJS) $(GUI_SOURCES) $(GUI_HEADERS)
 	@cd $(GUI) && $(QMAKE) $(QFLAGS) && make
-	@mv $(shell pwd)/$(GUI)/$(BIN_NAME)_gui .
+	@mv $(shell pwd)/$(GUI)/$(BIN_NAME_GUI) .
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -54,11 +55,11 @@ doxygen:
 	$(DOXYGEN) $(CFG)/doxyConf
 
 clean:
-	-@cd $(GUI) && make clean && rm -f moc_*
-	rm -f $(BIN_NAME) $(BIN_NAME)_gui $(GUI)/$(BIN_NAME)_gui $(GUI)/Makefile $(SRC)/*.o
+	-@cd $(GUI) && make clean && rm -f moc_* .qmake.stash
+	rm -f $(BIN_NAME) $(BIN_NAME_GUI) $(GUI)/$(BIN_NAME_GUI) $(GUI)/Makefile $(SRC)/*.o
 
 run:
 	./$(BIN_NAME)
 
 rungui:
-	./$(BIN_NAME)_gui
+	./$(BIN_NAME_GUI)
