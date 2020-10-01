@@ -18,7 +18,7 @@
 #include <QStyle>
 #include <QApplication>
 #include <QDesktopWidget>
-#include "gui/MainWindow.h"
+#include "gui/mainwindow.h"
 #endif
 
 int main(int argc, char *argv[])
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 #ifdef WHM_GUI
         QApplication app(argc, argv);
 
-        whm::gui::MainWindow_t window;
+        whm::gui::MainWindow window;
 
         window.setGeometry(
             QStyle::alignedRect(
