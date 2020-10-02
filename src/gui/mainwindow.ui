@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>656</width>
-    <height>496</height>
+    <width>1130</width>
+    <height>901</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -67,11 +67,11 @@ vertical {background-color: rgb(0,0,0);}</string>
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>567</width>
-           <height>467</height>
+           <width>1041</width>
+           <height>872</height>
           </rect>
          </property>
-         <layout class="QGridLayout" name="gridLayout_2" rowstretch="0" columnstretch="0" rowminimumheight="0" columnminimumwidth="0">
+         <layout class="QGridLayout" name="gridLayout_2" rowstretch="0" columnstretch="0">
           <property name="leftMargin">
            <number>1</number>
           </property>
@@ -109,6 +109,16 @@ vertical {background-color: rgb(0,0,0);}</string>
               <property name="frameShadow">
                <enum>QFrame::Raised</enum>
               </property>
+              <widget class="QGraphicsView" name="view">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>1041</width>
+                 <height>871</height>
+                </rect>
+               </property>
+              </widget>
              </widget>
             </item>
            </layout>

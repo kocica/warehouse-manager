@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
@@ -55,6 +56,7 @@ public:
     QGridLayout *gridLayout_2;
     QVBoxLayout *frameLayout;
     QFrame *frame;
+    QGraphicsView *view;
     QToolBar *mainToolBar;
     QToolBar *layoutManagement;
     QToolBar *simulationManagement;
@@ -63,7 +65,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(656, 496);
+        MainWindow->resize(1130, 901);
         saveLayout = new QAction(MainWindow);
         saveLayout->setObjectName(QStringLiteral("saveLayout"));
         loadLayout = new QAction(MainWindow);
@@ -142,7 +144,7 @@ public:
         scrollArea->setWidgetResizable(true);
         warehouseLayoutArea = new QWidget();
         warehouseLayoutArea->setObjectName(QStringLiteral("warehouseLayoutArea"));
-        warehouseLayoutArea->setGeometry(QRect(0, 0, 567, 467));
+        warehouseLayoutArea->setGeometry(QRect(0, 0, 1041, 872));
         gridLayout_2 = new QGridLayout(warehouseLayoutArea);
         gridLayout_2->setSpacing(1);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -157,6 +159,9 @@ public:
         frame->setLayoutDirection(Qt::LeftToRight);
         frame->setFrameShape(QFrame::StyledPanel);
         frame->setFrameShadow(QFrame::Raised);
+        view = new QGraphicsView(frame);
+        view->setObjectName(QStringLiteral("view"));
+        view->setGeometry(QRect(0, 0, 1041, 871));
 
         frameLayout->addWidget(frame);
 

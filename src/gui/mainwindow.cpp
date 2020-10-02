@@ -11,8 +11,12 @@
 #include <iostream>
 
 // Local
+#include "UiCursor.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "UiWarehouseLayout.h"
+#include "UiWarehouseItemLocation.h"
+#include "UiWarehouseItemConveyor.h"
 
 // Qt
 #include <QLabel>
@@ -23,6 +27,8 @@
 #include <QPushButton>
 #include <QFormLayout>
 #include <QMouseEvent>
+#include <QDesktopWidget>
+#include <QGraphicsScene>
 #include <QDialogButtonBox>
 
 namespace whm
@@ -36,6 +42,9 @@ namespace whm
             ui->setupUi(this);
             ui->warehouseLayoutArea->setStyleSheet("background-color: rgb(255, 255, 255)");
 
+            setWindowTitle("Warehouse Manager");
+            setFixedSize(1000, 700);
+
             // Get warehouse dimensions
             auto dialog = new QDialog(this);
             auto form   = new QFormLayout(dialog);
@@ -47,13 +56,28 @@ namespace whm
             form->addRow(QString("Enter Y dimenstion: "), whDimY);
 
             QDialogButtonBox buttons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dialog);
-            form->addRow(&buttons);
             QObject::connect(&buttons, SIGNAL(accepted()), dialog, SLOT(accept()));
             QObject::connect(&buttons, SIGNAL(rejected()), dialog, SLOT(reject()));
+            form->addRow(&buttons);
 
-            if (dialog->exec() == QDialog::Accepted)
+            /*if (dialog->exec() == QDialog::Accepted)
             {
                 ui->warehouseLayoutArea->setFixedSize(whDimX->text().toInt(), whDimY->text().toInt());
+            }*/
+            ui->warehouseLayoutArea->setFixedSize(2000, 1000);
+
+            auto scene = new QGraphicsScene();
+            ui->view->setScene(scene);
+            ui->view->setFixedSize(2000, 1000);
+
+            for (int32_t x = 0; x <= 2000; x += 20)
+            {
+                scene->addLine(x, 0, x, 1000, QPen(Qt::green));
+            }
+
+            for (int32_t y = 0; y <= 1000; y += 20)
+            {
+                scene->addLine(0, y, 2000, y, QPen(Qt::red));
             }
 
             setContextMenuPolicy(Qt::NoContextMenu);
@@ -79,66 +103,89 @@ namespace whm
         {
             if (event->button() == Qt::LeftButton)
             {
-                QPoint loc = QCursor::pos();
-                loc = ui->frame->mapFromGlobal(loc);
-
-                std::cout << loc.x() << " " << loc.y() << std::endl;
-
-                if (loc.x() < 0 || loc.x() > ui->frame->width() || loc.y() < 0 || loc.y() < ui->frame->height())
+                if (UiCursor_t::getCursor().getMode() == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
                 {
-                    std::cout << "outside" << std::endl;
+                    QPoint loc = QCursor::pos();
+                    loc = ui->frame->mapFromGlobal(loc);
+
+                    auto whItemLoc = new UiWarehouseItemLocation_t(ui->frame, this, loc, UiWarehouseItemType_t::E_LOCATION_SHELF);
+                    UiWarehouseLayout_t::getWhLayout().addWhItem(whItemLoc);
+                    UiWarehouseLayout_t::getWhLayout().dump();
+                    std::cout << std::endl << std::endl;
                 }
+                else if (UiCursor_t::getCursor().getMode() == UiCursorMode_t::E_MODE_WH_ITEM_CONV)
+                {
+                    QPoint loc = QCursor::pos();
+                    loc = ui->frame->mapFromGlobal(loc);
+
+                    auto whItemConv = new UiWarehouseItemConveyor_t(ui->frame, this, loc, UiWarehouseItemType_t::E_CONVEYOR);
+                    UiWarehouseLayout_t::getWhLayout().addWhItem(whItemConv);
+                    UiWarehouseLayout_t::getWhLayout().dump();
+                    std::cout << std::endl << std::endl;
+                }
+            }
+        }
+
+        void MainWindow::on_deletionMode_toggled(bool enabled)
+        {
+            if (enabled)
+            {
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_DELETE);
+            }
+        }
+
+        void MainWindow::on_selectionMode_toggled(bool enabled)
+        {
+            if (enabled)
+            {
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_SELECT);
+            }
+        }
+
+        void MainWindow::on_whItemConveyor_toggled(bool enabled)
+        {
+            if (enabled)
+            {
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV);
+            }
+        }
+
+        void MainWindow::on_whItemLocations_toggled(bool enabled)
+        {
+            if (enabled)
+            {
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_LOC);
             }
         }
 
         void MainWindow::on_loadLayout_triggered()
         {
-            std::cout << "loadLayout" << std::endl;
+
         }
 
         void MainWindow::on_saveLayout_triggered()
         {
-            std::cout << "saveLayout" << std::endl;
+
         }
 
         void MainWindow::on_clearLayout_triggered()
         {
-            std::cout << "clearLayout" << std::endl;
+
         }
 
         void MainWindow::on_simulationRun_triggered()
         {
-            std::cout << "simRun" << std::endl;
+
         }
 
         void MainWindow::on_simulationStep_triggered()
         {
-            std::cout << "simStep" << std::endl;
+
         }
 
         void MainWindow::on_simulationStop_triggered()
         {
-            std::cout << "simStop" << std::endl;
-        }
 
-        void MainWindow::on_deletionMode_toggled(bool enabled)
-        {
-            std::cout << "delMode" << std::endl;
-        }
-
-        void MainWindow::on_selectionMode_toggled(bool enabled)
-        {
-            std::cout << "selMode" << std::endl;
-        }
-
-        void MainWindow::on_whItemConveyor_toggled(bool enabled)
-        {
-            std::cout << "whItemConv" << std::endl;
-        }
-
-        void MainWindow::on_whItemLocations_toggled(bool enabled)
-        {
-            std::cout << "whItemLoc" << std::endl;
         }
     }
 }

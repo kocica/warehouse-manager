@@ -8,9 +8,23 @@ DEFINES          += "WHM_GUI"
 OBJECTS += ../Utils.o
 
 SOURCES +=  ../main.cpp \
-            MainWindow.cpp
+            UiCursor.cpp \
+            MainWindow.cpp \
+            UiWarehousePort.cpp \
+            UiWarehouseItem.cpp \
+            UiWarehouseLayout.cpp \
+            UiWarehouseConnection.cpp \
+            UiWarehouseItemLocation.cpp \
+            UiWarehouseItemConveyor.cpp
 
-HEADERS +=  MainWindow.h
+HEADERS +=  MainWindow.h \
+            UiCursor.h \
+            UiWarehousePort.h \
+            UiWarehouseItem.h \
+            UiWarehouseLayout.h \
+            UiWarehouseConnection.h \
+            UiWarehouseItemLocation.h \
+            UiWarehouseItemConveyor.h
 
 RESOURCES += resources.qrc
 

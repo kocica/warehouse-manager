@@ -29,6 +29,8 @@ namespace whm
                 explicit MainWindow(QWidget *parent = Q_NULLPTR);
                 virtual ~MainWindow() = default;
 
+                Ui::MainWindow *getUi() const { return ui; }
+
             private slots:
                 void mousePressEvent(QMouseEvent *);
 
