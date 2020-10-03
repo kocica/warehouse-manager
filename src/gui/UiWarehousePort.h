@@ -15,6 +15,7 @@
 
 #include "mainwindow.h"
 #include "UiWarehouseItem.h"
+#include "UiWarehouseConnection.h"
 
 namespace whm
 {
@@ -26,11 +27,18 @@ namespace whm
 
             public:
                 UiWarehousePort_t(QWidget *parent, MainWindow *ui, UiWarehouseItem_t *whItem, int32_t x, int32_t y);
-                virtual ~UiWarehousePort_t() = default;
+                virtual ~UiWarehousePort_t();
 
                 void select();
+                void connect();
+                void disconnect();
+
+                bool isConnected() const;
+                void setWhConn(UiWarehouseConnection_t*);
 
                 UiWarehouseItem_t* getWhItem() const;
+
+                void dump() const;
 
             public slots:
                 void mousePressEvent(QMouseEvent *);
@@ -40,7 +48,10 @@ namespace whm
 
             private:
                 MainWindow *ui{ nullptr };
+
                 UiWarehouseItem_t* whItem{ nullptr };
+                UiWarehouseConnection_t* whConn{ nullptr };
+
                 static UiWarehousePort_t *selectedPort;
         };
     }

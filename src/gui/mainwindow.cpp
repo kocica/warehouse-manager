@@ -9,12 +9,14 @@
 
 // Standard
 #include <iostream>
+#include <algorithm>
 
 // Local
 #include "UiCursor.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "UiWarehouseLayout.h"
+#include "UiGraphicsViewZoom.h"
 #include "UiWarehouseItemLocation.h"
 #include "UiWarehouseItemConveyor.h"
 
@@ -26,6 +28,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QFormLayout>
+#include <QFileDialog>
 #include <QMouseEvent>
 #include <QDesktopWidget>
 #include <QGraphicsScene>
@@ -66,19 +69,27 @@ namespace whm
             }*/
             ui->warehouseLayoutArea->setFixedSize(2000, 1000);
 
+            // Create grid
             auto scene = new QGraphicsScene();
             ui->view->setScene(scene);
             ui->view->setFixedSize(2000, 1000);
 
+            QPen backgroundGrid;
+            backgroundGrid.setColor("#d7d6d5");
+
             for (int32_t x = 0; x <= 2000; x += 20)
             {
-                scene->addLine(x, 0, x, 1000, QPen(Qt::green));
+                scene->addLine(x, 0, x, 1000, backgroundGrid);
             }
 
             for (int32_t y = 0; y <= 1000; y += 20)
             {
-                scene->addLine(0, y, 2000, y, QPen(Qt::red));
+                scene->addLine(0, y, 2000, y, backgroundGrid);
             }
+
+            // Enable zooming
+            auto zoom = new UiGraphicsViewZoom_t(ui->view);
+            zoom->setModifiers(Qt::NoModifier);
 
             setContextMenuPolicy(Qt::NoContextMenu);
 
@@ -99,29 +110,53 @@ namespace whm
             ui->selectionMode->toggle();
         }
 
+        MainWindow::~MainWindow()
+        {
+            UiWarehouseLayout_t::getWhLayout().deleteAllWhItems();
+
+            delete ui;
+        }
+
+        QPoint MainWindow::getWidgetPosition(QPoint p)
+        {
+            QPoint ret = ui->frame->mapFromGlobal(p);
+            return ret;
+        }
+
         void MainWindow::mousePressEvent(QMouseEvent *event)
         {
+            static std::map<UiCursorMode_t, UiWarehouseItemType_t> convMap =
+            {
+                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_R,   UiWarehouseItemType_t::E_CONVEYOR_R },
+                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_L,   UiWarehouseItemType_t::E_CONVEYOR_L },
+                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_U,   UiWarehouseItemType_t::E_CONVEYOR_U },
+                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_D,   UiWarehouseItemType_t::E_CONVEYOR_D },
+                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_HUB, UiWarehouseItemType_t::E_CONVEYOR_HUB }
+            };
+
             if (event->button() == Qt::LeftButton)
             {
-                if (UiCursor_t::getCursor().getMode() == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
+                auto cursorMode = UiCursor_t::getCursor().getMode();
+
+                if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
                 {
                     QPoint loc = QCursor::pos();
                     loc = ui->frame->mapFromGlobal(loc);
 
-                    auto whItemLoc = new UiWarehouseItemLocation_t(ui->frame, this, loc, UiWarehouseItemType_t::E_LOCATION_SHELF);
+                    auto whItemLoc = new UiWarehouseItemLocation_t(ui->view, this, loc, UiWarehouseItemType_t::E_LOCATION_SHELF);
                     UiWarehouseLayout_t::getWhLayout().addWhItem(whItemLoc);
+
                     UiWarehouseLayout_t::getWhLayout().dump();
-                    std::cout << std::endl << std::endl;
                 }
-                else if (UiCursor_t::getCursor().getMode() == UiCursorMode_t::E_MODE_WH_ITEM_CONV)
+                else if (convMap.find(cursorMode) != convMap.end())
                 {
                     QPoint loc = QCursor::pos();
                     loc = ui->frame->mapFromGlobal(loc);
 
-                    auto whItemConv = new UiWarehouseItemConveyor_t(ui->frame, this, loc, UiWarehouseItemType_t::E_CONVEYOR);
+                    auto whItemConv = new UiWarehouseItemConveyor_t(ui->frame, this, loc, convMap[cursorMode]);
                     UiWarehouseLayout_t::getWhLayout().addWhItem(whItemConv);
+
                     UiWarehouseLayout_t::getWhLayout().dump();
-                    std::cout << std::endl << std::endl;
                 }
             }
         }
@@ -142,11 +177,43 @@ namespace whm
             }
         }
 
-        void MainWindow::on_whItemConveyor_toggled(bool enabled)
+        void MainWindow::on_whItemConveyorRight_toggled(bool enabled)
         {
             if (enabled)
             {
-                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV);
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV_R);
+            }
+        }
+
+        void MainWindow::on_whItemConveyorLeft_toggled(bool enabled)
+        {
+            if (enabled)
+            {
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV_L);
+            }
+        }
+
+        void MainWindow::on_whItemConveyorUp_toggled(bool enabled)
+        {
+            if (enabled)
+            {
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV_U);
+            }
+        }
+
+        void MainWindow::on_whItemConveyorDown_toggled(bool enabled)
+        {
+            if (enabled)
+            {
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV_D);
+            }
+        }
+
+        void MainWindow::on_whItemConveyorHub_toggled(bool enabled)
+        {
+            if (enabled)
+            {
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV_HUB);
             }
         }
 
@@ -160,17 +227,29 @@ namespace whm
 
         void MainWindow::on_loadLayout_triggered()
         {
+            QString file = QFileDialog::getOpenFileName(this, tr("Load warehouse layout"), "./savedLayout.xml", tr("Warehouse layouts (*)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
 
+            // TODO: Load
         }
 
         void MainWindow::on_saveLayout_triggered()
         {
+            QString file = QFileDialog::getSaveFileName(this, tr("Save warehouse layout"), "./savedLayout.xml", tr("Warehouse layouts (*)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
 
+            // TODO: Save
         }
 
         void MainWindow::on_clearLayout_triggered()
         {
-
+            UiWarehouseLayout_t::getWhLayout().deleteAllWhItems();
         }
 
         void MainWindow::on_simulationRun_triggered()

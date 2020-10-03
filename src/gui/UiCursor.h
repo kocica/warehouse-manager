@@ -18,7 +18,11 @@ namespace whm
             E_MODE_SELECT,
             E_MODE_DELETE,
             E_MODE_WH_ITEM_LOC,
-            E_MODE_WH_ITEM_CONV
+            E_MODE_WH_ITEM_CONV_R,  //< Convs to all directions, so we can detect flow
+            E_MODE_WH_ITEM_CONV_L,
+            E_MODE_WH_ITEM_CONV_U,
+            E_MODE_WH_ITEM_CONV_D,
+            E_MODE_WH_ITEM_CONV_HUB //< Able to connect up to four convs
         };
 
         class UiCursor_t

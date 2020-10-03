@@ -4,13 +4,13 @@
  * @file    UiWarehouseItemConveyor.h
  * @date    09/30/2020
  * @author  Filip Kocica
- * @brief   Graphical representation of warehouse conveyor
+ * @brief   Graphical representation of warehouse conveyor system
  */
 
 #pragma once
 
-#include "UiWarehousePort.h"
 #include "UiWarehouseItem.h"
+#include "UiWarehousePort.h"
 
 namespace whm
 {
@@ -25,8 +25,7 @@ namespace whm
                 virtual ~UiWarehouseItemConveyor_t() = default;
 
             private:
-                UiWarehousePort_t* whPort1{ nullptr };
-                UiWarehousePort_t* whPort2{ nullptr };
+            
         };
     }
 }

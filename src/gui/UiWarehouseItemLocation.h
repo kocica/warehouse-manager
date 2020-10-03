@@ -9,8 +9,8 @@
 
 #pragma once
 
-#include "UiWarehousePort.h"
 #include "UiWarehouseItem.h"
+#include "UiWarehousePort.h"
 
 namespace whm
 {
@@ -25,7 +25,6 @@ namespace whm
                 virtual ~UiWarehouseItemLocation_t() = default;
 
             private:
-                UiWarehousePort_t* whPort{ nullptr };
         };
     }
 }

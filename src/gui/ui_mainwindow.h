@@ -47,7 +47,11 @@ public:
     QAction *deletionMode;
     QAction *selectionMode;
     QAction *whItemLocations;
-    QAction *whItemConveyor;
+    QAction *whItemConveyorRight;
+    QAction *whItemConveyorLeft;
+    QAction *whItemConveyorUp;
+    QAction *whItemConveyorDown;
+    QAction *whItemConveyorHub;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -121,9 +125,21 @@ public:
         whItemLocations = new QAction(block_selection);
         whItemLocations->setObjectName(QStringLiteral("whItemLocations"));
         whItemLocations->setCheckable(true);
-        whItemConveyor = new QAction(block_selection);
-        whItemConveyor->setObjectName(QStringLiteral("whItemConveyor"));
-        whItemConveyor->setCheckable(true);
+        whItemConveyorRight = new QAction(block_selection);
+        whItemConveyorRight->setObjectName(QStringLiteral("whItemConveyorRight"));
+        whItemConveyorRight->setCheckable(true);
+        whItemConveyorLeft = new QAction(block_selection);
+        whItemConveyorLeft->setObjectName(QStringLiteral("whItemConveyorLeft"));
+        whItemConveyorLeft->setCheckable(true);
+        whItemConveyorUp = new QAction(block_selection);
+        whItemConveyorUp->setObjectName(QStringLiteral("whItemConveyorUp"));
+        whItemConveyorUp->setCheckable(true);
+        whItemConveyorDown = new QAction(block_selection);
+        whItemConveyorDown->setObjectName(QStringLiteral("whItemConveyorDown"));
+        whItemConveyorDown->setCheckable(true);
+        whItemConveyorHub = new QAction(block_selection);
+        whItemConveyorHub->setObjectName(QStringLiteral("whItemConveyorHub"));
+        whItemConveyorHub->setCheckable(true);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         verticalLayout_2 = new QVBoxLayout(centralWidget);
@@ -202,7 +218,11 @@ public:
         mainToolBar->addAction(labelItems);
         mainToolBar->addSeparator();
         mainToolBar->addAction(whItemLocations);
-        mainToolBar->addAction(whItemConveyor);
+        mainToolBar->addAction(whItemConveyorRight);
+        mainToolBar->addAction(whItemConveyorLeft);
+        mainToolBar->addAction(whItemConveyorUp);
+        mainToolBar->addAction(whItemConveyorDown);
+        mainToolBar->addAction(whItemConveyorHub);
         mainToolBar->addSeparator();
         layoutManagement->addAction(loadLayout);
         layoutManagement->addAction(saveLayout);
@@ -302,12 +322,40 @@ public:
 #ifndef QT_NO_SHORTCUT
         whItemLocations->setShortcut(QApplication::translate("MainWindow", "1", Q_NULLPTR));
 #endif // QT_NO_SHORTCUT
-        whItemConveyor->setText(QApplication::translate("MainWindow", "Conveyor", Q_NULLPTR));
+        whItemConveyorRight->setText(QApplication::translate("MainWindow", "Conveyor right", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        whItemConveyor->setToolTip(QApplication::translate("MainWindow", "Warehouse conveyor system", Q_NULLPTR));
+        whItemConveyorRight->setToolTip(QApplication::translate("MainWindow", "Warehouse conveyor system", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_SHORTCUT
-        whItemConveyor->setShortcut(QApplication::translate("MainWindow", "2", Q_NULLPTR));
+        whItemConveyorRight->setShortcut(QApplication::translate("MainWindow", "2", Q_NULLPTR));
+#endif // QT_NO_SHORTCUT
+        whItemConveyorLeft->setText(QApplication::translate("MainWindow", "Conveyor left", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        whItemConveyorLeft->setToolTip(QApplication::translate("MainWindow", "Warehouse conveyor system", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_SHORTCUT
+        whItemConveyorLeft->setShortcut(QApplication::translate("MainWindow", "2", Q_NULLPTR));
+#endif // QT_NO_SHORTCUT
+        whItemConveyorUp->setText(QApplication::translate("MainWindow", "Conveyor up", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        whItemConveyorUp->setToolTip(QApplication::translate("MainWindow", "Warehouse conveyor system", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_SHORTCUT
+        whItemConveyorUp->setShortcut(QApplication::translate("MainWindow", "2", Q_NULLPTR));
+#endif // QT_NO_SHORTCUT
+        whItemConveyorDown->setText(QApplication::translate("MainWindow", "Conveyor down", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        whItemConveyorDown->setToolTip(QApplication::translate("MainWindow", "Warehouse conveyor system", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_SHORTCUT
+        whItemConveyorDown->setShortcut(QApplication::translate("MainWindow", "2", Q_NULLPTR));
+#endif // QT_NO_SHORTCUT
+        whItemConveyorHub->setText(QApplication::translate("MainWindow", "Conveyor hub", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        whItemConveyorHub->setToolTip(QApplication::translate("MainWindow", "Warehouse conveyor system", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+#ifndef QT_NO_SHORTCUT
+        whItemConveyorHub->setShortcut(QApplication::translate("MainWindow", "2", Q_NULLPTR));
 #endif // QT_NO_SHORTCUT
         layoutManagement->setWindowTitle(QApplication::translate("MainWindow", "toolBar", Q_NULLPTR));
         simulationManagement->setWindowTitle(QApplication::translate("MainWindow", "toolBar_2", Q_NULLPTR));

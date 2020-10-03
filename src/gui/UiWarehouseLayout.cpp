@@ -61,26 +61,29 @@ namespace whm
             }
         }
 
-        void UiWarehouseLayout_t::dump()
+        void UiWarehouseLayout_t::deleteAllWhItems()
         {
+            for (UiWarehouseItem_t* whItem : whItems)
+            {
+                delete whItem;
+            }
+
+            whItems.clear();
+
+            whItemIdSequence = 0;
+        }
+
+        void UiWarehouseLayout_t::dump() const
+        {
+            std::cout << std::endl << "Dump warehouse layout - start" << std::endl << std::endl;
+
             std::for_each(whItems.begin(), whItems.end(),
                           [](UiWarehouseItem_t* whItem) -> void
                           {
-                              std::cout << whItem->getWhItemID() << std::endl;
-                              switch(whItem->getWhItemType())
-                              {
-                                  case UiWarehouseItemType_t::E_LOCATION_SHELF:
-                                  {
-                                      std::cout << "Location shelf" << std::endl;
-                                      break;
-                                  }
-                                  case UiWarehouseItemType_t::E_CONVEYOR:
-                                  {
-                                      std::cout << "Conveyor" << std::endl;
-                                      break;
-                                  }
-                              }
+                              whItem->dump();
                           });
+
+            std::cout << std::endl << "Dump warehouse layout - end" << std::endl << std::endl << std::endl;
         }
 
         bool UiWarehouseLayout_t::itemsIntersects(UiWarehouseItem_t* i) const

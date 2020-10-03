@@ -13,6 +13,7 @@ SOURCES +=  ../main.cpp \
             UiWarehousePort.cpp \
             UiWarehouseItem.cpp \
             UiWarehouseLayout.cpp \
+            UiGraphicsViewZoom.cpp \
             UiWarehouseConnection.cpp \
             UiWarehouseItemLocation.cpp \
             UiWarehouseItemConveyor.cpp
@@ -22,6 +23,7 @@ HEADERS +=  MainWindow.h \
             UiWarehousePort.h \
             UiWarehouseItem.h \
             UiWarehouseLayout.h \
+            UiGraphicsViewZoom.h \
             UiWarehouseConnection.h \
             UiWarehouseItemLocation.h \
             UiWarehouseItemConveyor.h

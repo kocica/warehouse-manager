@@ -7,6 +7,8 @@
  * @brief   Graphical representation of warehouse conveyor
  */
 
+#include <iostream>
+
 #include <QLabel>
 #include <QDialog>
 #include <QLineEdit>
@@ -40,8 +42,24 @@ namespace whm
                 sizeX = len->text().toInt();
                 sizeY = 10; // TODO: Port size
             }*/
-            sizeX = 100;
-            sizeY = 20;
+
+            if(t == UiWarehouseItemType_t::E_CONVEYOR_R || t == UiWarehouseItemType_t::E_CONVEYOR_L)
+            {
+                sizeX = 100;
+                sizeY = 20;
+            }
+            else if(t == UiWarehouseItemType_t::E_CONVEYOR_U || t == UiWarehouseItemType_t::E_CONVEYOR_D)
+            {
+                sizeX = 20;
+                sizeY = 100;
+            }
+            else // Hub
+            {
+                sizeX = 20;
+                sizeY = 20;
+            }
+
+
 
             if (loc.x() < sizeX/2)
             {
@@ -71,21 +89,43 @@ namespace whm
 
             this->move(loc);
             this->resize(sizeX, sizeY);
-            this->setStyleSheet("background-color: red; font-size: 11px; border: 1px solid black; outline: none;");
+            this->setStyleSheet("border-style: outset; border-width: 2px; border-color: blue;");
 
             if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
             {
-                QMessageBox err;
-                err.critical(0, "Collision detected", "Item's cannot intersect.");
-                err.setFixedSize(500,200);
+                //QMessageBox err;
+                //err.critical(0, "Collision detected", "Item's cannot intersect.");
+                //err.setFixedSize(500,200);
+
+                std::cout << "Collision detected - Item's cannot intersect." << std::endl;
 
                 // TODO: Remove from layout?
             }
             else
             {
                 this->show();
-                whPort1 = new UiWarehousePort_t(this, ui, this, 0, sizeY/2-(10/2));
-                whPort2 = new UiWarehousePort_t(this, ui, this, sizeX-10, sizeY/2-(10/2));
+
+                switch(this->getWhItemType())
+                {
+                    case UiWarehouseItemType_t::E_CONVEYOR_R:
+                    case UiWarehouseItemType_t::E_CONVEYOR_L:
+                        ports.emplace_back(new UiWarehousePort_t(this, ui, this, 0, sizeY/2-(10/2)));
+                        ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX-10, sizeY/2-(10/2)));
+                        break;
+                    case UiWarehouseItemType_t::E_CONVEYOR_U:
+                    case UiWarehouseItemType_t::E_CONVEYOR_D:
+                        ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX/2-(10/2), 0));
+                        ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX/2-(10/2), sizeY-10));
+                        break;
+                    case UiWarehouseItemType_t::E_CONVEYOR_HUB:
+                        ports.emplace_back(new UiWarehousePort_t(this, ui, this, 0, sizeY/2-(10/2)));
+                        ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX-10, sizeY/2-(10/2)));
+                        ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX/2-(10/2), 0));
+                        ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX/2-(10/2), sizeY-10));
+                        break;
+                    default:
+                        throw std::exception();
+                }
             }
         }
     }

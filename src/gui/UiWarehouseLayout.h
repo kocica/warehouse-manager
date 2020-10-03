@@ -28,10 +28,12 @@ namespace whm
                 void addWhItem(UiWarehouseItem_t*);
                 void eraseWhItem(UiWarehouseItem_t*);
 
-                void dump();
+                void dump() const;
 
                 size_t getWhItemCount() const;
                 int32_t getNextWhItemID();
+
+                void deleteAllWhItems();
 
                 bool itemsIntersects(UiWarehouseItem_t*) const;
 

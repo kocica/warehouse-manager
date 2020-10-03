@@ -7,6 +7,8 @@
  * @brief   Graphical representation of warehouse location
  */
 
+#include <iostream>
+
 #include <QLabel>
 #include <QDialog>
 #include <QLineEdit>
@@ -71,20 +73,22 @@ namespace whm
 
             this->move(loc);
             this->resize(sizeX, sizeY);
-            this->setStyleSheet("background-color: green; font-size: 11px; border: 1px solid black; outline: none;");
+            this->setStyleSheet("border-style: outset; border-width: 2px; border-color: red;");
 
             if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
             {
-                QMessageBox err;
-                err.critical(0, "Collision detected", "Item's cannot intersect.");
-                err.setFixedSize(500,200);
+                //QMessageBox err;
+                //err.critical(0, "Collision detected", "Item's cannot intersect.");
+                //err.setFixedSize(500,200);
+
+                std::cout << "Collision detected - Item's cannot intersect." << std::endl;
 
                 // TODO: Remove from layout?
             }
             else
             {
                 this->show();
-                whPort = new UiWarehousePort_t(this, ui, this, sizeX/2-(10/2), sizeY/2-(10/2));
+                ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX/2-(10/2), sizeY/2-(10/2)));
             }
         }
     }
