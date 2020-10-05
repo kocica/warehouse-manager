@@ -164,7 +164,7 @@ namespace whm
         void UiWarehousePort_t::select()
         {
             selectedPort = this;
-            this->setStyleSheet("background-color: yellow;");
+            this->setStyleSheet("background-color: orange;");
         }
 
         void UiWarehousePort_t::unselect()

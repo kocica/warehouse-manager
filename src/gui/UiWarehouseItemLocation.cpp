@@ -88,7 +88,8 @@ namespace whm
             else
             {
                 this->show();
-                ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX/2-(10/2), sizeY/2-(10/2)));
+                ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX/2 -10, sizeY/2 - 10/2));
+                ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX/2    , sizeY/2 - 10/2));
             }
         }
     }

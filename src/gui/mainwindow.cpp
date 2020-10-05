@@ -143,7 +143,7 @@ namespace whm
                     QPoint loc = QCursor::pos();
                     loc = ui->frame->mapFromGlobal(loc);
 
-                    auto whItemLoc = new UiWarehouseItemLocation_t(ui->view, this, loc, UiWarehouseItemType_t::E_LOCATION_SHELF);
+                    auto whItemLoc = new UiWarehouseItemLocation_t(ui->frame, this, loc, UiWarehouseItemType_t::E_LOCATION_SHELF);
                     UiWarehouseLayout_t::getWhLayout().addWhItem(whItemLoc);
 
                     UiWarehouseLayout_t::getWhLayout().dump();
