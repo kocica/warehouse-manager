@@ -17,6 +17,7 @@
 #include "ui_mainwindow.h"
 #include "UiWarehouseLayout.h"
 #include "UiGraphicsViewZoom.h"
+#include "BaseShapeGraphicItem.h"
 #include "UiWarehouseItemLocation.h"
 #include "UiWarehouseItemConveyor.h"
 
@@ -31,7 +32,6 @@
 #include <QFileDialog>
 #include <QMouseEvent>
 #include <QDesktopWidget>
-#include <QGraphicsScene>
 #include <QDialogButtonBox>
 
 namespace whm
@@ -69,23 +69,10 @@ namespace whm
             }*/
             ui->warehouseLayoutArea->setFixedSize(2000, 1000);
 
-            // Create grid
-            auto scene = new QGraphicsScene();
+            // Create scene
+            scene = new QGraphicsScene();
+            scene->setSceneRect(0, 0, 1024, 1024);
             ui->view->setScene(scene);
-            ui->view->setFixedSize(2000, 1000);
-
-            QPen backgroundGrid;
-            backgroundGrid.setColor("#d7d6d5");
-
-            for (int32_t x = 0; x <= 2000; x += 20)
-            {
-                scene->addLine(x, 0, x, 1000, backgroundGrid);
-            }
-
-            for (int32_t y = 0; y <= 1000; y += 20)
-            {
-                scene->addLine(0, y, 2000, y, backgroundGrid);
-            }
 
             // Enable zooming
             auto zoom = new UiGraphicsViewZoom_t(ui->view);
@@ -141,9 +128,9 @@ namespace whm
                 if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
                 {
                     QPoint loc = QCursor::pos();
-                    loc = ui->frame->mapFromGlobal(loc);
+                    loc = ui->view->mapFromGlobal(loc);
 
-                    auto whItemLoc = new UiWarehouseItemLocation_t(ui->frame, this, loc, UiWarehouseItemType_t::E_LOCATION_SHELF);
+                    auto whItemLoc = new UiWarehouseItemLocation_t(scene, this, loc, UiWarehouseItemType_t::E_LOCATION_SHELF);
                     UiWarehouseLayout_t::getWhLayout().addWhItem(whItemLoc);
 
                     UiWarehouseLayout_t::getWhLayout().dump();
@@ -151,9 +138,9 @@ namespace whm
                 else if (convMap.find(cursorMode) != convMap.end())
                 {
                     QPoint loc = QCursor::pos();
-                    loc = ui->frame->mapFromGlobal(loc);
+                    loc = ui->view->mapFromGlobal(loc);
 
-                    auto whItemConv = new UiWarehouseItemConveyor_t(ui->frame, this, loc, convMap[cursorMode]);
+                    auto whItemConv = new UiWarehouseItemConveyor_t(scene, this, loc, convMap[cursorMode]);
                     UiWarehouseLayout_t::getWhLayout().addWhItem(whItemConv);
 
                     UiWarehouseLayout_t::getWhLayout().dump();

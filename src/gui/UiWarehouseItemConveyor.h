@@ -18,14 +18,9 @@ namespace whm
     {
         class UiWarehouseItemConveyor_t : public UiWarehouseItem_t
         {
-            Q_OBJECT
-
             public:
-                UiWarehouseItemConveyor_t(QWidget*, MainWindow*, QPoint, UiWarehouseItemType_t);
-                virtual ~UiWarehouseItemConveyor_t() = default;
-
-            private:
-            
+                UiWarehouseItemConveyor_t(QGraphicsScene*, MainWindow*, QPoint, UiWarehouseItemType_t);
+                ~UiWarehouseItemConveyor_t() = default;
         };
     }
 }

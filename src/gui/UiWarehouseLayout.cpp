@@ -91,7 +91,7 @@ namespace whm
             return std::any_of(whItems.begin(), whItems.end(),
                                [&](UiWarehouseItem_t *whItem) -> bool
                                {
-                                   return whItem != i && whItem->geometry().intersects(i->geometry());
+                                   return whItem != i; //&& whItem->geometry().intersects(i->geometry());
                                });
         }
     }

@@ -17,7 +17,7 @@
 #include <QTapAndHoldGesture>
 
 #include "mainwindow.h"
-//#include "UiWarehousePort.h"
+#include "BaseShapeGraphicItem.h"
 
 namespace whm
 {
@@ -38,40 +38,32 @@ namespace whm
 
         bool isWhItemCombinationAllowed(UiWarehouseItemType_t, UiWarehouseItemType_t);
 
-        class UiWarehouseItem_t : public QPushButton
+        class UiWarehouseItem_t : public BaseShapeGraphicItem_t
         {
-            Q_OBJECT
+            public:
+                UiWarehouseItem_t(QGraphicsScene*, MainWindow*, QPoint, UiWarehouseItemType_t);
+                virtual ~UiWarehouseItem_t();
 
-        public:
-            UiWarehouseItem_t(QWidget *, MainWindow*, QPoint, UiWarehouseItemType_t);
-            virtual ~UiWarehouseItem_t();
+                int32_t getWhItemID() const;
+                UiWarehouseItemType_t getWhItemType() const;
 
-            QPoint pos() const;
-            int32_t getWhItemID() const;
-            UiWarehouseItemType_t getWhItemType() const;
+                void dump() const;
 
-            void dump() const;
+            protected:
+                void eraseFromLayout();
+                void mousePressEvent(QGraphicsSceneMouseEvent *);
 
-        public slots:
-            void eraseFromLayout();
-            void mouseMoveEvent(QMouseEvent *);
-            void mousePressEvent(QMouseEvent *);
-            bool gestureEvent(QGestureEvent *event);
+            protected:
+                MainWindow* ui{ nullptr };
+                QGraphicsScene* scene{ nullptr };
 
-        protected:
-            MainWindow *ui{ nullptr };
+                int32_t sizeX{ 0 };
+                int32_t sizeY{ 0 };
 
-            bool holdTriggered{ false };
+                int32_t whItemID{ 0 };
+                UiWarehouseItemType_t whItemType;
 
-            int32_t sizeX{ 0 };
-            int32_t sizeY{ 0 };
-
-            int32_t whItemID{ 0 };
-            UiWarehouseItemType_t whItemType;
-
-            virtual bool event(QEvent *event);
-
-            std::vector<UiWarehousePort_t*> ports;
+                std::vector<UiWarehousePort_t*> ports;
         };
     }
 }

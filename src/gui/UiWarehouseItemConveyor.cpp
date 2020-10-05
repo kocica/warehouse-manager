@@ -23,10 +23,10 @@ namespace whm
 {
     namespace gui
     {
-        UiWarehouseItemConveyor_t::UiWarehouseItemConveyor_t(QWidget* p, MainWindow* ui, QPoint loc, UiWarehouseItemType_t t)
-            : UiWarehouseItem_t(p, ui, loc, t)
+        UiWarehouseItemConveyor_t::UiWarehouseItemConveyor_t(QGraphicsScene* s, MainWindow* ui, QPoint loc, UiWarehouseItemType_t t)
+            : UiWarehouseItem_t(s, ui, loc, t)
         {
-            auto dialog = new QDialog(this);
+            /*auto dialog = new QDialog(this);
             auto form   = new QFormLayout(dialog);
             auto len    = new QLineEdit(dialog);
 
@@ -36,12 +36,12 @@ namespace whm
             QObject::connect(&buttons, SIGNAL(accepted()), dialog, SLOT(accept()));
             form->addRow(&buttons);
 
-            /*if (dialog->exec() == QDialog::Accepted)
+            if (dialog->exec() == QDialog::Accepted)
             {
                 // TODO: Horizontal conv x = 10 y = length
                 sizeX = len->text().toInt();
                 sizeY = 10; // TODO: Port size
-            }*/
+            }
 
             if(t == UiWarehouseItemType_t::E_CONVEYOR_R || t == UiWarehouseItemType_t::E_CONVEYOR_L)
             {
@@ -126,7 +126,10 @@ namespace whm
                     default:
                         throw std::exception();
                 }
-            }
+            }*/
+
+            ports.emplace_back(new UiWarehousePort_t(s, this, ui, this, loc.x() + 50,  loc.y() + 80));
+            ports.emplace_back(new UiWarehousePort_t(s, this, ui, this, loc.x() + 125, loc.y() + 80));
         }
     }
 }

@@ -18,13 +18,9 @@ namespace whm
     {
         class UiWarehouseItemLocation_t : public UiWarehouseItem_t
         {
-            Q_OBJECT
-
             public:
-                UiWarehouseItemLocation_t(QWidget*, MainWindow*, QPoint, UiWarehouseItemType_t);
-                virtual ~UiWarehouseItemLocation_t() = default;
-
-            private:
+                UiWarehouseItemLocation_t(QGraphicsScene*, MainWindow*, QPoint, UiWarehouseItemType_t);
+                ~UiWarehouseItemLocation_t() = default;
         };
     }
 }

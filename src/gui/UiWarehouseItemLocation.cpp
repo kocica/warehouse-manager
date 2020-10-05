@@ -23,10 +23,10 @@ namespace whm
 {
     namespace gui
     {
-        UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QWidget* p, MainWindow* ui, QPoint loc, UiWarehouseItemType_t t)
-            : UiWarehouseItem_t(p, ui, loc, t)
+        UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, QPoint loc, UiWarehouseItemType_t t)
+            : UiWarehouseItem_t(s, ui, loc, t)
         {
-            auto dialog = new QDialog(this);
+            /*auto dialog = new QDialog(this);
             auto form   = new QFormLayout(dialog);
             auto locX   = new QLineEdit(dialog);
             auto locY   = new QLineEdit(dialog);
@@ -84,13 +84,10 @@ namespace whm
                 std::cout << "Collision detected - Item's cannot intersect." << std::endl;
 
                 // TODO: Remove from layout?
-            }
-            else
-            {
-                this->show();
-                ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX/2 -10, sizeY/2 - 10/2));
-                ports.emplace_back(new UiWarehousePort_t(this, ui, this, sizeX/2    , sizeY/2 - 10/2));
-            }
+            }*/
+
+            ports.emplace_back(new UiWarehousePort_t(s, this, ui, this, loc.x() + 50,  loc.y() + 80));
+            ports.emplace_back(new UiWarehousePort_t(s, this, ui, this, loc.x() + 125, loc.y() + 80));
         }
     }
 }

@@ -21,12 +21,10 @@ namespace whm
 {
     namespace gui
     {
-        class UiWarehousePort_t : QPushButton
+        class UiWarehousePort_t : BaseShapeGraphicItem_t
         {
-            Q_OBJECT
-
             public:
-                UiWarehousePort_t(QWidget *parent, MainWindow *ui, UiWarehouseItem_t *whItem, int32_t x, int32_t y);
+                UiWarehousePort_t(QGraphicsScene *parent, QGraphicsItem* item, MainWindow *ui, UiWarehouseItem_t *whItem, int32_t x, int32_t y);
                 virtual ~UiWarehousePort_t();
 
                 void select();
@@ -41,7 +39,7 @@ namespace whm
                 void dump() const;
 
             public slots:
-                void mousePressEvent(QMouseEvent *);
+                void mousePressEvent(QGraphicsSceneMouseEvent *);
 
             private slots:
                 void unselect();

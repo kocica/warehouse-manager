@@ -17,18 +17,15 @@ namespace whm
     {
         class UiWarehousePort_t;
 
-        class UiWarehouseConnection_t : QWidget
+        class UiWarehouseConnection_t
         {
-            Q_OBJECT
-
             public:
-                UiWarehouseConnection_t(QWidget *parent, MainWindow *ui, UiWarehousePort_t *from, UiWarehousePort_t *to);
-                virtual ~UiWarehouseConnection_t();
+                UiWarehouseConnection_t(UiWarehousePort_t *from, UiWarehousePort_t *to);
+                ~UiWarehouseConnection_t();
 
                 void dump() const;
 
             private:
-                MainWindow *ui{ nullptr };
                 UiWarehousePort_t *to{ nullptr };
                 UiWarehousePort_t *from{ nullptr };
         };

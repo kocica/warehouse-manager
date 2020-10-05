@@ -16,7 +16,10 @@ SOURCES +=  ../main.cpp \
             UiGraphicsViewZoom.cpp \
             UiWarehouseConnection.cpp \
             UiWarehouseItemLocation.cpp \
-            UiWarehouseItemConveyor.cpp
+            UiWarehouseItemConveyor.cpp \
+            BaseGraphicItem.cpp \
+            BaseShapeGraphicItem.cpp \
+            Handle.cpp
 
 HEADERS +=  MainWindow.h \
             UiCursor.h \
@@ -26,7 +29,10 @@ HEADERS +=  MainWindow.h \
             UiGraphicsViewZoom.h \
             UiWarehouseConnection.h \
             UiWarehouseItemLocation.h \
-            UiWarehouseItemConveyor.h
+            UiWarehouseItemConveyor.h \
+            BaseGraphicItem.h \
+            BaseShapeGraphicItem.h \
+            Handle.h
 
 RESOURCES += resources.qrc
 

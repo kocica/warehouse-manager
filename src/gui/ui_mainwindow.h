@@ -160,7 +160,7 @@ public:
         scrollArea->setWidgetResizable(true);
         warehouseLayoutArea = new QWidget();
         warehouseLayoutArea->setObjectName(QStringLiteral("warehouseLayoutArea"));
-        warehouseLayoutArea->setGeometry(QRect(0, 0, 1041, 872));
+        warehouseLayoutArea->setGeometry(QRect(0, 0, 1031, 872));
         gridLayout_2 = new QGridLayout(warehouseLayoutArea);
         gridLayout_2->setSpacing(1);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);

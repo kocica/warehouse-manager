@@ -59,14 +59,12 @@ SOURCES       = ../main.cpp \
 		UiGraphicsViewZoom.cpp \
 		UiWarehouseConnection.cpp \
 		UiWarehouseItemLocation.cpp \
-		UiWarehouseItemConveyor.cpp qrc_resources.cpp \
+		UiWarehouseItemConveyor.cpp \
+		BaseGraphicItem.cpp \
+		BaseShapeGraphicItem.cpp \
+		Handle.cpp qrc_resources.cpp \
 		moc_MainWindow.cpp \
-		moc_UiWarehousePort.cpp \
-		moc_UiWarehouseItem.cpp \
-		moc_UiGraphicsViewZoom.cpp \
-		moc_UiWarehouseConnection.cpp \
-		moc_UiWarehouseItemLocation.cpp \
-		moc_UiWarehouseItemConveyor.cpp
+		moc_UiGraphicsViewZoom.cpp
 OBJECTS       = ../Utils.o \
 		main.o \
 		UiCursor.o \
@@ -78,14 +76,12 @@ OBJECTS       = ../Utils.o \
 		UiWarehouseConnection.o \
 		UiWarehouseItemLocation.o \
 		UiWarehouseItemConveyor.o \
+		BaseGraphicItem.o \
+		BaseShapeGraphicItem.o \
+		Handle.o \
 		qrc_resources.o \
 		moc_MainWindow.o \
-		moc_UiWarehousePort.o \
-		moc_UiWarehouseItem.o \
-		moc_UiGraphicsViewZoom.o \
-		moc_UiWarehouseConnection.o \
-		moc_UiWarehouseItemLocation.o \
-		moc_UiWarehouseItemConveyor.o
+		moc_UiGraphicsViewZoom.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -167,7 +163,10 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		UiGraphicsViewZoom.h \
 		UiWarehouseConnection.h \
 		UiWarehouseItemLocation.h \
-		UiWarehouseItemConveyor.h ../main.cpp \
+		UiWarehouseItemConveyor.h \
+		BaseGraphicItem.h \
+		BaseShapeGraphicItem.h \
+		Handle.h ../main.cpp \
 		UiCursor.cpp \
 		MainWindow.cpp \
 		UiWarehousePort.cpp \
@@ -176,7 +175,10 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		UiGraphicsViewZoom.cpp \
 		UiWarehouseConnection.cpp \
 		UiWarehouseItemLocation.cpp \
-		UiWarehouseItemConveyor.cpp
+		UiWarehouseItemConveyor.cpp \
+		BaseGraphicItem.cpp \
+		BaseShapeGraphicItem.cpp \
+		Handle.cpp
 QMAKE_TARGET  = warehouse_manager_gui
 DESTDIR       = 
 TARGET        = warehouse_manager_gui
@@ -361,8 +363,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents MainWindow.h UiCursor.h UiWarehousePort.h UiWarehouseItem.h UiWarehouseLayout.h UiGraphicsViewZoom.h UiWarehouseConnection.h UiWarehouseItemLocation.h UiWarehouseItemConveyor.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../main.cpp UiCursor.cpp MainWindow.cpp UiWarehousePort.cpp UiWarehouseItem.cpp UiWarehouseLayout.cpp UiGraphicsViewZoom.cpp UiWarehouseConnection.cpp UiWarehouseItemLocation.cpp UiWarehouseItemConveyor.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents MainWindow.h UiCursor.h UiWarehousePort.h UiWarehouseItem.h UiWarehouseLayout.h UiGraphicsViewZoom.h UiWarehouseConnection.h UiWarehouseItemLocation.h UiWarehouseItemConveyor.h BaseGraphicItem.h BaseShapeGraphicItem.h Handle.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../main.cpp UiCursor.cpp MainWindow.cpp UiWarehousePort.cpp UiWarehouseItem.cpp UiWarehouseLayout.cpp UiGraphicsViewZoom.cpp UiWarehouseConnection.cpp UiWarehouseItemLocation.cpp UiWarehouseItemConveyor.cpp BaseGraphicItem.cpp BaseShapeGraphicItem.cpp Handle.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -408,56 +410,18 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -std=c++17 -O2 -Wall -W -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_MainWindow.cpp moc_UiWarehousePort.cpp moc_UiWarehouseItem.cpp moc_UiGraphicsViewZoom.cpp moc_UiWarehouseConnection.cpp moc_UiWarehouseItemLocation.cpp moc_UiWarehouseItemConveyor.cpp
+compiler_moc_header_make_all: moc_MainWindow.cpp moc_UiGraphicsViewZoom.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_MainWindow.cpp moc_UiWarehousePort.cpp moc_UiWarehouseItem.cpp moc_UiGraphicsViewZoom.cpp moc_UiWarehouseConnection.cpp moc_UiWarehouseItemLocation.cpp moc_UiWarehouseItemConveyor.cpp
+	-$(DEL_FILE) moc_MainWindow.cpp moc_UiGraphicsViewZoom.cpp
 moc_MainWindow.cpp: MainWindow.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager/src/gui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include MainWindow.h -o moc_MainWindow.cpp
 
-moc_UiWarehousePort.cpp: mainwindow.h \
-		UiWarehouseItem.h \
-		UiWarehouseConnection.h \
-		UiWarehousePort.h \
-		moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager/src/gui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include UiWarehousePort.h -o moc_UiWarehousePort.cpp
-
-moc_UiWarehouseItem.cpp: mainwindow.h \
-		UiWarehouseItem.h \
-		moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager/src/gui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include UiWarehouseItem.h -o moc_UiWarehouseItem.cpp
-
 moc_UiGraphicsViewZoom.cpp: UiGraphicsViewZoom.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager/src/gui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include UiGraphicsViewZoom.h -o moc_UiGraphicsViewZoom.cpp
-
-moc_UiWarehouseConnection.cpp: mainwindow.h \
-		UiWarehouseConnection.h \
-		moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager/src/gui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include UiWarehouseConnection.h -o moc_UiWarehouseConnection.cpp
-
-moc_UiWarehouseItemLocation.cpp: UiWarehouseItem.h \
-		mainwindow.h \
-		UiWarehousePort.h \
-		UiWarehouseConnection.h \
-		UiWarehouseItemLocation.h \
-		moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager/src/gui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include UiWarehouseItemLocation.h -o moc_UiWarehouseItemLocation.cpp
-
-moc_UiWarehouseItemConveyor.cpp: UiWarehouseItem.h \
-		mainwindow.h \
-		UiWarehousePort.h \
-		UiWarehouseConnection.h \
-		UiWarehouseItemConveyor.h \
-		moc_predefs.h \
-		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager/src/gui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include UiWarehouseItemConveyor.h -o moc_UiWarehouseItemConveyor.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -490,6 +454,9 @@ MainWindow.o: MainWindow.cpp UiCursor.h \
 		ui_mainwindow.h \
 		UiWarehouseLayout.h \
 		UiWarehouseItem.h \
+		BaseShapeGraphicItem.h \
+		BaseGraphicItem.h \
+		Handle.h \
 		UiGraphicsViewZoom.h \
 		UiWarehouseItemLocation.h \
 		UiWarehousePort.h \
@@ -501,12 +468,18 @@ UiWarehousePort.o: UiWarehousePort.cpp UiCursor.h \
 		UiWarehousePort.h \
 		mainwindow.h \
 		UiWarehouseItem.h \
+		BaseShapeGraphicItem.h \
+		BaseGraphicItem.h \
+		Handle.h \
 		UiWarehouseConnection.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o UiWarehousePort.o UiWarehousePort.cpp
 
 UiWarehouseItem.o: UiWarehouseItem.cpp UiCursor.h \
 		UiWarehouseItem.h \
 		mainwindow.h \
+		BaseShapeGraphicItem.h \
+		BaseGraphicItem.h \
+		Handle.h \
 		UiWarehousePort.h \
 		UiWarehouseConnection.h \
 		UiWarehouseLayout.h
@@ -515,6 +488,9 @@ UiWarehouseItem.o: UiWarehouseItem.cpp UiCursor.h \
 UiWarehouseLayout.o: UiWarehouseLayout.cpp UiWarehouseLayout.h \
 		UiWarehouseItem.h \
 		mainwindow.h \
+		BaseShapeGraphicItem.h \
+		BaseGraphicItem.h \
+		Handle.h \
 		UiWarehouseItemLocation.h \
 		UiWarehousePort.h \
 		UiWarehouseConnection.h \
@@ -527,12 +503,18 @@ UiGraphicsViewZoom.o: UiGraphicsViewZoom.cpp UiGraphicsViewZoom.h
 UiWarehouseConnection.o: UiWarehouseConnection.cpp UiWarehousePort.h \
 		mainwindow.h \
 		UiWarehouseItem.h \
+		BaseShapeGraphicItem.h \
+		BaseGraphicItem.h \
+		Handle.h \
 		UiWarehouseConnection.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o UiWarehouseConnection.o UiWarehouseConnection.cpp
 
 UiWarehouseItemLocation.o: UiWarehouseItemLocation.cpp UiWarehouseLayout.h \
 		UiWarehouseItem.h \
 		mainwindow.h \
+		BaseShapeGraphicItem.h \
+		BaseGraphicItem.h \
+		Handle.h \
 		UiWarehouseItemLocation.h \
 		UiWarehousePort.h \
 		UiWarehouseConnection.h
@@ -541,10 +523,25 @@ UiWarehouseItemLocation.o: UiWarehouseItemLocation.cpp UiWarehouseLayout.h \
 UiWarehouseItemConveyor.o: UiWarehouseItemConveyor.cpp UiWarehouseLayout.h \
 		UiWarehouseItem.h \
 		mainwindow.h \
+		BaseShapeGraphicItem.h \
+		BaseGraphicItem.h \
+		Handle.h \
 		UiWarehouseItemConveyor.h \
 		UiWarehousePort.h \
 		UiWarehouseConnection.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o UiWarehouseItemConveyor.o UiWarehouseItemConveyor.cpp
+
+BaseGraphicItem.o: BaseGraphicItem.cpp Handle.h \
+		BaseGraphicItem.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o BaseGraphicItem.o BaseGraphicItem.cpp
+
+BaseShapeGraphicItem.o: BaseShapeGraphicItem.cpp Handle.h \
+		BaseShapeGraphicItem.h \
+		BaseGraphicItem.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o BaseShapeGraphicItem.o BaseShapeGraphicItem.cpp
+
+Handle.o: Handle.cpp Handle.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Handle.o Handle.cpp
 
 qrc_resources.o: qrc_resources.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_resources.o qrc_resources.cpp
@@ -552,23 +549,8 @@ qrc_resources.o: qrc_resources.cpp
 moc_MainWindow.o: moc_MainWindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_MainWindow.o moc_MainWindow.cpp
 
-moc_UiWarehousePort.o: moc_UiWarehousePort.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_UiWarehousePort.o moc_UiWarehousePort.cpp
-
-moc_UiWarehouseItem.o: moc_UiWarehouseItem.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_UiWarehouseItem.o moc_UiWarehouseItem.cpp
-
 moc_UiGraphicsViewZoom.o: moc_UiGraphicsViewZoom.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_UiGraphicsViewZoom.o moc_UiGraphicsViewZoom.cpp
-
-moc_UiWarehouseConnection.o: moc_UiWarehouseConnection.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_UiWarehouseConnection.o moc_UiWarehouseConnection.cpp
-
-moc_UiWarehouseItemLocation.o: moc_UiWarehouseItemLocation.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_UiWarehouseItemLocation.o moc_UiWarehouseItemLocation.cpp
-
-moc_UiWarehouseItemConveyor.o: moc_UiWarehouseItemConveyor.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_UiWarehouseItemConveyor.o moc_UiWarehouseItemConveyor.cpp
 
 ####### Install
 

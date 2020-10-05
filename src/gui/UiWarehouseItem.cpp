@@ -52,16 +52,13 @@ namespace whm
                                });
         }
 
-        UiWarehouseItem_t::UiWarehouseItem_t(QWidget *p, MainWindow* ui, QPoint loc, UiWarehouseItemType_t type)
-            : QPushButton(p)
+        UiWarehouseItem_t::UiWarehouseItem_t(QGraphicsScene* s, MainWindow* ui, QPoint loc, UiWarehouseItemType_t type)
+            : BaseShapeGraphicItem_t(loc.x(), loc.y(), 200, 200, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s)
             , ui(ui)
+            , scene(s)
             , whItemID(UiWarehouseLayout_t::getWhLayout().getNextWhItemID())
             , whItemType(type)
         {
-            (void) loc;
-
-            grabGesture(Qt::TapAndHoldGesture);
-            QTapAndHoldGesture::setTimeout(100);
         }
 
         UiWarehouseItem_t::~UiWarehouseItem_t()
@@ -72,36 +69,6 @@ namespace whm
             }
 
             ports.clear();
-        }
-
-        bool UiWarehouseItem_t::event(QEvent *event)
-        {
-            if (event->type() == QEvent::Gesture)
-            {
-                return gestureEvent(static_cast<QGestureEvent*>(event));
-            }
-
-            return QWidget::event(event);
-        }
-
-        bool UiWarehouseItem_t::gestureEvent(QGestureEvent *event)
-        {
-            if (event->gesture(Qt::TapAndHoldGesture))
-            {
-                holdTriggered = true;
-            }
-
-            return true;
-        }
-
-        QPoint UiWarehouseItem_t::pos() const
-        {
-            QPoint p = QWidget::pos();
-
-            p.rx() += sizeX/2;
-            p.ry() += sizeY/2;
-
-            return p;
         }
 
         int32_t UiWarehouseItem_t::getWhItemID() const
@@ -119,92 +86,31 @@ namespace whm
             UiWarehouseLayout_t::getWhLayout().eraseWhItem(this);
         }
 
-        void UiWarehouseItem_t::mousePressEvent(QMouseEvent *event)
+        void UiWarehouseItem_t::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
             if (event->button() == Qt::LeftButton)
             {
-                holdTriggered = false;
-
                 if(UiCursor_t::getCursor().getMode() == UiCursorMode_t::E_MODE_DELETE)
                 {
                     eraseFromLayout();
-                    delete this;
+                    scene->removeItem(this);
                 }
             }
             else if (event->button() == Qt::RightButton)
             {
-                QMenu contextMenu("Item manipulation", this);
+                /*QMenu contextMenu("Item manipulation", ui->getUi());
                 contextMenu.setStyleSheet("background-color: rgb(150,150,150);");
 
-                QAction actionDelete("Delete", this);
-                connect(&actionDelete, SIGNAL(triggered()), this, SLOT(deleteLater()));
-                connect(&actionDelete, SIGNAL(triggered()), this, SLOT(eraseFromLayout()));
+                QAction actionDelete("Delete", ui->getUi());
+                connect(&actionDelete, SIGNAL(triggered()), ui->getUi(), SLOT(deleteLater()));
+                connect(&actionDelete, SIGNAL(triggered()), ui->getUi(), SLOT(eraseFromLayout()));
                 contextMenu.addAction(&actionDelete);
-                contextMenu.exec(mapToGlobal(event->pos()));
+                contextMenu.exec(mapToGlobal(event->pos()));*/
 
                 // TODO: Resize, etc.
             }
-        }
 
-        void UiWarehouseItem_t::mouseMoveEvent(QMouseEvent *event)
-        {
-            (void) event;
-
-            if (holdTriggered)
-            {
-                if(std::any_of(ports.begin(), ports.end(),
-                               [](UiWarehousePort_t* p) -> bool
-                               {
-                                   return p->isConnected();
-                               }))
-                {
-                    std::cout << "Cannot move, first disconnect!" << std::endl;
-                    return;
-                }
-
-                QPoint mousePos = QCursor::pos();
-                mousePos = parentWidget()->mapFromGlobal(mousePos);
-
-                if (mousePos.x() < sizeX/2)
-                {
-                    mousePos.rx() = sizeX/2;
-                }
-
-                if (mousePos.y() < sizeY/2)
-                {
-                    mousePos.ry() = sizeY/2;
-                }
-
-                if (mousePos.x() > parentWidget()->minimumWidth() - sizeX/2)
-                {
-                    parentWidget()->setMinimumWidth(mousePos.x() + sizeX/2);
-                }
-
-                if (mousePos.y() > parentWidget()->minimumHeight() - sizeY/2)
-                {
-                    parentWidget()->setMinimumHeight(mousePos.y() + sizeY/2);
-                }
-
-                mousePos.rx() -= sizeX/2;
-                mousePos.ry() -= sizeY/2;
-
-                mousePos.rx() -= mousePos.rx() % 20 - 1;
-                mousePos.ry() -= mousePos.ry() % 20 - 1;
-
-                // Don't move in case it collides with any other item
-                if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
-                {
-                    //QMessageBox err;
-                    //err.critical(0, "Collision detected", "Item's cannot intersect.");
-                    //err.setFixedSize(500,200);
-
-                    std::cout << "Collision detected - Item's cannot intersect." << std::endl;
-                }
-                else
-                {
-                    this->move(mousePos);
-                }
-            }
+            BaseGraphicItem_t::mousePressEvent(event);
         }
 
         void UiWarehouseItem_t::dump() const

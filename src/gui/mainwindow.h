@@ -11,6 +11,7 @@
 
 // Qt
 #include <QMainWindow>
+#include <QGraphicsScene>
 
 namespace Ui
 {
@@ -29,7 +30,7 @@ namespace whm
                 explicit MainWindow(QWidget *parent = Q_NULLPTR);
                 virtual ~MainWindow();
 
-                Ui::MainWindow *getUi() const { return ui; }
+                Ui::MainWindow* getUi() const { return ui; }
 
                 QPoint getWidgetPosition(QPoint);
 
@@ -55,7 +56,8 @@ namespace whm
                 void on_whItemConveyorHub_toggled(bool);
 
             private:
-                Ui::MainWindow *ui;
+                Ui::MainWindow* ui;
+                QGraphicsScene* scene;
         };
     }
 }

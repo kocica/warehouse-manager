@@ -16,19 +16,17 @@ namespace whm
 {
     namespace gui
     {
-        UiWarehouseConnection_t::UiWarehouseConnection_t(QWidget *parent, MainWindow *ui, UiWarehousePort_t *from, UiWarehousePort_t *to)
-            : QWidget(parent)
-            , ui(ui)
-            , to(to)
+        UiWarehouseConnection_t::UiWarehouseConnection_t(UiWarehousePort_t *from, UiWarehousePort_t *to)
+            : to(to)
             , from(from)
         {
-
+            
         }
 
         UiWarehouseConnection_t::~UiWarehouseConnection_t()
         {
-            from->disconnect();
             to->disconnect();
+            from->disconnect();
         }
 
         void UiWarehouseConnection_t::dump() const
