@@ -46,6 +46,15 @@ namespace whm
 
             painter->setRenderHint(QPainter::Antialiasing, true);
 
+            if(this->mConnected)
+            {
+                painter->setPen(QPen(Qt::blue));
+            }
+            else if(this->mSelected)
+            {
+                painter->setPen(QPen(Qt::red));
+            }
+
             switch (mType)
             {
                 case ITEM_RECTANGLE:

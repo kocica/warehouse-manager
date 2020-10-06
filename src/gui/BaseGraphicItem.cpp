@@ -18,6 +18,9 @@
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 
+// Std
+#include <iostream>
+
 namespace whm
 {
     namespace gui
@@ -26,6 +29,8 @@ namespace whm
             : QGraphicsItem(parent)
             , mSelected(false)
             , mConnected(false)
+            , mDrawHandles(true)
+            , mParentItem(parent)
             , mCurrentHandle(0)
         {
             QUuid id;
@@ -90,6 +95,11 @@ namespace whm
             return path;
         }
 
+        void BaseGraphicItem_t::showHandles(bool enabled)
+        {
+            mDrawHandles = enabled;
+        }
+
         void BaseGraphicItem_t::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
         {
             Q_UNUSED(option);
@@ -103,12 +113,6 @@ namespace whm
                     painter->setPen(pen);
                     painter->drawRect(this->mRect);
                 }
-                else if(this->mConnected)
-                {
-                    QPen pen(Qt::blue);
-                    painter->setPen(pen);
-                    painter->drawRect(this->mRect);
-                }
                 else if(this->mDrawBoundingRect)
                 {
                     QPen pen(Qt::green);
@@ -119,37 +123,40 @@ namespace whm
                 QPointF p1;
                 QPointF p2;
 
-                foreach (Handle *handle, mHandles)
+                if (mDrawHandles)
                 {
-                    if(handle->type() == Handle::HANDLE_TYPE_ROTATE)
+                    foreach (Handle *handle, mHandles)
                     {
-                        p1 = handle->pos();
-                    }
-                    if(handle->type() == Handle::HANDLE_TYPE_TOP)
-                    {
-                        p2 = handle->pos();
-                    }
-                    if(handle->type() == Handle::HANDLE_TYPE_CTRL)
-                    {
-                        painter->save();
-                        QPen pen(Qt::green);
-                        painter->setPen(pen);
-                        painter->setBackground(QBrush(Qt::green));
-                        painter->drawRect(handle->boundingRect());
-                        painter->restore();
-                    }
-                    else
-                    {
-                        switch (handle->shape())
+                        if(handle->type() == Handle::HANDLE_TYPE_ROTATE)
                         {
-                            case Handle::HANDLE_SHAPE_RECT:
-                                painter->drawRect(handle->boundingRect());
-                                break;
-                            case Handle::HANDLE_SHAPE_CIRCLE:
-                                painter->drawEllipse(handle->boundingRect());
-                                break;
-                            case Handle::HANDLE_SHAPE_TRIANGLE:
-                                break;
+                            p1 = handle->pos();
+                        }
+                        if(handle->type() == Handle::HANDLE_TYPE_TOP)
+                        {
+                            p2 = handle->pos();
+                        }
+                        if(handle->type() == Handle::HANDLE_TYPE_CTRL)
+                        {
+                            painter->save();
+                            QPen pen(Qt::green);
+                            painter->setPen(pen);
+                            painter->setBackground(QBrush(Qt::green));
+                            painter->drawRect(handle->boundingRect());
+                            painter->restore();
+                        }
+                        else
+                        {
+                            switch (handle->shape())
+                            {
+                                case Handle::HANDLE_SHAPE_RECT:
+                                    painter->drawRect(handle->boundingRect());
+                                    break;
+                                case Handle::HANDLE_SHAPE_CIRCLE:
+                                    painter->drawEllipse(handle->boundingRect());
+                                    break;
+                                case Handle::HANDLE_SHAPE_TRIANGLE:
+                                    break;
+                            }
                         }
                     }
                 }
@@ -175,6 +182,33 @@ namespace whm
             }
         }
 
+        QGraphicsItem* BaseGraphicItem_t::getParent() const
+        {
+            return mParentItem;
+        }
+
+        void BaseGraphicItem_t::updateChildren(int dx, int dy)
+        {
+            QList<QGraphicsItem*> items = scene()->items();
+
+            foreach(QGraphicsItem* i, items)
+            {
+                auto* baseItem = dynamic_cast<BaseGraphicItem_t*>(i);
+                auto* parentBaseItem = dynamic_cast<BaseGraphicItem_t*>(baseItem->getParent());
+
+                if (parentBaseItem && this->id() == parentBaseItem->id())
+                {
+                    baseItem->shiftGraphicItem(dx, dy);
+                }
+            }
+        }
+
+        void BaseGraphicItem_t::shiftGraphicItem(int dx, int dy)
+        {
+            this->mRect.setTopLeft(QPoint(this->mRect.topLeft().x() + dx, this->mRect.topLeft().y() + dy));
+            this->mRect.setBottomRight(QPoint(this->mRect.bottomRight().x() + dx, this->mRect.bottomRight().y() + dy));
+        }
+
         void BaseGraphicItem_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         {
             if(event->buttons() == Qt::LeftButton && mCurrentHandle)
@@ -185,37 +219,45 @@ namespace whm
                 switch (mCurrentHandle->type())
                 {
                     case Handle::HANDLE_TYPE_LEFT:
+                        updateChildren(event->pos().x() - mRect.topLeft().x(), 0);
                         this->mRect.setLeft(event->pos().x());
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         break;
                     case Handle::HANDLE_TYPE_RIGHT:
+                        updateChildren(event->pos().x() - mRect.topRight().x(), 0);
                         this->mRect.setRight(event->pos().x());
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         break;
                     case Handle::HANDLE_TYPE_TOP:
+                        updateChildren(0, event->pos().y() - mRect.topLeft().y());
                         this->mRect.setTop(event->pos().y());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_BOTTOM:
+                        updateChildren(0, event->pos().y() - mRect.bottomLeft().y());
                         this->mRect.setBottom(event->pos().y());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_TOPLEFT:
+                        updateChildren(event->pos().x() - mRect.topLeft().x(), event->pos().y() - mRect.topLeft().y());
                         this->mRect.setTopLeft(event->pos());
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_TOPRIGHT:
+                        updateChildren(event->pos().x() - mRect.topRight().x(), event->pos().y() - mRect.topRight().y());
                         this->mRect.setTopRight(event->pos());
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_BOTTOMLEFT:
+                        updateChildren(event->pos().x() - mRect.bottomLeft().x(), event->pos().y() - mRect.bottomLeft().y());
                         this->mRect.setBottomLeft(event->pos());
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_BOTTOMRIGHT:
+                        updateChildren(event->pos().x() - mRect.bottomRight().x(), event->pos().y() - mRect.bottomRight().y());
                         this->mRect.setBottomRight(event->pos());
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());

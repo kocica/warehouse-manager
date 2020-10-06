@@ -21,10 +21,12 @@ namespace whm
         UiWarehousePort_t *UiWarehousePort_t::selectedPort = nullptr;
 
         UiWarehousePort_t::UiWarehousePort_t(QGraphicsScene *s, QGraphicsItem* parent, MainWindow *ui, UiWarehouseItem_t *whItem, int32_t x, int32_t y)
-            : BaseShapeGraphicItem_t(x, y, 25, 25, BaseShapeGraphicItem_t::ITEM_ELLIPSE, s, parent)
+            : BaseShapeGraphicItem_t(x, y, 25, 25, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, parent)
             , ui(ui)
             , whItem(whItem)
         {
+            this->showHandles(false);
+
             /*switch(whItem->getWhItemType())
             {
                 case UiWarehouseItemType_t::E_CONVEYOR_R:
@@ -77,10 +79,10 @@ namespace whm
                     {
                         select();
                     }
-                    /*else if (selectedPort->parent() == this->parent())
+                    else if (selectedPort->getWhItem() == this->getWhItem())
                     {
                         std::cout << "Same object!" << std::endl;
-                    }*/
+                    }
                     else
                     {
                         /*auto pos1 = selectedPort->parentWidget()->mapToGlobal(selectedPort->geometry().topLeft());
@@ -134,8 +136,8 @@ namespace whm
                                 }*/
 
                                 this->whConn = new UiWarehouseConnection_t(selectedPort, this);
-                                //selectedPort->setStyleSheet("background-color: black;");
                                 selectedPort->setWhConn(this->whConn);
+                                selectedPort->connect();
                                 connect();
                             }
                             else

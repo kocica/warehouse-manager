@@ -35,6 +35,12 @@ namespace whm
                 void setId(QString id);
                 QString id();
 
+                void showHandles(bool enabled);
+                void updateChildren(int dx, int dy);
+                void shiftGraphicItem(int dx, int dy);
+
+                QGraphicsItem* getParent() const;
+
             protected:
                 QVariant itemChange(GraphicsItemChange change, const QVariant &value);
                 void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -45,10 +51,14 @@ namespace whm
 
                 QRectF mRect;
                 QPointF mOrigin;
+
                 bool mDrawBoundingRect;
                 bool mSelected;
                 bool mConnected;
+                bool mDrawHandles;
+
                 QList<Handle *> mHandles;
+                QGraphicsItem* mParentItem{ nullptr };
 
             private:
                 Handle *mCurrentHandle;
