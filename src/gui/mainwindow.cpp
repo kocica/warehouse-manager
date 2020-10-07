@@ -20,6 +20,7 @@
 #include "BaseShapeGraphicItem.h"
 #include "UiWarehouseItemLocation.h"
 #include "UiWarehouseItemConveyor.h"
+#include "../WarehouseLayout.h"
 
 // Qt
 #include <QLabel>
@@ -130,20 +131,16 @@ namespace whm
                     QPoint loc = QCursor::pos();
                     loc = ui->view->mapFromGlobal(loc);
 
-                    auto whItemLoc = new UiWarehouseItemLocation_t(scene, this, loc, UiWarehouseItemType_t::E_LOCATION_SHELF);
+                    auto whItemLoc = new UiWarehouseItemLocation_t(scene, this, loc.x(), loc.y(), 100, 100, UiWarehouseItemType_t::E_LOCATION_SHELF);
                     UiWarehouseLayout_t::getWhLayout().addWhItem(whItemLoc);
-
-                    UiWarehouseLayout_t::getWhLayout().dump();
                 }
                 else if (convMap.find(cursorMode) != convMap.end())
                 {
                     QPoint loc = QCursor::pos();
                     loc = ui->view->mapFromGlobal(loc);
 
-                    auto whItemConv = new UiWarehouseItemConveyor_t(scene, this, loc, convMap[cursorMode]);
+                    auto whItemConv = new UiWarehouseItemConveyor_t(scene, this, loc.x(), loc.y(), 100, 50, convMap[cursorMode]);
                     UiWarehouseLayout_t::getWhLayout().addWhItem(whItemConv);
-
-                    UiWarehouseLayout_t::getWhLayout().dump();
                 }
             }
         }
@@ -225,13 +222,16 @@ namespace whm
 
         void MainWindow::on_saveLayout_triggered()
         {
-            QString file = QFileDialog::getSaveFileName(this, tr("Save warehouse layout"), "./savedLayout.xml", tr("Warehouse layouts (*)"));
+            /*QString file = QFileDialog::getSaveFileName(this, tr("Save warehouse layout"), "./savedLayout.xml", tr("Warehouse layouts (*)"));
             if (file.cbegin() == file.cend())
             {
                 return;
-            }
+            }*/
 
-            // TODO: Save
+            ::whm::WarehouseLayout_t whLayout{ UiWarehouseLayout_t::getWhLayout() };
+            whLayout.dump();
+
+            UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this /*this->ui*/, whLayout);
         }
 
         void MainWindow::on_clearLayout_triggered()

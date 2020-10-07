@@ -35,6 +35,8 @@ namespace whm
                 void setId(QString id);
                 QString id();
 
+                QRectF getRect() const;
+
                 void showHandles(bool enabled);
                 void updateChildren(int dx, int dy);
                 void shiftGraphicItem(int dx, int dy);

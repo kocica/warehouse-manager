@@ -52,13 +52,14 @@ namespace whm
                                });
         }
 
-        UiWarehouseItem_t::UiWarehouseItem_t(QGraphicsScene* s, MainWindow* ui, QPoint loc, UiWarehouseItemType_t type)
-            : BaseShapeGraphicItem_t(loc.x(), loc.y(), 200, 200, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s)
+        UiWarehouseItem_t::UiWarehouseItem_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, UiWarehouseItemType_t type)
+            : BaseShapeGraphicItem_t(x, y, w, h, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s)
             , ui(ui)
             , scene(s)
             , whItemID(UiWarehouseLayout_t::getWhLayout().getNextWhItemID())
             , whItemType(type)
         {
+            
         }
 
         UiWarehouseItem_t::~UiWarehouseItem_t()

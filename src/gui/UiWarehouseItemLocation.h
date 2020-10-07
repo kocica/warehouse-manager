@@ -9,17 +9,24 @@
 
 #pragma once
 
+// Local
 #include "UiWarehouseItem.h"
 #include "UiWarehousePort.h"
 
 namespace whm
 {
+    class WarehouseItem_t;
+
     namespace gui
     {
         class UiWarehouseItemLocation_t : public UiWarehouseItem_t
         {
             public:
-                UiWarehouseItemLocation_t(QGraphicsScene*, MainWindow*, QPoint, UiWarehouseItemType_t);
+                // Construct from GUI
+                UiWarehouseItemLocation_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, UiWarehouseItemType_t);
+                // Construct from TUI
+                UiWarehouseItemLocation_t(QGraphicsScene*, MainWindow*, ::whm::WarehouseItem_t&);
+
                 ~UiWarehouseItemLocation_t() = default;
         };
     }

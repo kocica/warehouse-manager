@@ -100,6 +100,11 @@ namespace whm
             mDrawHandles = enabled;
         }
 
+        QRectF BaseGraphicItem_t::getRect() const
+        {
+            return mRect;
+        }
+
         void BaseGraphicItem_t::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
         {
             Q_UNUSED(option);
@@ -113,7 +118,13 @@ namespace whm
                     painter->setPen(pen);
                     painter->drawRect(this->mRect);
                 }
-                else if(this->mDrawBoundingRect)
+                else if(this->mConnected)
+                {
+                    QPen pen(Qt::blue);
+                    painter->setPen(pen);
+                    painter->drawRect(this->mRect);
+                }
+                else if(this->mDrawBoundingRect && mDrawHandles)
                 {
                     QPen pen(Qt::green);
                     painter->setPen(pen);

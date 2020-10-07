@@ -50,6 +50,7 @@ namespace whm
                 UiWarehouseItem_t* whItem{ nullptr };
                 UiWarehouseConnection_t* whConn{ nullptr };
 
+                // Shared across all instances
                 static UiWarehousePort_t *selectedPort;
         };
     }

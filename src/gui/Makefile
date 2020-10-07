@@ -51,6 +51,10 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../main.cpp \
+		../Utils.cpp \
+		../Logger.cpp \
+		../WarehouseItem.cpp \
+		../WarehouseLayout.cpp \
 		UiCursor.cpp \
 		MainWindow.cpp \
 		UiWarehousePort.cpp \
@@ -65,8 +69,11 @@ SOURCES       = ../main.cpp \
 		Handle.cpp qrc_resources.cpp \
 		moc_MainWindow.cpp \
 		moc_UiGraphicsViewZoom.cpp
-OBJECTS       = ../Utils.o \
-		main.o \
+OBJECTS       = main.o \
+		Utils.o \
+		Logger.o \
+		WarehouseItem.o \
+		WarehouseLayout.o \
 		UiCursor.o \
 		MainWindow.o \
 		UiWarehousePort.o \
@@ -155,7 +162,11 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		gui.pro MainWindow.h \
+		gui.pro ../Utils.h \
+		../Logger.h \
+		../WarehouseItem.h \
+		../WarehouseLayout.h \
+		MainWindow.h \
 		UiCursor.h \
 		UiWarehousePort.h \
 		UiWarehouseItem.h \
@@ -167,6 +178,10 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		BaseGraphicItem.h \
 		BaseShapeGraphicItem.h \
 		Handle.h ../main.cpp \
+		../Utils.cpp \
+		../Logger.cpp \
+		../WarehouseItem.cpp \
+		../WarehouseLayout.cpp \
 		UiCursor.cpp \
 		MainWindow.cpp \
 		UiWarehousePort.cpp \
@@ -363,8 +378,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents MainWindow.h UiCursor.h UiWarehousePort.h UiWarehouseItem.h UiWarehouseLayout.h UiGraphicsViewZoom.h UiWarehouseConnection.h UiWarehouseItemLocation.h UiWarehouseItemConveyor.h BaseGraphicItem.h BaseShapeGraphicItem.h Handle.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../main.cpp UiCursor.cpp MainWindow.cpp UiWarehousePort.cpp UiWarehouseItem.cpp UiWarehouseLayout.cpp UiGraphicsViewZoom.cpp UiWarehouseConnection.cpp UiWarehouseItemLocation.cpp UiWarehouseItemConveyor.cpp BaseGraphicItem.cpp BaseShapeGraphicItem.cpp Handle.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Utils.h ../Logger.h ../WarehouseItem.h ../WarehouseLayout.h MainWindow.h UiCursor.h UiWarehousePort.h UiWarehouseItem.h UiWarehouseLayout.h UiGraphicsViewZoom.h UiWarehouseConnection.h UiWarehouseItemLocation.h UiWarehouseItemConveyor.h BaseGraphicItem.h BaseShapeGraphicItem.h Handle.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../main.cpp ../Utils.cpp ../Logger.cpp ../WarehouseItem.cpp ../WarehouseLayout.cpp UiCursor.cpp MainWindow.cpp UiWarehousePort.cpp UiWarehouseItem.cpp UiWarehouseLayout.cpp UiGraphicsViewZoom.cpp UiWarehouseConnection.cpp UiWarehouseItemLocation.cpp UiWarehouseItemConveyor.cpp BaseGraphicItem.cpp BaseShapeGraphicItem.cpp Handle.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -446,6 +461,30 @@ main.o: ../main.cpp ../Utils.h \
 		mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
 
+Utils.o: ../Utils.cpp ../Utils.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Utils.o ../Utils.cpp
+
+Logger.o: ../Logger.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Logger.o ../Logger.cpp
+
+WarehouseItem.o: ../WarehouseItem.cpp ../WarehouseItem.h \
+		UiWarehouseItem.h \
+		mainwindow.h \
+		BaseShapeGraphicItem.h \
+		BaseGraphicItem.h \
+		Handle.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o WarehouseItem.o ../WarehouseItem.cpp
+
+WarehouseLayout.o: ../WarehouseLayout.cpp ../WarehouseItem.h \
+		../WarehouseLayout.h \
+		UiWarehouseLayout.h \
+		UiWarehouseItem.h \
+		mainwindow.h \
+		BaseShapeGraphicItem.h \
+		BaseGraphicItem.h \
+		Handle.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o WarehouseLayout.o ../WarehouseLayout.cpp
+
 UiCursor.o: UiCursor.cpp UiCursor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o UiCursor.o UiCursor.cpp
 
@@ -461,7 +500,8 @@ MainWindow.o: MainWindow.cpp UiCursor.h \
 		UiWarehouseItemLocation.h \
 		UiWarehousePort.h \
 		UiWarehouseConnection.h \
-		UiWarehouseItemConveyor.h
+		UiWarehouseItemConveyor.h \
+		../WarehouseLayout.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MainWindow.o MainWindow.cpp
 
 UiWarehousePort.o: UiWarehousePort.cpp UiCursor.h \
@@ -494,7 +534,9 @@ UiWarehouseLayout.o: UiWarehouseLayout.cpp UiWarehouseLayout.h \
 		UiWarehouseItemLocation.h \
 		UiWarehousePort.h \
 		UiWarehouseConnection.h \
-		UiWarehouseItemConveyor.h
+		UiWarehouseItemConveyor.h \
+		../WarehouseItem.h \
+		../WarehouseLayout.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o UiWarehouseLayout.o UiWarehouseLayout.cpp
 
 UiGraphicsViewZoom.o: UiGraphicsViewZoom.cpp UiGraphicsViewZoom.h
@@ -517,7 +559,8 @@ UiWarehouseItemLocation.o: UiWarehouseItemLocation.cpp UiWarehouseLayout.h \
 		Handle.h \
 		UiWarehouseItemLocation.h \
 		UiWarehousePort.h \
-		UiWarehouseConnection.h
+		UiWarehouseConnection.h \
+		../WarehouseItem.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o UiWarehouseItemLocation.o UiWarehouseItemLocation.cpp
 
 UiWarehouseItemConveyor.o: UiWarehouseItemConveyor.cpp UiWarehouseLayout.h \
@@ -528,7 +571,8 @@ UiWarehouseItemConveyor.o: UiWarehouseItemConveyor.cpp UiWarehouseLayout.h \
 		Handle.h \
 		UiWarehouseItemConveyor.h \
 		UiWarehousePort.h \
-		UiWarehouseConnection.h
+		UiWarehouseConnection.h \
+		../WarehouseItem.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o UiWarehouseItemConveyor.o UiWarehouseItemConveyor.cpp
 
 BaseGraphicItem.o: BaseGraphicItem.cpp Handle.h \

@@ -11,6 +11,8 @@
 #include "UiWarehouseLayout.h"
 #include "UiWarehouseItemLocation.h"
 #include "UiWarehouseItemConveyor.h"
+#include "../WarehouseItem.h"
+#include "../WarehouseLayout.h"
 
 // Std
 #include <vector>
@@ -26,10 +28,41 @@ namespace whm
 
         }
 
+        void UiWarehouseLayout_t::initFromTui(QGraphicsScene* s, MainWindow* ui, ::whm::WarehouseLayout_t& layout)
+        {
+            this->deleteAllWhItems();
+
+            auto items = layout.getWhItems();
+
+            for (auto* item : items)
+            {
+                UiWarehouseItem_t* newItem{ nullptr };
+
+                // TODO
+                if (item->getType() == 0)
+                {
+                    newItem = new UiWarehouseItemLocation_t{ s, ui, *item };
+                    whItemIdSequence = std::max(whItemIdSequence, item->getID() + 1);
+                }
+                else if (item->getType() == 1)
+                {
+                    newItem = new UiWarehouseItemConveyor_t{ s, ui, *item };
+                    whItemIdSequence = std::max(whItemIdSequence, item->getID() + 1);
+                }
+
+                whItems.emplace_back(newItem);
+            }
+        }
+
         UiWarehouseLayout_t& UiWarehouseLayout_t::getWhLayout()
         {
             static UiWarehouseLayout_t l;
             return l;
+        }
+
+        UiWarehouseLayout_t::UiWarehouseItemContainer_t UiWarehouseLayout_t::getWhItems() const
+        {
+            return whItems;
         }
 
         size_t UiWarehouseLayout_t::getWhItemCount() const
@@ -63,6 +96,8 @@ namespace whm
 
         void UiWarehouseLayout_t::deleteAllWhItems()
         {
+            // TODO: Clear also selectedPort variable
+
             for (UiWarehouseItem_t* whItem : whItems)
             {
                 delete whItem;
@@ -91,7 +126,7 @@ namespace whm
             return std::any_of(whItems.begin(), whItems.end(),
                                [&](UiWarehouseItem_t *whItem) -> bool
                                {
-                                   return whItem != i; //&& whItem->geometry().intersects(i->geometry());
+                                   return whItem != i && whItem->getRect().intersects(i->getRect());
                                });
         }
     }

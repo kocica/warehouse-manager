@@ -13,17 +13,21 @@
 
 namespace whm
 {
+    class WarehouseLayout_t;
+
     namespace gui
     {
         class UiWarehouseLayout_t
         {
-            using WarehouseItemContainer_t = std::vector<UiWarehouseItem_t*>;
+            using UiWarehouseItemContainer_t = std::vector<UiWarehouseItem_t*>;
 
             public:
                 UiWarehouseLayout_t();
-                virtual ~UiWarehouseLayout_t() = default;
+                ~UiWarehouseLayout_t() = default;
 
                 static UiWarehouseLayout_t& getWhLayout();
+
+                UiWarehouseItemContainer_t getWhItems() const;
 
                 void addWhItem(UiWarehouseItem_t*);
                 void eraseWhItem(UiWarehouseItem_t*);
@@ -37,9 +41,11 @@ namespace whm
 
                 bool itemsIntersects(UiWarehouseItem_t*) const;
 
+                void initFromTui(QGraphicsScene*, MainWindow*, ::whm::WarehouseLayout_t&);
+
             private:
                 int32_t whItemIdSequence{ 0 };
-                WarehouseItemContainer_t whItems;
+                UiWarehouseItemContainer_t whItems;
         };
     }
 }

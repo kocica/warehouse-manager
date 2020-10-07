@@ -18,13 +18,21 @@
 
 #include "UiWarehouseLayout.h"
 #include "UiWarehouseItemLocation.h"
+#include "../WarehouseItem.h"
 
 namespace whm
 {
     namespace gui
     {
-        UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, QPoint loc, UiWarehouseItemType_t t)
-            : UiWarehouseItem_t(s, ui, loc, t)
+        UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, ::whm::WarehouseItem_t& i)
+            : UiWarehouseItem_t(s, ui, i.getX(), i.getY(), i.getW(), i.getH(), UiWarehouseItemType_t::E_LOCATION_SHELF)
+        {
+            ports.emplace_back(new UiWarehousePort_t(s, this, ui, this, i.getX(), i.getY() + 37));
+            ports.emplace_back(new UiWarehousePort_t(s, this, ui, this, i.getX() + 75, i.getY() + 37));
+        }
+
+        UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, UiWarehouseItemType_t t)
+            : UiWarehouseItem_t(s, ui, x, y, w, h, t)
         {
             /*auto dialog = new QDialog(this);
             auto form   = new QFormLayout(dialog);
@@ -43,51 +51,17 @@ namespace whm
             {
                 sizeX = locX->text().toInt();
                 sizeY = locY->text().toInt();
-            }
-
-            if (loc.x() < sizeX/2)
-            {
-                loc.rx() = sizeX/2;
-            }
-
-            if (loc.y() < sizeY/2)
-            {
-                loc.ry() = sizeY/2;
-            }
-
-            if (loc.x() > p->minimumWidth() - sizeX/2)
-            {
-                p->setMinimumWidth(loc.x() + sizeX/2);
-            }
-
-            if (loc.y() > p->minimumHeight() - sizeY/2)
-            {
-                p->setMinimumHeight(loc.y() + sizeY/2);
-            }
-
-            loc.rx() -= sizeX/2;
-            loc.ry() -= sizeY/2;
-
-            loc.rx() -= loc.rx() % 20 - 1;
-            loc.ry() -= loc.ry() % 20 - 1;
-
-            this->move(loc);
-            this->resize(sizeX, sizeY);
-            this->setStyleSheet("border-style: outset; border-width: 2px; border-color: red;");
+            }*/
 
             if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
             {
-                //QMessageBox err;
-                //err.critical(0, "Collision detected", "Item's cannot intersect.");
-                //err.setFixedSize(500,200);
+                std::cerr << "Collision detected - Item's cannot intersect." << std::endl;
 
-                std::cout << "Collision detected - Item's cannot intersect." << std::endl;
+                // TODO: Remove from layout and deleteLater()?
+            }
 
-                // TODO: Remove from layout?
-            }*/
-
-            ports.emplace_back(new UiWarehousePort_t(s, this, ui, this, loc.x() + 50,  loc.y() + 80));
-            ports.emplace_back(new UiWarehousePort_t(s, this, ui, this, loc.x() + 125, loc.y() + 80));
+            ports.emplace_back(new UiWarehousePort_t(s, this, ui, this, x,  y + 37));
+            ports.emplace_back(new UiWarehousePort_t(s, this, ui, this, x + 75, y + 37));
         }
     }
 }

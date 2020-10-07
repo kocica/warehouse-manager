@@ -5,9 +5,13 @@ QMAKE_CXXFLAGS   += -std=c++17
 DEFINES          += QT_DEPRECATED_WARNINGS
 DEFINES          += "WHM_GUI"
 
-OBJECTS += ../Utils.o
+# OBJECTS += 
 
 SOURCES +=  ../main.cpp \
+            ../Utils.cpp \
+            ../Logger.cpp \
+            ../WarehouseItem.cpp \
+            ../WarehouseLayout.cpp \
             UiCursor.cpp \
             MainWindow.cpp \
             UiWarehousePort.cpp \
@@ -21,7 +25,11 @@ SOURCES +=  ../main.cpp \
             BaseShapeGraphicItem.cpp \
             Handle.cpp
 
-HEADERS +=  MainWindow.h \
+HEADERS +=  ../Utils.h \
+            ../Logger.h \
+            ../WarehouseItem.h \
+            ../WarehouseLayout.h \
+            MainWindow.h \
             UiCursor.h \
             UiWarehousePort.h \
             UiWarehouseItem.h \

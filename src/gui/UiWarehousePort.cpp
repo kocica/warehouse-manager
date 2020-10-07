@@ -91,50 +91,13 @@ namespace whm
                         auto globalPos1 = ui->getWidgetPosition(pos1);
                         auto globalPos2 = ui->getWidgetPosition(pos2);
 
-                        (void) globalPos1;*/
+                        (void) globalPos1;
 
-                        //if ((pos1.x() == pos2.x()) || (pos1.y() == pos2.y()))
-                        //{
+                        if ((pos1.x() == pos2.x()) || (pos1.y() == pos2.y()))
+                        {*/
                             if (isWhItemCombinationAllowed(this->getWhItem()->getWhItemType(),
                                                    selectedPort->getWhItem()->getWhItemType()))
                             {
-                                /*if(selectedPort->getWhItem()->getWhItemType() == UiWarehouseItemType_t::E_CONVEYOR_R)
-                                {
-                                    int32_t diff = pos2.x() - pos1.x() - 10;
-                                    selectedPort->getWhItem()->resize(selectedPort->getWhItem()->width() + diff, selectedPort->getWhItem()->height());
-                                    selectedPort->move(selectedPort->getWhItem()->width() - 10, 10/2);
-                                }
-                                else if(selectedPort->getWhItem()->getWhItemType() == UiWarehouseItemType_t::E_CONVEYOR_L)
-                                {
-                                    int32_t diff = pos1.x() - pos2.x() - 10;
-                                    selectedPort->getWhItem()->move(globalPos2.x() + 10, globalPos2.y() - 10/2);
-                                    selectedPort->getWhItem()->resize(selectedPort->getWhItem()->width() + diff, selectedPort->getWhItem()->height());
-                                }
-                                else if(selectedPort->getWhItem()->getWhItemType() == UiWarehouseItemType_t::E_CONVEYOR_U)
-                                {
-                                    int32_t diff = pos2.y() - pos1.y() - 10;
-                                    selectedPort->getWhItem()->move(globalPos2.x() - 10/2, globalPos2.y() + 10);
-                                    selectedPort->getWhItem()->resize(selectedPort->getWhItem()->width(), selectedPort->getWhItem()->height() - diff);
-                                }
-                                else if(selectedPort->getWhItem()->getWhItemType() == UiWarehouseItemType_t::E_CONVEYOR_D)
-                                {
-                                    int32_t diff = pos2.y() - pos1.y() - 10;
-                                    selectedPort->getWhItem()->resize(selectedPort->getWhItem()->width(), selectedPort->getWhItem()->height() + diff);
-                                    selectedPort->move(10/2, selectedPort->getWhItem()->height() - 10);
-                                }
-                                else if(selectedPort->getWhItem()->getWhItemType() == UiWarehouseItemType_t::E_CONVEYOR_HUB)
-                                {
-                                    if(They are not next to each other false)
-                                    {
-                                        std::cout << "Hub and conv have to be next each other" << std::endl;
-                                    }
-                                }
-                                else
-                                {
-                                    std::cout << "Can't connect this wh item type combination" << std::endl;
-                                    return;
-                                }*/
-
                                 this->whConn = new UiWarehouseConnection_t(selectedPort, this);
                                 selectedPort->setWhConn(this->whConn);
                                 selectedPort->connect();
@@ -144,11 +107,11 @@ namespace whm
                             {
                                 std::cout << "Incompatible types!" << std::endl;
                             }
-                        //}
-                        //else
-                        //{
-                        //    std::cout << "Ports are not on the same level!" << std::endl;
-                        //}
+                        /*}
+                        else
+                        {
+                            std::cout << "Ports are not on the same level!" << std::endl;
+                        }*/
                     }
                 }
             }
