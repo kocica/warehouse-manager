@@ -5,7 +5,9 @@ warehouse_manager_gui
 # Qt
 qrc*
 moc*
-*.stash
+src/gui/*.stash
+src/gui/Makefile
+src/gui/ui_mainwindow.h
 
 # vscode
 .vscode
