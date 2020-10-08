@@ -41,6 +41,8 @@ namespace whm
 #ifdef WHM_GUI
     void WarehouseLayout_t::initFromGui(gui::UiWarehouseLayout_t& uiLayout)
     {
+        this->clearWhLayout();
+
         auto uiItems = uiLayout.getWhItems();
         auto uiConns = uiLayout.getWhConns();
 

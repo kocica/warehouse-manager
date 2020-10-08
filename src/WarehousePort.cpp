@@ -24,8 +24,9 @@ namespace whm
 {
 #ifdef WHM_GUI
     WarehousePort_t::WarehousePort_t(gui::UiWarehousePort_t& uiPort)
+        : whPortID{ uiPort.getWhPortID() }
     {
-        (void) uiPort;
+
     }
 #else
     WarehousePort_t::WarehousePort_t()
@@ -36,12 +37,17 @@ namespace whm
 
     void WarehousePort_t::dump() const
     {
-        std::cout << std::endl << "    - Dump warehouse port on item ID <" << this->getWhItem()->getID() << ">" << std::endl;
+        std::cout << std::endl << "    - Dump warehouse port ID <" << this->whPortID << "> on item ID <" << this->getWhItem()->getID() << ">" << std::endl;
 
-        if(this->isConnected())
+        if (this->isConnected())
         {
             whConn->dump();
         }
+    }
+
+    int32_t WarehousePort_t::getWhPortID() const
+    {
+        return whPortID;
     }
 
     WarehouseItem_t* WarehousePort_t::getWhItem() const

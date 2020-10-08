@@ -28,8 +28,8 @@ namespace whm
 #ifdef WHM_GUI
     WarehouseConnection_t::WarehouseConnection_t(gui::UiWarehouseConnection_t& uiConn)
     {
-        to = this->lookupPort(uiConn.getTo()->getWhItem()->getID());
-        from = this->lookupPort(uiConn.getFrom()->getWhItem()->getID());
+        to = this->lookupPort(uiConn.getTo()->getWhItem()->getID(), uiConn.getTo()->getWhPortID());
+        from = this->lookupPort(uiConn.getFrom()->getWhItem()->getID(), uiConn.getFrom()->getWhPortID());
 
         to->setWhConn(this);
         from->setWhConn(this);
@@ -60,11 +60,11 @@ namespace whm
 
     void WarehouseConnection_t::dump() const
     {
-        std::cout << std::endl << "      = Connection from <" << from->getWhItem()->getID() << "> to <" <<
-                                                                   to->getWhItem()->getID() << ">" << std::endl;
+        std::cout << std::endl << "      = Dump warehouse connection from <" << from->getWhItem()->getID() << "> <" << from->getWhPortID() << "> to <" <<
+                                                                                  to->getWhItem()->getID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
     }
 
-    WarehousePort_t* WarehouseConnection_t::lookupPort(int32_t whItemID)
+    WarehousePort_t* WarehouseConnection_t::lookupPort(int32_t whItemID, int32_t whPortID)
     {
         const auto& whItems = WarehouseLayout_t::getWhLayout().getWhItems();
 
@@ -81,7 +81,7 @@ namespace whm
             auto itp = std::find_if(whPorts.begin(), whPorts.end(),
                                     [&](WarehousePort_t* p) -> bool
                                     {
-                                        return !p->isConnected();
+                                        return p->getWhPortID() == whPortID;
                                     });
 
             if(itp != whPorts.end())

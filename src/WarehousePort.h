@@ -44,11 +44,12 @@ namespace whm
             WarehouseConnection_t* getWhConn() const;
 
             bool isConnected() const;
+            int32_t getWhPortID() const;
 
         protected:
             WarehouseItem_t* whItem{ nullptr };
             WarehouseConnection_t* whConn{ nullptr };
 
-            // TODO: Fields
+            int32_t whPortID{ 0 };
     };
 }

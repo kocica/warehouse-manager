@@ -37,7 +37,7 @@ namespace whm
 
             WarehousePort_t* getTo() const;
             WarehousePort_t* getFrom() const;
-            WarehousePort_t* lookupPort(int32_t);
+            WarehousePort_t* lookupPort(int32_t, int32_t);
 
             void dump() const;
 

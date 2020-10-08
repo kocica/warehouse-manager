@@ -27,8 +27,8 @@ namespace whm
         UiWarehouseItemConveyor_t::UiWarehouseItemConveyor_t(QGraphicsScene* s, MainWindow* ui, ::whm::WarehouseItem_t& i)
             : UiWarehouseItem_t(s, ui, i.getX(), i.getY(), i.getW(), i.getH(), UiWarehouseItemType_t::E_CONVEYOR_R) // TODO item type TUI <-> GUI
         {
-            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, i.getX(), i.getY() + 12));
-            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, i.getX() + 75, i.getY() + 12));
+            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, i.getX(), i.getY() + 12));
+            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, i.getX() + 75, i.getY() + 12));
         }
 
         UiWarehouseItemConveyor_t::UiWarehouseItemConveyor_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, UiWarehouseItemType_t t)
@@ -58,8 +58,8 @@ namespace whm
                 // TODO: Remove from layout and deleteLater()?
             }
 
-            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, x,  y + 12));
-            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, x + 75, y + 12));
+            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x,  y + 12));
+            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + 75, y + 12));
         }
     }
 }

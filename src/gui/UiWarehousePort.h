@@ -24,7 +24,7 @@ namespace whm
         class UiWarehousePort_t : BaseShapeGraphicItem_t
         {
             public:
-                UiWarehousePort_t(QGraphicsScene*, QGraphicsItem*, MainWindow*, int32_t x, int32_t y);
+                UiWarehousePort_t(QGraphicsScene*, QGraphicsItem*, MainWindow*, int32_t, int32_t, int32_t);
                 virtual ~UiWarehousePort_t();
 
                 void select();
@@ -34,6 +34,7 @@ namespace whm
                 bool isConnected() const;
                 void setWhConn(UiWarehouseConnection_t*);
 
+                int32_t getWhPortID() const;
                 UiWarehouseItem_t* getWhItem() const;
 
                 void dump() const;
@@ -49,6 +50,8 @@ namespace whm
 
                 UiWarehouseItem_t* whItem{ nullptr };
                 UiWarehouseConnection_t* whConn{ nullptr };
+
+                int32_t whPortID{ 0 };
 
                 // Shared across all instances
                 static UiWarehousePort_t* selectedPort;

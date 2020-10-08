@@ -21,10 +21,11 @@ namespace whm
     {
         UiWarehousePort_t *UiWarehousePort_t::selectedPort = nullptr;
 
-        UiWarehousePort_t::UiWarehousePort_t(QGraphicsScene *s, QGraphicsItem* parent, MainWindow *ui, int32_t x, int32_t y)
+        UiWarehousePort_t::UiWarehousePort_t(QGraphicsScene *s, QGraphicsItem* parent, MainWindow *ui, int32_t id, int32_t x, int32_t y)
             : BaseShapeGraphicItem_t(x, y, 25, 25, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, parent)
             , ui(ui)
             , whItem(dynamic_cast<UiWarehouseItem_t*>(parent))
+            , whPortID(id)
         {
             this->showHandles(false);
 
@@ -84,6 +85,11 @@ namespace whm
             }
         }
 
+        int32_t UiWarehousePort_t::getWhPortID() const
+        {
+            return whPortID;
+        }
+
         UiWarehouseItem_t* UiWarehousePort_t::getWhItem() const
         {
             return this->whItem;
@@ -127,7 +133,7 @@ namespace whm
 
         void UiWarehousePort_t::dump() const
         {
-            std::cout << std::endl << "    - Dump warehouse port on item ID <" << this->getWhItem()->getWhItemID() << ">" << std::endl;
+            std::cout << std::endl << "    - Dump warehouse port ID <" << this->whPortID << "> on item ID <" << this->getWhItem()->getWhItemID() << ">" << std::endl;
 
             if(this->isConnected())
             {

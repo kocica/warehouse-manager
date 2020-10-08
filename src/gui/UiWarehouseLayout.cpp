@@ -38,17 +38,21 @@ namespace whm
             for (auto* item : items)
             {
                 UiWarehouseItem_t* newItem{ nullptr };
+                auto tmpIdSequence{ whItemIdSequence };
 
-                // TODO
+                // TODO: Item types
+
                 if (item->getType() == 0)
                 {
+                    whItemIdSequence = item->getID();
                     newItem = new UiWarehouseItemLocation_t{ s, ui, *item };
-                    whItemIdSequence = std::max(whItemIdSequence, item->getID() + 1);
+                    whItemIdSequence = std::max(tmpIdSequence, item->getID() + 1);
                 }
                 else if (item->getType() == 1)
                 {
+                    whItemIdSequence = item->getID();
                     newItem = new UiWarehouseItemConveyor_t{ s, ui, *item };
-                    whItemIdSequence = std::max(whItemIdSequence, item->getID() + 1);
+                    whItemIdSequence = std::max(tmpIdSequence, item->getID() + 1);
                 }
 
                 whItems.emplace_back(newItem);

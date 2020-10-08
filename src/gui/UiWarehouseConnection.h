@@ -33,7 +33,7 @@ namespace whm
                 UiWarehousePort_t* getFrom() const;
 
                 void dump() const;
-                UiWarehousePort_t* lookupPort(int32_t);
+                UiWarehousePort_t* lookupPort(int32_t, int32_t);
 
             private:
                 UiWarehousePort_t* to{ nullptr };
