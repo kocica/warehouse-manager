@@ -5,7 +5,7 @@ QMAKE_CXXFLAGS   += -std=c++17
 DEFINES          += QT_DEPRECATED_WARNINGS
 DEFINES          += "WHM_GUI"
 
-# OBJECTS += 
+OBJECTS += ../tinyxml2.o
 
 SOURCES +=  ../main.cpp \
             ../Utils.cpp \

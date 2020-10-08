@@ -56,6 +56,18 @@ namespace whm
     }
 #endif
 
+    void WarehouseItem_t::serializeToXml(tinyxml2::XMLDocument* doc) const
+    {
+        tinyxml2::XMLNode* element = doc->InsertEndChild( doc->NewElement( "WarehouseItem" ) );
+        tinyxml2::XMLElement* sub[3] = { doc->NewElement( "sub" ), doc->NewElement( "sub" ), doc->NewElement( "sub" ) };
+
+        for( int i=0; i<3; ++i )
+        {
+            sub[i]->SetAttribute( "attrib", i );
+            element->InsertEndChild( sub[i] );
+        }
+    }
+
     WarehouseItem_t::WarehousePortContainer_t WarehouseItem_t::getWhPorts() const
     {
         return whPorts;

@@ -222,6 +222,11 @@ namespace whm
 
         void BaseGraphicItem_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         {
+            if(!mDrawHandles)
+            {
+                return;
+            }
+
             if(event->buttons() == Qt::LeftButton && mCurrentHandle)
             {
                 qreal dx = (mOrigin.x() - mRect.center().x()) / mRect.width();
@@ -274,7 +279,10 @@ namespace whm
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_ROTATE:
-                        this->setTransform(QTransform().translate(mOrigin.x(),mOrigin.y()).rotate(-QLineF(event->scenePos(),mapToScene(mOrigin)).angle() + QLineF(event->lastScenePos(),mapToScene(mOrigin)).angle()).translate(-mOrigin.x(),-mOrigin.y()),true);
+                        this->setTransform(QTransform().translate(mOrigin.x(),mOrigin.y())
+                                                       .rotate((int(-QLineF(event->scenePos(),     mapToScene(mOrigin)).angle() / 90) * 90) +
+                                                               (int( QLineF(event->lastScenePos(), mapToScene(mOrigin)).angle() / 90) * 90))
+                                                       .translate(-mOrigin.x(), -mOrigin.y()), true);
                         break;
                     case Handle::HANDLE_TYPE_ORIGIN:
                         mCurrentHandle->setPos(event->pos());

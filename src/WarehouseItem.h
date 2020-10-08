@@ -9,8 +9,12 @@
 
 #pragma once
 
+// Std
 #include <cstdint>
 #include <vector>
+
+// Local
+#include "tinyxml2.h"
 
 #ifdef WHM_GUI
 namespace whm
@@ -57,6 +61,9 @@ namespace whm
             WarehousePortContainer_t getWhPorts() const;
 
             void dump() const;
+
+            // (De)-serialization
+            void serializeToXml(tinyxml2::XMLDocument* doc) const;
 
         protected:
             int32_t x{ 0 };

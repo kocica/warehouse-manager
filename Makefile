@@ -34,7 +34,7 @@ GUI_SOURCES = $(wildcard $(GUI)/*.cpp)
 GUI_HEADERS = $(wildcard $(GUI)/*.h)
 GUI_OBJS    = $(patsubst %.cpp, %.o, $(GUI_SOURCES))
 
-all: $(BIN_NAME)
+all: $(BIN_NAME) gui
 
 $(BIN_NAME): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)

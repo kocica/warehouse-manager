@@ -41,6 +41,8 @@ namespace whm
             void initFromGui(gui::UiWarehouseLayout_t&);
 #endif
 
+            void serializeToXml(const std::string&);
+
             WarehouseItemContainer_t getWhItems() const;
             WarehouseConnContainer_t getWhConns() const;
 

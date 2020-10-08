@@ -20,6 +20,8 @@
 #include "gui/UiWarehouseLayout.h"
 #endif
 
+#include "tinyxml2.h"
+
 namespace whm
 {
     WarehouseLayout_t::WarehouseLayout_t()
@@ -57,6 +59,18 @@ namespace whm
         }
     }
 #endif
+
+    void WarehouseLayout_t::serializeToXml(const std::string& xmlFilename)
+    {
+        tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
+
+        for(auto* whItem : whItems)
+        {
+            whItem->serializeToXml(doc);
+        }
+
+        doc->SaveFile( xmlFilename.c_str() );
+    }
 
     WarehouseLayout_t::WarehouseItemContainer_t WarehouseLayout_t::getWhItems() const
     {
