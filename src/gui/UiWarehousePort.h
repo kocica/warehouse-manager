@@ -24,7 +24,7 @@ namespace whm
         class UiWarehousePort_t : BaseShapeGraphicItem_t
         {
             public:
-                UiWarehousePort_t(QGraphicsScene *parent, QGraphicsItem* item, MainWindow *ui, UiWarehouseItem_t *whItem, int32_t x, int32_t y);
+                UiWarehousePort_t(QGraphicsScene*, QGraphicsItem*, MainWindow*, int32_t x, int32_t y);
                 virtual ~UiWarehousePort_t();
 
                 void select();
@@ -39,19 +39,19 @@ namespace whm
                 void dump() const;
 
             public slots:
-                void mousePressEvent(QGraphicsSceneMouseEvent *);
+                void mousePressEvent(QGraphicsSceneMouseEvent*);
 
             private slots:
                 void unselect();
 
             private:
-                MainWindow *ui{ nullptr };
+                MainWindow* ui{ nullptr };
 
                 UiWarehouseItem_t* whItem{ nullptr };
                 UiWarehouseConnection_t* whConn{ nullptr };
 
                 // Shared across all instances
-                static UiWarehousePort_t *selectedPort;
+                static UiWarehousePort_t* selectedPort;
         };
     }
 }

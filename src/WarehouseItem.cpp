@@ -9,9 +9,12 @@
 
 // Std
 #include <iostream>
+#include <algorithm>
 
 // Local
 #include "WarehouseItem.h"
+#include "WarehousePort.h"
+
 #ifdef WHM_GUI
 #include "gui/UiWarehouseItem.h"
 #endif
@@ -36,6 +39,15 @@ namespace whm
         {
             setType(1);
         }
+
+        auto uiPorts = uiItem.getWhPorts();
+        std::for_each(uiPorts.begin(), uiPorts.end(),
+                      [&](auto uiPort) -> void
+                      {
+                          auto newWhPort = new WarehousePort_t(*uiPort);
+                          newWhPort->setWhItem(this);
+                          whPorts.emplace_back(newWhPort);
+                      });
     }
 #else
     WarehouseItem_t::WarehouseItem_t()
@@ -43,6 +55,11 @@ namespace whm
 
     }
 #endif
+
+    WarehouseItem_t::WarehousePortContainer_t WarehouseItem_t::getWhPorts() const
+    {
+        return whPorts;
+    }
 
     void WarehouseItem_t::dump() const
     {
@@ -52,11 +69,11 @@ namespace whm
 
         std::cout << "x: " << x << " y: " << y << " w: " << w << " h: " << h << std::endl;
 
-        /*std::for_each(ports.begin(), ports.end(),
-                        [](UiWarehousePort_t* p)
-                        {
-                            p->dump();
-                        });*/
+        std::for_each(whPorts.begin(), whPorts.end(),
+                      [](WarehousePort_t* p)
+                      {
+                          p->dump();
+                      });
 
         std::cout << "==============================================" << std::endl;
     }

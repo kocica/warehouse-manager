@@ -10,7 +10,12 @@
 #include <iostream>
 
 #include "UiWarehousePort.h"
+#include "UiWarehouseLayout.h"
 #include "UiWarehouseConnection.h"
+
+#include "../WarehousePort.h"
+#include "../WarehouseItem.h"
+#include "../WarehouseConnection.h"
 
 namespace whm
 {
@@ -23,10 +28,61 @@ namespace whm
             
         }
 
+        UiWarehouseConnection_t::UiWarehouseConnection_t(::whm::WarehouseConnection_t& c)
+        {
+            to = this->lookupPort(c.getTo()->getWhItem()->getID());
+            from = this->lookupPort(c.getFrom()->getWhItem()->getID());
+
+            to->setWhConn(this);
+            from->setWhConn(this);
+        }
+
+        UiWarehousePort_t* UiWarehouseConnection_t::lookupPort(int32_t whItemID)
+        {
+            const auto& whItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
+
+            auto it = std::find_if(whItems.begin(), whItems.end(),
+                                  [&](UiWarehouseItem_t* i) -> bool
+                                  {
+                                      return i->getID() == whItemID;
+                                  });
+
+            if(it != whItems.end())
+            {
+                const auto& whPorts = (*it)->getWhPorts();
+
+                auto itp = std::find_if(whPorts.begin(), whPorts.end(),
+                                        [&](UiWarehousePort_t* p) -> bool
+                                        {
+                                            return !p->isConnected();
+                                        });
+
+                if(itp != whPorts.end())
+                {
+                    return *itp;
+                }
+            }
+
+            std::cerr << "Failed to lookup port!" << std::endl;
+            return nullptr;
+        }
+
+        UiWarehousePort_t* UiWarehouseConnection_t::getTo() const
+        {
+            return to;
+        }
+
+        UiWarehousePort_t* UiWarehouseConnection_t::getFrom() const
+        {
+            return from;
+        }
+
         UiWarehouseConnection_t::~UiWarehouseConnection_t()
         {
             to->disconnect();
             from->disconnect();
+
+            UiWarehouseLayout_t::getWhLayout().eraseWhConn(this);
         }
 
         void UiWarehouseConnection_t::dump() const

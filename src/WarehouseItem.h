@@ -24,10 +24,12 @@ namespace whm
 
 namespace whm
 {
-    //class WarehousePort_t;
+    class WarehousePort_t;
 
     class WarehouseItem_t
     {
+        using WarehousePortContainer_t = std::vector<WarehousePort_t*>;
+
         public:
             virtual ~WarehouseItem_t() = default;
 
@@ -52,6 +54,8 @@ namespace whm
             int32_t getW() const    { return w; }
             int32_t getH() const    { return h; }
 
+            WarehousePortContainer_t getWhPorts() const;
+
             void dump() const;
 
         protected:
@@ -63,6 +67,6 @@ namespace whm
             int32_t itemID{ 0 };
             int32_t itemType{ 0 };
 
-            //std::vector<WarehousePort_t> ports;
+            WarehousePortContainer_t whPorts;
     };
 }

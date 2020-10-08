@@ -13,6 +13,7 @@
 #include "UiWarehouseItemConveyor.h"
 #include "../WarehouseItem.h"
 #include "../WarehouseLayout.h"
+#include "../WarehouseConnection.h"
 
 // Std
 #include <vector>
@@ -30,7 +31,7 @@ namespace whm
 
         void UiWarehouseLayout_t::initFromTui(QGraphicsScene* s, MainWindow* ui, ::whm::WarehouseLayout_t& layout)
         {
-            this->deleteAllWhItems();
+            this->clearWhLayout();
 
             auto items = layout.getWhItems();
 
@@ -52,6 +53,13 @@ namespace whm
 
                 whItems.emplace_back(newItem);
             }
+
+            auto conns = layout.getWhConns();
+
+            for (auto* conn : conns)
+            {
+                whConns.emplace_back(new UiWarehouseConnection_t{ *conn });
+            }
         }
 
         UiWarehouseLayout_t& UiWarehouseLayout_t::getWhLayout()
@@ -65,14 +73,19 @@ namespace whm
             return whItems;
         }
 
-        size_t UiWarehouseLayout_t::getWhItemCount() const
+        UiWarehouseLayout_t::UiWarehouseConnContainer_t UiWarehouseLayout_t::getWhConns() const
         {
-            return whItems.size();
+            return whConns;
         }
 
         int32_t UiWarehouseLayout_t::getNextWhItemID()
         {
             return whItemIdSequence++;
+        }
+
+        int32_t UiWarehouseLayout_t::getNextWhConnID()
+        {
+            return whConnIdSequence++;
         }
 
         void UiWarehouseLayout_t::addWhItem(UiWarehouseItem_t* i)
@@ -94,7 +107,26 @@ namespace whm
             }
         }
 
-        void UiWarehouseLayout_t::deleteAllWhItems()
+        void UiWarehouseLayout_t::addWhConn(UiWarehouseConnection_t* c)
+        {
+            whConns.push_back(c);
+        }
+
+        void UiWarehouseLayout_t::eraseWhConn(UiWarehouseConnection_t* c)
+        {
+            auto found = std::find_if(whConns.begin(), whConns.end(),
+                         [&](UiWarehouseConnection_t* whConn) -> bool
+                         {
+                            return whConn == c;
+                         });
+
+            if (found != whConns.end())
+            {
+                whConns.erase(found);
+            }
+        }
+
+        void UiWarehouseLayout_t::clearWhLayout()
         {
             // TODO: Clear also selectedPort variable
 
@@ -103,9 +135,16 @@ namespace whm
                 delete whItem;
             }
 
+            for (UiWarehouseConnection_t* whConn : whConns)
+            {
+                delete whConn;
+            }
+
             whItems.clear();
+            whConns.clear();
 
             whItemIdSequence = 0;
+            whConnIdSequence = 0;
         }
 
         void UiWarehouseLayout_t::dump() const
@@ -116,6 +155,14 @@ namespace whm
                           [](UiWarehouseItem_t* whItem) -> void
                           {
                               whItem->dump();
+                          });
+
+            std::cout << std::endl << std::endl;
+
+            std::for_each(whConns.begin(), whConns.end(),
+                          [](UiWarehouseConnection_t* whConn) -> void
+                          {
+                              whConn->dump();
                           });
 
             std::cout << std::endl << "Dump warehouse layout - end" << std::endl << std::endl << std::endl;

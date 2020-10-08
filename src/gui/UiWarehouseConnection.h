@@ -13,6 +13,8 @@
 
 namespace whm
 {
+    class WarehouseConnection_t;
+
     namespace gui
     {
         class UiWarehousePort_t;
@@ -20,14 +22,22 @@ namespace whm
         class UiWarehouseConnection_t
         {
             public:
-                UiWarehouseConnection_t(UiWarehousePort_t *from, UiWarehousePort_t *to);
+                // Construct from GUI
+                UiWarehouseConnection_t(UiWarehousePort_t*, UiWarehousePort_t*);
+                // Construct from TUI
+                UiWarehouseConnection_t(::whm::WarehouseConnection_t&);
+
                 ~UiWarehouseConnection_t();
 
+                UiWarehousePort_t* getTo() const;
+                UiWarehousePort_t* getFrom() const;
+
                 void dump() const;
+                UiWarehousePort_t* lookupPort(int32_t);
 
             private:
-                UiWarehousePort_t *to{ nullptr };
-                UiWarehousePort_t *from{ nullptr };
+                UiWarehousePort_t* to{ nullptr };
+                UiWarehousePort_t* from{ nullptr };
         };
     }
 }

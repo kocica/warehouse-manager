@@ -12,6 +12,7 @@
 #include "UiCursor.h"
 #include "UiWarehousePort.h"
 #include "UiWarehouseItem.h"
+#include "UiWarehouseLayout.h"
 #include "UiWarehouseConnection.h"
 
 namespace whm
@@ -20,36 +21,14 @@ namespace whm
     {
         UiWarehousePort_t *UiWarehousePort_t::selectedPort = nullptr;
 
-        UiWarehousePort_t::UiWarehousePort_t(QGraphicsScene *s, QGraphicsItem* parent, MainWindow *ui, UiWarehouseItem_t *whItem, int32_t x, int32_t y)
+        UiWarehousePort_t::UiWarehousePort_t(QGraphicsScene *s, QGraphicsItem* parent, MainWindow *ui, int32_t x, int32_t y)
             : BaseShapeGraphicItem_t(x, y, 25, 25, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, parent)
             , ui(ui)
-            , whItem(whItem)
+            , whItem(dynamic_cast<UiWarehouseItem_t*>(parent))
         {
             this->showHandles(false);
 
-            /*switch(whItem->getWhItemType())
-            {
-                case UiWarehouseItemType_t::E_CONVEYOR_R:
-                    this->setText(">");
-                    break;
-                case UiWarehouseItemType_t::E_CONVEYOR_L:
-                    this->setText("<");
-                    break;
-                case UiWarehouseItemType_t::E_CONVEYOR_U:
-                    this->setText("^");
-                    break;
-                case UiWarehouseItemType_t::E_CONVEYOR_D:
-                    this->setText("v");
-                    break;
-                case UiWarehouseItemType_t::E_CONVEYOR_HUB:
-                    this->setText("+");
-                    break;
-                case UiWarehouseItemType_t::E_LOCATION_SHELF:
-                    this->setText("*");
-                    break;
-                default:
-                    this->setText("?");
-            }*/
+            // TODO: Show direction indicators
         }
 
         UiWarehousePort_t::~UiWarehousePort_t()
@@ -85,33 +64,21 @@ namespace whm
                     }
                     else
                     {
-                        /*auto pos1 = selectedPort->parentWidget()->mapToGlobal(selectedPort->geometry().topLeft());
-                        auto pos2 = this->parentWidget()->mapToGlobal(this->geometry().topLeft());
+                        // TODO: Are object on the same level and/or connected?
 
-                        auto globalPos1 = ui->getWidgetPosition(pos1);
-                        auto globalPos2 = ui->getWidgetPosition(pos2);
-
-                        (void) globalPos1;
-
-                        if ((pos1.x() == pos2.x()) || (pos1.y() == pos2.y()))
-                        {*/
-                            if (isWhItemCombinationAllowed(this->getWhItem()->getWhItemType(),
-                                                   selectedPort->getWhItem()->getWhItemType()))
-                            {
-                                this->whConn = new UiWarehouseConnection_t(selectedPort, this);
-                                selectedPort->setWhConn(this->whConn);
-                                selectedPort->connect();
-                                connect();
-                            }
-                            else
-                            {
-                                std::cout << "Incompatible types!" << std::endl;
-                            }
-                        /*}
+                        if (isWhItemCombinationAllowed(this->getWhItem()->getWhItemType(),
+                                               selectedPort->getWhItem()->getWhItemType()))
+                        {
+                            this->whConn = new UiWarehouseConnection_t(selectedPort, this);
+                            selectedPort->setWhConn(this->whConn);
+                            selectedPort->connect();
+                            connect();
+                            UiWarehouseLayout_t::getWhLayout().addWhConn(this->whConn);
+                        }
                         else
                         {
-                            std::cout << "Ports are not on the same level!" << std::endl;
-                        }*/
+                            std::cout << "Incompatible types!" << std::endl;
+                        }
                     }
                 }
             }
@@ -153,6 +120,7 @@ namespace whm
             }
             else
             {
+                mConnected = true;
                 this->whConn = newConn;
             }
         }

@@ -24,26 +24,31 @@ namespace whm
 namespace whm
 {
     class WarehouseItem_t;
+    class WarehouseConnection_t;
 
     class WarehouseLayout_t
     {
         using WarehouseItemContainer_t = std::vector<WarehouseItem_t*>;
+        using WarehouseConnContainer_t = std::vector<WarehouseConnection_t*>;
 
         public:
-            ~WarehouseLayout_t() = default;
+            WarehouseLayout_t();
+            ~WarehouseLayout_t();
+
+            static WarehouseLayout_t& getWhLayout();
 
 #ifdef WHM_GUI
-            WarehouseLayout_t() = delete;
-            WarehouseLayout_t(gui::UiWarehouseLayout_t&);
-#else
-            WarehouseLayout_t();
+            void initFromGui(gui::UiWarehouseLayout_t&);
 #endif
 
             WarehouseItemContainer_t getWhItems() const;
+            WarehouseConnContainer_t getWhConns() const;
 
             void dump() const;
+            void clearWhLayout();
 
         protected:
             WarehouseItemContainer_t whItems;
+            WarehouseConnContainer_t whConns;
     };
 }

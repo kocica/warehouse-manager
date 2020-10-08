@@ -64,12 +64,12 @@ namespace whm
 
         UiWarehouseItem_t::~UiWarehouseItem_t()
         {
-            for (UiWarehousePort_t* port : ports)
+            for (UiWarehousePort_t* whPort : whPorts)
             {
-                delete port;
+                delete whPort;
             }
 
-            ports.clear();
+            whPorts.clear();
         }
 
         int32_t UiWarehouseItem_t::getWhItemID() const
@@ -80,6 +80,11 @@ namespace whm
         UiWarehouseItemType_t UiWarehouseItem_t::getWhItemType() const
         {
             return whItemType;
+        }
+
+        UiWarehouseItem_t::UiWarehousePortContainer_t UiWarehouseItem_t::getWhPorts() const
+        {
+            return whPorts;
         }
 
         void UiWarehouseItem_t::eraseFromLayout()
@@ -95,6 +100,8 @@ namespace whm
                 {
                     eraseFromLayout();
                     scene->removeItem(this);
+                    delete this;
+                    return;
                 }
             }
             else if (event->button() == Qt::RightButton)
@@ -120,7 +127,7 @@ namespace whm
             std::cout << "  Warehouse item ID <" << whItemID << "> Type <" << typeid(*this).name() << ">" << std::endl;
             std::cout << "==============================================" << std::endl;
  
-            std::for_each(ports.begin(), ports.end(),
+            std::for_each(whPorts.begin(), whPorts.end(),
                           [](UiWarehousePort_t* p)
                           {
                               p->dump();

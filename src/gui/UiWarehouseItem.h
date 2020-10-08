@@ -40,6 +40,8 @@ namespace whm
 
         class UiWarehouseItem_t : public BaseShapeGraphicItem_t
         {
+            using UiWarehousePortContainer_t = std::vector<UiWarehousePort_t*>;
+
             public:
                 UiWarehouseItem_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, UiWarehouseItemType_t);
                 virtual ~UiWarehouseItem_t();
@@ -50,8 +52,8 @@ namespace whm
                 void dump() const;
 
                 int32_t getID() const { return whItemID; }
-                int32_t getX()  const { return mRect.topLeft().x(); }
-                int32_t getY()  const { return mRect.topLeft().y(); }
+                int32_t getX()  const { return mRect.x(); }
+                int32_t getY()  const { return mRect.y(); }
                 int32_t getW()  const { return mRect.width(); }
                 int32_t getH()  const { return mRect.height(); }
 
@@ -60,6 +62,8 @@ namespace whm
                 void setY(int32_t y)   { mRect.setY(y); }
                 void setW(int32_t w)   { mRect.setWidth(w); }
                 void setH(int32_t h)   { mRect.setHeight(h); }
+
+                UiWarehousePortContainer_t getWhPorts() const;
 
             protected:
                 void eraseFromLayout();
@@ -72,7 +76,7 @@ namespace whm
                 int32_t whItemID{ 0 };
                 UiWarehouseItemType_t whItemType;
 
-                std::vector<UiWarehousePort_t*> ports;
+                UiWarehousePortContainer_t whPorts;
         };
     }
 }

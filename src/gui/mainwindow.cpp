@@ -100,7 +100,7 @@ namespace whm
 
         MainWindow::~MainWindow()
         {
-            UiWarehouseLayout_t::getWhLayout().deleteAllWhItems();
+            UiWarehouseLayout_t::getWhLayout().clearWhLayout();
 
             delete ui;
         }
@@ -211,13 +211,13 @@ namespace whm
 
         void MainWindow::on_loadLayout_triggered()
         {
-            QString file = QFileDialog::getOpenFileName(this, tr("Load warehouse layout"), "./savedLayout.xml", tr("Warehouse layouts (*)"));
+            /*QString file = QFileDialog::getOpenFileName(this, tr("Load warehouse layout"), "./savedLayout.xml", tr("Warehouse layouts (*)"));
             if (file.cbegin() == file.cend())
             {
                 return;
-            }
+            }*/
 
-            // TODO: Load
+            UiWarehouseLayout_t::getWhLayout().dump();
         }
 
         void MainWindow::on_saveLayout_triggered()
@@ -228,15 +228,15 @@ namespace whm
                 return;
             }*/
 
-            ::whm::WarehouseLayout_t whLayout{ UiWarehouseLayout_t::getWhLayout() };
-            whLayout.dump();
+            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+            ::whm::WarehouseLayout_t::getWhLayout().dump();
 
-            UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this /*this->ui*/, whLayout);
+            UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
         }
 
         void MainWindow::on_clearLayout_triggered()
         {
-            UiWarehouseLayout_t::getWhLayout().deleteAllWhItems();
+            UiWarehouseLayout_t::getWhLayout().clearWhLayout();
         }
 
         void MainWindow::on_simulationRun_triggered()

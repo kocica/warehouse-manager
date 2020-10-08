@@ -11,7 +11,9 @@ SOURCES +=  ../main.cpp \
             ../Utils.cpp \
             ../Logger.cpp \
             ../WarehouseItem.cpp \
+            ../WarehousePort.cpp \
             ../WarehouseLayout.cpp \
+            ../WarehouseConnection.cpp \
             UiCursor.cpp \
             MainWindow.cpp \
             UiWarehousePort.cpp \
@@ -28,7 +30,9 @@ SOURCES +=  ../main.cpp \
 HEADERS +=  ../Utils.h \
             ../Logger.h \
             ../WarehouseItem.h \
+            ../WarehousePort.h \
             ../WarehouseLayout.h \
+            ../WarehouseConnection.h \
             MainWindow.h \
             UiCursor.h \
             UiWarehousePort.h \

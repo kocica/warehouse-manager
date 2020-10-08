@@ -10,6 +10,7 @@
 #pragma once
 
 #include "UiWarehouseItem.h"
+#include "UiWarehouseConnection.h"
 
 namespace whm
 {
@@ -20,6 +21,7 @@ namespace whm
         class UiWarehouseLayout_t
         {
             using UiWarehouseItemContainer_t = std::vector<UiWarehouseItem_t*>;
+            using UiWarehouseConnContainer_t = std::vector<UiWarehouseConnection_t*>;
 
             public:
                 UiWarehouseLayout_t();
@@ -28,24 +30,28 @@ namespace whm
                 static UiWarehouseLayout_t& getWhLayout();
 
                 UiWarehouseItemContainer_t getWhItems() const;
+                UiWarehouseConnContainer_t getWhConns() const;
 
                 void addWhItem(UiWarehouseItem_t*);
                 void eraseWhItem(UiWarehouseItem_t*);
 
-                void dump() const;
+                void addWhConn(UiWarehouseConnection_t*);
+                void eraseWhConn(UiWarehouseConnection_t*);
 
-                size_t getWhItemCount() const;
+                int32_t getNextWhConnID();
                 int32_t getNextWhItemID();
 
-                void deleteAllWhItems();
-
+                void clearWhLayout();
                 bool itemsIntersects(UiWarehouseItem_t*) const;
-
                 void initFromTui(QGraphicsScene*, MainWindow*, ::whm::WarehouseLayout_t&);
+                void dump() const;
 
             private:
                 int32_t whItemIdSequence{ 0 };
                 UiWarehouseItemContainer_t whItems;
+
+                int32_t whConnIdSequence{ 0 };
+                UiWarehouseConnContainer_t whConns;
         };
     }
 }
