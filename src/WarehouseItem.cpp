@@ -87,29 +87,9 @@ namespace whm
         tinyxml2::XMLElement* attribs = elem->FirstChildElement( "Attributes" );
 
         this->setID(attribs->IntAttribute("id"));
-        //this->setType(attribs->IntAttribute("type"));
 
-        int32_t typeID = attribs->IntAttribute("type");
-        if(typeID == 0)
-        {
-            this->setType(WarehouseItemType_t::E_LOCATION_SHELF);
-        }
-        if(typeID == 1)
-        {
-            this->setType(WarehouseItemType_t::E_CONVEYOR);
-        }
-        if(typeID == 2)
-        {
-            this->setType(WarehouseItemType_t::E_CONVEYOR_HUB);
-        }
-        if(typeID == 3)
-        {
-            this->setType(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE);
-        }
-        if(typeID == 4)
-        {
-            this->setType(WarehouseItemType_t::E_WAREHOUSE_EXIT);
-        }
+        WarehouseItemType_t whItemType = static_cast<WarehouseItemType_t>(attribs->IntAttribute("type"));
+        this->setType(whItemType);
 
         this->setX(attribs->IntAttribute("x"));
         this->setY(attribs->IntAttribute("y"));
