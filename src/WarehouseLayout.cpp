@@ -69,6 +69,11 @@ namespace whm
             whItem->serializeToXml(doc);
         }
 
+        for(auto* whConn : whConns)
+        {
+            whConn->serializeToXml(doc);
+        }
+
         doc->SaveFile( xmlFilename.c_str() );
     }
 

@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "tinyxml2.h"
+
 #ifdef WHM_GUI
 namespace whm
 {
@@ -36,6 +38,9 @@ namespace whm
             WarehousePort_t();
 #endif
             void dump() const;
+
+            // (De)-serialization
+            void serializeToXml(tinyxml2::XMLElement*) const;
 
             void setWhItem(WarehouseItem_t*);
             WarehouseItem_t* getWhItem() const;

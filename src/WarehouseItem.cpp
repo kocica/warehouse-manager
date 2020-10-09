@@ -58,14 +58,27 @@ namespace whm
 
     void WarehouseItem_t::serializeToXml(tinyxml2::XMLDocument* doc) const
     {
-        tinyxml2::XMLNode* element = doc->InsertEndChild( doc->NewElement( "WarehouseItem" ) );
-        tinyxml2::XMLElement* sub[3] = { doc->NewElement( "sub" ), doc->NewElement( "sub" ), doc->NewElement( "sub" ) };
+        tinyxml2::XMLNode* whItem = doc->InsertEndChild( doc->NewElement( "WarehouseItem" ) );
+        tinyxml2::XMLElement* whItemAttribs = doc->NewElement( "Attributes" );
 
-        for( int i=0; i<3; ++i )
-        {
-            sub[i]->SetAttribute( "attrib", i );
-            element->InsertEndChild( sub[i] );
-        }
+        // Set attributes
+        whItemAttribs->SetAttribute( "id", getID() );
+        whItemAttribs->SetAttribute( "type", getType() );
+        whItemAttribs->SetAttribute( "x", getX() );
+        whItemAttribs->SetAttribute( "y", getY() );
+        whItemAttribs->SetAttribute( "w", getW() );
+        whItemAttribs->SetAttribute( "h", getH() );
+
+        whItem->InsertEndChild( whItemAttribs );
+
+        // Add all ports
+        std::for_each(whPorts.begin(), whPorts.end(),
+                      [&](WarehousePort_t* whPort) -> void
+                      {
+                          tinyxml2::XMLElement* whPortAttribs = doc->NewElement( "WarehousePort" );
+                          whPort->serializeToXml(whPortAttribs);
+                          whItem->InsertEndChild( whPortAttribs );
+                      });
     }
 
     WarehouseItem_t::WarehousePortContainer_t WarehouseItem_t::getWhPorts() const

@@ -24,6 +24,7 @@ namespace whm
         UiWarehouseConnection_t::UiWarehouseConnection_t(UiWarehousePort_t *from, UiWarehousePort_t *to)
             : to(to)
             , from(from)
+            , whConnID(UiWarehouseLayout_t::getWhLayout().getNextWhConnID())
         {
             
         }
@@ -35,6 +36,8 @@ namespace whm
 
             to->setWhConn(this);
             from->setWhConn(this);
+
+            whConnID = c.getWhConnID();
         }
 
         UiWarehousePort_t* UiWarehouseConnection_t::lookupPort(int32_t whItemID, int32_t whPortID)
@@ -67,6 +70,11 @@ namespace whm
             return nullptr;
         }
 
+        int32_t UiWarehouseConnection_t::getWhConnID() const
+        {
+            return whConnID;
+        }
+
         UiWarehousePort_t* UiWarehouseConnection_t::getTo() const
         {
             return to;
@@ -87,8 +95,9 @@ namespace whm
 
         void UiWarehouseConnection_t::dump() const
         {
-            std::cout << std::endl << "      = Dump warehouse connection from <" << from->getWhItem()->getWhItemID() << "> <" << from->getWhPortID() << "> to <" <<
-                                                                                      to->getWhItem()->getWhItemID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
+            std::cout << std::endl << "      = Dump warehouse connection ID <" << getWhConnID() << ">" <<
+                           " from <" << from->getWhItem()->getWhItemID() << "> <" << from->getWhPortID() << ">" <<
+                           " to <"   <<   to->getWhItem()->getWhItemID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
         }
     }
 }

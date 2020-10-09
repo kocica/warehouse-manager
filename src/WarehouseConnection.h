@@ -35,14 +35,20 @@ namespace whm
             WarehouseConnection_t();
 #endif
 
+            int32_t getWhConnID() const;
             WarehousePort_t* getTo() const;
             WarehousePort_t* getFrom() const;
             WarehousePort_t* lookupPort(int32_t, int32_t);
 
             void dump() const;
 
+            // (De)-serialization
+            void serializeToXml(tinyxml2::XMLDocument* doc) const;
+
         protected:
             WarehousePort_t* to{ nullptr };
             WarehousePort_t* from{ nullptr };
+
+            int32_t whConnID{ 0 };
     };
 }

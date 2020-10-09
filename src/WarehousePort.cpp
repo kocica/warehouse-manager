@@ -35,6 +35,17 @@ namespace whm
     }
 #endif
 
+    void WarehousePort_t::serializeToXml(tinyxml2::XMLElement* elem) const
+    {
+        elem->SetAttribute("id", getWhPortID());
+
+        // TODO: Connection ID
+        if (this->isConnected())
+        {
+            elem->SetAttribute("conn_id", this->getWhConn()->getWhConnID());
+        }
+    }
+
     void WarehousePort_t::dump() const
     {
         std::cout << std::endl << "    - Dump warehouse port ID <" << this->whPortID << "> on item ID <" << this->getWhItem()->getID() << ">" << std::endl;

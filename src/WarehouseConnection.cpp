@@ -33,6 +33,8 @@ namespace whm
 
         to->setWhConn(this);
         from->setWhConn(this);
+
+        whConnID = uiConn.getWhConnID();
     }
 #else
     WarehouseConnection_t::WarehouseConnection_t()
@@ -43,11 +45,40 @@ namespace whm
 
     WarehouseConnection_t::~WarehouseConnection_t()
     {
-        // TODO
+        // TODO: Clean-up
         // delete to;
         // delete from;
     }
-    
+
+    void WarehouseConnection_t::serializeToXml(tinyxml2::XMLDocument* doc) const
+    {
+        tinyxml2::XMLNode* whConn = doc->InsertEndChild( doc->NewElement( "WarehouseConnection" ) );
+
+        tinyxml2::XMLElement* whConnAttribs = doc->NewElement( "Attributes" );
+
+        // Set attributes
+        whConnAttribs->SetAttribute( "id", getWhConnID() );
+        whConn->InsertEndChild( whConnAttribs );
+
+        // Add both ports
+        tinyxml2::XMLElement* whPortTo = doc->NewElement( "WarehousePortTo" );
+        tinyxml2::XMLElement* whPortFrom = doc->NewElement( "WarehousePortFrom" );
+
+        whPortFrom->SetAttribute( "item_id", from->getWhItem()->getID() );
+        whPortFrom->SetAttribute( "port_id", from->getWhPortID() );
+
+        whPortTo->SetAttribute( "item_id", to->getWhItem()->getID() );
+        whPortTo->SetAttribute( "port_id", to->getWhPortID() );
+
+        whConn->InsertEndChild( whPortTo );
+        whConn->InsertEndChild( whPortFrom );
+    }
+
+    int32_t WarehouseConnection_t::getWhConnID() const
+    {
+        return whConnID;
+    }
+
     WarehousePort_t* WarehouseConnection_t::getTo() const
     {
         return to;
@@ -60,8 +91,9 @@ namespace whm
 
     void WarehouseConnection_t::dump() const
     {
-        std::cout << std::endl << "      = Dump warehouse connection from <" << from->getWhItem()->getID() << "> <" << from->getWhPortID() << "> to <" <<
-                                                                                  to->getWhItem()->getID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
+        std::cout << std::endl << "      = Dump warehouse connection ID <" << getWhConnID() << ">" <<
+                                  " from <" << from->getWhItem()->getID() << "> <" << from->getWhPortID() << ">" <<
+                                  " to <"   <<   to->getWhItem()->getID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
     }
 
     WarehousePort_t* WarehouseConnection_t::lookupPort(int32_t whItemID, int32_t whPortID)

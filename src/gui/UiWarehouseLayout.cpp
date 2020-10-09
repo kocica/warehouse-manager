@@ -40,20 +40,19 @@ namespace whm
                 UiWarehouseItem_t* newItem{ nullptr };
                 auto tmpIdSequence{ whItemIdSequence };
 
-                // TODO: Item types
+                whItemIdSequence = item->getID();
 
+                // TODO: Item types
                 if (item->getType() == 0)
                 {
-                    whItemIdSequence = item->getID();
                     newItem = new UiWarehouseItemLocation_t{ s, ui, *item };
-                    whItemIdSequence = std::max(tmpIdSequence, item->getID() + 1);
                 }
                 else if (item->getType() == 1)
                 {
-                    whItemIdSequence = item->getID();
                     newItem = new UiWarehouseItemConveyor_t{ s, ui, *item };
-                    whItemIdSequence = std::max(tmpIdSequence, item->getID() + 1);
                 }
+
+                whItemIdSequence = std::max(tmpIdSequence, item->getID() + 1);
 
                 whItems.emplace_back(newItem);
             }
@@ -62,7 +61,15 @@ namespace whm
 
             for (auto* conn : conns)
             {
-                whConns.emplace_back(new UiWarehouseConnection_t{ *conn });
+                auto tmpIdSequence{ whConnIdSequence };
+
+                whConnIdSequence = conn->getWhConnID();
+
+                UiWarehouseConnection_t* newConn = new UiWarehouseConnection_t{ *conn };
+
+                whConnIdSequence = std::max(tmpIdSequence, conn->getWhConnID() + 1);
+
+                whConns.emplace_back(newConn);
             }
         }
 

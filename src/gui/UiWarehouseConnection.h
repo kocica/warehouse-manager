@@ -29,6 +29,7 @@ namespace whm
 
                 ~UiWarehouseConnection_t();
 
+                int32_t getWhConnID() const;
                 UiWarehousePort_t* getTo() const;
                 UiWarehousePort_t* getFrom() const;
 
@@ -38,6 +39,8 @@ namespace whm
             private:
                 UiWarehousePort_t* to{ nullptr };
                 UiWarehousePort_t* from{ nullptr };
+
+                int32_t whConnID{ 0 };
         };
     }
 }
