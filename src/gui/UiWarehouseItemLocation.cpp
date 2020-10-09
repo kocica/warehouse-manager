@@ -25,13 +25,13 @@ namespace whm
     namespace gui
     {
         UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, ::whm::WarehouseItem_t& i)
-            : UiWarehouseItem_t(s, ui, i.getX(), i.getY(), i.getW(), i.getH(), UiWarehouseItemType_t::E_LOCATION_SHELF)
+            : UiWarehouseItem_t(s, ui, i.getX(), i.getY(), i.getW(), i.getH(), WarehouseItemType_t::E_LOCATION_SHELF)
         {
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, i.getX(), i.getY() + 37));
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, i.getX() + 75, i.getY() + 37));
         }
 
-        UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, UiWarehouseItemType_t t)
+        UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t t)
             : UiWarehouseItem_t(s, ui, x, y, w, h, t)
         {
             /*auto dialog = new QDialog(this);

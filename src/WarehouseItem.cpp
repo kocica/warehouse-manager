@@ -34,16 +34,7 @@ namespace whm
         setW(uiItem.getW());
         setH(uiItem.getH());
         setID(uiItem.getID());
-
-        // TODO item type TUI <-> GUI
-        if (uiItem.getWhItemType() == gui::UiWarehouseItemType_t::E_LOCATION_SHELF)
-        {
-            setType(0);
-        }
-        else
-        {
-            setType(1);
-        }
+        setType(uiItem.getWhItemType());
 
         auto uiPorts = uiItem.getWhPorts();
         std::for_each(uiPorts.begin(), uiPorts.end(),
@@ -73,7 +64,7 @@ namespace whm
 
         // Set attributes
         whItemAttribs->SetAttribute( "id", getID() );
-        whItemAttribs->SetAttribute( "type", getType() );
+        whItemAttribs->SetAttribute( "type", to_underlying(getType()) );
         whItemAttribs->SetAttribute( "x", getX() );
         whItemAttribs->SetAttribute( "y", getY() );
         whItemAttribs->SetAttribute( "w", getW() );
@@ -96,7 +87,30 @@ namespace whm
         tinyxml2::XMLElement* attribs = elem->FirstChildElement( "Attributes" );
 
         this->setID(attribs->IntAttribute("id"));
-        this->setType(attribs->IntAttribute("type"));
+        //this->setType(attribs->IntAttribute("type"));
+
+        int32_t typeID = attribs->IntAttribute("type");
+        if(typeID == 0)
+        {
+            this->setType(WarehouseItemType_t::E_LOCATION_SHELF);
+        }
+        if(typeID == 1)
+        {
+            this->setType(WarehouseItemType_t::E_CONVEYOR);
+        }
+        if(typeID == 2)
+        {
+            this->setType(WarehouseItemType_t::E_CONVEYOR_HUB);
+        }
+        if(typeID == 3)
+        {
+            this->setType(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE);
+        }
+        if(typeID == 4)
+        {
+            this->setType(WarehouseItemType_t::E_WAREHOUSE_EXIT);
+        }
+
         this->setX(attribs->IntAttribute("x"));
         this->setY(attribs->IntAttribute("y"));
         this->setW(attribs->IntAttribute("w"));
@@ -119,7 +133,7 @@ namespace whm
     void WarehouseItem_t::dump() const
     {
         std::cout << "==============================================" << std::endl;
-        std::cout << "  Warehouse item ID <" << itemID << "> Type <" << itemType << ">" << std::endl;
+        std::cout << "  Warehouse item ID <" << itemID << "> Type <" << to_underlying(itemType) << ">" << std::endl;
         std::cout << "==============================================" << std::endl;
 
         std::cout << "x: " << x << " y: " << y << " w: " << w << " h: " << h << std::endl;

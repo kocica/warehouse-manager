@@ -23,7 +23,7 @@ namespace whm
         {
             public:
                 // Construct from GUI
-                UiWarehouseItemConveyor_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, UiWarehouseItemType_t);
+                UiWarehouseItemConveyor_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, WarehouseItemType_t);
                 // Construct from TUI
                 UiWarehouseItemConveyor_t(QGraphicsScene*, MainWindow*, ::whm::WarehouseItem_t&);
 

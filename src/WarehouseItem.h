@@ -15,6 +15,7 @@
 
 // Local
 #include "tinyxml2.h"
+#include "WarehouseItemType.h"
 
 #ifdef WHM_GUI
 namespace whm
@@ -43,14 +44,14 @@ namespace whm
 #endif
 
             void setID(int32_t id)     { itemID = id; }
-            void setType(int32_t type) { itemType = type; }
+            void setType(WarehouseItemType_t type) { itemType = type; }
             void setX(int32_t x_)      { x = x_; }
             void setY(int32_t y_)      { y = y_; }
             void setW(int32_t w_)      { w = w_; }
             void setH(int32_t h_)      { h = h_; }
 
             int32_t getID() const   { return itemID; }
-            int32_t getType() const { return itemType; }
+            WarehouseItemType_t getType() const { return itemType; }
             int32_t getX() const    { return x; }
             int32_t getY() const    { return y; }
             int32_t getW() const    { return w; }
@@ -71,7 +72,7 @@ namespace whm
             int32_t h{ 0 };
 
             int32_t itemID{ 0 };
-            int32_t itemType{ 0 };
+            WarehouseItemType_t itemType{ 0 };
 
             WarehousePortContainer_t whPorts;
     };

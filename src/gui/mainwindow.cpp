@@ -113,10 +113,10 @@ namespace whm
 
         void MainWindow::mousePressEvent(QMouseEvent *event)
         {
-            static std::map<UiCursorMode_t, UiWarehouseItemType_t> convMap =
+            static std::map<UiCursorMode_t, WarehouseItemType_t> convMap =
             {
-                { UiCursorMode_t::E_MODE_WH_ITEM_CONV,     UiWarehouseItemType_t::E_CONVEYOR },
-                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_HUB, UiWarehouseItemType_t::E_CONVEYOR_HUB }
+                { UiCursorMode_t::E_MODE_WH_ITEM_CONV,     WarehouseItemType_t::E_CONVEYOR },
+                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_HUB, WarehouseItemType_t::E_CONVEYOR_HUB }
             };
 
             if (event->button() == Qt::LeftButton)
@@ -128,7 +128,7 @@ namespace whm
                     QPoint loc = QCursor::pos();
                     loc = ui->view->mapFromGlobal(loc);
 
-                    auto whItemLoc = new UiWarehouseItemLocation_t(scene, this, loc.x(), loc.y(), 100, 100, UiWarehouseItemType_t::E_LOCATION_SHELF);
+                    auto whItemLoc = new UiWarehouseItemLocation_t(scene, this, loc.x(), loc.y(), 100, 100, WarehouseItemType_t::E_LOCATION_SHELF);
                     UiWarehouseLayout_t::getWhLayout().addWhItem(whItemLoc);
                 }
                 else if (convMap.find(cursorMode) != convMap.end())
@@ -136,7 +136,10 @@ namespace whm
                     QPoint loc = QCursor::pos();
                     loc = ui->view->mapFromGlobal(loc);
 
-                    auto whItemConv = new UiWarehouseItemConveyor_t(scene, this, loc.x(), loc.y(), 100, 50, convMap[cursorMode]);
+                    int32_t w = cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_CONV ? 100 : 75;
+                    int32_t h = cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_CONV ? 50 : 50;
+
+                    auto whItemConv = new UiWarehouseItemConveyor_t(scene, this, loc.x(), loc.y(), w, h, convMap[cursorMode]);
                     UiWarehouseLayout_t::getWhLayout().addWhItem(whItemConv);
                 }
             }
@@ -232,7 +235,7 @@ namespace whm
 
         void MainWindow::on_simulationRun_triggered()
         {
-
+            UiWarehouseLayout_t::getWhLayout().dump();
         }
 
         void MainWindow::on_simulationStep_triggered()

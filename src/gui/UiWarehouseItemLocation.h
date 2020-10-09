@@ -23,7 +23,7 @@ namespace whm
         {
             public:
                 // Construct from GUI
-                UiWarehouseItemLocation_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, UiWarehouseItemType_t);
+                UiWarehouseItemLocation_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, WarehouseItemType_t);
                 // Construct from TUI
                 UiWarehouseItemLocation_t(QGraphicsScene*, MainWindow*, ::whm::WarehouseItem_t&);
 

@@ -18,6 +18,7 @@
 
 #include "mainwindow.h"
 #include "BaseShapeGraphicItem.h"
+#include "../WarehouseItemType.h"
 
 namespace whm
 {
@@ -26,27 +27,18 @@ namespace whm
         // Forward declaration due to circular include
         class UiWarehousePort_t;
 
-        enum class UiWarehouseItemType_t
-        {
-            E_LOCATION_SHELF,
-            E_CONVEYOR,     //< Convs to all directions, so we can detect flow
-            E_CONVEYOR_HUB, //< Able to connect up to four convs
-            E_WAREHOUSE_ENTRANCE,
-            E_WAREHOUSE_EXIT
-        };
-
-        bool isWhItemCombinationAllowed(UiWarehouseItemType_t, UiWarehouseItemType_t);
+        bool isWhItemCombinationAllowed(WarehouseItemType_t, WarehouseItemType_t);
 
         class UiWarehouseItem_t : public BaseShapeGraphicItem_t
         {
             using UiWarehousePortContainer_t = std::vector<UiWarehousePort_t*>;
 
             public:
-                UiWarehouseItem_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, UiWarehouseItemType_t);
+                UiWarehouseItem_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, WarehouseItemType_t);
                 virtual ~UiWarehouseItem_t();
 
                 int32_t getWhItemID() const;
-                UiWarehouseItemType_t getWhItemType() const;
+                WarehouseItemType_t getWhItemType() const;
 
                 void dump() const;
 
@@ -73,7 +65,7 @@ namespace whm
                 QGraphicsScene* scene{ nullptr };
 
                 int32_t whItemID{ 0 };
-                UiWarehouseItemType_t whItemType;
+                WarehouseItemType_t whItemType;
 
                 UiWarehousePortContainer_t whPorts;
         };

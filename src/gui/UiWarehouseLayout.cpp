@@ -47,12 +47,12 @@ namespace whm
 
                 whItemIdSequence = item->getID();
 
-                // TODO: Item types
-                if (item->getType() == 0)
+                if (item->getType() == ::whm::WarehouseItemType_t::E_LOCATION_SHELF)
                 {
                     newItem = new UiWarehouseItemLocation_t{ s, ui, *item };
                 }
-                else if (item->getType() == 1)
+                else if (item->getType() == ::whm::WarehouseItemType_t::E_CONVEYOR ||
+                         item->getType() == ::whm::WarehouseItemType_t::E_CONVEYOR_HUB)
                 {
                     newItem = new UiWarehouseItemConveyor_t{ s, ui, *item };
                 }

@@ -16,38 +16,32 @@
 #include "UiWarehousePort.h"
 #include "UiWarehouseLayout.h"
 
-namespace
-{
-    
-}
-
 namespace whm
 {
     namespace gui
     {
-        std::map<UiWarehouseItemType_t, std::vector<UiWarehouseItemType_t>> allowedCombinations =
+        std::map<WarehouseItemType_t, std::vector<WarehouseItemType_t>> allowedCombinations =
         {
-            { UiWarehouseItemType_t::E_CONVEYOR,       { UiWarehouseItemType_t::E_CONVEYOR,
-                                                         UiWarehouseItemType_t::E_LOCATION_SHELF,
-                                                         UiWarehouseItemType_t::E_CONVEYOR_HUB }},
-            { UiWarehouseItemType_t::E_CONVEYOR_HUB,   { UiWarehouseItemType_t::E_CONVEYOR,
-                                                         UiWarehouseItemType_t::E_CONVEYOR_HUB }},
-            { UiWarehouseItemType_t::E_LOCATION_SHELF, { UiWarehouseItemType_t::E_CONVEYOR,
-                                                         UiWarehouseItemType_t::E_CONVEYOR_HUB }},
+            { WarehouseItemType_t::E_CONVEYOR,       { WarehouseItemType_t::E_CONVEYOR,
+                                                       WarehouseItemType_t::E_LOCATION_SHELF,
+                                                       WarehouseItemType_t::E_CONVEYOR_HUB }},
+            { WarehouseItemType_t::E_CONVEYOR_HUB,   { WarehouseItemType_t::E_CONVEYOR,
+                                                       WarehouseItemType_t::E_CONVEYOR_HUB }},
+            { WarehouseItemType_t::E_LOCATION_SHELF, { WarehouseItemType_t::E_CONVEYOR }},
         };
 
-        bool isWhItemCombinationAllowed(UiWarehouseItemType_t lhs, UiWarehouseItemType_t rhs)
+        bool isWhItemCombinationAllowed(WarehouseItemType_t lhs, WarehouseItemType_t rhs)
         {
-            std::vector<UiWarehouseItemType_t>& allowedTypes = allowedCombinations[lhs];
+            std::vector<WarehouseItemType_t>& allowedTypes = allowedCombinations[lhs];
 
             return std::any_of(allowedTypes.begin(), allowedTypes.end(),
-                               [&](UiWarehouseItemType_t& whItemType) -> bool
+                               [&](WarehouseItemType_t& whItemType) -> bool
                                {
                                    return whItemType == rhs;
                                });
         }
 
-        UiWarehouseItem_t::UiWarehouseItem_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, UiWarehouseItemType_t type)
+        UiWarehouseItem_t::UiWarehouseItem_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t type)
             : BaseShapeGraphicItem_t(x, y, w, h, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s)
             , ui(ui)
             , scene(s)
@@ -72,7 +66,7 @@ namespace whm
             return whItemID;
         }
 
-        UiWarehouseItemType_t UiWarehouseItem_t::getWhItemType() const
+        WarehouseItemType_t UiWarehouseItem_t::getWhItemType() const
         {
             return whItemType;
         }
