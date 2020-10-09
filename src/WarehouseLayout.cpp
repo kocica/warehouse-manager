@@ -74,7 +74,41 @@ namespace whm
             whConn->serializeToXml(doc);
         }
 
-        doc->SaveFile( xmlFilename.c_str() );
+        doc->SaveFile(xmlFilename.c_str());
+        //delete doc
+    }
+
+    void WarehouseLayout_t::deserializeFromXml(const std::string& xmlFilename)
+    {
+        tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
+
+        doc->LoadFile(xmlFilename.c_str());
+
+        for (tinyxml2::XMLElement* whItemXml = doc->FirstChildElement("WarehouseItem"); whItemXml; whItemXml = whItemXml->NextSiblingElement("WarehouseItem"))
+        {
+            WarehouseItem_t* whItem = new WarehouseItem_t();
+            whItem->deserializeFromXml(whItemXml);
+            addWhItem(whItem);
+        }
+
+        for (tinyxml2::XMLElement* whConnXml = doc->FirstChildElement("WarehouseConnection"); whConnXml; whConnXml = whConnXml->NextSiblingElement("WarehouseConnection"))
+        {
+            WarehouseConnection_t* whConn = new WarehouseConnection_t();
+            whConn->deserializeFromXml(whConnXml);
+            addWhConn(whConn);
+        }
+
+        //delete doc
+    }
+
+    void WarehouseLayout_t::addWhItem(WarehouseItem_t* i)
+    {
+        whItems.push_back(i);
+    }
+
+    void WarehouseLayout_t::addWhConn(WarehouseConnection_t* c)
+    {
+        whConns.push_back(c);
     }
 
     WarehouseLayout_t::WarehouseItemContainer_t WarehouseLayout_t::getWhItems() const

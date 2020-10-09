@@ -29,18 +29,18 @@ namespace whm
     class WarehousePort_t
     {
         public:
+            WarehousePort_t();
             ~WarehousePort_t() = default;
 
 #ifdef WHM_GUI
-            WarehousePort_t() = delete;
             WarehousePort_t(gui::UiWarehousePort_t&);
-#else
-            WarehousePort_t();
 #endif
+
             void dump() const;
 
             // (De)-serialization
             void serializeToXml(tinyxml2::XMLElement*) const;
+            void deserializeFromXml(tinyxml2::XMLElement*);
 
             void setWhItem(WarehouseItem_t*);
             WarehouseItem_t* getWhItem() const;

@@ -35,13 +35,11 @@ namespace whm
         using WarehousePortContainer_t = std::vector<WarehousePort_t*>;
 
         public:
+            WarehouseItem_t();
             virtual ~WarehouseItem_t() = default;
 
 #ifdef WHM_GUI
-            WarehouseItem_t() = delete;
             WarehouseItem_t(gui::UiWarehouseItem_t&);
-#else
-            WarehouseItem_t();
 #endif
 
             void setID(int32_t id)     { itemID = id; }
@@ -64,6 +62,7 @@ namespace whm
 
             // (De)-serialization
             void serializeToXml(tinyxml2::XMLDocument* doc) const;
+            void deserializeFromXml(tinyxml2::XMLElement*);
 
         protected:
             int32_t x{ 0 };

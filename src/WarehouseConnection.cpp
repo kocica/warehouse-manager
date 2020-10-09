@@ -25,6 +25,11 @@
 
 namespace whm
 {
+    WarehouseConnection_t::WarehouseConnection_t()
+    {
+
+    }
+
 #ifdef WHM_GUI
     WarehouseConnection_t::WarehouseConnection_t(gui::UiWarehouseConnection_t& uiConn)
     {
@@ -35,11 +40,6 @@ namespace whm
         from->setWhConn(this);
 
         whConnID = uiConn.getWhConnID();
-    }
-#else
-    WarehouseConnection_t::WarehouseConnection_t()
-    {
-
     }
 #endif
 
@@ -72,6 +72,29 @@ namespace whm
 
         whConn->InsertEndChild( whPortTo );
         whConn->InsertEndChild( whPortFrom );
+    }
+
+    void WarehouseConnection_t::deserializeFromXml(tinyxml2::XMLElement* elem)
+    {
+        tinyxml2::XMLElement* attribs = elem->FirstChildElement( "Attributes" );
+
+        whConnID = attribs->IntAttribute("id");
+
+        tinyxml2::XMLElement* whPortFrom = elem->FirstChildElement( "WarehousePortFrom" );
+
+        int32_t whPortFromItemID = whPortFrom->IntAttribute("item_id");
+        int32_t whPortFromPortID = whPortFrom->IntAttribute("port_id");
+
+        tinyxml2::XMLElement* whPortTo = elem->FirstChildElement( "WarehousePortTo" );
+
+        int32_t whPortToItemID = whPortTo->IntAttribute("item_id");
+        int32_t whPortToPortID = whPortTo->IntAttribute("port_id");
+
+        to = this->lookupPort(whPortToItemID, whPortToPortID);
+        from = this->lookupPort(whPortFromItemID, whPortFromPortID);
+
+        to->setWhConn(this);
+        from->setWhConn(this);
     }
 
     int32_t WarehouseConnection_t::getWhConnID() const

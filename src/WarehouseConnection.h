@@ -26,13 +26,11 @@ namespace whm
     class WarehouseConnection_t
     {
         public:
+            WarehouseConnection_t();
             ~WarehouseConnection_t();
 
 #ifdef WHM_GUI
-            WarehouseConnection_t() = delete;
             WarehouseConnection_t(gui::UiWarehouseConnection_t&);
-#else
-            WarehouseConnection_t();
 #endif
 
             int32_t getWhConnID() const;
@@ -44,6 +42,7 @@ namespace whm
 
             // (De)-serialization
             void serializeToXml(tinyxml2::XMLDocument* doc) const;
+            void deserializeFromXml(tinyxml2::XMLElement*);
 
         protected:
             WarehousePort_t* to{ nullptr };

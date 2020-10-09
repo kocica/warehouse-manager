@@ -217,6 +217,8 @@ namespace whm
                 return;
             }*/
 
+            ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./test.xml");
+            UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().dump();
         }
 
@@ -232,8 +234,6 @@ namespace whm
             ::whm::WarehouseLayout_t::getWhLayout().dump();
 
             //UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
-
-            ::whm::WarehouseLayout_t::getWhLayout().serializeToXml("./test.xml");
         }
 
         void MainWindow::on_clearLayout_triggered()

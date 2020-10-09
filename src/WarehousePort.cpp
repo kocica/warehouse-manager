@@ -22,14 +22,14 @@
 
 namespace whm
 {
-#ifdef WHM_GUI
-    WarehousePort_t::WarehousePort_t(gui::UiWarehousePort_t& uiPort)
-        : whPortID{ uiPort.getWhPortID() }
+    WarehousePort_t::WarehousePort_t()
     {
 
     }
-#else
-    WarehousePort_t::WarehousePort_t()
+
+#ifdef WHM_GUI
+    WarehousePort_t::WarehousePort_t(gui::UiWarehousePort_t& uiPort)
+        : whPortID{ uiPort.getWhPortID() }
     {
 
     }
@@ -39,11 +39,15 @@ namespace whm
     {
         elem->SetAttribute("id", getWhPortID());
 
-        // TODO: Connection ID
         if (this->isConnected())
         {
             elem->SetAttribute("conn_id", this->getWhConn()->getWhConnID());
         }
+    }
+
+    void WarehousePort_t::deserializeFromXml(tinyxml2::XMLElement* elem)
+    {
+        whPortID = elem->IntAttribute("id");
     }
 
     void WarehousePort_t::dump() const

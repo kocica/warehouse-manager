@@ -21,6 +21,11 @@
 
 namespace whm
 {
+    WarehouseItem_t::WarehouseItem_t()
+    {
+
+    }
+
 #ifdef WHM_GUI
     WarehouseItem_t::WarehouseItem_t(gui::UiWarehouseItem_t& uiItem)
     {
@@ -49,11 +54,6 @@ namespace whm
                           whPorts.emplace_back(newWhPort);
                       });
     }
-#else
-    WarehouseItem_t::WarehouseItem_t()
-    {
-
-    }
 #endif
 
     void WarehouseItem_t::serializeToXml(tinyxml2::XMLDocument* doc) const
@@ -79,6 +79,26 @@ namespace whm
                           whPort->serializeToXml(whPortAttribs);
                           whItem->InsertEndChild( whPortAttribs );
                       });
+    }
+
+    void WarehouseItem_t::deserializeFromXml(tinyxml2::XMLElement* elem)
+    {
+        tinyxml2::XMLElement* attribs = elem->FirstChildElement( "Attributes" );
+
+        this->setID(attribs->IntAttribute("id"));
+        this->setType(attribs->IntAttribute("type"));
+        this->setX(attribs->IntAttribute("x"));
+        this->setY(attribs->IntAttribute("y"));
+        this->setW(attribs->IntAttribute("w"));
+        this->setH(attribs->IntAttribute("h"));
+
+        for (tinyxml2::XMLElement* whPortXml = elem->FirstChildElement("WarehousePort"); whPortXml; whPortXml = whPortXml->NextSiblingElement("WarehousePort"))
+        {
+            auto newWhPort = new WarehousePort_t();
+            newWhPort->deserializeFromXml(whPortXml);
+            newWhPort->setWhItem(this);
+            whPorts.emplace_back(newWhPort);
+        }
     }
 
     WarehouseItem_t::WarehousePortContainer_t WarehouseItem_t::getWhPorts() const
