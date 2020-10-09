@@ -45,7 +45,7 @@ namespace whm
                 UiWarehouseItem_t* newItem{ nullptr };
                 auto tmpIdSequence{ whItemIdSequence };
 
-                whItemIdSequence = item->getID();
+                whItemIdSequence = item->getWhItemID();
 
                 if (item->getType() == ::whm::WarehouseItemType_t::E_LOCATION_SHELF)
                 {
@@ -57,7 +57,7 @@ namespace whm
                     newItem = new UiWarehouseItemConveyor_t{ s, ui, *item };
                 }
 
-                whItemIdSequence = std::max(tmpIdSequence, item->getID() + 1);
+                whItemIdSequence = std::max(tmpIdSequence, item->getWhItemID() + 1);
 
                 whItems.emplace_back(newItem);
             }

@@ -61,11 +61,6 @@ namespace whm
             whPorts.clear();
         }
 
-        int32_t UiWarehouseItem_t::getWhItemID() const
-        {
-            return whItemID;
-        }
-
         WarehouseItemType_t UiWarehouseItem_t::getWhItemType() const
         {
             return whItemType;

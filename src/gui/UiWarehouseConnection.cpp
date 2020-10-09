@@ -31,8 +31,8 @@ namespace whm
 
         UiWarehouseConnection_t::UiWarehouseConnection_t(::whm::WarehouseConnection_t& c)
         {
-            to = this->lookupPort(c.getTo()->getWhItem()->getID(), c.getTo()->getWhPortID());
-            from = this->lookupPort(c.getFrom()->getWhItem()->getID(), c.getFrom()->getWhPortID());
+            to = this->lookupPort(c.getTo()->getWhItem()->getWhItemID(), c.getTo()->getWhPortID());
+            from = this->lookupPort(c.getFrom()->getWhItem()->getWhItemID(), c.getFrom()->getWhPortID());
 
             to->setWhConn(this);
             from->setWhConn(this);
@@ -47,7 +47,7 @@ namespace whm
             auto it = std::find_if(whItems.begin(), whItems.end(),
                                   [&](UiWarehouseItem_t* i) -> bool
                                   {
-                                      return i->getID() == whItemID;
+                                      return i->getWhItemID() == whItemID;
                                   });
 
             if(it != whItems.end())

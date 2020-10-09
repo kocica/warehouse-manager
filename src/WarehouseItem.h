@@ -43,14 +43,14 @@ namespace whm
             WarehouseItem_t(gui::UiWarehouseItem_t&);
 #endif
 
-            void setID(int32_t id)     { itemID = id; }
+            void setWhItemID(int32_t id)     { itemID = id; }
             void setType(WarehouseItemType_t type) { itemType = type; }
             void setX(int32_t x_)      { x = x_; }
             void setY(int32_t y_)      { y = y_; }
             void setW(int32_t w_)      { w = w_; }
             void setH(int32_t h_)      { h = h_; }
 
-            int32_t getID() const   { return itemID; }
+            int32_t getWhItemID() const   { return itemID; }
             WarehouseItemType_t getType() const { return itemType; }
             int32_t getX() const    { return x; }
             int32_t getY() const    { return y; }

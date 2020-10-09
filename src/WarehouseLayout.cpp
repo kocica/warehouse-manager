@@ -163,7 +163,7 @@ namespace whm
         auto found = std::find_if(whItems.begin(), whItems.end(),
                         [&](WarehouseItem_t* whItem) -> bool
                         {
-                            return whItem->getID() == i->getID(); // whItem == i
+                            return whItem->getWhItemID() == i->getWhItemID(); // whItem == i
                         });
 
         if (found != whItems.end())

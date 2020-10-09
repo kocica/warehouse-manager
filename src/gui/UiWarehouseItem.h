@@ -37,18 +37,16 @@ namespace whm
                 UiWarehouseItem_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, WarehouseItemType_t);
                 virtual ~UiWarehouseItem_t();
 
-                int32_t getWhItemID() const;
                 WarehouseItemType_t getWhItemType() const;
-
                 void dump() const;
 
-                int32_t getID() const { return whItemID; }
-                int32_t getX()  const { return mRect.x(); }
-                int32_t getY()  const { return mRect.y(); }
+                int32_t getWhItemID() const { return whItemID; }
+                int32_t getX()  const { return this->scenePos().x() + this->mRect.topLeft().x(); }
+                int32_t getY()  const { return this->scenePos().y() + this->mRect.topLeft().y(); }
                 int32_t getW()  const { return mRect.width(); }
                 int32_t getH()  const { return mRect.height(); }
 
-                void setID(int32_t id) { whItemID = id; }
+                void setWhItemID(int32_t id) { whItemID = id; }
                 void setX(int32_t x)   { mRect.setX(x); }
                 void setY(int32_t y)   { mRect.setY(y); }
                 void setW(int32_t w)   { mRect.setWidth(w); }

@@ -33,8 +33,8 @@ namespace whm
 #ifdef WHM_GUI
     WarehouseConnection_t::WarehouseConnection_t(gui::UiWarehouseConnection_t& uiConn)
     {
-        to = this->lookupPort(uiConn.getTo()->getWhItem()->getID(), uiConn.getTo()->getWhPortID());
-        from = this->lookupPort(uiConn.getFrom()->getWhItem()->getID(), uiConn.getFrom()->getWhPortID());
+        to = this->lookupPort(uiConn.getTo()->getWhItem()->getWhItemID(), uiConn.getTo()->getWhPortID());
+        from = this->lookupPort(uiConn.getFrom()->getWhItem()->getWhItemID(), uiConn.getFrom()->getWhPortID());
 
         to->setWhConn(this);
         from->setWhConn(this);
@@ -65,10 +65,10 @@ namespace whm
         tinyxml2::XMLElement* whPortTo = doc->NewElement( "WarehousePortTo" );
         tinyxml2::XMLElement* whPortFrom = doc->NewElement( "WarehousePortFrom" );
 
-        whPortFrom->SetAttribute( "item_id", from->getWhItem()->getID() );
+        whPortFrom->SetAttribute( "item_id", from->getWhItem()->getWhItemID() );
         whPortFrom->SetAttribute( "port_id", from->getWhPortID() );
 
-        whPortTo->SetAttribute( "item_id", to->getWhItem()->getID() );
+        whPortTo->SetAttribute( "item_id", to->getWhItem()->getWhItemID() );
         whPortTo->SetAttribute( "port_id", to->getWhPortID() );
 
         whConn->InsertEndChild( whPortTo );
@@ -116,8 +116,8 @@ namespace whm
     void WarehouseConnection_t::dump() const
     {
         std::cout << std::endl << "      = Dump warehouse connection ID <" << getWhConnID() << ">" <<
-                                  " from <" << from->getWhItem()->getID() << "> <" << from->getWhPortID() << ">" <<
-                                  " to <"   <<   to->getWhItem()->getID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
+                                  " from <" << from->getWhItem()->getWhItemID() << "> <" << from->getWhPortID() << ">" <<
+                                  " to <"   <<   to->getWhItem()->getWhItemID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
     }
 
     WarehousePort_t* WarehouseConnection_t::lookupPort(int32_t whItemID, int32_t whPortID)
@@ -127,7 +127,7 @@ namespace whm
         auto it = std::find_if(whItems.begin(), whItems.end(),
                                [&](WarehouseItem_t* i) -> bool
                                {
-                                   return i->getID() == whItemID;
+                                   return i->getWhItemID() == whItemID;
                                });
 
         if(it != whItems.end())

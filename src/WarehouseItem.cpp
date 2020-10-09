@@ -33,7 +33,7 @@ namespace whm
         setY(uiItem.getY());
         setW(uiItem.getW());
         setH(uiItem.getH());
-        setID(uiItem.getID());
+        setWhItemID(uiItem.getWhItemID());
         setType(uiItem.getWhItemType());
 
         auto uiPorts = uiItem.getWhPorts();
@@ -63,7 +63,7 @@ namespace whm
         tinyxml2::XMLElement* whItemAttribs = doc->NewElement( "Attributes" );
 
         // Set attributes
-        whItemAttribs->SetAttribute( "id", getID() );
+        whItemAttribs->SetAttribute( "id", getWhItemID() );
         whItemAttribs->SetAttribute( "type", to_underlying(getType()) );
         whItemAttribs->SetAttribute( "x", getX() );
         whItemAttribs->SetAttribute( "y", getY() );
@@ -86,7 +86,7 @@ namespace whm
     {
         tinyxml2::XMLElement* attribs = elem->FirstChildElement( "Attributes" );
 
-        this->setID(attribs->IntAttribute("id"));
+        this->setWhItemID(attribs->IntAttribute("id"));
 
         WarehouseItemType_t whItemType = static_cast<WarehouseItemType_t>(attribs->IntAttribute("type"));
         this->setType(whItemType);
