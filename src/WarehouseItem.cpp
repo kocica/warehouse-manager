@@ -14,6 +14,7 @@
 // Local
 #include "WarehouseItem.h"
 #include "WarehousePort.h"
+#include "WarehouseLocationRack.h"
 
 #ifdef WHM_GUI
 #include "gui/UiWarehouseItem.h"
@@ -23,7 +24,16 @@ namespace whm
 {
     WarehouseItem_t::WarehouseItem_t()
     {
+        if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        {
+            WarehouseLocationSlot_t<std::string> s;
+            s.setArticle("CODE0000");
+            s.setQuantity(42);
 
+            whLocRack = new WarehouseLocationRack_t<std::string>();
+
+            whLocRack->setAt(2, 7, s);
+        }
     }
 
 #ifdef WHM_GUI
@@ -44,6 +54,12 @@ namespace whm
                           newWhPort->setWhItem(this);
                           whPorts.emplace_back(newWhPort);
                       });
+
+        if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        {
+            whLocRack = new WarehouseLocationRack_t<std::string>();
+            // TODO: whLocRack->init(slotsX, slotsY);
+        }
     }
 #endif
 
@@ -55,6 +71,11 @@ namespace whm
         }
 
         whPorts.clear();
+
+        if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        {
+            delete whLocRack;
+        }
     }
 
     void WarehouseItem_t::serializeToXml(tinyxml2::XMLDocument* doc) const
@@ -80,6 +101,8 @@ namespace whm
                           whPort->serializeToXml(whPortAttribs);
                           whItem->InsertEndChild( whPortAttribs );
                       });
+
+        // TODO: whLocRack->init(slotsX, slotsY);
     }
 
     void WarehouseItem_t::deserializeFromXml(tinyxml2::XMLElement* elem)
@@ -123,6 +146,12 @@ namespace whm
                       {
                           p->dump();
                       });
+
+        if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        {
+            std::cout << std::endl << "Location Rack:" << std::endl << std::endl;
+            whLocRack->dump();
+        }
 
         std::cout << "==============================================" << std::endl;
     }

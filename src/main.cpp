@@ -12,6 +12,7 @@
 
 // Local
 #include "Utils.h"
+#include "WarehouseLayout.h"
 
 // Qt
 #ifdef WHM_GUI
@@ -42,6 +43,9 @@ int main(int argc, char *argv[])
         window.show();
 #else
         auto args = whm::utils::ArgsParser_t{}.parseArgs(argc, argv);
+
+        whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./test.xml");
+        whm::WarehouseLayout_t::getWhLayout().dump();
 #endif
 
 #ifdef WHM_GUI

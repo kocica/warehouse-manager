@@ -31,6 +31,9 @@ namespace whm
 {
     class WarehousePort_t;
 
+    template<typename>
+    class WarehouseLocationRack_t;
+
     class WarehouseItem_t
     {
         using WarehousePortContainer_t = std::vector<WarehousePort_t*>;
@@ -72,8 +75,10 @@ namespace whm
             int32_t h{ 0 };
 
             int32_t itemID{ 0 };
-            WarehouseItemType_t itemType{ 0 };
+            WarehouseItemType_t itemType;
 
             WarehousePortContainer_t whPorts;
+
+            WarehouseLocationRack_t<std::string>* whLocRack{ nullptr };
     };
 }
