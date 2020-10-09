@@ -155,12 +155,11 @@ vertical {background-color: rgb(0,0,0);}</string>
    <addaction name="separator"/>
    <addaction name="labelItems"/>
    <addaction name="separator"/>
-   <addaction name="whItemLocations"/>
-   <addaction name="whItemConveyorRight"/>
-   <addaction name="whItemConveyorLeft"/>
-   <addaction name="whItemConveyorUp"/>
-   <addaction name="whItemConveyorDown"/>
+   <addaction name="whItemLocation"/>
+   <addaction name="whItemConveyor"/>
    <addaction name="whItemConveyorHub"/>
+   <addaction name="whItemEntrance"/>
+   <addaction name="whItemExit"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QToolBar" name="layoutManagement">
@@ -390,7 +389,7 @@ vertical {background-color: rgb(0,0,0);}</string>
      <string>Esc</string>
     </property>
    </action>
-   <action name="whItemLocations">
+   <action name="whItemLocation">
     <property name="checkable">
      <bool>true</bool>
     </property>
@@ -404,54 +403,12 @@ vertical {background-color: rgb(0,0,0);}</string>
      <string>1</string>
     </property>
    </action>
-   <action name="whItemConveyorRight">
+   <action name="whItemConveyor">
     <property name="checkable">
      <bool>true</bool>
     </property>
     <property name="text">
-     <string>Conveyor right</string>
-    </property>
-    <property name="toolTip">
-     <string>Warehouse conveyor system</string>
-    </property>
-    <property name="shortcut">
-     <string>2</string>
-    </property>
-   </action>
-   <action name="whItemConveyorLeft">
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string>Conveyor left</string>
-    </property>
-    <property name="toolTip">
-     <string>Warehouse conveyor system</string>
-    </property>
-    <property name="shortcut">
-     <string>2</string>
-    </property>
-   </action>
-   <action name="whItemConveyorUp">
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string>Conveyor up</string>
-    </property>
-    <property name="toolTip">
-     <string>Warehouse conveyor system</string>
-    </property>
-    <property name="shortcut">
-     <string>2</string>
-    </property>
-   </action>
-   <action name="whItemConveyorDown">
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <property name="text">
-     <string>Conveyor down</string>
+     <string>Conveyor</string>
     </property>
     <property name="toolTip">
      <string>Warehouse conveyor system</string>
@@ -469,6 +426,34 @@ vertical {background-color: rgb(0,0,0);}</string>
     </property>
     <property name="toolTip">
      <string>Warehouse conveyor system</string>
+    </property>
+    <property name="shortcut">
+     <string>2</string>
+    </property>
+   </action>
+   <action name="whItemEntrance">
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string>Warehouse entrance</string>
+    </property>
+    <property name="toolTip">
+     <string>Warehouse goodsin area</string>
+    </property>
+    <property name="shortcut">
+     <string>2</string>
+    </property>
+   </action>
+   <action name="whItemExit">
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string>Warehouse exit</string>
+    </property>
+    <property name="toolTip">
+     <string>Warehouse shipping area</string>
     </property>
     <property name="shortcut">
      <string>2</string>

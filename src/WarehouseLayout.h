@@ -50,6 +50,8 @@ namespace whm
 
             void addWhItem(WarehouseItem_t*);
             void addWhConn(WarehouseConnection_t*);
+            void eraseWhItem(WarehouseItem_t*);
+            void eraseWhConn(WarehouseConnection_t*);
 
             void dump() const;
             void clearWhLayout();

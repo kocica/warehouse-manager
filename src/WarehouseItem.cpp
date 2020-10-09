@@ -56,6 +56,16 @@ namespace whm
     }
 #endif
 
+    WarehouseItem_t::~WarehouseItem_t()
+    {
+        for (WarehousePort_t* whPort : whPorts)
+        {
+            delete whPort;
+        }
+
+        whPorts.clear();
+    }
+
     void WarehouseItem_t::serializeToXml(tinyxml2::XMLDocument* doc) const
     {
         tinyxml2::XMLNode* whItem = doc->InsertEndChild( doc->NewElement( "WarehouseItem" ) );

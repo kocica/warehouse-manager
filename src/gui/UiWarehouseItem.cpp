@@ -27,18 +27,13 @@ namespace whm
     {
         std::map<UiWarehouseItemType_t, std::vector<UiWarehouseItemType_t>> allowedCombinations =
         {
-            { UiWarehouseItemType_t::E_CONVEYOR_R,     { UiWarehouseItemType_t::E_LOCATION_SHELF, UiWarehouseItemType_t::E_CONVEYOR_HUB }},
-            { UiWarehouseItemType_t::E_CONVEYOR_L,     { UiWarehouseItemType_t::E_LOCATION_SHELF, UiWarehouseItemType_t::E_CONVEYOR_HUB }},
-            { UiWarehouseItemType_t::E_CONVEYOR_U,     { UiWarehouseItemType_t::E_LOCATION_SHELF, UiWarehouseItemType_t::E_CONVEYOR_HUB }},
-            { UiWarehouseItemType_t::E_CONVEYOR_D,     { UiWarehouseItemType_t::E_LOCATION_SHELF, UiWarehouseItemType_t::E_CONVEYOR_HUB }},
-            { UiWarehouseItemType_t::E_CONVEYOR_HUB,   { UiWarehouseItemType_t::E_CONVEYOR_R,
-                                                         UiWarehouseItemType_t::E_CONVEYOR_L,
-                                                         UiWarehouseItemType_t::E_CONVEYOR_U,
-                                                         UiWarehouseItemType_t::E_CONVEYOR_D }},
-            { UiWarehouseItemType_t::E_LOCATION_SHELF, { UiWarehouseItemType_t::E_CONVEYOR_R,
-                                                         UiWarehouseItemType_t::E_CONVEYOR_L,
-                                                         UiWarehouseItemType_t::E_CONVEYOR_U,
-                                                         UiWarehouseItemType_t::E_CONVEYOR_D }},
+            { UiWarehouseItemType_t::E_CONVEYOR,       { UiWarehouseItemType_t::E_CONVEYOR,
+                                                         UiWarehouseItemType_t::E_LOCATION_SHELF,
+                                                         UiWarehouseItemType_t::E_CONVEYOR_HUB }},
+            { UiWarehouseItemType_t::E_CONVEYOR_HUB,   { UiWarehouseItemType_t::E_CONVEYOR,
+                                                         UiWarehouseItemType_t::E_CONVEYOR_HUB }},
+            { UiWarehouseItemType_t::E_LOCATION_SHELF, { UiWarehouseItemType_t::E_CONVEYOR,
+                                                         UiWarehouseItemType_t::E_CONVEYOR_HUB }},
         };
 
         bool isWhItemCombinationAllowed(UiWarehouseItemType_t lhs, UiWarehouseItemType_t rhs)

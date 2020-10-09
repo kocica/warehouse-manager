@@ -29,6 +29,11 @@ namespace whm
 
         }
 
+        UiWarehouseLayout_t::~UiWarehouseLayout_t()
+        {
+            this->clearWhLayout();
+        }
+
         void UiWarehouseLayout_t::initFromTui(QGraphicsScene* s, MainWindow* ui, ::whm::WarehouseLayout_t& layout)
         {
             this->clearWhLayout();

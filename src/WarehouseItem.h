@@ -36,7 +36,7 @@ namespace whm
 
         public:
             WarehouseItem_t();
-            virtual ~WarehouseItem_t() = default;
+            virtual ~WarehouseItem_t();
 
 #ifdef WHM_GUI
             WarehouseItem_t(gui::UiWarehouseItem_t&);

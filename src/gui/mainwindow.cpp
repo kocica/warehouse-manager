@@ -115,10 +115,7 @@ namespace whm
         {
             static std::map<UiCursorMode_t, UiWarehouseItemType_t> convMap =
             {
-                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_R,   UiWarehouseItemType_t::E_CONVEYOR_R },
-                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_L,   UiWarehouseItemType_t::E_CONVEYOR_L },
-                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_U,   UiWarehouseItemType_t::E_CONVEYOR_U },
-                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_D,   UiWarehouseItemType_t::E_CONVEYOR_D },
+                { UiCursorMode_t::E_MODE_WH_ITEM_CONV,     UiWarehouseItemType_t::E_CONVEYOR },
                 { UiCursorMode_t::E_MODE_WH_ITEM_CONV_HUB, UiWarehouseItemType_t::E_CONVEYOR_HUB }
             };
 
@@ -161,35 +158,27 @@ namespace whm
             }
         }
 
-        void MainWindow::on_whItemConveyorRight_toggled(bool enabled)
+        void MainWindow::on_whItemConveyor_toggled(bool enabled)
         {
             if (enabled)
             {
-                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV_R);
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV);
             }
         }
 
-        void MainWindow::on_whItemConveyorLeft_toggled(bool enabled)
+        void MainWindow::on_whItemEntrance_toggled(bool enabled)
         {
             if (enabled)
             {
-                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV_L);
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_ENTRANCE);
             }
         }
 
-        void MainWindow::on_whItemConveyorUp_toggled(bool enabled)
+        void MainWindow::on_whItemExit_toggled(bool enabled)
         {
             if (enabled)
             {
-                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV_U);
-            }
-        }
-
-        void MainWindow::on_whItemConveyorDown_toggled(bool enabled)
-        {
-            if (enabled)
-            {
-                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_CONV_D);
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_EXIT);
             }
         }
 
@@ -201,7 +190,7 @@ namespace whm
             }
         }
 
-        void MainWindow::on_whItemLocations_toggled(bool enabled)
+        void MainWindow::on_whItemLocation_toggled(bool enabled)
         {
             if (enabled)
             {
@@ -217,6 +206,7 @@ namespace whm
                 return;
             }*/
 
+            ::whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./test.xml");
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().dump();
@@ -232,8 +222,7 @@ namespace whm
 
             ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
             ::whm::WarehouseLayout_t::getWhLayout().dump();
-
-            //UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
+            ::whm::WarehouseLayout_t::getWhLayout().serializeToXml("./test.xml");
         }
 
         void MainWindow::on_clearLayout_triggered()

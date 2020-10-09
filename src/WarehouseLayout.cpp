@@ -31,7 +31,7 @@ namespace whm
 
     WarehouseLayout_t::~WarehouseLayout_t()
     {
-        // Delete all whItems & whConns
+        this->clearWhLayout();
     }
 
     WarehouseLayout_t& WarehouseLayout_t::getWhLayout()
@@ -75,7 +75,7 @@ namespace whm
         }
 
         doc->SaveFile(xmlFilename.c_str());
-        //delete doc
+        delete doc;
     }
 
     void WarehouseLayout_t::deserializeFromXml(const std::string& xmlFilename)
@@ -98,7 +98,7 @@ namespace whm
             addWhConn(whConn);
         }
 
-        //delete doc
+        delete doc;
     }
 
     void WarehouseLayout_t::addWhItem(WarehouseItem_t* i)
@@ -156,5 +156,33 @@ namespace whm
 
         whItems.clear();
         whConns.clear();
+    }
+
+    void WarehouseLayout_t::eraseWhItem(WarehouseItem_t* i)
+    {
+        auto found = std::find_if(whItems.begin(), whItems.end(),
+                        [&](WarehouseItem_t* whItem) -> bool
+                        {
+                            return whItem->getID() == i->getID(); // whItem == i
+                        });
+
+        if (found != whItems.end())
+        {
+            whItems.erase(found);
+        }
+    }
+
+    void WarehouseLayout_t::eraseWhConn(WarehouseConnection_t* c)
+    {
+        auto found = std::find_if(whConns.begin(), whConns.end(),
+                        [&](WarehouseConnection_t* whConn) -> bool
+                        {
+                            return whConn == c;
+                        });
+
+        if (found != whConns.end())
+        {
+            whConns.erase(found);
+        }
     }
 }

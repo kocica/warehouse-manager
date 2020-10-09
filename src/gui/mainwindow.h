@@ -48,12 +48,11 @@ namespace whm
                 void on_deletionMode_toggled(bool);
                 void on_selectionMode_toggled(bool);
 
-                void on_whItemLocations_toggled(bool);
-                void on_whItemConveyorRight_toggled(bool);
-                void on_whItemConveyorLeft_toggled(bool);
-                void on_whItemConveyorUp_toggled(bool);
-                void on_whItemConveyorDown_toggled(bool);
+                void on_whItemLocation_toggled(bool);
+                void on_whItemConveyor_toggled(bool);
                 void on_whItemConveyorHub_toggled(bool);
+                void on_whItemEntrance_toggled(bool);
+                void on_whItemExit_toggled(bool);
 
             private:
                 Ui::MainWindow* ui;

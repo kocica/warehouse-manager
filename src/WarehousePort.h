@@ -30,13 +30,14 @@ namespace whm
     {
         public:
             WarehousePort_t();
-            ~WarehousePort_t() = default;
+            ~WarehousePort_t();
 
 #ifdef WHM_GUI
             WarehousePort_t(gui::UiWarehousePort_t&);
 #endif
 
             void dump() const;
+            void disconnect();
 
             // (De)-serialization
             void serializeToXml(tinyxml2::XMLElement*) const;

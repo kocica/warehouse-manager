@@ -29,11 +29,10 @@ namespace whm
         enum class UiWarehouseItemType_t
         {
             E_LOCATION_SHELF,
-            E_CONVEYOR_R,  //< Convs to all directions, so we can detect flow
-            E_CONVEYOR_L,
-            E_CONVEYOR_U,
-            E_CONVEYOR_D,
-            E_CONVEYOR_HUB //< Able to connect up to four convs
+            E_CONVEYOR,     //< Convs to all directions, so we can detect flow
+            E_CONVEYOR_HUB, //< Able to connect up to four convs
+            E_WAREHOUSE_ENTRANCE,
+            E_WAREHOUSE_EXIT
         };
 
         bool isWhItemCombinationAllowed(UiWarehouseItemType_t, UiWarehouseItemType_t);

@@ -35,6 +35,22 @@ namespace whm
     }
 #endif
 
+    WarehousePort_t::~WarehousePort_t()
+    {
+        if (this->isConnected())
+        {
+            delete whConn;
+        }
+    }
+
+    void WarehousePort_t::disconnect()
+    {
+        if(this->isConnected())
+        {
+            whConn = nullptr;
+        }
+    }
+
     void WarehousePort_t::serializeToXml(tinyxml2::XMLElement* elem) const
     {
         elem->SetAttribute("id", getWhPortID());

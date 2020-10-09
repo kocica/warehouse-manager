@@ -25,7 +25,7 @@ namespace whm
 
             public:
                 UiWarehouseLayout_t();
-                ~UiWarehouseLayout_t() = default;
+                ~UiWarehouseLayout_t();
 
                 static UiWarehouseLayout_t& getWhLayout();
 

@@ -45,9 +45,10 @@ namespace whm
 
     WarehouseConnection_t::~WarehouseConnection_t()
     {
-        // TODO: Clean-up
-        // delete to;
-        // delete from;
+        to->disconnect();
+        from->disconnect();
+
+        WarehouseLayout_t::getWhLayout().eraseWhConn(this);
     }
 
     void WarehouseConnection_t::serializeToXml(tinyxml2::XMLDocument* doc) const
