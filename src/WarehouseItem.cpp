@@ -26,13 +26,7 @@ namespace whm
     {
         if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
         {
-            WarehouseLocationSlot_t<std::string> s;
-            s.setArticle("CODE0000");
-            s.setQuantity(42);
-
-            whLocRack = new WarehouseLocationRack_t<std::string>();
-
-            whLocRack->setAt(2, 7, s);
+            whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5);
         }
     }
 
@@ -57,7 +51,7 @@ namespace whm
 
         if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
         {
-            whLocRack = new WarehouseLocationRack_t<std::string>();
+            whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5);
             // TODO: whLocRack->init(slotsX, slotsY);
         }
     }
@@ -101,8 +95,6 @@ namespace whm
                           whPort->serializeToXml(whPortAttribs);
                           whItem->InsertEndChild( whPortAttribs );
                       });
-
-        // TODO: whLocRack->init(slotsX, slotsY);
     }
 
     void WarehouseItem_t::deserializeFromXml(tinyxml2::XMLElement* elem)
@@ -126,11 +118,21 @@ namespace whm
             newWhPort->setWhItem(this);
             whPorts.emplace_back(newWhPort);
         }
+
+        if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        {
+            whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5);
+        }
     }
 
     WarehouseItem_t::WarehousePortContainer_t WarehouseItem_t::getWhPorts() const
     {
         return whPorts;
+    }
+
+    WarehouseLocationRack_t<std::string>* WarehouseItem_t::getWhLocationRack() const
+    {
+        return whLocRack;
     }
 
     void WarehouseItem_t::dump() const

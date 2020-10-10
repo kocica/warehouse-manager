@@ -61,6 +61,7 @@ namespace whm
             int32_t getH() const    { return h; }
 
             WarehousePortContainer_t getWhPorts() const;
+            WarehouseLocationRack_t<std::string>* getWhLocationRack() const;
 
             void dump() const;
 

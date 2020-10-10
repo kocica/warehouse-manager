@@ -8,6 +8,7 @@
  */
 
 // Std
+#include <fstream>
 #include <iostream>
 #include <algorithm>
 
@@ -15,6 +16,7 @@
 #include "WarehouseItem.h"
 #include "WarehouseLayout.h"
 #include "WarehouseConnection.h"
+#include "WarehouseLocationRack.h"
 
 #ifdef WHM_GUI
 #include "gui/UiWarehouseLayout.h"
@@ -80,6 +82,8 @@ namespace whm
 
     void WarehouseLayout_t::deserializeFromXml(const std::string& xmlFilename)
     {
+        this->clearWhLayout();
+
         tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
 
         doc->LoadFile(xmlFilename.c_str());
@@ -99,6 +103,47 @@ namespace whm
         }
 
         delete doc;
+    }
+
+    void WarehouseLayout_t::importLocationSlots(const std::string& csvFilename)
+    {
+        std::ifstream csvStream;
+        csvStream.open(csvFilename);
+
+        // Ignore header
+        std::string header;
+        std::getline(csvStream, header);
+
+        std::for_each(whItems.begin(), whItems.end(),
+                      [&](const WarehouseItem_t* whItem) -> void
+                      {
+                          if (whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                          {
+                              whItem->getWhLocationRack()->importSlots(csvStream);
+                          }
+                      });
+
+        csvStream.close();
+    }
+
+    void WarehouseLayout_t::exportLocationSlots(const std::string& csvFilename)
+    {
+        std::ofstream csvStream;
+        csvStream.open(csvFilename);
+
+        // Create header
+        csvStream << "Warehouse location ID;Slot X;Slot Y;Article;Quantity" << std::endl;
+
+        std::for_each(whItems.begin(), whItems.end(),
+                      [&](const WarehouseItem_t* whItem) -> void
+                      {
+                          if (whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                          {
+                              whItem->getWhLocationRack()->exportSlots(csvStream);
+                          }
+                      });
+
+        csvStream.close();
     }
 
     void WarehouseLayout_t::addWhItem(WarehouseItem_t* i)

@@ -45,6 +45,10 @@ namespace whm
             void serializeToXml(const std::string&);
             void deserializeFromXml(const std::string&);
 
+            // Import/Export
+            void importLocationSlots(const std::string&);
+            void exportLocationSlots(const std::string&);
+
             WarehouseItemContainer_t getWhItems() const;
             WarehouseConnContainer_t getWhConns() const;
 

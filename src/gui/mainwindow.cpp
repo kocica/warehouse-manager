@@ -209,7 +209,6 @@ namespace whm
                 return;
             }*/
 
-            ::whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./test.xml");
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().dump();
@@ -230,17 +229,23 @@ namespace whm
 
         void MainWindow::on_clearLayout_triggered()
         {
+            ::whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             UiWarehouseLayout_t::getWhLayout().clearWhLayout();
         }
 
         void MainWindow::on_simulationRun_triggered()
         {
-            UiWarehouseLayout_t::getWhLayout().dump();
+            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+            ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots("./test.csv");
         }
 
         void MainWindow::on_simulationStep_triggered()
         {
-
+            ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./test.xml");
+            ::whm::WarehouseLayout_t::getWhLayout().importLocationSlots("./test.csv");
+            ::whm::WarehouseLayout_t::getWhLayout().dump();
+            UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
+            UiWarehouseLayout_t::getWhLayout().dump();
         }
 
         void MainWindow::on_simulationStop_triggered()

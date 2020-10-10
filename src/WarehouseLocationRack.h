@@ -14,6 +14,8 @@
 
 namespace whm
 {
+    class WarehouseItem_t;
+
     template<typename T>
     class WarehouseLocationRack_t
     {
@@ -21,16 +23,23 @@ namespace whm
         using LocationSlots_t = std::vector<std::vector<LocationSlot_t>>;
 
         public:
-            WarehouseLocationRack_t();
+            WarehouseLocationRack_t(WarehouseItem_t*, size_t, size_t);
             ~WarehouseLocationRack_t();
 
             LocationSlot_t at(size_t, size_t) const;
             void setAt(size_t, size_t, const LocationSlot_t&);
+
             void init(size_t, size_t);
+
+            void exportSlots(std::ostream&) const;
+            void importSlots(std::istream&);
+
+            WarehouseItem_t* getWhItem() const;
 
             void dump() const;
 
         private:
             LocationSlots_t slots;
+            WarehouseItem_t* whItem{ nullptr };
     };
 }
