@@ -21,7 +21,7 @@ namespace whm
             E_MODE_WH_ITEM_CONV,     //< Conv to all directions, so we can detect flow
             E_MODE_WH_ITEM_CONV_HUB, //< Able to connect up to four convs
             E_MODE_WH_ITEM_ENTRANCE,
-            E_MODE_WH_ITEM_EXIT
+            E_MODE_WH_ITEM_DISPATCH
         };
 
         class UiCursor_t

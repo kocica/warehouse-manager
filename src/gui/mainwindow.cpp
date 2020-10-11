@@ -17,6 +17,7 @@
 #include "ui_mainwindow.h"
 #include "UiWarehouseLayout.h"
 #include "UiGraphicsViewZoom.h"
+#include "UiWarehouseItemGate.h"
 #include "BaseShapeGraphicItem.h"
 #include "UiWarehouseItemLocation.h"
 #include "UiWarehouseItemConveyor.h"
@@ -119,29 +120,34 @@ namespace whm
                 { UiCursorMode_t::E_MODE_WH_ITEM_CONV_HUB, WarehouseItemType_t::E_CONVEYOR_HUB }
             };
 
+            static std::map<UiCursorMode_t, WarehouseItemType_t> gateMap =
+            {
+                { UiCursorMode_t::E_MODE_WH_ITEM_ENTRANCE, WarehouseItemType_t::E_WAREHOUSE_ENTRANCE },
+                { UiCursorMode_t::E_MODE_WH_ITEM_DISPATCH, WarehouseItemType_t::E_WAREHOUSE_DISPATCH }
+            };
+
             if (event->button() == Qt::LeftButton)
             {
+                UiWarehouseItem_t* whItem{ nullptr };
                 auto cursorMode = UiCursor_t::getCursor().getMode();
+
+                QPoint loc = QCursor::pos();
+                loc = ui->view->mapFromGlobal(loc);
 
                 if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
                 {
-                    QPoint loc = QCursor::pos();
-                    loc = ui->view->mapFromGlobal(loc);
-
-                    auto whItemLoc = new UiWarehouseItemLocation_t(scene, this, loc.x(), loc.y(), 100, 100, WarehouseItemType_t::E_LOCATION_SHELF);
-                    UiWarehouseLayout_t::getWhLayout().addWhItem(whItemLoc);
+                    whItem = new UiWarehouseItemLocation_t(scene, this, loc.x(), loc.y(), 100, 100, WarehouseItemType_t::E_LOCATION_SHELF);
+                }
+                else if (gateMap.find(cursorMode) != gateMap.end())
+                {
+                    whItem = new UiWarehouseItemGate_t(scene, this, loc.x(), loc.y(), 50, 50, gateMap[cursorMode]);
                 }
                 else if (convMap.find(cursorMode) != convMap.end())
                 {
-                    QPoint loc = QCursor::pos();
-                    loc = ui->view->mapFromGlobal(loc);
-
-                    int32_t w = cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_CONV ? 100 : 75;
-                    int32_t h = cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_CONV ? 50 : 50;
-
-                    auto whItemConv = new UiWarehouseItemConveyor_t(scene, this, loc.x(), loc.y(), w, h, convMap[cursorMode]);
-                    UiWarehouseLayout_t::getWhLayout().addWhItem(whItemConv);
+                    whItem = new UiWarehouseItemConveyor_t(scene, this, loc.x(), loc.y(), cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_CONV ? 100 : 75, 50, convMap[cursorMode]);
                 }
+
+                UiWarehouseLayout_t::getWhLayout().addWhItem(whItem);
             }
         }
 
@@ -181,7 +187,7 @@ namespace whm
         {
             if (enabled)
             {
-                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_EXIT);
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_DISPATCH);
             }
         }
 
@@ -210,6 +216,7 @@ namespace whm
             }
 
             ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(file.toUtf8().constData());
+            ::whm::WarehouseLayout_t::getWhLayout().dump();
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().dump();
         }

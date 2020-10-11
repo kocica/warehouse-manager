@@ -9,6 +9,7 @@
 
 // Local
 #include "UiWarehouseLayout.h"
+#include "UiWarehouseItemGate.h"
 #include "UiWarehouseItemLocation.h"
 #include "UiWarehouseItemConveyor.h"
 #include "../WarehouseItem.h"
@@ -55,6 +56,15 @@ namespace whm
                          item->getType() == ::whm::WarehouseItemType_t::E_CONVEYOR_HUB)
                 {
                     newItem = new UiWarehouseItemConveyor_t{ s, ui, *item };
+                }
+                else if (item->getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_ENTRANCE ||
+                         item->getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_DISPATCH)
+                {
+                    newItem = new UiWarehouseItemGate_t{ s, ui, *item };
+                }
+                else
+                {
+                    std::cerr << "Unknown warehouse item type!" << std::endl;
                 }
 
                 whItemIdSequence = std::max(tmpIdSequence, item->getWhItemID() + 1);

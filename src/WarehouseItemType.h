@@ -19,7 +19,7 @@ namespace whm
         E_CONVEYOR,           //< Convs to all directions, so we can detect flow
         E_CONVEYOR_HUB,       //< Able to connect up to four convs
         E_WAREHOUSE_ENTRANCE,
-        E_WAREHOUSE_EXIT
+        E_WAREHOUSE_DISPATCH
     };
 
     template <typename E>

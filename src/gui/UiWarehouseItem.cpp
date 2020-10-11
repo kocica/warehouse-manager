@@ -22,12 +22,12 @@ namespace whm
     {
         std::map<WarehouseItemType_t, std::vector<WarehouseItemType_t>> allowedCombinations =
         {
-            { WarehouseItemType_t::E_CONVEYOR,       { WarehouseItemType_t::E_CONVEYOR,
-                                                       WarehouseItemType_t::E_LOCATION_SHELF,
-                                                       WarehouseItemType_t::E_CONVEYOR_HUB }},
-            { WarehouseItemType_t::E_CONVEYOR_HUB,   { WarehouseItemType_t::E_CONVEYOR,
-                                                       WarehouseItemType_t::E_CONVEYOR_HUB }},
-            { WarehouseItemType_t::E_LOCATION_SHELF, { WarehouseItemType_t::E_CONVEYOR }},
+            { WarehouseItemType_t::E_CONVEYOR,           { WarehouseItemType_t::E_CONVEYOR, WarehouseItemType_t::E_LOCATION_SHELF, WarehouseItemType_t::E_CONVEYOR_HUB,
+                                                           WarehouseItemType_t::E_WAREHOUSE_ENTRANCE, WarehouseItemType_t::E_WAREHOUSE_DISPATCH }},
+            { WarehouseItemType_t::E_CONVEYOR_HUB,       { WarehouseItemType_t::E_CONVEYOR, WarehouseItemType_t::E_CONVEYOR_HUB }},
+            { WarehouseItemType_t::E_LOCATION_SHELF,     { WarehouseItemType_t::E_CONVEYOR }},
+            { WarehouseItemType_t::E_WAREHOUSE_ENTRANCE, { WarehouseItemType_t::E_CONVEYOR }},
+            { WarehouseItemType_t::E_WAREHOUSE_DISPATCH, { WarehouseItemType_t::E_CONVEYOR }}
         };
 
         bool isWhItemCombinationAllowed(WarehouseItemType_t lhs, WarehouseItemType_t rhs)
@@ -108,7 +108,7 @@ namespace whm
         void UiWarehouseItem_t::dump() const
         {
             std::cout << "==============================================" << std::endl;
-            std::cout << "  Warehouse item ID <" << whItemID << "> Type <" << typeid(*this).name() << ">" << std::endl;
+            std::cout << "  Warehouse item ID <" << whItemID << "> Type <" << typeid(*this).name() << "> = <" << to_underlying(whItemType) << ">" << std::endl;
             std::cout << "==============================================" << std::endl;
  
             std::for_each(whPorts.begin(), whPorts.end(),
