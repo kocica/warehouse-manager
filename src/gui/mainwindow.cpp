@@ -209,7 +209,7 @@ namespace whm
 
         void MainWindow::on_loadLayout_triggered()
         {
-            QString file = QFileDialog::getOpenFileName(this, tr("Load warehouse layout"), "", tr("Warehouse layouts (*)"));
+            QString file = QFileDialog::getOpenFileName(this, tr("Load warehouse layout"), "", tr("Warehouse layouts (*.xml)"));
             if (file.cbegin() == file.cend())
             {
                 return;
@@ -223,7 +223,7 @@ namespace whm
 
         void MainWindow::on_saveLayout_triggered()
         {
-            QString file = QFileDialog::getSaveFileName(this, tr("Save warehouse layout"), "", tr("Warehouse layouts (*)"));
+            QString file = QFileDialog::getSaveFileName(this, tr("Save warehouse layout"), "", tr("Warehouse layouts (*.xml)"));
             if (file.cbegin() == file.cend())
             {
                 return;

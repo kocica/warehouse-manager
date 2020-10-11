@@ -1,103 +1,90 @@
 <WarehouseItem>
-    <Attributes id="0" type="0" x="120" y="128" w="100" h="100"/>
-    <WarehousePort id="0" conn_id="1"/>
-    <WarehousePort id="1"/>
-</WarehouseItem>
-
-<WarehouseItem>
-    <Attributes id="1" type="0" x="710" y="578" w="100" h="100"/>
-    <WarehousePort id="0" conn_id="4"/>
-    <WarehousePort id="1"/>
-</WarehouseItem>
-
-<WarehouseItem>
-    <Attributes id="2" type="0" x="113" y="587" w="100" h="100"/>
-    <WarehousePort id="0"/>
-    <WarehousePort id="1" conn_id="5"/>
-</WarehouseItem>
-
-<WarehouseItem>
-    <Attributes id="3" type="2" x="416" y="361" w="75" h="50"/>
+    <Attributes id="0" type="3" x="37" y="117" w="50" h="50"/>
     <WarehousePort id="0" conn_id="0"/>
-    <WarehousePort id="1" conn_id="2"/>
-    <WarehousePort id="2" conn_id="6"/>
-    <WarehousePort id="3" conn_id="3"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="4" type="1" x="408" y="252" w="100" h="50"/>
-    <WarehousePort id="0" conn_id="4"/>
-    <WarehousePort id="1" conn_id="2"/>
+    <Attributes id="1" type="1" x="111" y="118" w="100" h="50"/>
+    <WarehousePort id="0" conn_id="0"/>
+    <WarehousePort id="1" conn_id="1"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="5" type="1" x="225" y="359" w="100" h="50"/>
+    <Attributes id="2" type="2" x="235" y="117" w="75" h="50"/>
     <WarehousePort id="0" conn_id="1"/>
-    <WarehousePort id="1" conn_id="0"/>
+    <WarehousePort id="1"/>
+    <WarehousePort id="2" conn_id="4"/>
+    <WarehousePort id="3" conn_id="2"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="6" type="1" x="408" y="499" w="100" h="50"/>
+    <Attributes id="3" type="1" x="225" y="193" w="100" h="50"/>
+    <WarehousePort id="0" conn_id="2"/>
+    <WarehousePort id="1" conn_id="3"/>
+</WarehouseItem>
+
+<WarehouseItem>
+    <Attributes id="4" type="0" x="225" y="264" w="100" h="100"/>
     <WarehousePort id="0" conn_id="3"/>
+    <WarehousePort id="1"/>
+</WarehouseItem>
+
+<WarehouseItem>
+    <Attributes id="5" type="1" x="355" y="117" w="100" h="50"/>
+    <WarehousePort id="0" conn_id="4"/>
     <WarehousePort id="1" conn_id="5"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="7" type="1" x="581" y="360" w="100" h="50"/>
-    <WarehousePort id="0" conn_id="6"/>
-    <WarehousePort id="1" conn_id="7"/>
+    <Attributes id="6" type="1" x="477" y="116" w="100" h="50"/>
+    <WarehousePort id="0" conn_id="5"/>
+    <WarehousePort id="1" conn_id="6"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="8" type="0" x="706" y="111" w="100" h="100"/>
-    <WarehousePort id="0" conn_id="7"/>
+    <Attributes id="8" type="0" x="589" y="91" w="100" h="100"/>
+    <WarehousePort id="0" conn_id="6"/>
     <WarehousePort id="1"/>
 </WarehouseItem>
 
 <WarehouseConnection>
     <Attributes id="0"/>
-    <WarehousePortTo item_id="3" port_id="0"/>
-    <WarehousePortFrom item_id="5" port_id="1"/>
+    <WarehousePortTo item_id="1" port_id="0"/>
+    <WarehousePortFrom item_id="0" port_id="0"/>
 </WarehouseConnection>
 
 <WarehouseConnection>
     <Attributes id="1"/>
-    <WarehousePortTo item_id="0" port_id="0"/>
-    <WarehousePortFrom item_id="5" port_id="0"/>
+    <WarehousePortTo item_id="2" port_id="0"/>
+    <WarehousePortFrom item_id="1" port_id="1"/>
 </WarehouseConnection>
 
 <WarehouseConnection>
     <Attributes id="2"/>
-    <WarehousePortTo item_id="3" port_id="1"/>
-    <WarehousePortFrom item_id="4" port_id="1"/>
+    <WarehousePortTo item_id="3" port_id="0"/>
+    <WarehousePortFrom item_id="2" port_id="3"/>
 </WarehouseConnection>
 
 <WarehouseConnection>
     <Attributes id="3"/>
-    <WarehousePortTo item_id="3" port_id="3"/>
-    <WarehousePortFrom item_id="6" port_id="0"/>
+    <WarehousePortTo item_id="4" port_id="0"/>
+    <WarehousePortFrom item_id="3" port_id="1"/>
 </WarehouseConnection>
 
 <WarehouseConnection>
     <Attributes id="4"/>
-    <WarehousePortTo item_id="1" port_id="0"/>
-    <WarehousePortFrom item_id="4" port_id="0"/>
+    <WarehousePortTo item_id="5" port_id="0"/>
+    <WarehousePortFrom item_id="2" port_id="2"/>
 </WarehouseConnection>
 
 <WarehouseConnection>
     <Attributes id="5"/>
-    <WarehousePortTo item_id="2" port_id="1"/>
-    <WarehousePortFrom item_id="6" port_id="1"/>
+    <WarehousePortTo item_id="6" port_id="0"/>
+    <WarehousePortFrom item_id="5" port_id="1"/>
 </WarehouseConnection>
 
 <WarehouseConnection>
     <Attributes id="6"/>
-    <WarehousePortTo item_id="7" port_id="0"/>
-    <WarehousePortFrom item_id="3" port_id="2"/>
-</WarehouseConnection>
-
-<WarehouseConnection>
-    <Attributes id="7"/>
     <WarehousePortTo item_id="8" port_id="0"/>
-    <WarehousePortFrom item_id="7" port_id="1"/>
+    <WarehousePortFrom item_id="6" port_id="1"/>
 </WarehouseConnection>

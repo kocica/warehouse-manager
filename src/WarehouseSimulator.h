@@ -15,6 +15,11 @@
 
 namespace whm
 {
+    struct WarehouseSimOrderInfo_t
+    {
+        int32_t currentWhItemID{ 0 };
+    };
+
     class WarehouseSimulator_t
     {
         public:
@@ -24,15 +29,16 @@ namespace whm
             void runSimulation();
 
         protected:
+            WarehouseItem_t* lookupWhEntrance();
             void simulatePick(WarehouseOrder_t<std::string>& whOrder);
-            std::vector<int32_t> lookupLocations(const std::string&, int32_t);
+            std::vector<int32_t> lookupWhLocations(const std::string&, int32_t);
 
             // TODO: calcTimePicking (calculates time of picking at location which depends on slot position x/y, etc.)
             // TODO: calcTimeMovement (calculates time of movement on conveyor which depends on length, etc.)
 
         private:
-            // TODO: orderInfo (where current order actually is located, etc.)
             WarehouseLayout_t& whLayout;
             WarehousePathFinder_t* whPathFinder;
+            WarehouseSimOrderInfo_t whOrderInfo;
     };
 }

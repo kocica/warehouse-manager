@@ -50,28 +50,39 @@ namespace whm
     {
         std::cout << "Start picking orderID <" << whOrder.getWhOrderID() << ">\n";
 
+        whOrderInfo.currentWhItemID = lookupWhEntrance()->getWhItemID();
+
         for(auto& whOrderLine : whOrder)
         {
             std::cout << "Start picking lineID <" << whOrderLine.getWhLineID() << ">\n";
 
-            auto filteredLocIDs = this->lookupLocations(whOrderLine.getArticle(), whOrderLine.getQuantity());
+            auto filteredLocIDs = this->lookupWhLocations(whOrderLine.getArticle(), whOrderLine.getQuantity());
 
-            WarehousePathInfo_t* whPathInfo{ nullptr };
+            WarehousePathInfo_t* whTopPathInfo{ nullptr };
 
             std::for_each(filteredLocIDs.begin(), filteredLocIDs.end(),
-                          [&](int32_t whLocID)
+                          [&](int32_t targetWhLocID)
                           {
-                              whPathInfo = this->whPathFinder->getShortestPath(0, whLocID);
+                              auto whPathInfo = this->whPathFinder->getShortestPath(whOrderInfo.currentWhItemID, targetWhLocID);
 
-                              if(whPathInfo)
+                              if(!whTopPathInfo || whPathInfo->distance < whTopPathInfo->distance )
                               {
-                                  std::cout << "Shortest path: " << whOrderLine.getArticle() << " " << whPathInfo->targetWhItemID << " " << whPathInfo->distance << std::endl;
+                                  whTopPathInfo = whPathInfo;
                               }
                           });
+
+            if(!whTopPathInfo)
+            {
+                std::cerr << "Cannot pick this article!" << std::endl;
+            }
+
+            std::cout << "Movement for <" << whOrderLine.getArticle() << ">: from <" << whOrderInfo.currentWhItemID << "> to <" << whTopPathInfo->targetWhItemID << ">\n";
+
+            whOrderInfo.currentWhItemID = whTopPathInfo->targetWhItemID;
         }
     }
 
-    std::vector<int32_t> WarehouseSimulator_t::lookupLocations(const std::string& article, int32_t quantity)
+    std::vector<int32_t> WarehouseSimulator_t::lookupWhLocations(const std::string& article, int32_t quantity)
     {
         std::vector<int32_t> whLocIDs;
         std::pair<size_t, size_t> position;
@@ -86,5 +97,19 @@ namespace whm
         }
 
         return whLocIDs;
+    }
+
+    WarehouseItem_t* WarehouseSimulator_t::lookupWhEntrance()
+    {
+        for(WarehouseItem_t* i : whLayout.getWhItems())
+        {
+            if(i->getType() == WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)
+            {
+                return i;
+            }
+        }
+
+        std::cerr << "Warehouse layout has no entrance (should be checked in UI afterall)!" << std::endl;
+        return nullptr;
     }
 }
