@@ -203,28 +203,28 @@ namespace whm
 
         void MainWindow::on_loadLayout_triggered()
         {
-            /*QString file = QFileDialog::getOpenFileName(this, tr("Load warehouse layout"), "./savedLayout.xml", tr("Warehouse layouts (*)"));
+            QString file = QFileDialog::getOpenFileName(this, tr("Load warehouse layout"), "", tr("Warehouse layouts (*)"));
             if (file.cbegin() == file.cend())
             {
                 return;
-            }*/
+            }
 
-            ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./data/layout.xml");
+            ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(file.toUtf8().constData());
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().dump();
         }
 
         void MainWindow::on_saveLayout_triggered()
         {
-            /*QString file = QFileDialog::getSaveFileName(this, tr("Save warehouse layout"), "./savedLayout.xml", tr("Warehouse layouts (*)"));
+            QString file = QFileDialog::getSaveFileName(this, tr("Save warehouse layout"), "", tr("Warehouse layouts (*)"));
             if (file.cbegin() == file.cend())
             {
                 return;
-            }*/
+            }
 
             ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
             ::whm::WarehouseLayout_t::getWhLayout().dump();
-            ::whm::WarehouseLayout_t::getWhLayout().serializeToXml("./data/layout.xml");
+            ::whm::WarehouseLayout_t::getWhLayout().serializeToXml(file.toUtf8().constData());
         }
 
         void MainWindow::on_clearLayout_triggered()
@@ -235,17 +235,12 @@ namespace whm
 
         void MainWindow::on_simulationRun_triggered()
         {
-            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
-            ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots("./data/products.csv");
+
         }
 
         void MainWindow::on_simulationStep_triggered()
         {
-            ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./data/layout.xml");
-            ::whm::WarehouseLayout_t::getWhLayout().importLocationSlots("./data/products.csv");
-            ::whm::WarehouseLayout_t::getWhLayout().dump();
-            UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
-            UiWarehouseLayout_t::getWhLayout().dump();
+
         }
 
         void MainWindow::on_simulationStop_triggered()

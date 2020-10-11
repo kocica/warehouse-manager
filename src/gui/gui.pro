@@ -16,6 +16,7 @@ SOURCES +=  ../main.cpp \
             ../WarehouseLayout.cpp \
             ../WarehouseOrderLine.cpp \
             ../WarehouseConnection.cpp \
+            ../WarehousePathFinder.cpp \
             ../WarehouseLocationSlot.cpp \
             ../WarehouseLocationRack.cpp \
             UiCursor.cpp \
@@ -39,6 +40,7 @@ HEADERS +=  ../Utils.h \
             ../WarehouseLayout.h \
             ../WarehouseOrderLine.h \
             ../WarehouseConnection.h \
+            ../WarehousePathFinder.h \
             ../WarehouseLocationSlot.h \
             ../WarehouseLocationRack.h \
             MainWindow.h \

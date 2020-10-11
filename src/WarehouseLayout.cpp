@@ -17,6 +17,7 @@
 #include "WarehouseOrder.h"
 #include "WarehouseLayout.h"
 #include "WarehouseConnection.h"
+#include "WarehousePathFinder.h"
 #include "WarehouseLocationRack.h"
 
 #ifdef WHM_GUI
@@ -278,5 +279,13 @@ namespace whm
         {
             whOrders.erase(found);
         }
+    }
+
+    void WarehouseLayout_t::runSimulation() const
+    {
+        WarehousePathFinder_t whPathFinder;
+
+        whPathFinder.precalculatePaths(this->getWhItems());
+        whPathFinder.dump();
     }
 }

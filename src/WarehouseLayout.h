@@ -67,6 +67,8 @@ namespace whm
             void eraseWhConn(WarehouseConnection_t*);
             void eraseWhOrder(const WarehouseOrder_t<std::string>&);
 
+            void runSimulation() const;
+
             void dump() const;
             void clearWhLayout();
 
