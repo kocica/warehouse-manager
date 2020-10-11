@@ -26,8 +26,8 @@ namespace whm
             T getArticle() const;
             void setArticle(const T&);
 
-            size_t getQuantity() const;
-            void setQuantity(const size_t);
+            int32_t getQuantity() const;
+            void setQuantity(const int32_t);
 
             std::pair<size_t, size_t> getCoords() const;
             void setCoords(const std::pair<size_t, size_t>&);
@@ -44,7 +44,7 @@ namespace whm
             T article;
             size_t x{ 0 };
             size_t y{ 0 };
-            size_t quantity{ 0 };
+            int32_t quantity{ 0 };
             WarehouseLocationRack_t<T>* whLocRack{ nullptr };
     };
 }

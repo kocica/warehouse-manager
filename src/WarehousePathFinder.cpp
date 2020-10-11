@@ -58,17 +58,13 @@ namespace whm
 
         if(it != pathInfo.pathWhItemIDs.end())
         {
-            std::cout << "Loop detected, abort." << std::endl;
+            //std::cout << "Loop detected, abort." << std::endl;
             return;
         }
 
         // Add new item to the map in case its not conv
-        if(whItem->getType() != WarehouseItemType_t::E_CONVEYOR &&
-           whItem->getType() != WarehouseItemType_t::E_CONVEYOR_HUB)
-        {
-            pathInfo.targetWhItemID = whItemID;
-            whPaths[sourceWhItemID].push_back(pathInfo);
-        }
+        pathInfo.targetWhItemID = whItemID;
+        whPaths[sourceWhItemID].push_back(pathInfo);
 
         // Update path info attributes
         if(sourceWhItemID != whItemID)
@@ -98,10 +94,27 @@ namespace whm
                       });
     }
 
-    void WarehousePathFinder_t::getShortestPath(int32_t lhsItemID, int32_t rhsItemID) const
+    WarehousePathInfo_t* WarehousePathFinder_t::getShortestPath(int32_t lhsItemID, int32_t rhsItemID) const
     {
-        (void)lhsItemID;
-        (void)rhsItemID;
+        WarehousePathInfo_t* shortestPath{ nullptr };
+
+        auto it = whPaths.find(lhsItemID);
+
+        if(it != whPaths.end())
+        {
+            for(const WarehousePathInfo_t& pathInfo : it->second)
+            {
+                if(pathInfo.targetWhItemID == rhsItemID)
+                {
+                    if(!shortestPath || (shortestPath->distance > pathInfo.distance))
+                    {
+                        shortestPath = const_cast<WarehousePathInfo_t*>(&pathInfo);
+                    }
+                }
+            }
+        }
+
+        return shortestPath;
     }
 
     void WarehousePathFinder_t::dump() const

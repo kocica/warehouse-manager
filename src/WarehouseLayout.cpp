@@ -280,12 +280,4 @@ namespace whm
             whOrders.erase(found);
         }
     }
-
-    void WarehouseLayout_t::runSimulation() const
-    {
-        WarehousePathFinder_t whPathFinder;
-
-        whPathFinder.precalculatePaths(this->getWhItems());
-        whPathFinder.dump();
-    }
 }

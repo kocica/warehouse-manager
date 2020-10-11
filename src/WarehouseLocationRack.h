@@ -9,7 +9,10 @@
 
 #pragma once
 
+// Std
 #include <vector>
+
+// Local
 #include "WarehouseLocationSlot.h"
 
 namespace whm
@@ -30,6 +33,8 @@ namespace whm
             void setAt(size_t, size_t, const LocationSlot_t&);
 
             void init(size_t, size_t);
+
+            bool containsArticle(const T&, int32_t, std::pair<size_t, size_t>&);
 
             void exportSlots(std::ostream&) const;
             void importSlots(std::istream&);

@@ -13,6 +13,7 @@
 // Local
 #include "Utils.h"
 #include "WarehouseLayout.h"
+#include "WarehouseSimulator.h"
 
 // Qt
 #ifdef WHM_GUI
@@ -44,9 +45,11 @@ int main(int argc, char *argv[])
 #else
         auto args = whm::utils::ArgsParser_t{}.parseArgs(argc, argv);
 
-        whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./data/testLayout.xml");
+        whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./data/layout.xml");
+        whm::WarehouseLayout_t::getWhLayout().importLocationSlots("./data/products.csv");
+        whm::WarehouseLayout_t::getWhLayout().importCustomerOrders("./data/orders.xml");
 
-        whm::WarehouseLayout_t::getWhLayout().runSimulation();
+        whm::WarehouseSimulator_t{}.runSimulation();
 #endif
 
 #ifdef WHM_GUI

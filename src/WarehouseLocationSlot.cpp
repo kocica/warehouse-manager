@@ -39,13 +39,13 @@ namespace whm
     }
 
     template<typename T>
-    size_t WarehouseLocationSlot_t<T>::getQuantity() const
+    int32_t WarehouseLocationSlot_t<T>::getQuantity() const
     {
         return this->quantity;
     }
 
     template<typename T>
-    void WarehouseLocationSlot_t<T>::setQuantity(const size_t q)
+    void WarehouseLocationSlot_t<T>::setQuantity(const int32_t q)
     {
         this->quantity = q;
     }

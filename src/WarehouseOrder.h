@@ -30,6 +30,9 @@ namespace whm
             WarehouseOrder_t();
             ~WarehouseOrder_t();
 
+            typename WarehouseOrderLineContainer_t::iterator begin() { return whOrderLines.begin(); }
+            typename WarehouseOrderLineContainer_t::iterator end() { return whOrderLines.end(); }
+
             int32_t getWhOrderID() const;
             WarehouseOrderLineContainer_t getWhOrderLines() const;
 

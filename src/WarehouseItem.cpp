@@ -24,10 +24,7 @@ namespace whm
 {
     WarehouseItem_t::WarehouseItem_t()
     {
-        if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
-        {
-            whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5);
-        }
+        
     }
 
 #ifdef WHM_GUI
@@ -51,8 +48,7 @@ namespace whm
 
         if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
         {
-            whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5);
-            // TODO: whLocRack->init(slotsX, slotsY);
+            whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5); // TODO: User input location slots
         }
     }
 #endif
@@ -66,7 +62,7 @@ namespace whm
 
         whPorts.clear();
 
-        if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        if (whLocRack)
         {
             delete whLocRack;
         }
@@ -121,7 +117,7 @@ namespace whm
 
         if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
         {
-            whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5);
+            whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5); // TODO: User input location slots
         }
     }
 
