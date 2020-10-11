@@ -209,7 +209,7 @@ namespace whm
                 return;
             }*/
 
-            ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./test.xml");
+            ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./data/layout.xml");
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().dump();
         }
@@ -224,7 +224,7 @@ namespace whm
 
             ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
             ::whm::WarehouseLayout_t::getWhLayout().dump();
-            ::whm::WarehouseLayout_t::getWhLayout().serializeToXml("./test.xml");
+            ::whm::WarehouseLayout_t::getWhLayout().serializeToXml("./data/layout.xml");
         }
 
         void MainWindow::on_clearLayout_triggered()
@@ -236,13 +236,13 @@ namespace whm
         void MainWindow::on_simulationRun_triggered()
         {
             ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
-            ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots("./test.csv");
+            ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots("./data/products.csv");
         }
 
         void MainWindow::on_simulationStep_triggered()
         {
-            ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./test.xml");
-            ::whm::WarehouseLayout_t::getWhLayout().importLocationSlots("./test.csv");
+            ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./data/layout.xml");
+            ::whm::WarehouseLayout_t::getWhLayout().importLocationSlots("./data/products.csv");
             ::whm::WarehouseLayout_t::getWhLayout().dump();
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().dump();

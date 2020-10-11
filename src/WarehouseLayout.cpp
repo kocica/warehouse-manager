@@ -14,6 +14,7 @@
 
 // Local
 #include "WarehouseItem.h"
+#include "WarehouseOrder.h"
 #include "WarehouseLayout.h"
 #include "WarehouseConnection.h"
 #include "WarehouseLocationRack.h"
@@ -105,6 +106,22 @@ namespace whm
         delete doc;
     }
 
+    void WarehouseLayout_t::importCustomerOrders(const std::string& xmlFilename)
+    {
+        tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
+
+        doc->LoadFile(xmlFilename.c_str());
+
+        for (tinyxml2::XMLElement* whOrderXml = doc->FirstChildElement("WarehouseOrder"); whOrderXml; whOrderXml = whOrderXml->NextSiblingElement("WarehouseOrder"))
+        {
+            WarehouseOrder_t<std::string> whOrder;
+            whOrder.deserializeFromXml(whOrderXml);
+            addWhOrder(std::move(whOrder));
+        }
+
+        delete doc;
+    }
+
     void WarehouseLayout_t::importLocationSlots(const std::string& csvFilename)
     {
         std::ifstream csvStream;
@@ -156,6 +173,11 @@ namespace whm
         whConns.push_back(c);
     }
 
+    void WarehouseLayout_t::addWhOrder(const WarehouseOrder_t<std::string>& o)
+    {
+        whOrders.push_back(o);
+    }
+
     WarehouseLayout_t::WarehouseItemContainer_t WarehouseLayout_t::getWhItems() const
     {
         return whItems;
@@ -164,6 +186,11 @@ namespace whm
     WarehouseLayout_t::WarehouseConnContainer_t WarehouseLayout_t::getWhConns() const
     {
         return whConns;
+    }
+
+    WarehouseLayout_t::WarehouseOrderContainer_t WarehouseLayout_t::getWhOrders() const
+    {
+        return whOrders;
     }
 
     void WarehouseLayout_t::dump() const
@@ -182,6 +209,14 @@ namespace whm
                       [](const WarehouseConnection_t* whConn) -> void
                       {
                           whConn->dump();
+                      });
+
+        std::cout << std::endl << std::endl;
+
+        std::for_each(whOrders.begin(), whOrders.end(),
+                      [](const auto& whOrder) -> void
+                      {
+                          whOrder.dump();
                       });
 
         std::cout << std::endl << "Dump warehouse layout - end" << std::endl << std::endl << std::endl;
@@ -228,6 +263,20 @@ namespace whm
         if (found != whConns.end())
         {
             whConns.erase(found);
+        }
+    }
+
+    void WarehouseLayout_t::eraseWhOrder(const WarehouseOrder_t<std::string>& o)
+    {
+        auto found = std::find_if(whOrders.begin(), whOrders.end(),
+                        [&](const auto& whOrder) -> bool
+                        {
+                            return whOrder.getWhOrderID() == o.getWhOrderID();
+                        });
+
+        if (found != whOrders.end())
+        {
+            whOrders.erase(found);
         }
     }
 }

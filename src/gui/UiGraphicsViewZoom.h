@@ -6,6 +6,8 @@
  * @author  TODO: Citation
  */
 
+#pragma once
+
 #include <QObject>
 #include <QGraphicsView>
 

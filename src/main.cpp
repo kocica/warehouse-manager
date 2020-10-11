@@ -44,7 +44,10 @@ int main(int argc, char *argv[])
 #else
         auto args = whm::utils::ArgsParser_t{}.parseArgs(argc, argv);
 
-        whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./test.xml");
+        //whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./data/layout.xml");
+        //whm::WarehouseLayout_t::getWhLayout().dump();
+
+        whm::WarehouseLayout_t::getWhLayout().importCustomerOrders("./data/orders.xml");
         whm::WarehouseLayout_t::getWhLayout().dump();
 #endif
 

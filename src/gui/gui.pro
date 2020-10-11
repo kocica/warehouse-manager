@@ -12,7 +12,9 @@ SOURCES +=  ../main.cpp \
             ../Logger.cpp \
             ../WarehouseItem.cpp \
             ../WarehousePort.cpp \
+            ../WarehouseOrder.cpp \
             ../WarehouseLayout.cpp \
+            ../WarehouseOrderLine.cpp \
             ../WarehouseConnection.cpp \
             ../WarehouseLocationSlot.cpp \
             ../WarehouseLocationRack.cpp \
@@ -33,7 +35,9 @@ HEADERS +=  ../Utils.h \
             ../Logger.h \
             ../WarehouseItem.h \
             ../WarehousePort.h \
+            ../WarehouseOrder.h \
             ../WarehouseLayout.h \
+            ../WarehouseOrderLine.h \
             ../WarehouseConnection.h \
             ../WarehouseLocationSlot.h \
             ../WarehouseLocationRack.h \
