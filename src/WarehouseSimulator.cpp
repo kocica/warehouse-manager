@@ -9,6 +9,7 @@
 
 // Std
 #include <chrono>
+#include <thread>
 #include <utility>
 #include <iostream>
 #include <algorithm>
@@ -20,11 +21,12 @@
 
 namespace whm
 {
-    WarehouseSimulator_t::WarehouseSimulator_t()
-        : whPathFinder{ new WarehousePathFinder_t() }
+    WarehouseSimulator_t::WarehouseSimulator_t(const utils::SimArgs_t& args_)
+        : args{ args_ }
+        , whPathFinder{ new WarehousePathFinder_t() }
         , whLayout{ WarehouseLayout_t::getWhLayout() }
     {
-        
+
     }
 
     WarehouseSimulator_t::~WarehouseSimulator_t()
@@ -43,7 +45,7 @@ namespace whm
 
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-        std::cout << "Simulation took " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
+        std::cout << "Simulation took <" << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "> [µs]" << std::endl;
     }
 
     void WarehouseSimulator_t::simulatePick(WarehouseOrder_t<std::string>& whOrder)
@@ -76,7 +78,13 @@ namespace whm
                 std::cerr << "Cannot pick this article!" << std::endl;
             }
 
-            std::cout << "Movement for <" << whOrderLine.getArticle() << ">: from <" << whOrderInfo.currentWhItemID << "> to <" << whTopPathInfo->targetWhItemID << ">\n";
+            std::cout << "Movement for article <" << whOrderLine.getArticle() << ">: from <" << whOrderInfo.currentWhItemID << "> to <" << whTopPathInfo->targetWhItemID << ">\n";
+
+            int64_t us = whTopPathInfo->distance / args.toteSpeed * 1000000;
+
+            std::cout << "Sleep for <" << us << "> [µs]" << std::endl;
+
+            std::this_thread::sleep_for(std::chrono::microseconds(us));
 
             whOrderInfo.currentWhItemID = whTopPathInfo->targetWhItemID;
         }

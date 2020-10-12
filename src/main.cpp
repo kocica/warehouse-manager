@@ -43,13 +43,13 @@ int main(int argc, char *argv[])
 
         window.show();
 #else
-        auto args = whm::utils::ArgsParser_t{}.parseArgs(argc, argv);
+        const auto& args = whm::utils::parseArgs(argc, argv);
 
-        whm::WarehouseLayout_t::getWhLayout().deserializeFromXml("./data/layout.xml");
-        whm::WarehouseLayout_t::getWhLayout().importLocationSlots("./data/products.csv");
-        whm::WarehouseLayout_t::getWhLayout().importCustomerOrders("./data/orders.xml");
+        whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(args.layoutPath);
+        whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.productsPath);
+        whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
-        whm::WarehouseSimulator_t{}.runSimulation();
+        whm::WarehouseSimulator_t{args}.runSimulation();
 #endif
 
 #ifdef WHM_GUI

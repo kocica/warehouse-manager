@@ -61,12 +61,12 @@ namespace whm
                 sizeY = 10; // TODO: Port size
             }*/
 
-            if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
+            /*if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
             {
                 std::cerr << "Collision detected - Item's cannot intersect." << std::endl;
 
                 // TODO: Remove from layout and deleteLater()?
-            }
+            }*/
 
             if (t == WarehouseItemType_t::E_CONVEYOR)
             {

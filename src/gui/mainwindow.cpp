@@ -45,7 +45,7 @@ namespace whm
             , ui(new Ui::MainWindow)
         {
             ui->setupUi(this);
-            ui->warehouseLayoutArea->setStyleSheet("background-color: rgb(255, 255, 255)");
+            ui->view->setStyleSheet("background-color: rgb(255, 255, 255)");
 
             setWindowTitle("Warehouse Manager");
             setFixedSize(1000, 700);
@@ -65,14 +65,12 @@ namespace whm
             QObject::connect(&buttons, SIGNAL(rejected()), dialog, SLOT(reject()));
             form->addRow(&buttons);
 
-            /*if (dialog->exec() == QDialog::Accepted)
-            {
-                ui->warehouseLayoutArea->setFixedSize(whDimX->text().toInt(), whDimY->text().toInt());
-            }*/
-            ui->warehouseLayoutArea->setFixedSize(2000, 1000);
-
             // Create scene
             scene = new QGraphicsScene();
+            /*if (dialog->exec() == QDialog::Accepted)
+            {
+                scene->setSceneRect(0, 0, w, h);
+            }*/
             scene->setSceneRect(0, 0, 1024, 1024);
             ui->view->setScene(scene);
 

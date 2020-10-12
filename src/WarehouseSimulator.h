@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "Utils.h"
 #include "WarehouseOrder.h"
 #include "WarehouseLayout.h"
 #include "WarehousePathFinder.h"
@@ -23,7 +24,7 @@ namespace whm
     class WarehouseSimulator_t
     {
         public:
-            WarehouseSimulator_t();
+            WarehouseSimulator_t(const utils::SimArgs_t&);
             ~WarehouseSimulator_t();
 
             void runSimulation();
@@ -37,6 +38,7 @@ namespace whm
             // TODO: calcTimeMovement (calculates time of movement on conveyor which depends on length, etc.)
 
         private:
+            utils::SimArgs_t args;
             WarehouseLayout_t& whLayout;
             WarehousePathFinder_t* whPathFinder;
             WarehouseSimOrderInfo_t whOrderInfo;

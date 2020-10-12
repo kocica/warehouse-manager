@@ -53,12 +53,12 @@ namespace whm
                 sizeY = locY->text().toInt();
             }*/
 
-            if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
+            /*if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
             {
                 std::cerr << "Collision detected - Item's cannot intersect." << std::endl;
 
                 // TODO: Remove from layout and deleteLater()?
-            }
+            }*/
 
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x,  y + 37));
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + 75, y + 37));

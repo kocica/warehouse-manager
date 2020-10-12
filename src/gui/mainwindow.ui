@@ -48,29 +48,6 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QScrollArea" name="scrollArea">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(200,200,200);
-vertical {background-color: rgb(0,0,0);}</string>
-        </property>
-        <property name="verticalScrollBarPolicy">
-         <enum>Qt::ScrollBarAsNeeded</enum>
-        </property>
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarAsNeeded</enum>
-        </property>
-        <property name="widgetResizable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="warehouseLayoutArea">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>1031</width>
-           <height>872</height>
-          </rect>
-         </property>
          <layout class="QGridLayout" name="gridLayout_2" rowstretch="0" columnstretch="0">
           <property name="leftMargin">
            <number>1</number>
@@ -124,8 +101,6 @@ vertical {background-color: rgb(0,0,0);}</string>
            </layout>
           </item>
          </layout>
-        </widget>
-       </widget>
       </item>
      </layout>
     </item>
