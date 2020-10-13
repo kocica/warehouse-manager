@@ -27,7 +27,7 @@ namespace whm
         UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, ::whm::WarehouseItem_t& i)
             : UiWarehouseItem_t(s, ui, i.getX(), i.getY(), i.getW(), i.getH(), i.getType())
         {
-            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, i.getX() + i.getW()/2 - portSizeX, i.getY() + i.getH()/2 - portSizeX/2, portSizeX, portSizeY));
+            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, i.getX() + i.getW()/2 - portSizeX, i.getY() + i.getH()/2 - portSizeY/2, portSizeX, portSizeY));
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, i.getX() + i.getW()/2            , i.getY() + i.getH()/2 - portSizeY/2, portSizeX, portSizeY));
 
             this->setGraphicItemOrientation(i.getO()); // We have to rotate the object after its constructed
@@ -67,7 +67,7 @@ namespace whm
                 // TODO: Remove from layout and deleteLater()?
             }*/
 
-            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x + w/2 - portSizeX, y + h/2 - portSizeX/2, portSizeX, portSizeY));
+            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x + w/2 - portSizeX, y + h/2 - portSizeY/2, portSizeX, portSizeY));
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + w/2            , y + h/2 - portSizeY/2, portSizeX, portSizeY));
         }
     }
