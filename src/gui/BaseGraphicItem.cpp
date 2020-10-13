@@ -216,8 +216,8 @@ namespace whm
 
         void BaseGraphicItem_t::shiftGraphicItem(int dx, int dy)
         {
-            this->mRect.setTopLeft(QPoint(this->mRect.topLeft().x() + dx, this->mRect.topLeft().y() + dy));
-            this->mRect.setBottomRight(QPoint(this->mRect.bottomRight().x() + dx, this->mRect.bottomRight().y() + dy));
+            this->mRect.setTopLeft(QPointF(this->mRect.topLeft().x() + (dx/2.0), this->mRect.topLeft().y() + (dy/2.0)));
+            this->mRect.setBottomRight(QPointF(this->mRect.bottomRight().x() + (dx/2.0), this->mRect.bottomRight().y() + (dy/2.0)));
         }
 
         void BaseGraphicItem_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -229,6 +229,7 @@ namespace whm
 
             if(event->buttons() == Qt::LeftButton && mCurrentHandle)
             {
+                int32_t rotation{ 0 };
                 qreal dx = (mOrigin.x() - mRect.center().x()) / mRect.width();
                 qreal dy = (mOrigin.y() - mRect.center().y()) / mRect.height();
 
@@ -279,9 +280,11 @@ namespace whm
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_ROTATE:
-                        this->setTransform(QTransform().translate(mOrigin.x(),mOrigin.y())
-                                                       .rotate((int(-QLineF(event->scenePos(),     mapToScene(mOrigin)).angle() / 90) * 90) +
-                                                               (int( QLineF(event->lastScenePos(), mapToScene(mOrigin)).angle() / 90) * 90))
+                        rotation = (int(-QLineF(event->scenePos(),     mapToScene(mOrigin)).angle() / 90) * 90)+
+                                   (int( QLineF(event->lastScenePos(), mapToScene(mOrigin)).angle() / 90) * 90);
+                        this->mOrientation = (this->mOrientation + rotation) % 360;
+                        this->setTransform(QTransform().translate(mOrigin.x(), mOrigin.y())
+                                                       .rotate(rotation)
                                                        .translate(-mOrigin.x(), -mOrigin.y()), true);
                         break;
                     case Handle::HANDLE_TYPE_ORIGIN:
@@ -345,6 +348,16 @@ namespace whm
             {
                 QGraphicsItem::mouseMoveEvent(event);
             }
+        }
+
+        void BaseGraphicItem_t::setGraphicItemOrientation(int o)
+        {
+            int32_t angle = o - this->mOrientation;
+
+            this->mOrientation = o;
+            this->setTransform(QTransform().translate(mOrigin.x(), mOrigin.y())
+                                           .rotate(angle)
+                                           .translate(-mOrigin.x(), -mOrigin.y()), true);
         }
 
         void BaseGraphicItem_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)

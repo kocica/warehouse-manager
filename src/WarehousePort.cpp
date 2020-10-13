@@ -68,7 +68,7 @@ namespace whm
 
     void WarehousePort_t::dump() const
     {
-        std::cout << std::endl << "    - Dump warehouse port ID <" << this->whPortID << "> on item ID <" << this->getWhItem()->getWhItemID() << ">" << std::endl;
+        std::cout << "    - Dump warehouse port ID <" << this->whPortID << "> on item ID <" << this->getWhItem()->getWhItemID() << ">" << std::endl;
 
         if (this->isConnected())
         {

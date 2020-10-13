@@ -115,9 +115,9 @@ namespace whm
 
     void WarehouseConnection_t::dump() const
     {
-        std::cout << std::endl << "      = Dump warehouse connection ID <" << getWhConnID() << ">" <<
-                                  " from <" << from->getWhItem()->getWhItemID() << "> <" << from->getWhPortID() << ">" <<
-                                  " to <"   <<   to->getWhItem()->getWhItemID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
+        std::cout << "      = Dump warehouse connection ID <" << getWhConnID() <<
+                     "> from <" << from->getWhItem()->getWhItemID() << "> <" << from->getWhPortID() <<
+                     "> to   <" <<   to->getWhItem()->getWhItemID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
     }
 
     WarehousePort_t* WarehouseConnection_t::lookupPort(int32_t whItemID, int32_t whPortID)

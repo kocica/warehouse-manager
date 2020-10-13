@@ -46,19 +46,21 @@ namespace whm
             WarehouseItem_t(gui::UiWarehouseItem_t&);
 #endif
 
-            void setWhItemID(int32_t id)     { itemID = id; }
-            void setType(WarehouseItemType_t type) { itemType = type; }
-            void setX(int32_t x_)      { x = x_; }
-            void setY(int32_t y_)      { y = y_; }
-            void setW(int32_t w_)      { w = w_; }
-            void setH(int32_t h_)      { h = h_; }
+            void setWhItemID(int32_t id)           { whItemID = id; }
+            void setType(WarehouseItemType_t type) { whItemType = type; }
+            void setX(int32_t x_)                  { x = x_; }
+            void setY(int32_t y_)                  { y = y_; }
+            void setW(int32_t w_)                  { w = w_; }
+            void setH(int32_t h_)                  { h = h_; }
+            void setO(int32_t o_)                  { o = o_; }
 
-            int32_t getWhItemID() const   { return itemID; }
-            WarehouseItemType_t getType() const { return itemType; }
-            int32_t getX() const    { return x; }
-            int32_t getY() const    { return y; }
-            int32_t getW() const    { return w; }
-            int32_t getH() const    { return h; }
+            int32_t getWhItemID() const         { return whItemID; }
+            WarehouseItemType_t getType() const { return whItemType; }
+            int32_t getX() const                { return x; }
+            int32_t getY() const                { return y; }
+            int32_t getW() const                { return w; }
+            int32_t getH() const                { return h; }
+            int32_t getO() const                { return o; }
 
             WarehousePortContainer_t getWhPorts() const;
             WarehouseLocationRack_t<std::string>* getWhLocationRack() const;
@@ -74,9 +76,10 @@ namespace whm
             int32_t y{ 0 };
             int32_t w{ 0 };
             int32_t h{ 0 };
+            int32_t o{ 0 };
 
-            int32_t itemID{ 0 };
-            WarehouseItemType_t itemType;
+            int32_t whItemID{ 0 };
+            WarehouseItemType_t whItemType;
 
             WarehousePortContainer_t whPorts;
 

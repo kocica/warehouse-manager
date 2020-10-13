@@ -1,16 +1,16 @@
 <WarehouseItem>
-    <Attributes id="0" type="3" x="37" y="117" w="50" h="50"/>
+    <Attributes id="0" type="3" x="37" y="117" w="50" h="50" o="0"/>
     <WarehousePort id="0" conn_id="0"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="1" type="1" x="111" y="118" w="100" h="50"/>
+    <Attributes id="1" type="1" x="111" y="118" w="100" h="50" o="0"/>
     <WarehousePort id="0" conn_id="0"/>
     <WarehousePort id="1" conn_id="1"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="2" type="2" x="235" y="117" w="75" h="50"/>
+    <Attributes id="2" type="2" x="235" y="117" w="75" h="50" o="0"/>
     <WarehousePort id="0" conn_id="1"/>
     <WarehousePort id="1"/>
     <WarehousePort id="2" conn_id="4"/>
@@ -18,31 +18,31 @@
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="3" type="1" x="225" y="193" w="100" h="50"/>
+    <Attributes id="3" type="1" x="224" y="201" w="100" h="50" o="90"/>
     <WarehousePort id="0" conn_id="2"/>
     <WarehousePort id="1" conn_id="3"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="4" type="0" x="225" y="264" w="100" h="100"/>
+    <Attributes id="4" type="0" x="224" y="285" w="100" h="100" o="90"/>
     <WarehousePort id="0" conn_id="3"/>
     <WarehousePort id="1"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="5" type="1" x="355" y="117" w="100" h="50"/>
+    <Attributes id="5" type="1" x="355" y="117" w="100" h="50" o="0"/>
     <WarehousePort id="0" conn_id="4"/>
     <WarehousePort id="1" conn_id="5"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="6" type="1" x="477" y="116" w="100" h="50"/>
+    <Attributes id="6" type="1" x="477" y="116" w="100" h="50" o="0"/>
     <WarehousePort id="0" conn_id="5"/>
     <WarehousePort id="1" conn_id="6"/>
 </WarehouseItem>
 
 <WarehouseItem>
-    <Attributes id="8" type="0" x="589" y="91" w="100" h="100"/>
+    <Attributes id="8" type="0" x="589" y="91" w="100" h="100" o="0"/>
     <WarehousePort id="0" conn_id="6"/>
     <WarehousePort id="1"/>
 </WarehouseItem>

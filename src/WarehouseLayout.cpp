@@ -196,7 +196,8 @@ namespace whm
 
     void WarehouseLayout_t::dump() const
     {
-        std::cout << std::endl << "Dump warehouse layout - start" << std::endl << std::endl;
+        std::cout << "*******************************************" << std::endl;
+        std::cout << " Dump warehouse layout - start" << std::endl << std::endl;
 
         std::for_each(whItems.begin(), whItems.end(),
                       [](const WarehouseItem_t* whItem) -> void
@@ -219,8 +220,6 @@ namespace whm
                       {
                           whOrder.dump();
                       });
-
-        std::cout << std::endl << "Dump warehouse layout - end" << std::endl << std::endl << std::endl;
     }
 
     void WarehouseLayout_t::clearWhLayout()

@@ -95,9 +95,9 @@ namespace whm
 
         void UiWarehouseConnection_t::dump() const
         {
-            std::cout << std::endl << "      = Dump warehouse connection ID <" << getWhConnID() << ">" <<
-                           " from <" << from->getWhItem()->getWhItemID() << "> <" << from->getWhPortID() << ">" <<
-                           " to <"   <<   to->getWhItem()->getWhItemID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
+            std::cout << "      = [UI] Dump warehouse connection ID <" << getWhConnID() <<
+                         "> from <" << from->getWhItem()->getWhItemID() << "> <" << from->getWhPortID() <<
+                         "> to   <" <<   to->getWhItem()->getWhItemID() << "> <" <<   to->getWhPortID() << ">" << std::endl;
         }
     }
 }

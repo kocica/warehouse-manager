@@ -46,8 +46,8 @@ namespace whm
             {
                 if (UiCursor_t::getCursor().getMode() == UiCursorMode_t::E_MODE_DELETE)
                 {
-                    //scene->removeItem()
-                    std::cout << "Remove parent" << std::endl;
+                    whItem->removeWhItem();
+                    return;
                 }
                 else
                 {
@@ -122,7 +122,7 @@ namespace whm
         {
             if(this->whConn != nullptr)
             {
-                std::cout << "Alrady connected!" << std::endl;
+                std::cout << "Already connected!" << std::endl;
             }
             else
             {
@@ -133,7 +133,7 @@ namespace whm
 
         void UiWarehousePort_t::dump() const
         {
-            std::cout << std::endl << "    - Dump warehouse port ID <" << this->whPortID << "> on item ID <" << this->getWhItem()->getWhItemID() << ">" << std::endl;
+            std::cout << "    - [UI] Dump warehouse port ID <" << this->whPortID << "> on item ID <" << this->getWhItem()->getWhItemID() << ">" << std::endl;
 
             if(this->isConnected())
             {

@@ -28,6 +28,7 @@ namespace whm
             : UiWarehouseItem_t(s, ui, i.getX(), i.getY(), i.getW(), i.getH(), i.getType())
         {
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, i.getX() + 12, i.getY() + 12));
+            this->setGraphicItemOrientation(i.getO()); // We have to rotate the object after its constructed
         }
 
         UiWarehouseItemGate_t::UiWarehouseItemGate_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t t)

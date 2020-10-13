@@ -76,15 +76,20 @@ namespace whm
             UiWarehouseLayout_t::getWhLayout().eraseWhItem(this);
         }
 
+        void UiWarehouseItem_t::removeWhItem()
+        {
+            eraseFromLayout();
+            scene->removeItem(this);
+            delete this;
+        }
+
         void UiWarehouseItem_t::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
             if (event->button() == Qt::LeftButton)
             {
                 if(UiCursor_t::getCursor().getMode() == UiCursorMode_t::E_MODE_DELETE)
                 {
-                    eraseFromLayout();
-                    scene->removeItem(this);
-                    delete this;
+                    removeWhItem();
                     return;
                 }
             }
@@ -108,16 +113,16 @@ namespace whm
         void UiWarehouseItem_t::dump() const
         {
             std::cout << "==============================================" << std::endl;
-            std::cout << "  Warehouse item ID <" << whItemID << "> Type <" << typeid(*this).name() << "> = <" << to_underlying(whItemType) << ">" << std::endl;
+            std::cout << "  [UI] Warehouse item ID <" << whItemID << "> Type <" << to_underlying(whItemType) << ">" << std::endl;
             std::cout << "==============================================" << std::endl;
- 
+
+            std::cout << "x: " << getX() << " y: " << getY() << " w: " << getW() << " h: " << getH() << " o: " << getO() << std::endl;
+
             std::for_each(whPorts.begin(), whPorts.end(),
                           [](UiWarehousePort_t* p)
                           {
                               p->dump();
                           });
-
-            std::cout << "==============================================" << std::endl;
         }
     }
 }

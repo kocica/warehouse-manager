@@ -17,7 +17,10 @@ namespace whm
         {
             std::cout << "\nUsage: ./warehouse_manager\n\n"
                          "\t-h\tPrints usage\n"
-                         "\t-s\tTote speed on conveyor\n" << std::endl;
+                         "\t-s\tTote speed on conveyor\n"
+                         "\t-o\tPath to a file with customer orders"
+                         "\t-l\tPath to a file with warehouse layout description"
+                         "\t-p\tPath to a file with article-slot allocation" << std::endl;
         }
 
         SimArgs_t parseArgs(int argc, char *argv[])

@@ -175,7 +175,8 @@ namespace whm
 
         void UiWarehouseLayout_t::dump() const
         {
-            std::cout << std::endl << "Dump warehouse layout - start" << std::endl << std::endl;
+            std::cout << "***********************************************" << std::endl;
+            std::cout << "[UI] Dump warehouse layout - start" << std::endl << std::endl;
 
             std::for_each(whItems.begin(), whItems.end(),
                           [](UiWarehouseItem_t* whItem) -> void
@@ -190,8 +191,6 @@ namespace whm
                           {
                               whConn->dump();
                           });
-
-            std::cout << std::endl << "Dump warehouse layout - end" << std::endl << std::endl << std::endl;
         }
 
         bool UiWarehouseLayout_t::itemsIntersects(UiWarehouseItem_t* i) const

@@ -30,10 +30,15 @@ namespace whm
 #ifdef WHM_GUI
     WarehouseItem_t::WarehouseItem_t(gui::UiWarehouseItem_t& uiItem)
     {
+        int32_t o = uiItem.getO();
+        uiItem.setO(0); // We need to set item to start position (no rotation) to get coorect coords
         setX(uiItem.getX());
         setY(uiItem.getY());
         setW(uiItem.getW());
         setH(uiItem.getH());
+        uiItem.setO(o);
+        setO(uiItem.getO());
+
         setWhItemID(uiItem.getWhItemID());
         setType(uiItem.getWhItemType());
 
@@ -46,7 +51,7 @@ namespace whm
                           whPorts.emplace_back(newWhPort);
                       });
 
-        if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        if (whItemType == WarehouseItemType_t::E_LOCATION_SHELF)
         {
             whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5); // TODO: User input location slots
         }
@@ -80,6 +85,7 @@ namespace whm
         whItemAttribs->SetAttribute( "y", getY() );
         whItemAttribs->SetAttribute( "w", getW() );
         whItemAttribs->SetAttribute( "h", getH() );
+        whItemAttribs->SetAttribute( "o", getO() );
 
         whItem->InsertEndChild( whItemAttribs );
 
@@ -106,6 +112,7 @@ namespace whm
         this->setY(attribs->IntAttribute("y"));
         this->setW(attribs->IntAttribute("w"));
         this->setH(attribs->IntAttribute("h"));
+        this->setO(attribs->IntAttribute("o"));
 
         for (tinyxml2::XMLElement* whPortXml = elem->FirstChildElement("WarehousePort"); whPortXml; whPortXml = whPortXml->NextSiblingElement("WarehousePort"))
         {
@@ -115,7 +122,7 @@ namespace whm
             whPorts.emplace_back(newWhPort);
         }
 
-        if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        if (whItemType == WarehouseItemType_t::E_LOCATION_SHELF)
         {
             whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5); // TODO: User input location slots
         }
@@ -134,10 +141,10 @@ namespace whm
     void WarehouseItem_t::dump() const
     {
         std::cout << "==============================================" << std::endl;
-        std::cout << "  Warehouse item ID <" << itemID << "> Type <" << to_underlying(itemType) << ">" << std::endl;
+        std::cout << "  Warehouse item ID <" << whItemID << "> Type <" << to_underlying(whItemType) << ">" << std::endl;
         std::cout << "==============================================" << std::endl;
 
-        std::cout << "x: " << x << " y: " << y << " w: " << w << " h: " << h << std::endl;
+        std::cout << "x: " << x << " y: " << y << " w: " << w << " h: " << h << " o: " << o << std::endl;
 
         std::for_each(whPorts.begin(), whPorts.end(),
                       [](WarehousePort_t* p)
@@ -145,12 +152,10 @@ namespace whm
                           p->dump();
                       });
 
-        if (itemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        if (whItemType == WarehouseItemType_t::E_LOCATION_SHELF)
         {
-            std::cout << std::endl << "Location Rack:" << std::endl << std::endl;
+            std::cout << std::endl << "--- Location Rack ---" << std::endl << std::endl;
             whLocRack->dump();
         }
-
-        std::cout << "==============================================" << std::endl;
     }
 }
