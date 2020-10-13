@@ -41,6 +41,9 @@ namespace whm
 
             WarehouseItem_t* getWhItem() const;
 
+            int32_t getSlotCountX() const;
+            int32_t getSlotCountY() const;
+
             void dump() const;
 
         private:

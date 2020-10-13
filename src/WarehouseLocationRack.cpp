@@ -35,37 +35,37 @@ namespace whm
     WarehouseLocationSlot_t<T> WarehouseLocationRack_t<T>::at(size_t x, size_t y) const
     {
         // TODO: assert; exception
-        if (x > slots.size() || y > slots[0].size())
+        if (y > slots.size() || x > slots[0].size())
         {
             std::cerr << "Index is outside of bounds!" << std::endl;
         }
 
-        return slots[x][y];
+        return slots[y][x];
     }
 
     template<typename T>
     void WarehouseLocationRack_t<T>::setAt(size_t x, size_t y, const WarehouseLocationSlot_t<T>& s)
     {
         // TODO: assert; exception
-        if (x > slots.size() || y > slots[0].size())
+        if (y > slots.size() || x > slots[0].size())
         {
             std::cerr << "Index is outside of bounds!" << std::endl;
         }
 
-        slots[x][y] = s;
+        slots[y][x] = s;
     }
 
     template<typename T>
     void WarehouseLocationRack_t<T>::init(size_t x, size_t y)
     {
-        slots = LocationSlots_t(x, std::vector<WarehouseLocationSlot_t<T>>(y));
+        slots = LocationSlots_t(y, std::vector<WarehouseLocationSlot_t<T>>(x));
 
         for (size_t i = 0; i < slots.size(); i++)
         {
             for (size_t j = 0; j < slots[i].size(); j++)
             {
                 slots[i][j].setWhLocRack(this);
-                slots[i][j].setCoords(std::make_pair(i, j));
+                slots[i][j].setCoords(std::make_pair(j, i));
             }
         }
     }
@@ -116,13 +116,25 @@ namespace whm
             {
                 if(slots[i][j].getArticle() == article && slots[i][j].getQuantity() >= quantity)
                 {
-                    coords = std::make_pair(i, j);
+                    coords = std::make_pair(j, i);
                     return true;
                 }
             }
         }
 
         return false;
+    }
+
+    template<typename T>
+    int32_t WarehouseLocationRack_t<T>::getSlotCountY() const
+    {
+        return static_cast<int32_t>(slots.size());
+    }
+
+    template<typename T>
+    int32_t WarehouseLocationRack_t<T>::getSlotCountX() const
+    {
+        return static_cast<int32_t>(slots.size() > 0 ? slots[0].size() : 0);
     }
 
     template class WarehouseLocationRack_t<std::string>;

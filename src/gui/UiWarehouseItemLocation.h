@@ -28,6 +28,14 @@ namespace whm
                 UiWarehouseItemLocation_t(QGraphicsScene*, MainWindow*, ::whm::WarehouseItem_t&);
 
                 ~UiWarehouseItemLocation_t() = default;
+
+                int32_t getSlotCountX() const { return this->slotsX; }
+                int32_t getSlotCountY() const { return this->slotsY; }
+                void setDimensions(int32_t x, int32_t y) { slotsX = x; slotsY = y; }
+
+            private:
+                int32_t slotsX{ 0 };
+                int32_t slotsY{ 0 };
         };
     }
 }

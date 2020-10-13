@@ -25,6 +25,7 @@
 
 <WarehouseItem>
     <Attributes id="4" type="0" x="224" y="285" w="100" h="100" o="90"/>
+    <LocationRackDimensions slots_x="2" slots_y="5"/>
     <WarehousePort id="0" conn_id="3"/>
     <WarehousePort id="1"/>
 </WarehouseItem>
@@ -43,6 +44,7 @@
 
 <WarehouseItem>
     <Attributes id="8" type="0" x="589" y="91" w="100" h="100" o="0"/>
+    <LocationRackDimensions slots_x="2" slots_y="5"/>
     <WarehousePort id="0" conn_id="6"/>
     <WarehousePort id="1"/>
 </WarehouseItem>

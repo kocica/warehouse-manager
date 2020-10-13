@@ -18,6 +18,7 @@
 
 #ifdef WHM_GUI
 #include "gui/UiWarehouseItem.h"
+#include "gui/UiWarehouseItemLocation.h"
 #endif
 
 namespace whm
@@ -53,7 +54,8 @@ namespace whm
 
         if (whItemType == WarehouseItemType_t::E_LOCATION_SHELF)
         {
-            whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5); // TODO: User input location slots
+            const auto& uiItemLoc = static_cast<gui::UiWarehouseItemLocation_t&>(uiItem);
+            whLocRack = new WarehouseLocationRack_t<std::string>(this, uiItemLoc.getSlotCountX(), uiItemLoc.getSlotCountY());
         }
     }
 #endif
@@ -77,6 +79,7 @@ namespace whm
     {
         tinyxml2::XMLNode* whItem = doc->InsertEndChild( doc->NewElement( "WarehouseItem" ) );
         tinyxml2::XMLElement* whItemAttribs = doc->NewElement( "Attributes" );
+        tinyxml2::XMLElement* whLocationRack = doc->NewElement( "LocationRackDimensions" );
 
         // Set attributes
         whItemAttribs->SetAttribute( "id", getWhItemID() );
@@ -86,8 +89,15 @@ namespace whm
         whItemAttribs->SetAttribute( "w", getW() );
         whItemAttribs->SetAttribute( "h", getH() );
         whItemAttribs->SetAttribute( "o", getO() );
-
         whItem->InsertEndChild( whItemAttribs );
+
+        // Add location rack dimensions
+        if (whItemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        {
+            whLocationRack->SetAttribute( "slots_x", whLocRack->getSlotCountX() );
+            whLocationRack->SetAttribute( "slots_y", whLocRack->getSlotCountY() );
+            whItem->InsertEndChild( whLocationRack );
+        }
 
         // Add all ports
         std::for_each(whPorts.begin(), whPorts.end(),
@@ -114,17 +124,22 @@ namespace whm
         this->setH(attribs->IntAttribute("h"));
         this->setO(attribs->IntAttribute("o"));
 
+        if (whItemType == WarehouseItemType_t::E_LOCATION_SHELF)
+        {
+            tinyxml2::XMLElement* locationRack = elem->FirstChildElement( "LocationRackDimensions" );
+
+            int32_t slotsX = locationRack->IntAttribute("slots_x");
+            int32_t slotsY = locationRack->IntAttribute("slots_y");
+
+            whLocRack = new WarehouseLocationRack_t<std::string>(this, slotsX, slotsY);
+        }
+
         for (tinyxml2::XMLElement* whPortXml = elem->FirstChildElement("WarehousePort"); whPortXml; whPortXml = whPortXml->NextSiblingElement("WarehousePort"))
         {
             auto newWhPort = new WarehousePort_t();
             newWhPort->deserializeFromXml(whPortXml);
             newWhPort->setWhItem(this);
             whPorts.emplace_back(newWhPort);
-        }
-
-        if (whItemType == WarehouseItemType_t::E_LOCATION_SHELF)
-        {
-            whLocRack = new WarehouseLocationRack_t<std::string>(this, 2, 5); // TODO: User input location slots
         }
     }
 
@@ -157,5 +172,15 @@ namespace whm
             std::cout << std::endl << "--- Location Rack ---" << std::endl << std::endl;
             whLocRack->dump();
         }
+    }
+
+    int32_t WarehouseItem_t::getSlotCountX() const
+    {
+        return whItemType == WarehouseItemType_t::E_LOCATION_SHELF ? whLocRack->getSlotCountX() : 0;
+    }
+
+    int32_t WarehouseItem_t::getSlotCountY() const
+    {
+        return whItemType == WarehouseItemType_t::E_LOCATION_SHELF ? whLocRack->getSlotCountY() : 0;
     }
 }

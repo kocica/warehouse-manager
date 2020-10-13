@@ -29,7 +29,10 @@ namespace whm
         {
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, i.getX(), i.getY() + 37));
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, i.getX() + 75, i.getY() + 37));
+
             this->setGraphicItemOrientation(i.getO()); // We have to rotate the object after its constructed
+
+            setDimensions(i.getSlotCountX(), i.getSlotCountY());
         }
 
         UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t t)
@@ -60,6 +63,8 @@ namespace whm
 
                 // TODO: Remove from layout and deleteLater()?
             }*/
+
+            setDimensions(2,5);
 
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x,  y + 37));
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + 75, y + 37));

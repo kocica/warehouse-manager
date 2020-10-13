@@ -71,6 +71,9 @@ namespace whm
             void serializeToXml(tinyxml2::XMLDocument* doc) const;
             void deserializeFromXml(tinyxml2::XMLElement*);
 
+            int32_t getSlotCountX() const;
+            int32_t getSlotCountY() const;
+
         protected:
             int32_t x{ 0 };
             int32_t y{ 0 };
