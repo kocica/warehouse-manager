@@ -65,6 +65,9 @@ namespace whm
                 MainWindow* ui{ nullptr };
                 QGraphicsScene* scene{ nullptr };
 
+                int32_t portSizeX{ 0 };
+                int32_t portSizeY{ 0 };
+
                 int32_t whItemID{ 0 };
                 WarehouseItemType_t whItemType;
 

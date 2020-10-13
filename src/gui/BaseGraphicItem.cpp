@@ -218,6 +218,10 @@ namespace whm
         {
             this->mRect.setTopLeft(QPointF(this->mRect.topLeft().x() + (dx/2.0), this->mRect.topLeft().y() + (dy/2.0)));
             this->mRect.setBottomRight(QPointF(this->mRect.bottomRight().x() + (dx/2.0), this->mRect.bottomRight().y() + (dy/2.0)));
+
+            // TODO: Resizing of ports
+            //this->mRect.setWidth(this->mRect.width() + (dx/5.0));
+            //this->mRect.setHeight(this->mRect.height() - (dy/5.0));
         }
 
         void BaseGraphicItem_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event)

@@ -35,6 +35,8 @@ namespace whm
                 UiCursorMode_t getMode() const;
                 void setMode(const UiCursorMode_t&);
 
+                bool isItemSelected() const;
+
             private:
                 UiCursorMode_t m{ UiCursorMode_t::E_MODE_SELECT };
         };

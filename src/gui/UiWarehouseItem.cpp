@@ -45,6 +45,8 @@ namespace whm
             : BaseShapeGraphicItem_t(x, y, w, h, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s)
             , ui(ui)
             , scene(s)
+            , portSizeX{ w / 5 }
+            , portSizeY{ h / 5 }
             , whItemID(UiWarehouseLayout_t::getWhLayout().getNextWhItemID())
             , whItemType(type)
         {
@@ -92,19 +94,6 @@ namespace whm
                     removeWhItem();
                     return;
                 }
-            }
-            else if (event->button() == Qt::RightButton)
-            {
-                /*QMenu contextMenu("Item manipulation", ui->getUi());
-                contextMenu.setStyleSheet("background-color: rgb(150,150,150);");
-
-                QAction actionDelete("Delete", ui->getUi());
-                connect(&actionDelete, SIGNAL(triggered()), ui->getUi(), SLOT(deleteLater()));
-                connect(&actionDelete, SIGNAL(triggered()), ui->getUi(), SLOT(eraseFromLayout()));
-                contextMenu.addAction(&actionDelete);
-                contextMenu.exec(mapToGlobal(event->pos()));*/
-
-                // TODO: Resize, etc.
             }
 
             BaseGraphicItem_t::mousePressEvent(event);

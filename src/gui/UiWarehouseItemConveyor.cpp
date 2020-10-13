@@ -29,15 +29,15 @@ namespace whm
         {
             if (getWhItemType() == WarehouseItemType_t::E_CONVEYOR)
             {
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, getX(), getY() + 12));
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, getX() + 75, getY() + 12));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, getX() + getW()/2 - portSizeX, getY() + getH()/2 - (portSizeY/2), portSizeX, portSizeY));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, getX() + getW()/2            , getY() + getH()/2 - (portSizeY/2), portSizeX, portSizeY));
             }
             else if (getWhItemType() == WarehouseItemType_t::E_CONVEYOR_HUB)
             {
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, getX(), getY() + 12));
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, getX() + 25, getY()));
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 2, getX() + 50, getY() + 12));
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 3, getX() + 25, getY() + 25));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, getX() + getW()/2 - portSizeX  , getY() + getH()/2 - (portSizeY/2), portSizeX, portSizeY));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, getX() + getW()/2              , getY() + getH()/2 - (portSizeY/2), portSizeX, portSizeY));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 2, getX() + getW()/2 - portSizeX/2, getY() + getH()/2 - portSizeY    , portSizeX, portSizeY));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 3, getX() + getW()/2 - portSizeX/2, getY() + getH()/2                , portSizeX, portSizeY));
             }
 
             this->setGraphicItemOrientation(i.getO()); // We have to rotate the object after its constructed
@@ -72,15 +72,15 @@ namespace whm
 
             if (t == WarehouseItemType_t::E_CONVEYOR)
             {
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x, y + 12));
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + 75, y + 12));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x + w/2 - portSizeX, y + h/2 - (portSizeY/2), portSizeX, portSizeY));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + w/2            , y + h/2 - (portSizeY/2), portSizeX, portSizeY));
             }
             else if (t == WarehouseItemType_t::E_CONVEYOR_HUB)
             {
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x, y + 12));
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + 25, y));
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 2, x + 50, y + 12));
-                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 3, x + 25, y + 25));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x + w/2 - portSizeX  , y + h/2 - (portSizeY/2), portSizeX, portSizeY));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + w/2              , y + h/2 - (portSizeY/2), portSizeX, portSizeY));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 2, x + w/2 - portSizeX/2, y + h/2 - portSizeY    , portSizeX, portSizeY));
+                whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 3, x + w/2 - portSizeX/2, y + h/2                , portSizeX, portSizeY));
             }
         }
     }

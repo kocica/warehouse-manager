@@ -28,5 +28,11 @@ namespace whm
         {
             m = m_;
         }
+
+        bool UiCursor_t::isItemSelected() const
+        {
+            return m != UiCursorMode_t::E_MODE_SELECT &&
+                   m != UiCursorMode_t::E_MODE_DELETE;
+        }
     }
 }

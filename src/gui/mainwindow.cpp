@@ -48,7 +48,7 @@ namespace whm
             ui->view->setStyleSheet("background-color: rgb(255, 255, 255)");
 
             setWindowTitle("Warehouse Manager");
-            setFixedSize(1000, 700);
+            setFixedSize(1920, 1080);
 
             // Get warehouse dimensions
             auto dialog = new QDialog(this);
@@ -69,9 +69,12 @@ namespace whm
             scene = new QGraphicsScene();
             /*if (dialog->exec() == QDialog::Accepted)
             {
-                scene->setSceneRect(0, 0, w, h);
-            }*/
-            scene->setSceneRect(0, 0, 1024, 1024);
+                scene->setSceneRect(0, 0, whDimX->text().toInt(), whDimY->text().toInt());
+            }
+            else*/
+            {
+                scene->setSceneRect(0, 0, 10000, 10000);
+            }
             ui->view->setScene(scene);
 
             // Enable zooming
@@ -126,23 +129,54 @@ namespace whm
 
             if (event->button() == Qt::LeftButton)
             {
+                if (! UiCursor_t::getCursor().isItemSelected())
+                {
+                    return;
+                }
+
                 UiWarehouseItem_t* whItem{ nullptr };
                 auto cursorMode = UiCursor_t::getCursor().getMode();
 
-                QPoint loc = QCursor::pos();
-                loc = ui->view->mapFromGlobal(loc);
+                QPointF loc = QCursor::pos();
+                loc = ui->view->mapToScene(loc.x() - ui->mainToolBar->size().width(), loc.y() - ui->layoutManagement->size().height());
+
+                auto dialog = new QDialog(this);
+                auto form   = new QFormLayout(dialog);
+                auto width  = new QLineEdit(dialog);
+                auto height = new QLineEdit(dialog);
+
+                form->addRow(QString("Enter item width: "), width);
+                form->addRow(QString("Enter item height: "), height);
+
+                QDialogButtonBox buttons(QDialogButtonBox::Ok, Qt::Horizontal, dialog);
+                QObject::connect(&buttons, SIGNAL(accepted()), dialog, SLOT(accept()));
+                QObject::connect(&buttons, SIGNAL(rejected()), dialog, SLOT(reject()));
+                form->addRow(&buttons);
+
+                int32_t w{ 0 };
+                int32_t h{ 0 };
+
+                if (dialog->exec() == QDialog::Accepted)
+                {
+                    w = width->text().toInt();
+                    h = height->text().toInt();
+                }
+                else
+                {
+                    std::cerr << "Invalid input, abort!" << std::endl;
+                }
 
                 if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
                 {
-                    whItem = new UiWarehouseItemLocation_t(scene, this, loc.x(), loc.y(), 100, 100, WarehouseItemType_t::E_LOCATION_SHELF);
+                    whItem = new UiWarehouseItemLocation_t(scene, this, loc.x(), loc.y(), w, h, WarehouseItemType_t::E_LOCATION_SHELF);
                 }
                 else if (gateMap.find(cursorMode) != gateMap.end())
                 {
-                    whItem = new UiWarehouseItemGate_t(scene, this, loc.x(), loc.y(), 50, 50, gateMap[cursorMode]);
+                    whItem = new UiWarehouseItemGate_t(scene, this, loc.x(), loc.y(), w, h, gateMap[cursorMode]);
                 }
                 else if (convMap.find(cursorMode) != convMap.end())
                 {
-                    whItem = new UiWarehouseItemConveyor_t(scene, this, loc.x(), loc.y(), cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_CONV ? 100 : 75, 50, convMap[cursorMode]);
+                    whItem = new UiWarehouseItemConveyor_t(scene, this, loc.x(), loc.y(), w, h, convMap[cursorMode]);
                 }
 
                 UiWarehouseLayout_t::getWhLayout().addWhItem(whItem);

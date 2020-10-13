@@ -24,7 +24,7 @@ namespace whm
         class UiWarehousePort_t : BaseShapeGraphicItem_t
         {
             public:
-                UiWarehousePort_t(QGraphicsScene*, QGraphicsItem*, MainWindow*, int32_t, int32_t, int32_t);
+                UiWarehousePort_t(QGraphicsScene*, QGraphicsItem*, MainWindow*, int32_t, int32_t, int32_t, int32_t, int32_t);
                 virtual ~UiWarehousePort_t();
 
                 void select();
