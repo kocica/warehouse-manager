@@ -41,6 +41,9 @@ namespace whm
 
             auto items = layout.getWhItems();
 
+            this->whRatio = layout.getRatio(); 
+            this->whDims = layout.getDimensions();
+
             for (auto* item : items)
             {
                 UiWarehouseItem_t* newItem{ nullptr };
@@ -175,8 +178,9 @@ namespace whm
 
         void UiWarehouseLayout_t::dump() const
         {
-            std::cout << "***********************************************" << std::endl;
-            std::cout << "[UI] Dump warehouse layout - start" << std::endl << std::endl;
+            std::cout << "*******************************************************" << std::endl;
+            std::cout << " [UI] Dump warehouse layout <" << whDims.first << "> x <" << whDims.second
+                      << "> ratio <" << whRatio << ">" << std::endl << std::endl;
 
             std::for_each(whItems.begin(), whItems.end(),
                           [](UiWarehouseItem_t* whItem) -> void
@@ -200,6 +204,26 @@ namespace whm
                                {
                                    return whItem != i && whItem->getRect().intersects(i->getRect());
                                });
+        }
+
+        int32_t UiWarehouseLayout_t::getRatio() const
+        {
+            return this->whRatio;
+        }
+
+        UiWarehouseLayout_t::WarehouseDimensions_t UiWarehouseLayout_t::getDimensions() const
+        {
+            return this->whDims;
+        }
+
+        void UiWarehouseLayout_t::setRatio(int32_t r)
+        {
+            this->whRatio = r;
+        }
+
+        void UiWarehouseLayout_t::setDimensions(const UiWarehouseLayout_t::WarehouseDimensions_t& d)
+        {
+            this->whDims = d;
         }
     }
 }

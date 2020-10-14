@@ -84,6 +84,9 @@ namespace whm
                 whY = 500  * whR;
             }
 
+            UiWarehouseLayout_t::getWhLayout().setRatio(whR);
+            UiWarehouseLayout_t::getWhLayout().setDimensions(std::make_pair(whX/whR, whY/whR));
+
             scene->setSceneRect(0, 0, whX, whY);
             ui->view->setScene(scene);
 
@@ -278,10 +281,36 @@ namespace whm
                 return;
             }
 
+            // Clear previous scene
+            UiWarehouseLayout_t::getWhLayout().clearWhLayout();
+            ui->view->scene()->clear();
+            ui->view->scene()->update();
+
             ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(file.toUtf8().constData());
             ::whm::WarehouseLayout_t::getWhLayout().dump();
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().dump();
+
+            int32_t whR = UiWarehouseLayout_t::getWhLayout().getRatio();
+            int32_t whX = UiWarehouseLayout_t::getWhLayout().getDimensions().first * whR;
+            int32_t whY = UiWarehouseLayout_t::getWhLayout().getDimensions().second * whR;
+
+            ui->view->scene()->setSceneRect(0, 0, whX, whY);
+
+            // TODO: Set view dimension according to the available space minus sidebars width/height
+
+            QPen pen;
+            pen.setColor(Qt::black);
+            pen.setWidth(whX / 100);
+            ui->view->scene()->addLine(0,     0,    whX, 0,   pen);
+            ui->view->scene()->addLine(0,     0,    0,   whY, pen);
+            ui->view->scene()->addLine(0,     whY,  whX, whY, pen);
+            ui->view->scene()->addLine(whX,   0,    whX, whY, pen);
+
+            // Enable zooming
+            ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
+            ui->ratioText->setText(QString::number(((ui->view->width()/double(whX)) * (whX/whR))/5));
+            // TODO: Maybe there will be incorrect start ratio
         }
 
         void MainWindow::on_saveLayout_triggered()

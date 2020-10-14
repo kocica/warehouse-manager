@@ -52,6 +52,9 @@ namespace whm
         auto uiItems = uiLayout.getWhItems();
         auto uiConns = uiLayout.getWhConns();
 
+        this->whRatio = uiLayout.getRatio(); 
+        this->whDims = uiLayout.getDimensions();
+
         for(auto* uiItem : uiItems)
         {
             whItems.emplace_back(new WarehouseItem_t{ *uiItem });
@@ -68,11 +71,21 @@ namespace whm
     {
         tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
 
+        // Layout info
+        tinyxml2::XMLNode* whLayout = doc->InsertEndChild( doc->NewElement( "WarehouseLayout" ) );
+        tinyxml2::XMLElement* whLayoutAttribs = doc->NewElement( "Attributes" );
+        whLayoutAttribs->SetAttribute( "dim_x", whDims.first );
+        whLayoutAttribs->SetAttribute( "dim_y", whDims.second );
+        whLayoutAttribs->SetAttribute( "ratio", whRatio );
+        whLayout->InsertEndChild( whLayoutAttribs );
+
+        // Items
         for(auto* whItem : whItems)
         {
             whItem->serializeToXml(doc);
         }
 
+        // Connections
         for(auto* whConn : whConns)
         {
             whConn->serializeToXml(doc);
@@ -90,6 +103,13 @@ namespace whm
 
         doc->LoadFile(xmlFilename.c_str());
 
+        // Layout info
+        tinyxml2::XMLElement* whLayoutXml = doc->FirstChildElement("WarehouseLayout");
+        tinyxml2::XMLElement* whLayoutAttribsXml = whLayoutXml->FirstChildElement( "Attributes" );
+        this->whRatio = whLayoutAttribsXml->IntAttribute("ratio");
+        this->whDims = std::make_pair(whLayoutAttribsXml->IntAttribute("dim_x"), whLayoutAttribsXml->IntAttribute("dim_y"));
+
+        // Items
         for (tinyxml2::XMLElement* whItemXml = doc->FirstChildElement("WarehouseItem"); whItemXml; whItemXml = whItemXml->NextSiblingElement("WarehouseItem"))
         {
             WarehouseItem_t* whItem = new WarehouseItem_t();
@@ -97,6 +117,7 @@ namespace whm
             addWhItem(whItem);
         }
 
+        // Connections
         for (tinyxml2::XMLElement* whConnXml = doc->FirstChildElement("WarehouseConnection"); whConnXml; whConnXml = whConnXml->NextSiblingElement("WarehouseConnection"))
         {
             WarehouseConnection_t* whConn = new WarehouseConnection_t();
@@ -196,8 +217,9 @@ namespace whm
 
     void WarehouseLayout_t::dump() const
     {
-        std::cout << "*******************************************" << std::endl;
-        std::cout << " Dump warehouse layout - start" << std::endl << std::endl;
+        std::cout << "*******************************************************" << std::endl;
+        std::cout << " Dump warehouse layout <" << whDims.first << "> x <" << whDims.second
+                  << "> ratio <" << whRatio << ">" << std::endl << std::endl;
 
         std::for_each(whItems.begin(), whItems.end(),
                       [](const WarehouseItem_t* whItem) -> void
@@ -278,5 +300,15 @@ namespace whm
         {
             whOrders.erase(found);
         }
+    }
+
+    int32_t WarehouseLayout_t::getRatio() const
+    {
+        return this->whRatio;
+    }
+
+    WarehouseLayout_t::WarehouseDimensions_t WarehouseLayout_t::getDimensions() const
+    {
+        return this->whDims;
     }
 }

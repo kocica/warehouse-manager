@@ -10,6 +10,7 @@
 #pragma once
 
 #include <vector>
+#include <utility>
 
 #ifdef WHM_GUI
 namespace whm
@@ -30,6 +31,7 @@ namespace whm
 
     class WarehouseLayout_t
     {
+        using WarehouseDimensions_t = std::pair<int32_t, int32_t>;
         using WarehouseItemContainer_t = std::vector<WarehouseItem_t*>;
         using WarehouseConnContainer_t = std::vector<WarehouseConnection_t*>;
         using WarehouseOrderContainer_t = std::vector<WarehouseOrder_t<std::string>>;
@@ -70,7 +72,13 @@ namespace whm
             void dump() const;
             void clearWhLayout();
 
+            int32_t getRatio() const;
+            WarehouseDimensions_t getDimensions() const;
+
         protected:
+            int32_t whRatio;
+            WarehouseDimensions_t whDims;
+
             WarehouseItemContainer_t whItems;
             WarehouseConnContainer_t whConns;
             WarehouseOrderContainer_t whOrders;

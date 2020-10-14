@@ -1,3 +1,7 @@
+<WarehouseLayout>
+    <Attributes dim_x="500" dim_y="500" ratio="25"/>
+</WarehouseLayout>
+
 <WarehouseItem>
     <Attributes id="0" type="3" x="213" y="290" w="50" h="50" o="0"/>
     <WarehousePort id="0" conn_id="0"/>

@@ -20,6 +20,7 @@ namespace whm
     {
         class UiWarehouseLayout_t
         {
+            using WarehouseDimensions_t = std::pair<int32_t, int32_t>;
             using UiWarehouseItemContainer_t = std::vector<UiWarehouseItem_t*>;
             using UiWarehouseConnContainer_t = std::vector<UiWarehouseConnection_t*>;
 
@@ -41,12 +42,21 @@ namespace whm
                 int32_t getNextWhConnID();
                 int32_t getNextWhItemID();
 
+                int32_t getRatio() const;
+                WarehouseDimensions_t getDimensions() const;
+
+                void setRatio(int32_t);
+                void setDimensions(const WarehouseDimensions_t&);
+
                 void clearWhLayout();
                 bool itemsIntersects(UiWarehouseItem_t*) const;
                 void initFromTui(QGraphicsScene*, MainWindow*, ::whm::WarehouseLayout_t&);
                 void dump() const;
 
             private:
+                int32_t whRatio;
+                WarehouseDimensions_t whDims;
+
                 int32_t whItemIdSequence{ 0 };
                 UiWarehouseItemContainer_t whItems;
 
