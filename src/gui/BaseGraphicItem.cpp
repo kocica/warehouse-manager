@@ -14,7 +14,6 @@
 // Qt
 #include <QUuid>
 #include <QPainter>
-#include <QSettings>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 
@@ -25,7 +24,7 @@ namespace whm
 {
     namespace gui
     {
-        BaseGraphicItem_t::BaseGraphicItem_t(QGraphicsScene *scene, QGraphicsItem *parent)
+        BaseGraphicItem_t::BaseGraphicItem_t(qreal w, qreal h, QGraphicsScene *scene, QGraphicsItem *parent)
             : QGraphicsItem(parent)
             , mSelected(false)
             , mConnected(false)
@@ -42,6 +41,9 @@ namespace whm
             {
                 scene->addItem(this);
             }
+
+            minWidth = w / 2;
+            minHeight = h / 2;
         }
 
         void BaseGraphicItem_t::setId(QString id)
@@ -61,11 +63,9 @@ namespace whm
 
         QRectF BaseGraphicItem_t::boundingRect() const
         {
-            QSettings settings;
+            int size = (mRect.width() + mRect.height())/2 / 10;
 
-            int size = settings.value("drawing/hanleSize", 10).toInt();
-
-            return this->mRect.adjusted(-size/2,-size/2 - 50,size/2,size/2);
+            return this->mRect.adjusted(-size/2,-size/2 - (5*size),size/2,size/2);
         }
 
         QPainterPath BaseGraphicItem_t::shape() const
@@ -246,49 +246,91 @@ namespace whm
                 qreal dx = (mOrigin.x() - mRect.center().x()) / mRect.width();
                 qreal dy = (mOrigin.y() - mRect.center().y()) / mRect.height();
 
+                auto backupRect = this->mRect;
+
                 switch (mCurrentHandle->type())
                 {
                     case Handle::HANDLE_TYPE_LEFT:
-                        updateChildren(event->pos().x() - mRect.topLeft().x(), 0);
                         this->mRect.setLeft(event->pos().x());
+                        if(this->mRect.width() < minWidth || this->mRect.height() < minHeight)
+                        {
+                            this->mRect = backupRect;
+                            return;
+                        }
+                        updateChildren(event->pos().x() - backupRect.topLeft().x(), 0);
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         break;
                     case Handle::HANDLE_TYPE_RIGHT:
-                        updateChildren(event->pos().x() - mRect.topRight().x(), 0);
                         this->mRect.setRight(event->pos().x());
+                        if(this->mRect.width() < minWidth || this->mRect.height() < minHeight)
+                        {
+                            this->mRect = backupRect;
+                            return;
+                        }
+                        updateChildren(event->pos().x() - backupRect.topRight().x(), 0);
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         break;
                     case Handle::HANDLE_TYPE_TOP:
-                        updateChildren(0, event->pos().y() - mRect.topLeft().y());
                         this->mRect.setTop(event->pos().y());
+                        if(this->mRect.width() < minWidth || this->mRect.height() < minHeight)
+                        {
+                            this->mRect = backupRect;
+                            return;
+                        }
+                        updateChildren(0, event->pos().y() - backupRect.topLeft().y());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_BOTTOM:
-                        updateChildren(0, event->pos().y() - mRect.bottomLeft().y());
                         this->mRect.setBottom(event->pos().y());
+                        if(this->mRect.width() < minWidth || this->mRect.height() < minHeight)
+                        {
+                            this->mRect = backupRect;
+                            return;
+                        }
+                        updateChildren(0, event->pos().y() - backupRect.bottomLeft().y());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_TOPLEFT:
-                        updateChildren(event->pos().x() - mRect.topLeft().x(), event->pos().y() - mRect.topLeft().y());
                         this->mRect.setTopLeft(event->pos());
+                        if(this->mRect.width() < minWidth || this->mRect.height() < minHeight)
+                        {
+                            this->mRect = backupRect;
+                            return;
+                        }
+                        updateChildren(event->pos().x() - backupRect.topLeft().x(), event->pos().y() - backupRect.topLeft().y());
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_TOPRIGHT:
-                        updateChildren(event->pos().x() - mRect.topRight().x(), event->pos().y() - mRect.topRight().y());
                         this->mRect.setTopRight(event->pos());
+                        if(this->mRect.width() < minWidth || this->mRect.height() < minHeight)
+                        {
+                            this->mRect = backupRect;
+                            return;
+                        }
+                        updateChildren(event->pos().x() - backupRect.topRight().x(), event->pos().y() - backupRect.topRight().y());
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_BOTTOMLEFT:
-                        updateChildren(event->pos().x() - mRect.bottomLeft().x(), event->pos().y() - mRect.bottomLeft().y());
                         this->mRect.setBottomLeft(event->pos());
+                        if(this->mRect.width() < minWidth || this->mRect.height() < minHeight)
+                        {
+                            this->mRect = backupRect;
+                            return;
+                        }
+                        updateChildren(event->pos().x() - backupRect.bottomLeft().x(), event->pos().y() - backupRect.bottomLeft().y());
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_BOTTOMRIGHT:
-                        updateChildren(event->pos().x() - mRect.bottomRight().x(), event->pos().y() - mRect.bottomRight().y());
                         this->mRect.setBottomRight(event->pos());
+                        if(this->mRect.width() < minWidth || this->mRect.height() < minHeight)
+                        {
+                            this->mRect = backupRect;
+                            return;
+                        }
+                        updateChildren(event->pos().x() - backupRect.bottomRight().x(), event->pos().y() - backupRect.bottomRight().y());
                         mOrigin.setX((dx * mRect.width()) + mRect.center().x());
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
@@ -316,7 +358,8 @@ namespace whm
                 QPointF right(mRect.right(),mRect.top() + mRect.height()/2);
                 QPointF top(mRect.left()+mRect.width()/2,mRect.top());
                 QPointF bottom(mRect.left()+mRect.width()/2,mRect.bottom());
-                QPointF rotate(top.x(),top.y()-50);
+                int size = (mRect.width() + mRect.height())/2 / 10;
+                QPointF rotate(top.x(),top.y()-(5*size));
 
                 foreach (Handle *handle, mHandles)
                 {
@@ -383,9 +426,8 @@ namespace whm
         {
             if (change == ItemPositionChange && scene())
             {
-                QSettings settings;
-                int gridSize = settings.value("drawing/gridSize").toInt();
-                bool gridEnabled = settings.value("drawing/gridEnabled").toBool();
+                int gridSize = 100;
+                bool gridEnabled = false;
 
                 QPointF newPos = value.toPointF();
                 if (gridEnabled)
@@ -409,15 +451,14 @@ namespace whm
 
         void BaseGraphicItem_t::createHandles()
         {
-            QSettings settings;
-            int size = settings.value("drawing/hanleSize", 10).toInt();
+            int size = (mRect.width() + mRect.height())/2 / 10;
 
             mOrigin = this->mRect.center();
             QPointF left(mRect.left(),mRect.top() + mRect.height()/2);
             QPointF right(mRect.right(),mRect.top() + mRect.height()/2);
             QPointF top(mRect.left()+mRect.width()/2,mRect.top());
             QPointF bottom(mRect.left()+mRect.width()/2,mRect.bottom());
-            QPointF rotate(top.x(),top.y()-50);
+            QPointF rotate(top.x(),top.y()-(size* 5));
 
             mHandles<<new Handle(mRect.topLeft(),size,Handle::HANDLE_SHAPE_RECT,Handle::HANDLE_TYPE_TOPLEFT);
             mHandles<<new Handle(top,size,Handle::HANDLE_SHAPE_RECT,Handle::HANDLE_TYPE_TOP);

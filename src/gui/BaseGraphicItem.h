@@ -25,7 +25,7 @@ namespace whm
         class BaseGraphicItem_t : public QGraphicsItem
         {
             public:
-                BaseGraphicItem_t(QGraphicsScene *scene = 0, QGraphicsItem *parent = 0);
+                BaseGraphicItem_t(qreal w, qreal h, QGraphicsScene *scene = 0, QGraphicsItem *parent = 0);
                 ~BaseGraphicItem_t() = default;
 
                 virtual QRectF boundingRect() const;
@@ -64,6 +64,9 @@ namespace whm
 
                 QList<Handle *> mHandles;
                 QGraphicsItem* mParentItem{ nullptr };
+
+                int32_t minWidth{ 0 };
+                int32_t minHeight{ 0 };
 
             private:
                 Handle *mCurrentHandle;

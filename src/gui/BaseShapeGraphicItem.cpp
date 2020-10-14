@@ -20,7 +20,7 @@ namespace whm
     namespace gui
     {
         BaseShapeGraphicItem_t::BaseShapeGraphicItem_t(qreal x, qreal y, qreal w, qreal h, ItemType type, QGraphicsScene *scene, QGraphicsItem *parent)
-            : BaseGraphicItem_t(scene,parent)
+            : BaseGraphicItem_t(w, h, scene, parent)
         {
             mRect.setRect(x, y, w, h);
             mType = type;
@@ -30,7 +30,7 @@ namespace whm
         void BaseShapeGraphicItem_t::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
         {
             QPen pen(Qt::black);
-            pen.setWidth(3);
+            pen.setWidth(5);
             painter->setPen(pen);
 
             if(mRect.left() > mRect.right())
@@ -73,7 +73,6 @@ namespace whm
                     painter->drawLine(this->mRect.topLeft(),this->mRect.bottomRight());
                     break;
                 case ITEM_PIXMAP:
-                    //painter->drawPixmap(this->mRect.topLeft(),this->mPixmap,this->mRect);
                     painter->drawPixmap(this->mRect.toRect(),this->mPixmap);
                     break;
                 default:
