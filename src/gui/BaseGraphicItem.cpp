@@ -110,23 +110,27 @@ namespace whm
             Q_UNUSED(option);
             Q_UNUSED(widget);
 
+            QPen pen(Qt::black);
+            pen.setWidth(3);
+            painter->setPen(pen);
+
             if(this->isSelected())
             {
                 if(this->mSelected)
                 {
-                    QPen pen(Qt::red);
+                    pen.setColor(Qt::red);
                     painter->setPen(pen);
                     painter->drawRect(this->mRect);
                 }
                 else if(this->mConnected)
                 {
-                    QPen pen(Qt::blue);
+                    pen.setColor(Qt::blue);
                     painter->setPen(pen);
                     painter->drawRect(this->mRect);
                 }
                 else if(this->mDrawBoundingRect && mDrawHandles)
                 {
-                    QPen pen(Qt::green);
+                    pen.setColor(Qt::green);
                     painter->setPen(pen);
                     painter->drawRect(this->mRect);
                 }
@@ -204,12 +208,14 @@ namespace whm
 
             foreach(QGraphicsItem* i, items)
             {
-                auto* baseItem = dynamic_cast<BaseGraphicItem_t*>(i);
-                auto* parentBaseItem = dynamic_cast<BaseGraphicItem_t*>(baseItem->getParent());
-
-                if (parentBaseItem && this->id() == parentBaseItem->id())
+                if(auto* baseItem = dynamic_cast<BaseGraphicItem_t*>(i))
                 {
-                    baseItem->shiftGraphicItem(dx, dy);
+                    auto* parentBaseItem = dynamic_cast<BaseGraphicItem_t*>(baseItem->getParent());
+
+                    if (parentBaseItem && this->id() == parentBaseItem->id())
+                    {
+                        baseItem->shiftGraphicItem(dx, dy);
+                    }
                 }
             }
         }
@@ -218,6 +224,9 @@ namespace whm
         {
             this->mRect.setTopLeft(QPointF(this->mRect.topLeft().x() + (dx/2.0), this->mRect.topLeft().y() + (dy/2.0)));
             this->mRect.setBottomRight(QPointF(this->mRect.bottomRight().x() + (dx/2.0), this->mRect.bottomRight().y() + (dy/2.0)));
+
+            this->mOrigin.setX((dx * mRect.width()) + mRect.center().x());
+            this->mOrigin.setY((dy * mRect.height()) + mRect.center().y());
 
             // TODO: Resizing of ports
             //this->mRect.setWidth(this->mRect.width() + (dx/5.0));

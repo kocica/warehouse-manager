@@ -12,6 +12,7 @@
 #include "Utils.h"
 #include "WarehouseOrder.h"
 #include "WarehouseLayout.h"
+#include "WarehouseItemType.h"
 #include "WarehousePathFinder.h"
 
 namespace whm
@@ -30,16 +31,17 @@ namespace whm
             void runSimulation();
 
         protected:
-            WarehouseItem_t* lookupWhEntrance();
-            void simulatePick(WarehouseOrder_t<std::string>& whOrder);
+            WarehouseItem_t* lookupWhGate(const WarehouseItemType_t&);
             std::vector<int32_t> lookupWhLocations(const std::string&, int32_t);
 
-            // TODO: calcTimePicking (calculates time of picking at location which depends on slot position x/y, etc.)
-            // TODO: calcTimeMovement (calculates time of movement on conveyor which depends on length, etc.)
+            void simulatePick();
+            void simulateMovement();
+            void simulateProcessing(WarehouseOrder_t<std::string>& whOrder);
 
         private:
             utils::SimArgs_t args;
             WarehouseLayout_t& whLayout;
+            WarehousePathInfo_t* whPathInfo;
             WarehousePathFinder_t* whPathFinder;
             WarehouseSimOrderInfo_t whOrderInfo;
     };

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <QLabel>
 #include <QObject>
 #include <QGraphicsView>
 
@@ -20,7 +21,7 @@ namespace whm
             Q_OBJECT
         
             public:
-                UiGraphicsViewZoom_t(QGraphicsView* view);
+                UiGraphicsViewZoom_t(QGraphicsView* view, QLabel* ratio);
                 virtual ~UiGraphicsViewZoom_t() = default;
 
                 void gentleZoom(double factor);
@@ -29,6 +30,7 @@ namespace whm
 
             private:
                 QGraphicsView* view;
+                QLabel* ratio;
 
                 Qt::KeyboardModifiers modifiers;
 

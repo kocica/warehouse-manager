@@ -55,6 +55,10 @@ namespace whm
                 void on_whItemExit_toggled(bool);
 
             private:
+                int32_t whR{ 0 };
+                int32_t whX{ 0 };
+                int32_t whY{ 0 };
+
                 Ui::MainWindow* ui;
                 QGraphicsScene* scene;
         };

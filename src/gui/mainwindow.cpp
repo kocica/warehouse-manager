@@ -51,14 +51,16 @@ namespace whm
             setFixedSize(1920, 1080);
 
             // Get warehouse dimensions
-            auto dialog = new QDialog(this);
-            auto form   = new QFormLayout(dialog);
-            auto whDimX = new QLineEdit(dialog);
-            auto whDimY = new QLineEdit(dialog);
+            auto dialog  = new QDialog(this);
+            auto form    = new QFormLayout(dialog);
+            auto whDimX  = new QLineEdit(dialog);
+            auto whDimY  = new QLineEdit(dialog);
+            auto whRatio = new QLineEdit(dialog);
 
-            form->addRow(new QLabel("Enter warehouse dimensions"));
-            form->addRow(QString("Enter X dimenstion: "), whDimX);
-            form->addRow(QString("Enter Y dimenstion: "), whDimY);
+            form->addRow(new QLabel("Enter warehouse dimensions and ratio"));
+            form->addRow(QString("Enter X dimenstion [m]: "), whDimX);
+            form->addRow(QString("Enter Y dimenstion [m]: "), whDimY);
+            form->addRow(QString("Enter ratio 1 [m] = ? [points]: "), whRatio);
 
             QDialogButtonBox buttons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dialog);
             QObject::connect(&buttons, SIGNAL(accepted()), dialog, SLOT(accept()));
@@ -67,18 +69,39 @@ namespace whm
 
             // Create scene
             scene = new QGraphicsScene();
-            /*if (dialog->exec() == QDialog::Accepted)
+
+            if (dialog->exec() == QDialog::Accepted)
             {
-                scene->setSceneRect(0, 0, whDimX->text().toInt(), whDimY->text().toInt());
+                whR = whRatio->text().toInt();
+                whX = whDimX->text().toInt() * whR;
+                whY = whDimY->text().toInt() * whR;
             }
-            else*/
+            else
             {
-                scene->setSceneRect(0, 0, 10000, 10000);
+                // Defaults for dev, otherwise show error
+                whR = 50;
+                whX = 1000 * whR;
+                whY = 500  * whR;
             }
+
+            scene->setSceneRect(0, 0, whX, whY);
             ui->view->setScene(scene);
 
+            // TODO: Set view dimension according to the available space minus sidebars width/height
+
+            // Create scene borders
+            QPen pen;
+            pen.setColor(Qt::black);
+            pen.setWidth(whX / 100);
+            scene->addLine(0,     0,    whX, 0,   pen);
+            scene->addLine(0,     0,    0,   whY, pen);
+            scene->addLine(0,     whY,  whX, whY, pen);
+            scene->addLine(whX,   0,    whX, whY, pen);
+
             // Enable zooming
-            auto zoom = new UiGraphicsViewZoom_t(ui->view);
+            ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
+            ui->ratioText->setText(QString::number(((ui->view->width()/double(whX)) * (whX/whR))/5));
+            auto zoom = new UiGraphicsViewZoom_t(ui->view, ui->ratioText);
             zoom->setModifiers(Qt::NoModifier);
 
             setContextMenuPolicy(Qt::NoContextMenu);
@@ -138,7 +161,15 @@ namespace whm
                 auto cursorMode = UiCursor_t::getCursor().getMode();
 
                 QPointF loc = QCursor::pos();
-                loc = ui->view->mapToScene(loc.x() - ui->mainToolBar->size().width(), loc.y() - ui->layoutManagement->size().height());
+                loc = ui->view->mapToScene(loc.x() - ui->mainToolBar->size().width() - ui->frame->window()->pos().x(),
+                                           loc.y() - ui->layoutManagement->size().height() - ui->frame->window()->pos().y());
+
+                if (loc.x() < 0 || loc.x() > whX ||
+                    loc.y() < 0 || loc.y() > whY)
+                {
+                    std::cerr << "Outside of scene bounds!" << std::endl;
+                    return;
+                }
 
                 auto dialog = new QDialog(this);
                 auto form   = new QFormLayout(dialog);
@@ -158,8 +189,8 @@ namespace whm
 
                 if (dialog->exec() == QDialog::Accepted)
                 {
-                    w = width->text().toInt();
-                    h = height->text().toInt();
+                    w = width->text().toInt() * whR;
+                    h = height->text().toInt() * whR;
                 }
                 else
                 {

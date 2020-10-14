@@ -94,6 +94,10 @@ namespace whm
                     removeWhItem();
                     return;
                 }
+                else if(UiCursor_t::getCursor().isItemSelected())
+                {
+                    // TODO: Select CURSOR
+                }
             }
 
             BaseGraphicItem_t::mousePressEvent(event);

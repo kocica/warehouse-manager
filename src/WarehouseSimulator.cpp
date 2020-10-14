@@ -23,6 +23,7 @@ namespace whm
 {
     WarehouseSimulator_t::WarehouseSimulator_t(const utils::SimArgs_t& args_)
         : args{ args_ }
+        , whPathInfo{ nullptr }
         , whPathFinder{ new WarehousePathFinder_t() }
         , whLayout{ WarehouseLayout_t::getWhLayout() }
     {
@@ -41,53 +42,86 @@ namespace whm
 
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
-        for(auto& whOrder : whLayout.getWhOrders()) { this->simulatePick(whOrder); }
+        for(auto& whOrder : whLayout.getWhOrders()) { this->simulateProcessing(whOrder); }
 
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
         std::cout << "Simulation took <" << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "> [µs]" << std::endl;
     }
 
-    void WarehouseSimulator_t::simulatePick(WarehouseOrder_t<std::string>& whOrder)
+    void WarehouseSimulator_t::simulateProcessing(WarehouseOrder_t<std::string>& whOrder)
     {
-        std::cout << "Start picking orderID <" << whOrder.getWhOrderID() << ">\n";
+        std::cout << std::endl << "Start picking orderID <" << whOrder.getWhOrderID() << ">\n";
 
-        whOrderInfo.currentWhItemID = lookupWhEntrance()->getWhItemID();
+        // Start in warehouse entrance
+        whOrderInfo.currentWhItemID = lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)->getWhItemID();
 
+        // Simulate picking of each line
         for(auto& whOrderLine : whOrder)
         {
-            std::cout << "Start picking lineID <" << whOrderLine.getWhLineID() << ">\n";
+            std::cout << " - Start picking lineID <" << whOrderLine.getWhLineID() << ">\n";
 
-            auto filteredLocIDs = this->lookupWhLocations(whOrderLine.getArticle(), whOrderLine.getQuantity());
+            whPathInfo = nullptr;
 
-            WarehousePathInfo_t* whTopPathInfo{ nullptr };
+            auto articleLocIDs = this->lookupWhLocations(whOrderLine.getArticle(), whOrderLine.getQuantity());
 
-            std::for_each(filteredLocIDs.begin(), filteredLocIDs.end(),
+            std::for_each(articleLocIDs.begin(), articleLocIDs.end(),
                           [&](int32_t targetWhLocID)
                           {
-                              auto whPathInfo = this->whPathFinder->getShortestPath(whOrderInfo.currentWhItemID, targetWhLocID);
+                              auto actPathInfo = this->whPathFinder->getShortestPath(whOrderInfo.currentWhItemID, targetWhLocID);
 
-                              if(!whTopPathInfo || whPathInfo->distance < whTopPathInfo->distance )
+                              if(!whPathInfo || actPathInfo->distance < whPathInfo->distance )
                               {
-                                  whTopPathInfo = whPathInfo;
+                                  whPathInfo = actPathInfo;
                               }
                           });
 
-            if(!whTopPathInfo)
+            if(!whPathInfo)
             {
                 std::cerr << "Cannot pick this article!" << std::endl;
             }
-
-            std::cout << "Movement for article <" << whOrderLine.getArticle() << ">: from <" << whOrderInfo.currentWhItemID << "> to <" << whTopPathInfo->targetWhItemID << ">\n";
-
-            int64_t us = whTopPathInfo->distance / args.toteSpeed * 1000000;
-
-            std::cout << "Sleep for <" << us << "> [µs]" << std::endl;
-
-            std::this_thread::sleep_for(std::chrono::microseconds(us));
-
-            whOrderInfo.currentWhItemID = whTopPathInfo->targetWhItemID;
+            else
+            {
+                simulateMovement();
+                simulatePick();
+            }
         }
+
+        // Move to warehouse dispatch
+        whPathInfo = this->whPathFinder->getShortestPath(whOrderInfo.currentWhItemID, lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_DISPATCH)->getWhItemID());
+
+        if(!whPathInfo)
+        {
+            std::cerr << "Cannot move to dispatch!" << std::endl;
+        }
+        else
+        {
+            simulateMovement();
+        }
+    }
+
+    void WarehouseSimulator_t::simulateMovement()
+    {
+        std::cout << "  - Movement from <" << whOrderInfo.currentWhItemID << "> to <" << whPathInfo->targetWhItemID << ">\n";
+
+        int64_t us = whPathInfo->distance / args.toteSpeed * 1000000;
+
+        std::cout << "  - Sleep for <" << us << "> [µs]" << std::endl;
+
+        std::this_thread::sleep_for(std::chrono::microseconds(us));
+
+        whOrderInfo.currentWhItemID = whPathInfo->targetWhItemID;
+    }
+
+    void WarehouseSimulator_t::simulatePick()
+    {
+        std::cout << "   - Picking from location <" << whOrderInfo.currentWhItemID << ">\n";
+
+        int64_t us = whPathInfo->distance / args.toteSpeed * 1000000;
+
+        std::cout << "   - Sleep for <" << us << "> [µs]" << std::endl;
+
+        std::this_thread::sleep_for(std::chrono::microseconds(us));
     }
 
     std::vector<int32_t> WarehouseSimulator_t::lookupWhLocations(const std::string& article, int32_t quantity)
@@ -98,7 +132,7 @@ namespace whm
         for(const auto* whItem : whLayout.getWhItems())
         {
             if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF &&
-               whItem->getWhLocationRack()->containsArticle(article, quantity, position))
+               whItem->getWhLocationRack()->containsArticle(article, 0 /*quantity*/, position))
             {
                 whLocIDs.push_back(whItem->getWhItemID());
             }
@@ -107,17 +141,17 @@ namespace whm
         return whLocIDs;
     }
 
-    WarehouseItem_t* WarehouseSimulator_t::lookupWhEntrance()
+    WarehouseItem_t* WarehouseSimulator_t::lookupWhGate(const WarehouseItemType_t& whGateType)
     {
         for(WarehouseItem_t* i : whLayout.getWhItems())
         {
-            if(i->getType() == WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)
+            if(i->getType() == whGateType)
             {
                 return i;
             }
         }
 
-        std::cerr << "Warehouse layout has no entrance (should be checked in UI afterall)!" << std::endl;
+        std::cerr << "Warehouse layout has no entrance/exit (should be checked in UI)!" << std::endl;
         return nullptr;
     }
 }

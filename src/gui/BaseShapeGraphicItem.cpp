@@ -29,6 +29,10 @@ namespace whm
 
         void BaseShapeGraphicItem_t::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
         {
+            QPen pen(Qt::black);
+            pen.setWidth(3);
+            painter->setPen(pen);
+
             if(mRect.left() > mRect.right())
             {
                 qreal left = mRect.left();
@@ -48,11 +52,13 @@ namespace whm
 
             if(this->mConnected)
             {
-                painter->setPen(QPen(Qt::blue));
+                pen.setColor(Qt::blue);
+                painter->setPen(pen);
             }
             else if(this->mSelected)
             {
-                painter->setPen(QPen(Qt::red));
+                pen.setColor(Qt::red);
+                painter->setPen(pen);
             }
 
             switch (mType)

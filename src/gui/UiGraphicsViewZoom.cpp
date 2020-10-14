@@ -6,6 +6,7 @@
  * @author  TODO: Citation
  */
 
+#include <iostream>
 #include <qmath.h>
 #include <QScrollBar>
 #include <QMouseEvent>
@@ -17,9 +18,10 @@ namespace whm
 {
     namespace gui
     {
-        UiGraphicsViewZoom_t::UiGraphicsViewZoom_t(QGraphicsView* view)
+        UiGraphicsViewZoom_t::UiGraphicsViewZoom_t(QGraphicsView* view, QLabel* ratio)
             : QObject(view)
             , view(view)
+            , ratio(ratio)
         {
             view->viewport()->installEventFilter(this);
             view->setMouseTracking(true);
@@ -33,7 +35,7 @@ namespace whm
             view->centerOn(targetScenePos);
 
             QPointF deltaViewportPos = targetViewportPos - QPointF(view->viewport()->width() / 2.0,
-                                                                    view->viewport()->height() / 2.0);
+                                                                   view->viewport()->height() / 2.0);
             QPointF viewportCenter = view->mapFromScene(targetScenePos) - deltaViewportPos;
 
             view->centerOn(view->mapToScene(viewportCenter.toPoint()));
@@ -73,6 +75,14 @@ namespace whm
                     {
                         double angle = wheelEvent->angleDelta().y();
                         double factor = qPow(zoomFactorBase, angle);
+
+                        // Update ratio
+                        static double actFactor = 1.0;
+                        actFactor *= factor;
+
+                        static double meters = ratio->text().toDouble();
+                        ratio->setText(QString::number(uint32_t(meters / actFactor)));
+
                         gentleZoom(factor);
                         return true;
                     }
