@@ -78,6 +78,12 @@ namespace whm
         Init(0);
         (new OrderRequest_t(whLayout))->Activate();
         Run();
+
+        for(auto& whFacility : whFacilities)
+        {
+            whFacility.second->Output();
+            delete whFacility.second;
+        }
     }
 
     void WarehouseSimulator_t::setArguments(const utils::SimArgs_t& args_)

@@ -16,11 +16,14 @@ namespace whm
         void printHelp()
         {
             std::cout << "\nUsage: ./warehouse_manager\n\n"
-                         "\t-h\tPrints usage\n"
+                         "\t-h\tPrints this usage\n"
+                         "\t-v\tTriggers verbose mode\n"
                          "\t-s\tTote speed on conveyor\n"
-                         "\t-o\tPath to a file with customer orders"
-                         "\t-l\tPath to a file with warehouse layout description"
-                         "\t-p\tPath to a file with article-slot allocation" << std::endl;
+                         "\t-p\tWorker speed during picking\n"
+                         "\t-t\tDispatched totes per minute\n"
+                         "\t-o\tPath to a file with customer orders\n"
+                         "\t-l\tPath to a file with warehouse layout description\n"
+                         "\t-a\tPath to a file with article-slot allocation\n";
         }
 
         SimArgs_t parseArgs(int argc, char *argv[])
@@ -28,18 +31,24 @@ namespace whm
             int c;
             SimArgs_t args;
 
-            while ((c = getopt (argc, argv, "s:o:p:l:v")) != -1)
+            while ((c = getopt (argc, argv, "s:p:t:o:a:l:v")) != -1)
             {
                 switch(c)
                 {
                     case 's':
                         args.toteSpeed = atof(optarg);
                         break;
+                    case 'p':
+                        args.pickerSpeed = atof(optarg);
+                        break;
+                    case 't':
+                        args.totesPerMin = atof(optarg);
+                        break;
                     case 'o':
                         args.ordersPath = optarg;
                         break;
-                    case 'p':
-                        args.productsPath = optarg;
+                    case 'a':
+                        args.articlesPath = optarg;
                         break;
                     case 'l':
                         args.layoutPath = optarg;

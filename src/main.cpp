@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
         const auto& args = whm::utils::parseArgs(argc, argv);
 
         whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(args.layoutPath);
-        whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.productsPath);
+        whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.articlesPath);
         whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
         whm::WarehouseSimulator_t::getWhSimulator().setArguments(args);

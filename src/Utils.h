@@ -25,10 +25,12 @@ namespace whm
         {
             float toteSpeed{ 0.5 };      //< How fast tote moves on conv; default 0.5 [m/s]
             float pickerSpeed{ 0.5 };    //< How fast picker performs material handling; default x [x]
+            float totesPerMin{ 1.0 };    //< How many totes are dispatched in one minute; default x [totes/min]
             float ratio{ 0.0 };          //< Ratio to real world size; defailt x [x]
-            float errorRate{ 0.1 };      //< Rate with which pickers do a mistake
+            float speedup{ 1.0 };        //< If we want to fasten up/slower down the simulation
+            float errorRate{ 0.1 };      //< Rate with which pickers do a mistake x [errors/min]
             std::string ordersPath;      //< Path to a file with customer orders
-            std::string productsPath;    //< Path to a file with article-slot allocation
+            std::string articlesPath;    //< Path to a file with article-slot allocation
             std::string layoutPath;      //< Path to a file with warehouse layout description
             bool verbose{ false };       //< Print debug to an output stream
         };
