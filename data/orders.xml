@@ -1,9 +1,6 @@
-<WarehouseOrder id="1">
-    <WarehouseOrderLine id="1" article_name="ART001" requested_quantity="10"/>
-    <WarehouseOrderLine id="2" article_name="ART002" requested_quantity="15"/>
-</WarehouseOrder>
-
-<WarehouseOrder id="2">
-    <WarehouseOrderLine id="1" article_name="ART001" requested_quantity="10"/>
-    <WarehouseOrderLine id="2" article_name="ART002" requested_quantity="15"/>
+<WarehouseOrder id="0">
+    <WarehouseOrderLine id="1" article_name="ART001" requested_quantity="0"/>
+    <WarehouseOrderLine id="2" article_name="ART002" requested_quantity="0"/>
+    <WarehouseOrderLine id="3" article_name="ART001" requested_quantity="0"/>
+    <WarehouseOrderLine id="4" article_name="ART002" requested_quantity="0"/>
 </WarehouseOrder>
