@@ -21,6 +21,7 @@ namespace whm
                          "\t-s\tTote speed on conveyor\n"
                          "\t-p\tWorker speed during picking\n"
                          "\t-t\tDispatched totes per minute\n"
+                         "\t-f\tSpeed up / Slow down the simulation by this factor\n"
                          "\t-o\tPath to a file with customer orders\n"
                          "\t-l\tPath to a file with warehouse layout description\n"
                          "\t-a\tPath to a file with article-slot allocation\n";
@@ -31,7 +32,7 @@ namespace whm
             int c;
             SimArgs_t args;
 
-            while ((c = getopt (argc, argv, "s:p:t:o:a:l:v")) != -1)
+            while ((c = getopt (argc, argv, "s:p:t:f:o:a:l:v")) != -1)
             {
                 switch(c)
                 {
@@ -43,6 +44,9 @@ namespace whm
                         break;
                     case 't':
                         args.totesPerMin = atof(optarg);
+                        break;
+                    case 'f':
+                        args.speedup = atof(optarg);
                         break;
                     case 'o':
                         args.ordersPath = optarg;

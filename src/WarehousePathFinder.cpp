@@ -82,7 +82,7 @@ namespace whm
         // Update path info attributes
         if(sourceWhItemID != whItemID)
         {
-            pathInfo.pathToTarget.emplace_back(std::make_pair(whItemID, whItem->getW()));
+            pathInfo.pathToTarget.emplace_back(std::make_pair(whItemID, whItem->getW() / WarehouseLayout_t::getWhLayout().getRatio()));
         }
 
         // Recursively call for each connected port

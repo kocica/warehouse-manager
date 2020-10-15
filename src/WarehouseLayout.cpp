@@ -200,12 +200,12 @@ namespace whm
         whOrders.push_back(o);
     }
 
-    WarehouseLayout_t::WarehouseItemContainer_t WarehouseLayout_t::getWhItems() const
+    const WarehouseLayout_t::WarehouseItemContainer_t& WarehouseLayout_t::getWhItems() const
     {
         return whItems;
     }
 
-    WarehouseLayout_t::WarehouseConnContainer_t WarehouseLayout_t::getWhConns() const
+    const WarehouseLayout_t::WarehouseConnContainer_t& WarehouseLayout_t::getWhConns() const
     {
         return whConns;
     }

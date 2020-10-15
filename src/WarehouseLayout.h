@@ -57,8 +57,8 @@ namespace whm
             // Customer order import
             void importCustomerOrders(const std::string&);
 
-            WarehouseItemContainer_t getWhItems() const;
-            WarehouseConnContainer_t getWhConns() const;
+            const WarehouseItemContainer_t& getWhItems() const;
+            const WarehouseConnContainer_t& getWhConns() const;
             const WarehouseOrderContainer_t& getWhOrders() const;
 
             void addWhItem(WarehouseItem_t*);

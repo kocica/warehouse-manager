@@ -12,10 +12,12 @@
 
     - Pri pickovani na stanici se podivat, jestli tam nelze napickovat i nejakou jinou lajnu
     - Flag u order line - processed, znacici ze je jiz zpracovana a pri vyhledavani dalsi lajny brat jen processed = false
-    - Kazda lokace/picker na lokaci a mozna i conveyor jako Facility
-    - Jednotlive krabice/objednavky jako Process
-    - Cas pro "Wait" pocitany obdobne, jako ted - m/s, kolik je metru, rychlost pickera, ze ktere lokace, vaha produktu apod.
+    - Init = MAX
+        double simStart = Time
+        double simStop = Time
+        Calculate how long it takes to process orders
 */
+
 
 #pragma once
 
@@ -27,6 +29,7 @@
 #include "WarehouseLayout.h"
 #include "WarehouseItemType.h"
 #include "WarehousePathFinder.h"
+#include "WarehouseLocationRack.h"
 
 #include "../include/simlib.h"
 
@@ -40,6 +43,8 @@ namespace whm
 
             void runSimulation();
 
+            void orderFinished();
+
             utils::SimArgs_t getArguments();
             void setArguments(const utils::SimArgs_t&);
 
@@ -47,6 +52,7 @@ namespace whm
 
             simlib3::Store* getWhItemFacility(int32_t);
 
+            WarehouseItem_t* lookupWhLoc(int32_t);
             WarehouseItem_t* lookupWhGate(const WarehouseItemType_t&);
             std::vector<int32_t> lookupWhLocations(const std::string&, int32_t);
             WarehousePathInfo_t* lookupShortestPath(int32_t, const std::vector<int32_t>&);
@@ -55,6 +61,7 @@ namespace whm
             void prepareWhSimulation();
 
         private:
+            double simStart;
             utils::SimArgs_t args;
 
             WarehouseLayout_t& whLayout;
@@ -72,7 +79,7 @@ namespace whm
 
             void Behavior()
             {
-                int64_t waitDuration = 0;
+                double waitDuration = 0.0;
                 auto& sim = WarehouseSimulator_t::getWhSimulator();
 
                 const auto& handleFacility = [&](int32_t itemID)
@@ -80,7 +87,7 @@ namespace whm
                                                 simlib3::Store* whFacility = sim.getWhItemFacility(itemID);
 
                                                 Enter(*whFacility, 1);
-                                                Wait(waitDuration);
+                                                Wait(waitDuration * sim.getArguments().speedup);
                                                 Leave(*whFacility, 1);
                                              };
 
@@ -93,17 +100,19 @@ namespace whm
 
                     for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
                     {
-                        waitDuration = pathItem.second / sim.getArguments().toteSpeed * 1000000;
+                        waitDuration = pathItem.second / sim.getArguments().toteSpeed;
 
-                        //std::cerr << "- order " << order.getWhOrderID() << " line " << orderLine.getWhLineID() << " MOVE " << pathItem.first << std::endl;
                         handleFacility(pathItem.first);
                     }
 
                     locationID = shortestPath->targetWhItemID;
 
-                    waitDuration = 999 /*TODO: Calc*/ / sim.getArguments().pickerSpeed * 1000000;
+                    WarehouseItem_t* whLoc = sim.lookupWhLoc(locationID);
+                    std::pair<size_t, size_t> slotPos;
+                    whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), 0, slotPos);
+                    waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) +
+                                    (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY()))) / sim.getArguments().pickerSpeed;
 
-                    //std::cerr << "- order " << order.getWhOrderID() << " line " << orderLine.getWhLineID() << " PICK " << locationID << std::endl;
                     handleFacility(locationID);
                 }
 
@@ -113,18 +122,18 @@ namespace whm
 
                 for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
                 {
-                    waitDuration = pathItem.second / sim.getArguments().toteSpeed * 1000000;
+                    waitDuration = pathItem.second / sim.getArguments().toteSpeed;
 
-                    //std::cerr << "- order " << order.getWhOrderID() << " MOVE " << pathItem.first << std::endl;
                     handleFacility(pathItem.first);
                 }
 
                 locationID = dispatchID;
 
-                waitDuration = sim.getArguments().totesPerMin * 1000000;
+                waitDuration = (sim.getArguments().totesPerMin / 60);
 
-                //std::cerr << "- order " << order.getWhOrderID() << " DISPATCH " << locationID << std::endl;
                 handleFacility(locationID);
+
+                sim.orderFinished();
             }
 
         public:
@@ -145,7 +154,7 @@ namespace whm
 
                 if(++it != layout.getWhOrders().end())
                 {
-                    Activate(Time+Exponential(1e3));
+                    Activate(Time + Uniform(10, 20));
                 }
             }
 

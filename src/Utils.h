@@ -23,10 +23,9 @@ namespace whm
          */
         struct SimArgs_t
         {
-            float toteSpeed{ 0.5 };      //< How fast tote moves on conv; default 0.5 [m/s]
-            float pickerSpeed{ 0.5 };    //< How fast picker performs material handling; default x [x]
-            float totesPerMin{ 1.0 };    //< How many totes are dispatched in one minute; default x [totes/min]
-            float ratio{ 0.0 };          //< Ratio to real world size; defailt x [x]
+            float toteSpeed{ 1.0 };      //< How fast tote moves on conv; default 0.5 [m/s]
+            float pickerSpeed{ 1.0 };    //< How fast picker performs material handling; default x [x]
+            float totesPerMin{ 120.0 };  //< How many totes are dispatched in one minute; default 15 [totes/min]
             float speedup{ 1.0 };        //< If we want to fasten up/slower down the simulation
             float errorRate{ 0.1 };      //< Rate with which pickers do a mistake x [errors/min]
             std::string ordersPath;      //< Path to a file with customer orders

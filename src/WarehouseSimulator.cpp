@@ -17,7 +17,6 @@
 // Local
 #include "WarehouseItem.h"
 #include "WarehouseSimulator.h"
-#include "WarehouseLocationRack.h"
 
 namespace whm
 {
@@ -71,9 +70,11 @@ namespace whm
     void WarehouseSimulator_t::runSimulation()
     {
         whPathFinder->precalculatePaths(whLayout.getWhItems());
-        whPathFinder->dump();
+        //whPathFinder->dump();
 
         prepareWhSimulation();
+
+        simStart = Time;
 
         Init(0);
         (new OrderRequest_t(whLayout))->Activate();
@@ -81,8 +82,19 @@ namespace whm
 
         for(auto& whFacility : whFacilities)
         {
-            whFacility.second->Output();
-            delete whFacility.second;
+            //whFacility.second->Output();
+        }
+    }
+
+    void WarehouseSimulator_t::orderFinished()
+    {
+        static size_t finished = 0;
+
+        ++finished;
+
+        if(finished == whLayout.getWhOrders().size())
+        {
+            std::cout << "Simulation finished in: <" << Time - simStart << ">\n";
         }
     }
 
@@ -149,6 +161,20 @@ namespace whm
         }
 
         std::cerr << "Warehouse layout has no entrance/exit (should be checked in UI)!" << std::endl;
+        return nullptr;
+    }
+
+    WarehouseItem_t* WarehouseSimulator_t::lookupWhLoc(int32_t locID)
+    {
+        for(WarehouseItem_t* i : whLayout.getWhItems())
+        {
+            if(i->getWhItemID() == locID)
+            {
+                return i;
+            }
+        }
+
+        std::cerr << "Failed to find location!" << std::endl;
         return nullptr;
     }
 }
