@@ -24,7 +24,7 @@ namespace whm
         struct SimArgs_t
         {
             float toteSpeed{ 1.0 };      //< How fast tote moves on conv; default 0.5 [m/s]
-            float pickerSpeed{ 1.0 };    //< How fast picker performs material handling; default x [x]
+            float workerSpeed{ 1.0 };    //< How fast picker performs material handling; default x [x]
             float totesPerMin{ 120.0 };  //< How many totes are dispatched in one minute; default 15 [totes/min]
             float speedup{ 1.0 };        //< If we want to fasten up/slower down the simulation
             float errorRate{ 0.1 };      //< Rate with which pickers do a mistake x [errors/min]
@@ -32,6 +32,7 @@ namespace whm
             std::string articlesPath;    //< Path to a file with article-slot allocation
             std::string layoutPath;      //< Path to a file with warehouse layout description
             bool verbose{ false };       //< Print debug to an output stream
+            bool preprocess{ false };    //< Preprocess (optimize) orders before starting/picking them
         };
 
         /**

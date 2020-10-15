@@ -28,6 +28,8 @@ namespace whm
             void setQuantity(int32_t);
 
             WarehouseOrder_t<T> getWhOrder() const;
+
+            void setWhLineID(int32_t);
             int32_t getWhLineID() const;
 
             void deserializeFromXml(tinyxml2::XMLElement*);

@@ -34,7 +34,9 @@ namespace whm
             typename WarehouseOrderLineContainer_t::iterator end() { return whOrderLines.end(); }
 
             int32_t getWhOrderID() const;
-            WarehouseOrderLineContainer_t getWhOrderLines() const;
+
+            void setWhOrderLines(WarehouseOrderLineContainer_t);
+            const WarehouseOrderLineContainer_t& getWhOrderLines() const;
 
             void deserializeFromXml(tinyxml2::XMLElement*);
 

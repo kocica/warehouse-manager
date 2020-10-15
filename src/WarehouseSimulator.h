@@ -42,7 +42,6 @@ namespace whm
             ~WarehouseSimulator_t();
 
             void runSimulation();
-
             void orderFinished();
 
             utils::SimArgs_t getArguments();
@@ -58,6 +57,7 @@ namespace whm
             WarehousePathInfo_t* lookupShortestPath(int32_t, const std::vector<int32_t>&);
 
         protected:
+            void preprocessOrders();
             void prepareWhSimulation();
 
         private:
@@ -111,7 +111,7 @@ namespace whm
                     std::pair<size_t, size_t> slotPos;
                     whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), 0, slotPos);
                     waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) +
-                                    (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY()))) / sim.getArguments().pickerSpeed;
+                                    (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY()))) / sim.getArguments().workerSpeed;
 
                     handleFacility(locationID);
                 }

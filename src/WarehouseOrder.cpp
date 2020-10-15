@@ -30,9 +30,15 @@ namespace whm
     }
 
     template<typename T>
-    std::vector<WarehouseOrderLine_t<T>> WarehouseOrder_t<T>::getWhOrderLines() const
+    const std::vector<WarehouseOrderLine_t<T>>& WarehouseOrder_t<T>::getWhOrderLines() const
     {
         return this->whOrderLines;
+    }
+
+    template<typename T>
+    void WarehouseOrder_t<T>::setWhOrderLines(std::vector<WarehouseOrderLine_t<T>> newLines)
+    {
+        this->whOrderLines = newLines;
     }
 
     template<typename T>

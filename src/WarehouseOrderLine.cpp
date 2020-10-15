@@ -56,6 +56,12 @@ namespace whm
     }
 
     template<typename T>
+    void WarehouseOrderLine_t<T>::setWhLineID(int32_t newLineID)
+    {
+        this->whLineID = newLineID; // Reordered line during optimizations
+    }
+
+    template<typename T>
     int32_t WarehouseOrderLine_t<T>::getWhLineID() const
     {
         return this->whLineID;

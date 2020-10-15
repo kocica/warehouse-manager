@@ -67,12 +67,54 @@ namespace whm
         }
     }
 
+    void WarehouseSimulator_t::preprocessOrders()
+    {
+        auto& orders = const_cast<std::vector<WarehouseOrder_t<std::string>>&>(whLayout.getWhOrders());
+
+        for(auto& order : orders)
+        {
+            std::vector<WarehouseOrderLine_t<std::string>> newLines;
+
+            for(auto itLine = order.begin(); itLine != order.end(); ++itLine)
+            {
+                static const auto& lookup = [&](const WarehouseOrderLine_t<std::string>& line) -> bool
+                                            {
+                                                return line.getArticle() == itLine->getArticle();
+                                            };
+
+                auto itTargetLine = std::find_if(newLines.begin(), newLines.end(), lookup);
+
+                if(itTargetLine != newLines.end())
+                {
+                    newLines.insert(itTargetLine, *itLine);
+                }
+                else
+                {
+                    newLines.push_back(*itLine);
+                }
+            }
+
+            // Fix IDs broken by reordering
+            for(auto itLine = newLines.begin(); itLine != newLines.end(); ++itLine)
+            {
+                itLine->setWhLineID(itLine - newLines.begin() /*+ 1*/);
+            }
+
+            order.setWhOrderLines(newLines);
+        }
+    }
+
     void WarehouseSimulator_t::runSimulation()
     {
         whPathFinder->precalculatePaths(whLayout.getWhItems());
         //whPathFinder->dump();
 
         prepareWhSimulation();
+
+        if(args.preprocess)
+        {
+            preprocessOrders();
+        }
 
         simStart = Time;
 

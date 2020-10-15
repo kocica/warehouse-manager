@@ -18,8 +18,9 @@ namespace whm
             std::cout << "\nUsage: ./warehouse_manager\n\n"
                          "\t-h\tPrints this usage\n"
                          "\t-v\tTriggers verbose mode\n"
+                         "\t-p\tPreprocess (optimize) orders\n"
                          "\t-s\tTote speed on conveyor\n"
-                         "\t-p\tWorker speed during picking\n"
+                         "\t-w\tWorker speed during picking\n"
                          "\t-t\tDispatched totes per minute\n"
                          "\t-f\tSpeed up / Slow down the simulation by this factor\n"
                          "\t-o\tPath to a file with customer orders\n"
@@ -32,15 +33,15 @@ namespace whm
             int c;
             SimArgs_t args;
 
-            while ((c = getopt (argc, argv, "s:p:t:f:o:a:l:v")) != -1)
+            while ((c = getopt (argc, argv, "s:w:t:f:o:a:l:vp")) != -1)
             {
                 switch(c)
                 {
                     case 's':
                         args.toteSpeed = atof(optarg);
                         break;
-                    case 'p':
-                        args.pickerSpeed = atof(optarg);
+                    case 'w':
+                        args.workerSpeed = atof(optarg);
                         break;
                     case 't':
                         args.totesPerMin = atof(optarg);
@@ -59,6 +60,9 @@ namespace whm
                         break;
                     case 'v':
                         args.verbose = true; // TODO: whm::Logger_t::getLogger().setVerbose(); (maybe also file stream)
+                        break;
+                    case 'p':
+                        args.preprocess = true;
                         break;
                     case 'h':
                         printHelp();
