@@ -49,7 +49,8 @@ int main(int argc, char *argv[])
         whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.productsPath);
         whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
-        whm::WarehouseSimulator_t{args}.runSimulation();
+        whm::WarehouseSimulator_t::getWhSimulator().setArguments(args);
+        whm::WarehouseSimulator_t::getWhSimulator().runSimulation();
 #endif
 
 #ifdef WHM_GUI

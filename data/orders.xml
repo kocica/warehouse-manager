@@ -2,3 +2,13 @@
     <WarehouseOrderLine id="1" article_name="ART001" requested_quantity="10"/>
     <WarehouseOrderLine id="2" article_name="ART002" requested_quantity="15"/>
 </WarehouseOrder>
+
+<WarehouseOrder id="2">
+    <WarehouseOrderLine id="1" article_name="ART001" requested_quantity="10"/>
+    <WarehouseOrderLine id="2" article_name="ART002" requested_quantity="15"/>
+</WarehouseOrder>
+
+<WarehouseOrder id="3">
+    <WarehouseOrderLine id="1" article_name="ART001" requested_quantity="10"/>
+    <WarehouseOrderLine id="2" article_name="ART002" requested_quantity="15"/>
+</WarehouseOrder>

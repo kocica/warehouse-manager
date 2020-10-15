@@ -30,7 +30,7 @@ namespace whm
         void BaseShapeGraphicItem_t::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
         {
             QPen pen(Qt::black);
-            pen.setWidth(5);
+            pen.setWidth(3);
             painter->setPen(pen);
 
             if(mRect.left() > mRect.right())

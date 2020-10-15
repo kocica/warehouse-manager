@@ -16,10 +16,10 @@ QMAKE      = qmake
 QFLAGS     = -qt=qt5
 
 CC         = g++
-CFLAGS     = -std=c++17
+CFLAGS     = -std=c++17 -pedantic -Wall -Wextra
 
-LDFLAGS    =
-LIBS       =
+LDFLAGS    = libs/simlib.so
+LDLIBS     = 
 DOXYGEN    = doxygen
 
 SRC        = src
@@ -37,7 +37,7 @@ GUI_OBJS    = $(patsubst %.cpp, %.o, $(GUI_SOURCES))
 all: $(BIN_NAME) gui
 
 $(BIN_NAME): $(HEADERS) $(SOURCES) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) -o $@ $(LDFLAGS)
 
 debug: CFLAGS += -DDEBUG -g -DWM_DEBUG
 debug: all

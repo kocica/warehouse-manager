@@ -26,7 +26,6 @@ src/gui/ui_mainwindow.h
 *.pch
 
 # Compiled Dynamic libraries
-*.so
 *.dylib
 *.dll
 

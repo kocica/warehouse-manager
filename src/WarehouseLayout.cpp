@@ -210,7 +210,7 @@ namespace whm
         return whConns;
     }
 
-    WarehouseLayout_t::WarehouseOrderContainer_t WarehouseLayout_t::getWhOrders() const
+    const WarehouseLayout_t::WarehouseOrderContainer_t& WarehouseLayout_t::getWhOrders() const
     {
         return whOrders;
     }

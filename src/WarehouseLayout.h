@@ -59,7 +59,7 @@ namespace whm
 
             WarehouseItemContainer_t getWhItems() const;
             WarehouseConnContainer_t getWhConns() const;
-            WarehouseOrderContainer_t getWhOrders() const;
+            const WarehouseOrderContainer_t& getWhOrders() const;
 
             void addWhItem(WarehouseItem_t*);
             void addWhConn(WarehouseConnection_t*);

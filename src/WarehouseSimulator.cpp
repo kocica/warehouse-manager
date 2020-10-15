@@ -21,18 +21,43 @@
 
 namespace whm
 {
-    WarehouseSimulator_t::WarehouseSimulator_t(const utils::SimArgs_t& args_)
-        : args{ args_ }
-        , whPathInfo{ nullptr }
+    WarehouseSimulator_t::WarehouseSimulator_t()
+        : whLayout{ WarehouseLayout_t::getWhLayout() }
         , whPathFinder{ new WarehousePathFinder_t() }
-        , whLayout{ WarehouseLayout_t::getWhLayout() }
     {
 
+    }
+
+    WarehouseSimulator_t& WarehouseSimulator_t::getWhSimulator()
+    {
+        static WarehouseSimulator_t s;
+        return s;
+    }
+
+    simlib3::Facility* WarehouseSimulator_t::getItemFacility(int32_t itemID)
+    {
+        return whFacilities[itemID];
     }
 
     WarehouseSimulator_t::~WarehouseSimulator_t()
     {
         delete whPathFinder;
+
+        for(auto& whFacility : whFacilities)
+        {
+            delete whFacility.second;
+        }
+
+        whFacilities.clear();
+    }
+
+    void WarehouseSimulator_t::prepareWhFacilities()
+    {
+        for(const auto* whItem : whLayout.getWhItems())
+        {
+            auto whItemID = whItem->getWhItemID();
+            whFacilities[whItemID] = new simlib3::Facility(std::to_string(whItemID).c_str());
+        }
     }
 
     void WarehouseSimulator_t::runSimulation()
@@ -40,92 +65,49 @@ namespace whm
         whPathFinder->precalculatePaths(whLayout.getWhItems());
         whPathFinder->dump();
 
-        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+        prepareWhFacilities();
 
-        for(auto& whOrder : whLayout.getWhOrders()) { this->simulateProcessing(whOrder); }
-
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-
-        std::cout << "Simulation took <" << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "> [µs]" << std::endl;
+        Init(0,100000);
+        (new OrderRequest_t(whLayout))->Activate();
+        Run();
     }
 
-    void WarehouseSimulator_t::simulateProcessing(WarehouseOrder_t<std::string>& whOrder)
+    void WarehouseSimulator_t::setArguments(const utils::SimArgs_t& args_)
     {
-        std::cout << std::endl << "Start picking orderID <" << whOrder.getWhOrderID() << ">\n";
+        args = args_;
+    }
 
-        // Start in warehouse entrance
-        whOrderInfo.currentWhItemID = lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)->getWhItemID();
+    utils::SimArgs_t WarehouseSimulator_t::getArguments()
+    {
+        return args;
+    }
 
-        // Simulate picking of each line
-        for(auto& whOrderLine : whOrder)
-        {
-            std::cout << " - Start picking lineID <" << whOrderLine.getWhLineID() << ">\n";
+    WarehousePathInfo_t* WarehouseSimulator_t::lookupShortestPath(int32_t currentLocID, const std::vector<int32_t>& targetLocIDs)
+    {
+        WarehousePathInfo_t* whPathInfo{ nullptr };
 
-            whPathInfo = nullptr;
+        std::for_each(targetLocIDs.begin(), targetLocIDs.end(),
+                      [&](int32_t targetLocID)
+                      {
+                          auto* actPathInfo = this->whPathFinder->getShortestPath(currentLocID, targetLocID);
 
-            auto articleLocIDs = this->lookupWhLocations(whOrderLine.getArticle(), whOrderLine.getQuantity());
-
-            std::for_each(articleLocIDs.begin(), articleLocIDs.end(),
-                          [&](int32_t targetWhLocID)
+                          if(!whPathInfo || actPathInfo->distance < whPathInfo->distance )
                           {
-                              auto actPathInfo = this->whPathFinder->getShortestPath(whOrderInfo.currentWhItemID, targetWhLocID);
-
-                              if(!whPathInfo || actPathInfo->distance < whPathInfo->distance )
-                              {
-                                  whPathInfo = actPathInfo;
-                              }
-                          });
-
-            if(!whPathInfo)
-            {
-                std::cerr << "Cannot pick this article!" << std::endl;
-            }
-            else
-            {
-                simulateMovement();
-                simulatePick();
-            }
-        }
-
-        // Move to warehouse dispatch
-        whPathInfo = this->whPathFinder->getShortestPath(whOrderInfo.currentWhItemID, lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_DISPATCH)->getWhItemID());
+                              whPathInfo = actPathInfo;
+                          }
+                      });
 
         if(!whPathInfo)
         {
-            std::cerr << "Cannot move to dispatch!" << std::endl;
+            throw std::runtime_error("Cannot pick article!");
         }
-        else
-        {
-            simulateMovement();
-        }
-    }
 
-    void WarehouseSimulator_t::simulateMovement()
-    {
-        std::cout << "  - Movement from <" << whOrderInfo.currentWhItemID << "> to <" << whPathInfo->targetWhItemID << ">\n";
-
-        int64_t us = whPathInfo->distance / args.toteSpeed * 1000000;
-
-        std::cout << "  - Sleep for <" << us << "> [µs]" << std::endl;
-
-        std::this_thread::sleep_for(std::chrono::microseconds(us));
-
-        whOrderInfo.currentWhItemID = whPathInfo->targetWhItemID;
-    }
-
-    void WarehouseSimulator_t::simulatePick()
-    {
-        std::cout << "   - Picking from location <" << whOrderInfo.currentWhItemID << ">\n";
-
-        int64_t us = whPathInfo->distance / args.toteSpeed * 1000000;
-
-        std::cout << "   - Sleep for <" << us << "> [µs]" << std::endl;
-
-        std::this_thread::sleep_for(std::chrono::microseconds(us));
+        return whPathInfo;
     }
 
     std::vector<int32_t> WarehouseSimulator_t::lookupWhLocations(const std::string& article, int32_t quantity)
     {
+        (void)quantity;
         std::vector<int32_t> whLocIDs;
         std::pair<size_t, size_t> position;
 
