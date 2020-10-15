@@ -19,12 +19,13 @@
 #include "WarehousePathFinder.h"
 
 template <typename T>
-std::ostream& operator<<(std::ostream& out, const std::vector<T>& v)
+std::ostream& operator<<(std::ostream& out, const std::vector<std::pair<T, T>>& v)
 {
   if ( !v.empty() )
   {
     out << '[';
-    std::copy (v.begin(), v.end(), std::ostream_iterator<T>(out, ", "));
+    std::for_each(v.begin(), v.end(), [](const std::pair<T, T>& p)
+                                      { std::cout << "(" << p.first << ", " << p.second << "); "; });
     out << "]";
   }
   return out;
@@ -47,30 +48,41 @@ namespace whm
         std::for_each(whItems.begin(), whItems.end(),
                       [&](const WarehouseItem_t* whItem)
                       {
-                          this->precalculatePaths(whItem->getWhItemID(), whItem, WarehousePathInfo_t{});
+                          if(whItem->getType() != WarehouseItemType_t::E_CONVEYOR &&
+                             whItem->getType() != WarehouseItemType_t::E_CONVEYOR_HUB)
+                          {
+                            this->precalculatePaths(whItem->getWhItemID(), whItem, WarehousePathInfo_t{});
+                          }
                       });
     }
 
     void WarehousePathFinder_t::precalculatePaths(int32_t sourceWhItemID, const WarehouseItem_t* whItem, WarehousePathInfo_t pathInfo)
     {
         auto whItemID = whItem->getWhItemID();
-        auto it = std::find(pathInfo.pathWhItemIDs.begin(), pathInfo.pathWhItemIDs.end(), whItemID);
+        auto it = std::find_if(pathInfo.pathToTarget.begin(), pathInfo.pathToTarget.end(),
+                               [&whItemID](auto& pathItem) -> bool
+                               {
+                                   return pathItem.first == whItemID;
+                               });
 
-        if(it != pathInfo.pathWhItemIDs.end())
+        if(it != pathInfo.pathToTarget.end())
         {
-            //std::cout << "Loop detected, abort." << std::endl;
+            // Loop detected, abort.
             return;
         }
 
         // Add new item to the map in case its not conv
-        pathInfo.targetWhItemID = whItemID;
-        whPaths[sourceWhItemID].push_back(pathInfo);
+        if(whItem->getType() != WarehouseItemType_t::E_CONVEYOR &&
+           whItem->getType() != WarehouseItemType_t::E_CONVEYOR_HUB)
+        {
+            pathInfo.targetWhItemID = whItemID;
+            whPaths[sourceWhItemID].push_back(pathInfo);
+        }
 
         // Update path info attributes
         if(sourceWhItemID != whItemID)
         {
-            pathInfo.pathWhItemIDs.push_back(whItemID);
-            pathInfo.distance += whItem->getW();
+            pathInfo.pathToTarget.emplace_back(std::make_pair(whItemID, whItem->getW()));
         }
 
         // Recursively call for each connected port
@@ -106,7 +118,7 @@ namespace whm
             {
                 if(pathInfo.targetWhItemID == rhsItemID)
                 {
-                    if(!shortestPath || (shortestPath->distance > pathInfo.distance))
+                    if(!shortestPath || (pathDistance(shortestPath->pathToTarget) > pathDistance(pathInfo.pathToTarget)))
                     {
                         shortestPath = const_cast<WarehousePathInfo_t*>(&pathInfo);
                     }
@@ -115,6 +127,18 @@ namespace whm
         }
 
         return shortestPath;
+    }
+
+    int32_t WarehousePathFinder_t::pathDistance(const WarehousePath_t& path) const
+    {
+        int32_t summedPathDistance{ 0 };
+
+        for(const auto& pathItem : path)
+        {
+            summedPathDistance += pathItem.second;
+        }
+
+        return summedPathDistance;
     }
 
     void WarehousePathFinder_t::dump() const
@@ -127,9 +151,9 @@ namespace whm
             for(const auto& whPathInfo : whPath.second)
             {
                 std::cout << "  - Warehouse path to <" << whPathInfo.targetWhItemID
-                          << "> goes through <"        << whPathInfo.pathWhItemIDs
-                          << "> and takes <"           << whPathInfo.distance
-                          << "> meters "               << std::endl;
+                          << "> through path: "        << whPathInfo.pathToTarget
+                          << ", total distance: <"     << pathDistance(whPathInfo.pathToTarget)
+                          << ">"                       << std::endl;
             }
         }
     }

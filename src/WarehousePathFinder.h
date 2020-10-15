@@ -10,6 +10,7 @@
 #pragma once
 
 #include <vector>
+#include <utility>
 #include <cstdint>
 #include <unordered_map>
 
@@ -17,11 +18,12 @@ namespace whm
 {
     class WarehouseItem_t;
 
+    using WarehousePath_t = std::vector<std::pair<int32_t, int32_t>>;
+
     struct WarehousePathInfo_t
     {
-        int32_t targetWhItemID{ 0 };        //< Target warehouse item
-        std::vector<int32_t> pathWhItemIDs; //< Path to go to reach target item
-        int32_t distance{ 0 };              //< How many meters it takes to reach target item
+        int32_t targetWhItemID{ 0 };     //< Target warehouse item
+        WarehousePath_t pathToTarget;    //< Path to go to reach target item (item ids and distances)
     };
 
     class WarehousePathFinder_t
@@ -32,6 +34,8 @@ namespace whm
 
             void precalculatePaths(const std::vector<WarehouseItem_t*>&);
             WarehousePathInfo_t* getShortestPath(int32_t, int32_t) const;
+
+            int32_t pathDistance(const WarehousePath_t& path) const;
 
             void dump() const;
 

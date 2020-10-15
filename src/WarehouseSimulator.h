@@ -45,14 +45,14 @@ namespace whm
 
             static WarehouseSimulator_t& getWhSimulator();
 
-            simlib3::Facility* getItemFacility(int32_t);
+            simlib3::Store* getWhItemFacility(int32_t);
 
             WarehouseItem_t* lookupWhGate(const WarehouseItemType_t&);
             std::vector<int32_t> lookupWhLocations(const std::string&, int32_t);
             WarehousePathInfo_t* lookupShortestPath(int32_t, const std::vector<int32_t>&);
 
         protected:
-            void prepareWhFacilities();
+            void prepareWhSimulation();
 
         private:
             utils::SimArgs_t args;
@@ -60,7 +60,7 @@ namespace whm
             WarehouseLayout_t& whLayout;
             WarehousePathFinder_t* whPathFinder;
 
-            std::map<int32_t, simlib3::Facility*> whFacilities;
+            std::map<int32_t, simlib3::Store*> whFacilities;
     };
 
 
@@ -82,21 +82,23 @@ namespace whm
                     const auto& targetLocations = sim.lookupWhLocations(orderLine.getArticle(), orderLine.getQuantity());
                     const auto* shortestPath = sim.lookupShortestPath(locationID, targetLocations);
 
-                    int64_t waitDuration = shortestPath->distance / sim.getArguments().toteSpeed * 1000;
-                    simlib3::Facility* itemFacility = sim.getItemFacility(shortestPath->targetWhItemID);
+                    for(const auto& pathItem : shortestPath->pathToTarget)
+                    {
+                        int64_t waitDuration = pathItem.second / sim.getArguments().toteSpeed * 1000000;
 
-                    // TODO: Seize each item on the path? (shortestPath->pathWhItemIDs)
+                        simlib3::Store* whFacility = sim.getWhItemFacility(pathItem.first);
 
-                    std::cout << waitDuration << std::endl;
+                        Enter(*whFacility, 1);
+                        Wait(waitDuration);
+                        Leave(*whFacility, 1);
+                    }
 
-                    Seize(*itemFacility);
-                    Wait(waitDuration);
-                    Release(*itemFacility);
+                    // TODO: Simulate picking
 
                     locationID = shortestPath->targetWhItemID;
                 }
 
-                // TODO: Get to the shipping
+                // TODO: Simulate shipping
             }
 
         public:
@@ -117,7 +119,7 @@ namespace whm
 
                 if(++it != layout.getWhOrders().end())
                 {
-                    Activate(Time+Exponential(1e3/150));
+                    Activate(Time+Exponential(1e3));
                 }
             }
 

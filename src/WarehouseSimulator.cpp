@@ -34,9 +34,9 @@ namespace whm
         return s;
     }
 
-    simlib3::Facility* WarehouseSimulator_t::getItemFacility(int32_t itemID)
+    simlib3::Store* WarehouseSimulator_t::getWhItemFacility(int32_t facilityID)
     {
-        return whFacilities[itemID];
+        return whFacilities[facilityID];
     }
 
     WarehouseSimulator_t::~WarehouseSimulator_t()
@@ -51,12 +51,20 @@ namespace whm
         whFacilities.clear();
     }
 
-    void WarehouseSimulator_t::prepareWhFacilities()
+    void WarehouseSimulator_t::prepareWhSimulation()
     {
         for(const auto* whItem : whLayout.getWhItems())
         {
             auto whItemID = whItem->getWhItemID();
-            whFacilities[whItemID] = new simlib3::Facility(std::to_string(whItemID).c_str());
+
+            if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+            {
+                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), 1);
+            }
+            else
+            {
+                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), 1 /*TODO: Calculate*/);
+            }
         }
     }
 
@@ -65,9 +73,9 @@ namespace whm
         whPathFinder->precalculatePaths(whLayout.getWhItems());
         whPathFinder->dump();
 
-        prepareWhFacilities();
+        prepareWhSimulation();
 
-        Init(0,100000);
+        Init(0);
         (new OrderRequest_t(whLayout))->Activate();
         Run();
     }
@@ -89,9 +97,10 @@ namespace whm
         std::for_each(targetLocIDs.begin(), targetLocIDs.end(),
                       [&](int32_t targetLocID)
                       {
-                          auto* actPathInfo = this->whPathFinder->getShortestPath(currentLocID, targetLocID);
+                          auto* actPathInfo = whPathFinder->getShortestPath(currentLocID, targetLocID);
 
-                          if(!whPathInfo || actPathInfo->distance < whPathInfo->distance )
+                          if(!whPathInfo || whPathFinder->pathDistance(actPathInfo->pathToTarget)
+                                          < whPathFinder->pathDistance(whPathInfo->pathToTarget))
                           {
                               whPathInfo = actPathInfo;
                           }
