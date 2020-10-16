@@ -18,6 +18,7 @@
 #include <algorithm>
 
 // Local
+#include "Logger.h"
 #include "WarehouseOrder.h"
 #include "WarehouseLayout.h"
 #include "WarehouseDataGenerator.h"
@@ -63,7 +64,7 @@ namespace whm
 
         // Calculate probability of participation in order for each product
         int32_t adu = sumAdu(whProductsAdu);
-        std::cout << "\n\nADU: <" << adu << ">\n\n" << std::endl;
+        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "ADU: <%d>", adu);
 
         std::for_each(whProducts.begin(), whProducts.end(),
                       [&](const WarehouseProduct_t& whProduct)
