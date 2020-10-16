@@ -56,9 +56,14 @@ namespace whm
                           whProductsAdu[whProduct] = std::round(normalDist(gen));
                       });
 
+        for(auto& whProdAdu : whProductsAdu)
+        {
+            std::cout << std::setw(32) << whProdAdu.first << " = " << whProdAdu.second << std::endl;
+        }
+
         // Calculate probability of participation in order for each product
         int32_t adu = sumAdu(whProductsAdu);
-        std::cout << "ADU: <" << adu << ">" << std::endl;
+        std::cout << "\n\nADU: <" << adu << ">\n\n" << std::endl;
 
         std::for_each(whProducts.begin(), whProducts.end(),
                       [&](const WarehouseProduct_t& whProduct)
@@ -68,7 +73,7 @@ namespace whm
 
         // Generate orders in two (or more) runs with the same product probabilities for training and evaluation
         double ordersMi = double(adu) / args.orderCount;
-        double ordersSigma = sigma;
+        double ordersSigma = sigma / args.orderCount;
 
         dump();
         generateOrders(ordersMi, ordersSigma);
@@ -154,6 +159,8 @@ namespace whm
 
             actProb += whProd.second;
         }
+
+        return WarehouseProduct_t("---"); // Never gonna happen but shut up compiler
     }
 
     int32_t WarehouseDataGenerator_t::sumAdu(const std::map<WarehouseProduct_t, int32_t>& whProductsAdu)
