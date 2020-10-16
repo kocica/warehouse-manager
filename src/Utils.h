@@ -28,6 +28,8 @@ namespace whm
             bool verbose{ false };       //< Print debug to an output stream
 #ifdef WHM_GEN
             int32_t orderCount{ 1000 };  //< Number of generated orders; default 1000 orders per set
+            double mi{ 10 };             //< Gauss distribution mi (mean value)
+            double sigma{ 3 };           //< Gauss distribution sigma (standard deviation)
 #else
             float toteSpeed{ 1.0 };      //< How fast tote moves on conv; default 0.5 [m/s]
             float workerSpeed{ 1.0 };    //< How fast picker performs material handling; default x [x]

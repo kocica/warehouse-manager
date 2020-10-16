@@ -40,14 +40,17 @@ GUI_OBJS    = $(patsubst %.cpp, %.o, $(GUI_SOURCES))
 
 $(BIN_NAME_GEN): CFLAGS += -DWHM_GEN
 $(BIN_NAME_GEN): $(HEADERS) $(SOURCES) $(OBJS)
-	$(CC) $(CFLAGS) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) -fPIC $(OBJS) -o $@
+	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 $(BIN_NAME_SIM): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) -o $@ $(LDFLAGS)
+	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 $(BIN_NAME_GUI): $(HEADERS) $(SOURCES) $(OBJS) $(GUI_SOURCES) $(GUI_HEADERS)
 	@cd $(GUI) && $(QMAKE) $(QFLAGS) && make
 	@mv $(shell pwd)/$(GUI)/$(BIN_NAME_GUI) .
+	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@

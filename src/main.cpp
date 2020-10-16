@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 #  ifdef WHM_GEN
             whm::WarehouseDataGenerator_t gen{args};
 
-            gen.generateData(5, 2);
+            gen.generateData(args.mi, args.sigma);
 #  else
             whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(args.layoutPath);
             whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.articlesPath);

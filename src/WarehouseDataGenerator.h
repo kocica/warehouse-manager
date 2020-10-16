@@ -20,6 +20,8 @@
 
 namespace whm
 {
+    using WarehouseProduct_t = std::string;
+
     class WarehouseDataGenerator_t
     {
         public:
@@ -36,13 +38,15 @@ namespace whm
         private:
             void generateOrders(double mi, double sigma);
 
-            void importProducts(std::vector<std::string>&);
+            void importProducts(std::vector<WarehouseProduct_t>&);
 
-            int32_t sumAdu(const std::map<std::string, int32_t>&);
+            int32_t sumAdu(const std::map<WarehouseProduct_t, int32_t>&);
+
+            WarehouseProduct_t lookupArticle(double);
 
         private:
             utils::WhmArgs_t args;
-            std::map<std::string, double> whProductsProb;
+            std::map<WarehouseProduct_t, double> whProductsProb;
     };
 }
 

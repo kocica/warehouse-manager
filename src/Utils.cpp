@@ -21,7 +21,9 @@ namespace whm
                          "\t-o\tPath to a file with customer orders\n"
                          "\t-a\tPath to a file with article-slot allocation\n"
 #ifdef WHM_GEN
-                         "\t-c\tNumber of generated orders per set\n";
+                         "\t-c\tNumber of generated orders per set\n"
+                         "\t-m\tGauss distribution mi (mean value)\n"
+                         "\t-d\tGauss distribution sigma (standard deviation)\n"
 #else
                          "\t-p\tPreprocess (optimize) orders\n"
                          "\t-s\tTote speed on conveyor\n"
@@ -40,7 +42,7 @@ namespace whm
 
             // TODO: Handle catch invalid_argument exception and missing arguments
 
-            while ((c = getopt (argc, argv, "s:w:t:f:o:a:l:c:vpg")) != -1)
+            while ((c = getopt (argc, argv, "s:w:t:f:o:a:l:c:m:d:vpg")) != -1)
             {
                 switch(c)
                 {
@@ -53,6 +55,12 @@ namespace whm
 #ifdef WHM_GEN
                     case 'c':
                         args.orderCount = atoi(optarg);;
+                        break;
+                    case 'm':
+                        args.mi = atof(optarg);
+                        break;
+                    case 'd':
+                        args.sigma = atof(optarg);
                         break;
 #else
                     case 's':

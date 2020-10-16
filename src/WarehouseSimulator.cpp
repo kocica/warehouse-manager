@@ -71,6 +71,8 @@ namespace whm
 
     void WarehouseSimulator_t::preprocessOrders()
     {
+        // TODO: Take locations into account - if prod A and B is on the same location, pick it there
+
         auto& orders = const_cast<std::vector<WarehouseOrder_t<std::string>>&>(whLayout.getWhOrders());
 
         for(auto& order : orders)
