@@ -7,6 +7,7 @@
  * @brief   Class representing one customer order including order lines
  */
 
+#include "Logger.h"
 #include "WarehouseOrder.h"
 
 namespace whm

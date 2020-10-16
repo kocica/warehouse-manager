@@ -7,6 +7,7 @@
  * @brief   Class representing one customer order line (product + requested quantity)
  */
 
+#include "Logger.h"
 #include "WarehouseOrder.h"
 #include "WarehouseOrderLine.h"
 

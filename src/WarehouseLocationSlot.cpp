@@ -8,6 +8,8 @@
  */
 
 #include <iostream>
+
+#include "Logger.h"
 #include "WarehouseItem.h"
 #include "WarehouseLocationSlot.h"
 #include "WarehouseLocationRack.h"

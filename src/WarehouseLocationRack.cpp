@@ -8,6 +8,8 @@
  */
 
 #include <iostream>
+
+#include "Logger.h"
 #include "WarehouseLocationRack.h"
 
 namespace whm

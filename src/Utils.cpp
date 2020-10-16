@@ -8,6 +8,7 @@
  */
 
 #include "Utils.h"
+#include "Logger.h"
 
 namespace whm
 {

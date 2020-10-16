@@ -12,6 +12,7 @@
 #include <algorithm>
 
 // Local
+#include "Logger.h"
 #include "WarehousePort.h"
 #include "WarehouseItem.h"
 #include "WarehouseConnection.h"

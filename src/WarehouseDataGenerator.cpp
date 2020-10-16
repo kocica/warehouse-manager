@@ -59,7 +59,7 @@ namespace whm
 
         for(auto& whProdAdu : whProductsAdu)
         {
-            std::cout << std::setw(32) << whProdAdu.first << " = " << whProdAdu.second << std::endl;
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "Product <%s> = ADU <%d>", whProdAdu.first.c_str(), whProdAdu.second);
         }
 
         // Calculate probability of participation in order for each product
@@ -180,7 +180,7 @@ namespace whm
     {
         for(auto& whProd : whProductsProb)
         {
-            std::cout << std::setw(32) << whProd.first << " = " << whProd.second << std::endl;
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "Product <%s> = Probability <%f>", whProd.first.c_str(), whProd.second);
         }
     }
 }

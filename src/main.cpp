@@ -12,6 +12,7 @@
 
 // Local
 #include "Utils.h"
+#include "Logger.h"
 #include "WarehouseLayout.h"
 #ifndef WHM_GEN
 #  include "WarehouseSimulator.h"

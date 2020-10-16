@@ -12,6 +12,7 @@
 #include <iterator>
 #include <algorithm>
 
+#include "Logger.h"
 #include "WarehousePort.h"
 #include "WarehouseItem.h"
 #include "WarehouseLayout.h"

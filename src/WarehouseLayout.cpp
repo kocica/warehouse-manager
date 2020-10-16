@@ -13,6 +13,7 @@
 #include <algorithm>
 
 // Local
+#include "Logger.h"
 #include "WarehouseItem.h"
 #include "WarehouseOrder.h"
 #include "WarehouseLayout.h"

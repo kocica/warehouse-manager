@@ -61,7 +61,7 @@ namespace whm
                     }
                     else if (selectedPort->getWhItem() == this->getWhItem())
                     {
-                        std::cout << "Same object!" << std::endl;
+                        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot connect same object!");
                     }
                     else
                     {
@@ -78,7 +78,7 @@ namespace whm
                         }
                         else
                         {
-                            std::cout << "Incompatible types!" << std::endl;
+                            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot connect incompatible types!");
                         }
                     }
                 }
@@ -122,7 +122,7 @@ namespace whm
         {
             if(this->whConn != nullptr)
             {
-                std::cout << "Already connected!" << std::endl;
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Already connected!");
             }
             else
             {

@@ -17,6 +17,7 @@
 #include <algorithm>
 
 // Local
+#include "Logger.h"
 #include "WarehouseItem.h"
 #include "WarehouseSimulator.h"
 
@@ -140,7 +141,7 @@ namespace whm
 
         if(finished == whLayout.getWhOrders().size())
         {
-            std::cout << "Simulation finished in: <" << Time - simStart << ">\n";
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "Simulation finished in: <%f>", Time - simStart);
         }
     }
 
