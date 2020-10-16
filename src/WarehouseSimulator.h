@@ -21,6 +21,8 @@
 
 #pragma once
 
+#ifndef WHM_GEN
+
 #include <map>
 
 #include "Utils.h"
@@ -44,8 +46,8 @@ namespace whm
             void runSimulation();
             void orderFinished();
 
-            utils::SimArgs_t getArguments();
-            void setArguments(const utils::SimArgs_t&);
+            utils::WhmArgs_t getArguments();
+            void setArguments(const utils::WhmArgs_t&);
 
             static WarehouseSimulator_t& getWhSimulator();
 
@@ -62,7 +64,7 @@ namespace whm
 
         private:
             double simStart;
-            utils::SimArgs_t args;
+            utils::WhmArgs_t args;
 
             WarehouseLayout_t& whLayout;
             WarehousePathFinder_t* whPathFinder;
@@ -162,3 +164,5 @@ namespace whm
             OrderRequest_t(WarehouseLayout_t& layout_) : layout(layout_), it(layout.getWhOrders().begin()) {}
     };
 }
+
+#endif

@@ -84,5 +84,13 @@ namespace whm
         this->quantity = elem->IntAttribute("requested_quantity");
     }
 
+    template<typename T>
+    void WarehouseOrderLine_t<T>::serializeToXml(tinyxml2::XMLElement* elem) const
+    {
+        elem->SetAttribute("id", getWhLineID());
+        elem->SetAttribute("article_name", getArticle().c_str());
+        elem->SetAttribute("requested_quantity", getQuantity());
+    }
+
     template class WarehouseOrderLine_t<std::string>;
 }

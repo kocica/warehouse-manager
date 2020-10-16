@@ -7,7 +7,8 @@
 ###############################################################
 
 ################## Build constants ##############
-BIN_NAME     = warehouse_manager
+BIN_NAME_SIM = warehouse_manager_sim
+BIN_NAME_GEN = warehouse_manager_gen
 BIN_NAME_GUI = warehouse_manager_gui
 
 README     = README
@@ -34,32 +35,26 @@ GUI_SOURCES = $(wildcard $(GUI)/*.cpp)
 GUI_HEADERS = $(wildcard $(GUI)/*.h)
 GUI_OBJS    = $(patsubst %.cpp, %.o, $(GUI_SOURCES))
 
-all: $(BIN_NAME) gui
+#all: $(BIN_NAME_SIM) $(BIN_NAME_GEN) $(BIN_NAME_GUI)
+.PHONY: clean
 
-$(BIN_NAME): $(HEADERS) $(SOURCES) $(OBJS)
+$(BIN_NAME_GEN): CFLAGS += -DWHM_GEN
+$(BIN_NAME_GEN): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) -o $@ $(LDFLAGS)
 
-debug: CFLAGS += -DDEBUG -g -DWM_DEBUG
-debug: all
+$(BIN_NAME_SIM): $(HEADERS) $(SOURCES) $(OBJS)
+	$(CC) $(CFLAGS) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) -o $@ $(LDFLAGS)
 
-gui: $(HEADERS) $(SOURCES) $(OBJS) $(GUI_SOURCES) $(GUI_HEADERS)
+$(BIN_NAME_GUI): $(HEADERS) $(SOURCES) $(OBJS) $(GUI_SOURCES) $(GUI_HEADERS)
 	@cd $(GUI) && $(QMAKE) $(QFLAGS) && make
 	@mv $(shell pwd)/$(GUI)/$(BIN_NAME_GUI) .
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-.PHONY: clean
-
 doxygen:
 	$(DOXYGEN) $(CFG)/doxyConf
 
 clean:
 	-@cd $(GUI) && make clean && rm -f moc_* .qmake.stash
-	rm -f $(BIN_NAME) $(BIN_NAME_GUI) $(GUI)/$(BIN_NAME_GUI) $(GUI)/Makefile $(SRC)/*.o
-
-run:
-	./$(BIN_NAME)
-
-rungui:
-	./$(BIN_NAME_GUI)
+	rm -f $(BIN_NAME_SIM) $(BIN_NAME_GEN) $(BIN_NAME_GUI) $(GUI)/$(BIN_NAME_GUI) $(GUI)/Makefile $(SRC)/*.o

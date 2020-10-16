@@ -13,14 +13,18 @@
 // Local
 #include "Utils.h"
 #include "WarehouseLayout.h"
-#include "WarehouseSimulator.h"
+#ifndef WHM_GEN
+#  include "WarehouseSimulator.h"
+#else
+#  include "WarehouseDataGenerator.h"
+#endif
 
 // Qt
 #ifdef WHM_GUI
-#include <QStyle>
-#include <QApplication>
-#include <QDesktopWidget>
-#include "gui/mainwindow.h"
+#  include <QStyle>
+#  include <QApplication>
+#  include <QDesktopWidget>
+#  include "gui/mainwindow.h"
 #endif
 
 int main(int argc, char *argv[])
@@ -45,12 +49,18 @@ int main(int argc, char *argv[])
 #else
         const auto& args = whm::utils::parseArgs(argc, argv);
 
-        whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(args.layoutPath);
-        whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.articlesPath);
-        whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
+#  ifdef WHM_GEN
+            whm::WarehouseDataGenerator_t gen{args};
 
-        whm::WarehouseSimulator_t::getWhSimulator().setArguments(args);
-        whm::WarehouseSimulator_t::getWhSimulator().runSimulation();
+            gen.generateData(5, 2);
+#  else
+            whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(args.layoutPath);
+            whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.articlesPath);
+            whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
+
+            whm::WarehouseSimulator_t::getWhSimulator().setArguments(args);
+            whm::WarehouseSimulator_t::getWhSimulator().runSimulation();
+#  endif
 #endif
 
 #ifdef WHM_GUI

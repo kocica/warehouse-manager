@@ -7,6 +7,8 @@
  * @brief   Module responsible for simulation of the warehouse operations
  */
 
+#ifndef WHM_GEN
+
 // Std
 #include <chrono>
 #include <thread>
@@ -122,10 +124,10 @@ namespace whm
         (new OrderRequest_t(whLayout))->Activate();
         Run();
 
-        for(auto& whFacility : whFacilities)
+        /*for(auto& whFacility : whFacilities)
         {
-            //whFacility.second->Output();
-        }
+            whFacility.second->Output();
+        }*/
     }
 
     void WarehouseSimulator_t::orderFinished()
@@ -140,12 +142,12 @@ namespace whm
         }
     }
 
-    void WarehouseSimulator_t::setArguments(const utils::SimArgs_t& args_)
+    void WarehouseSimulator_t::setArguments(const utils::WhmArgs_t& args_)
     {
         args = args_;
     }
 
-    utils::SimArgs_t WarehouseSimulator_t::getArguments()
+    utils::WhmArgs_t WarehouseSimulator_t::getArguments()
     {
         return args;
     }
@@ -220,3 +222,5 @@ namespace whm
         return nullptr;
     }
 }
+
+#endif

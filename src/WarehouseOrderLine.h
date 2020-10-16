@@ -33,6 +33,7 @@ namespace whm
             int32_t getWhLineID() const;
 
             void deserializeFromXml(tinyxml2::XMLElement*);
+            void serializeToXml(tinyxml2::XMLElement*) const;
 
             void dump() const;
 

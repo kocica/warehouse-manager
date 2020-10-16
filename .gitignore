@@ -1,5 +1,6 @@
 # Bin name(s)
-warehouse_manager
+warehouse_manager_sim
+warehouse_manager_gen
 warehouse_manager_gui
 
 # Qt

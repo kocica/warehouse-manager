@@ -144,6 +144,19 @@ namespace whm
         delete doc;
     }
 
+    void WarehouseLayout_t::exportCustomerOrders(const std::string& xmlFilename)
+    {
+        tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
+
+        for(const auto& whOrder : whOrders)
+        {
+            whOrder.serializeToXml(doc);
+        }
+
+        doc->SaveFile(xmlFilename.c_str());
+        delete doc;
+    }
+
     void WarehouseLayout_t::importLocationSlots(const std::string& csvFilename)
     {
         std::ifstream csvStream;

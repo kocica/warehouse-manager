@@ -24,6 +24,12 @@ namespace whm
     }
 
     template<typename T>
+    void WarehouseOrder_t<T>::setWhOrderID(int32_t whOrderID_)
+    {
+        this->whOrderID = whOrderID_;
+    }
+
+    template<typename T>
     int32_t WarehouseOrder_t<T>::getWhOrderID() const
     {
         return this->whOrderID;
@@ -65,6 +71,25 @@ namespace whm
             whLine.deserializeFromXml(whLineXml);
             this->whOrderLines.emplace_back(std::move(whLine));
         }
+    }
+
+    template<typename T>
+    void WarehouseOrder_t<T>::serializeToXml(tinyxml2::XMLDocument* doc) const
+    {
+        tinyxml2::XMLElement* whOrder = doc->NewElement( "WarehouseOrder" );
+
+        whOrder->SetAttribute( "id", getWhOrderID() );
+
+        // Add all lines
+        std::for_each(whOrderLines.begin(), whOrderLines.end(),
+                      [&](auto whLine) -> void
+                      {
+                          tinyxml2::XMLElement* whLineXml = doc->NewElement( "WarehouseOrderLine" );
+                          whLine.serializeToXml(whLineXml);
+                          whOrder->InsertEndChild(whLineXml);
+                      });
+
+        doc->InsertEndChild(whOrder);
     }
 
     template class WarehouseOrder_t<std::string>;
