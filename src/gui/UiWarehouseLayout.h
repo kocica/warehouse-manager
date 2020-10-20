@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "../Logger.h"
 #include "UiWarehouseItem.h"
 #include "UiWarehouseConnection.h"
 

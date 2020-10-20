@@ -10,6 +10,7 @@
 #pragma once
 
 // Local
+#include "../Logger.h"
 #include "UiWarehouseItem.h"
 #include "UiWarehousePort.h"
 

@@ -10,6 +10,7 @@
 #include <iostream>
 
 #include <QMessageBox>
+#include <QApplication>
 
 #include "UiCursor.h"
 #include "UiWarehouseItem.h"
@@ -80,6 +81,7 @@ namespace whm
 
         void UiWarehouseItem_t::removeWhItem()
         {
+            qApp->processEvents();
             eraseFromLayout();
             scene->removeItem(this);
             delete this;

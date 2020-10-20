@@ -13,6 +13,7 @@
 #include <QPushButton>
 #include <QMouseEvent>
 
+#include "../Logger.h"
 #include "mainwindow.h"
 #include "UiWarehouseItem.h"
 #include "UiWarehouseConnection.h"

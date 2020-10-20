@@ -16,6 +16,7 @@
 #include <QPushButton>
 #include <QTapAndHoldGesture>
 
+#include "../Logger.h"
 #include "mainwindow.h"
 #include "BaseShapeGraphicItem.h"
 #include "../WarehouseItemType.h"

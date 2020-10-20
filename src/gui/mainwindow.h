@@ -9,6 +9,9 @@
 
 #pragma once
 
+// Local
+#include "../Logger.h"
+
 // Qt
 #include <QMainWindow>
 #include <QGraphicsScene>
