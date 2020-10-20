@@ -46,23 +46,6 @@ namespace whm
         UiWarehouseItemConveyor_t::UiWarehouseItemConveyor_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t t)
             : UiWarehouseItem_t(s, ui, x, y, w, h, t)
         {
-            /*auto dialog = new QDialog(this);
-            auto form   = new QFormLayout(dialog);
-            auto len    = new QLineEdit(dialog);
-
-            form->addRow(QString("Enter conveyor length: "), len);
-
-            QDialogButtonBox buttons(QDialogButtonBox::Ok, Qt::Horizontal, dialog);
-            QObject::connect(&buttons, SIGNAL(accepted()), dialog, SLOT(accept()));
-            form->addRow(&buttons);
-
-            if (dialog->exec() == QDialog::Accepted)
-            {
-                // TODO: Horizontal conv x = 10 y = length
-                sizeX = len->text().toInt();
-                sizeY = 10; // TODO: Port size
-            }*/
-
             /*if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
             {
                 std::cerr << "Collision detected - Item's cannot intersect." << std::endl;

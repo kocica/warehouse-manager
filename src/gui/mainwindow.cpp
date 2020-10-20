@@ -92,8 +92,6 @@ namespace whm
             scene->setSceneRect(0, 0, whX, whY);
             ui->view->setScene(scene);
 
-            // TODO: Set view dimension according to the available space minus sidebars width/height
-
             // Create scene borders
             QPen pen;
             pen.setColor(Qt::black);
@@ -306,8 +304,6 @@ namespace whm
             int32_t whY = UiWarehouseLayout_t::getWhLayout().getDimensions().second * whR;
 
             ui->view->scene()->setSceneRect(0, 0, whX, whY);
-
-            // TODO: Set view dimension according to the available space minus sidebars width/height
 
             QPen pen;
             pen.setColor(Qt::black);

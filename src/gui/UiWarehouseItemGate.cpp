@@ -35,25 +35,6 @@ namespace whm
         UiWarehouseItemGate_t::UiWarehouseItemGate_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t t)
             : UiWarehouseItem_t(s, ui, x, y, w, h, t)
         {
-            /*auto dialog = new QDialog(this);
-            auto form   = new QFormLayout(dialog);
-            auto locX   = new QLineEdit(dialog);
-            auto locY   = new QLineEdit(dialog);
-
-            form->addRow(QString("Enter X dimenstion: "), locX);
-            form->addRow(QString("Enter Y dimenstion: "), locY);
-
-            QDialogButtonBox buttons(QDialogButtonBox::Ok, Qt::Horizontal, dialog);
-            QObject::connect(&buttons, SIGNAL(accepted()), dialog, SLOT(accept()));
-            QObject::connect(&buttons, SIGNAL(rejected()), dialog, SLOT(reject()));
-            form->addRow(&buttons);
-
-            if (dialog->exec() == QDialog::Accepted)
-            {
-                sizeX = locX->text().toInt();
-                sizeY = locY->text().toInt();
-            }*/
-
             /*if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
             {
                 std::cerr << "Collision detected - Item's cannot intersect." << std::endl;

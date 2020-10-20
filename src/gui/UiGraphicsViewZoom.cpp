@@ -81,7 +81,7 @@ namespace whm
                         actFactor *= factor;
 
                         static double meters = ratio->text().toDouble();
-                        ratio->setText(QString::number(uint32_t(meters / actFactor)));
+                        ratio->setText(QString::number(meters / actFactor));
 
                         gentleZoom(factor);
                         return true;
