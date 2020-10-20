@@ -10,9 +10,11 @@
 #pragma once
 
 // Std
+#include <vector>
 #include <iostream>
 #include <stdlib.h>
 #include <unistd.h>
+#include <unordered_set>
 
 namespace whm
 {
@@ -54,5 +56,24 @@ namespace whm
          * @brief Prints help/usage to the output stream
          */
         void printHelp();
+
+        /**
+         * @brief Return true, if vectors intersects
+         */
+        template<typename T>
+        bool intersects(const std::vector<T>& lhs, const std::vector<T>& rhs)
+        {
+            std::unordered_set<T> set(lhs.begin(), lhs.end());
+
+            for(auto i : rhs)
+            {
+                if(set.count(i))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

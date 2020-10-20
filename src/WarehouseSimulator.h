@@ -7,18 +7,6 @@
  * @brief   Module responsible for simulation of the warehouse operations
  */
 
-/*
-  TODO:
-
-    - Pri pickovani na stanici se podivat, jestli tam nelze napickovat i nejakou jinou lajnu
-    - Flag u order line - processed, znacici ze je jiz zpracovana a pri vyhledavani dalsi lajny brat jen processed = false
-    - Init = MAX
-        double simStart = Time
-        double simStop = Time
-        Calculate how long it takes to process orders
-*/
-
-
 #pragma once
 
 #ifndef WHM_GEN

@@ -110,13 +110,22 @@ namespace whm
     }
 
     template<typename T>
+    bool WarehouseLocationRack_t<T>::containsArticle(const T& article, int32_t quantity)
+    {
+        std::pair<size_t, size_t> c;
+        return containsArticle(article, quantity, c);
+    }
+
+    template<typename T>
     bool WarehouseLocationRack_t<T>::containsArticle(const T& article, int32_t quantity, std::pair<size_t, size_t>& coords)
     {
+        (void)quantity;
+
         for (size_t i = 0; i < slots.size(); i++)
         {
             for (size_t j = 0; j < slots[i].size(); j++)
             {
-                if(slots[i][j].getArticle() == article && slots[i][j].getQuantity() >= quantity)
+                if(slots[i][j].getArticle() == article && slots[i][j].getQuantity() >= 0 /*quantity*/)
                 {
                     coords = std::make_pair(j, i);
                     return true;

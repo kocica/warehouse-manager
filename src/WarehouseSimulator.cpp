@@ -72,8 +72,6 @@ namespace whm
 
     void WarehouseSimulator_t::preprocessOrders()
     {
-        // TODO: Take locations into account - if prod A and B is on the same location, pick it there
-
         auto& orders = const_cast<std::vector<WarehouseOrder_t<std::string>>&>(whLayout.getWhOrders());
 
         for(auto& order : orders)
@@ -84,7 +82,8 @@ namespace whm
             {
                 static const auto& lookup = [&](const WarehouseOrderLine_t<std::string>& line) -> bool
                                             {
-                                                return line.getArticle() == itLine->getArticle();
+                                                return utils::intersects(lookupWhLocations(line.getArticle(), 0),
+                                                                         lookupWhLocations(itLine->getArticle(), 0));
                                             };
 
                 auto itTargetLine = std::find_if(newLines.begin(), newLines.end(), lookup);
@@ -181,14 +180,12 @@ namespace whm
 
     std::vector<int32_t> WarehouseSimulator_t::lookupWhLocations(const std::string& article, int32_t quantity)
     {
-        (void)quantity;
         std::vector<int32_t> whLocIDs;
-        std::pair<size_t, size_t> position;
 
         for(const auto* whItem : whLayout.getWhItems())
         {
             if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF &&
-               whItem->getWhLocationRack()->containsArticle(article, 0 /*quantity*/, position))
+               whItem->getWhLocationRack()->containsArticle(article, quantity))
             {
                 whLocIDs.push_back(whItem->getWhItemID());
             }
