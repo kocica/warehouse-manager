@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
             QStyle::alignedRect(
                 Qt::LeftToRight,
                 Qt::AlignLeft,
-                QSize{1, 1},
+                qApp->desktop()->availableGeometry().size() /* * 0.75 */,
                 qApp->desktop()->availableGeometry()
             )
         );

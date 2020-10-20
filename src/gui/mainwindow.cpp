@@ -27,6 +27,7 @@
 #include <QLabel>
 #include <QDialog>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -46,9 +47,10 @@ namespace whm
         {
             ui->setupUi(this);
             ui->view->setStyleSheet("background-color: rgb(255, 255, 255)");
+            ui->view->setGeometry(0, 0, qApp->desktop()->availableGeometry().size().width() * 0.8,
+                                        qApp->desktop()->availableGeometry().size().height() * 0.8);
 
             setWindowTitle("Warehouse Manager");
-            setFixedSize(1920, 1080);
 
             // Get warehouse dimensions
             auto dialog  = new QDialog(this);
@@ -197,7 +199,15 @@ namespace whm
                 }
                 else
                 {
-                    std::cerr << "Invalid input, abort!" << std::endl;
+                    return;
+                }
+
+                if(w == 0 || h == 0)
+                {
+                    QMessageBox err;
+                    err.critical(0, "Error", "Invalid dimenstions entered");
+                    err.setFixedSize(500, 200);
+                    return;
                 }
 
                 if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
