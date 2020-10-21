@@ -101,7 +101,9 @@ namespace whm
                     std::pair<size_t, size_t> slotPos;
                     whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), 0, slotPos);
                     waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) +
-                                    (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY()))) / sim.getArguments().workerSpeed;
+                                    (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * 10 /*TODO: Appropriate factor*/) / sim.getArguments().workerSpeed;
+
+                    
 
                     handleFacility(locationID);
                 }
@@ -119,7 +121,7 @@ namespace whm
 
                 locationID = dispatchID;
 
-                waitDuration = (sim.getArguments().totesPerMin / 60);
+                waitDuration = (60 / sim.getArguments().totesPerMin);
 
                 handleFacility(locationID);
 
@@ -144,7 +146,7 @@ namespace whm
 
                 if(++it != layout.getWhOrders().end())
                 {
-                    Activate(Time + Uniform(10, 20));
+                    Activate(Time + Uniform(10, 20)); // TODO: Poisson distribution more appropriate?
                 }
             }
 
