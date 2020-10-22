@@ -65,7 +65,7 @@ namespace whm
             }
             else
             {
-                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), 1 /*TODO: Calculate*/);
+                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), 5 /*TODO: Calculate*/);
             }
         }
     }

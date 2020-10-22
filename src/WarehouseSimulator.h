@@ -146,7 +146,7 @@ namespace whm
 
                 if(++it != layout.getWhOrders().end())
                 {
-                    Activate(Time + Uniform(10, 20)); // TODO: Poisson distribution more appropriate?
+                    Activate(Time + 1); // TODO: Poisson distribution more appropriate?
                 }
             }
 
