@@ -11,6 +11,7 @@
 
 // Qt
 #include <QList>
+#include <QTimer>
 #include <QGraphicsItem>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsSceneMouseEvent>
@@ -67,6 +68,9 @@ namespace whm
 
                 int32_t minWidth{ 0 };
                 int32_t minHeight{ 0 };
+
+                QTimer infoTimeout;
+                QGraphicsTextItem* info{ nullptr };
 
             private:
                 Handle *mCurrentHandle;

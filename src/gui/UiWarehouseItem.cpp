@@ -10,7 +10,6 @@
 #include <iostream>
 
 #include <QMessageBox>
-#include <QApplication>
 
 #include "UiCursor.h"
 #include "UiWarehouseItem.h"
@@ -51,7 +50,12 @@ namespace whm
             , whItemID(UiWarehouseLayout_t::getWhLayout().getNextWhItemID())
             , whItemType(type)
         {
-            
+            info = scene->addText(QString("ID: ") + QString::number(whItemID) +
+                                  QString("\nType: ") + QString::number(to_underlying(whItemType)));
+
+            setAcceptHoverEvents(true);
+
+            QObject::connect(&infoTimeout, &QTimer::timeout, [&](){ info->hide(); });
         }
 
         UiWarehouseItem_t::~UiWarehouseItem_t()
@@ -62,6 +66,9 @@ namespace whm
             }
 
             whPorts.clear();
+
+            info->hide();
+            delete info;
         }
 
         WarehouseItemType_t UiWarehouseItem_t::getWhItemType() const
@@ -81,7 +88,6 @@ namespace whm
 
         void UiWarehouseItem_t::removeWhItem()
         {
-            qApp->processEvents();
             eraseFromLayout();
             scene->removeItem(this);
             delete this;
@@ -89,6 +95,8 @@ namespace whm
 
         void UiWarehouseItem_t::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
+            info->hide();
+
             if (event->button() == Qt::LeftButton)
             {
                 if(UiCursor_t::getCursor().getMode() == UiCursorMode_t::E_MODE_DELETE)
@@ -103,6 +111,16 @@ namespace whm
             }
 
             BaseGraphicItem_t::mousePressEvent(event);
+        }
+
+        void UiWarehouseItem_t::hoverEnterEvent(QGraphicsSceneHoverEvent * event)
+        {
+            info->setPos(getX(), getY());
+            info->setFont(QFont("Helvetica", (getW() + getH())/30));
+            info->show();
+            infoTimeout.start(1000);
+
+            QGraphicsItem::hoverEnterEvent(event);
         }
 
         void UiWarehouseItem_t::dump() const

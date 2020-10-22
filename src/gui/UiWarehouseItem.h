@@ -60,7 +60,8 @@ namespace whm
 
             protected:
                 void eraseFromLayout();
-                void mousePressEvent(QGraphicsSceneMouseEvent *);
+                void mousePressEvent(QGraphicsSceneMouseEvent*);
+                void hoverEnterEvent(QGraphicsSceneHoverEvent*);
 
             protected:
                 MainWindow* ui{ nullptr };
