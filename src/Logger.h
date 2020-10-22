@@ -36,6 +36,9 @@ namespace whm
 
             static Logger_t& getLogger();
 
+            void setVerbose(bool);
+            bool isVerbose() const;
+
             void setStream(std::ostream&);
 
             const char* lvlStr(const LogLevel_t&);
@@ -47,10 +50,13 @@ namespace whm
                        const char*, ...);
 
         private:
+            bool verbose{ false };
             std::ostream* os{ nullptr };
     };
 
-    // https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
+    ///
+    /// @link https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
+    ///
     namespace Color
     {
         enum Code

@@ -26,6 +26,7 @@ namespace whm
                          "\t-m\tGauss distribution mi (mean value)\n"
                          "\t-d\tGauss distribution sigma (standard deviation)\n"
 #else
+                         "\t-r\tRealistic simulation (seizing facilities, ...)\n"
                          "\t-p\tPreprocess (optimize) orders\n"
                          "\t-s\tTote speed on conveyor\n"
                          "\t-w\tWorker speed during picking\n"
@@ -43,7 +44,7 @@ namespace whm
 
             // TODO: Handle catch invalid_argument exception and missing arguments
 
-            while ((c = getopt (argc, argv, "s:w:t:f:o:a:l:c:m:d:vpg")) != -1)
+            while ((c = getopt (argc, argv, "s:w:t:f:o:a:l:c:m:d:vpr")) != -1)
             {
                 switch(c)
                 {
@@ -82,9 +83,12 @@ namespace whm
                     case 'p':
                         args.preprocess = true;
                         break;
+                    case 'r':
+                        args.realistic = true;
+                        break;
 #endif
                     case 'v':
-                        args.verbose = true; // TODO: whm::Logger_t::getLogger().setVerbose(); (maybe also file stream)
+                        whm::Logger_t::getLogger().setVerbose(true);
                         break;
                     case 'h':
                         printHelp();

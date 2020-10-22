@@ -46,6 +46,16 @@ namespace whm
         os = &os_;
     }
 
+    void Logger_t::setVerbose(bool verbose_)
+    {
+        verbose = verbose_;
+    }
+
+    bool Logger_t::isVerbose() const
+    {
+        return verbose;
+    }
+
     void Logger_t::print(const char* file,
                          const char* func,
                          uint32_t    line,

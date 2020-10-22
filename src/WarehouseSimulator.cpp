@@ -13,6 +13,7 @@
 #include <chrono>
 #include <thread>
 #include <utility>
+#include <float.h>
 #include <iostream>
 #include <algorithm>
 
@@ -61,11 +62,11 @@ namespace whm
 
             if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
             {
-                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), 1);
+                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), args.realistic ? 1 : 1000);
             }
             else
             {
-                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), 5 /*TODO: Calculate*/);
+                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), args.realistic ? 5 : 1000 /*TODO: Calculate*/);
             }
         }
     }
@@ -111,7 +112,11 @@ namespace whm
     void WarehouseSimulator_t::runSimulation()
     {
         whPathFinder->precalculatePaths(whLayout.getWhItems());
-        //whPathFinder->dump();
+
+        if(Logger_t::getLogger().isVerbose())
+        {
+            whPathFinder->dump();
+        }
 
         prepareWhSimulation();
 
@@ -125,22 +130,29 @@ namespace whm
         Init(0);
         (new OrderRequest_t(whLayout))->Activate();
         Run();
-
-        /*for(auto& whFacility : whFacilities)
-        {
-            whFacility.second->Output();
-        }*/
     }
 
-    void WarehouseSimulator_t::orderFinished()
+    void WarehouseSimulator_t::orderFinished(double duration)
     {
         static size_t finished = 0;
+        static double minDuration = DBL_MAX;
+        static double maxDuration = DBL_MIN;
+        static double sumDuration = 0.0;
 
         ++finished;
+        minDuration = duration < minDuration ? duration : minDuration;
+        maxDuration = duration > maxDuration ? duration : maxDuration;
+        sumDuration = duration + sumDuration ;
 
         if(finished == whLayout.getWhOrders().size())
         {
-            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "Simulation finished in: <%f>", Time - simStart);
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Min order process time: <%f>", minDuration);
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Max order process time: <%f>", maxDuration);
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Sum order process time: <%f>", sumDuration);
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Avg order process time: <%f>", sumDuration / finished);
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in: <%f>", Time - simStart);
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
         }
     }
 

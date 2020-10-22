@@ -27,7 +27,6 @@ namespace whm
         {
             std::string ordersPath;      //< Path to a file with customer orders
             std::string articlesPath;    //< Path to a file with article-slot allocation
-            bool verbose{ false };       //< Print debug to an output stream
 #ifdef WHM_GEN
             int32_t orderCount{ 1000 };  //< Number of generated orders; default 1000 orders per set
             double mi{ 10 };             //< Gauss distribution mi (mean value)
@@ -39,7 +38,8 @@ namespace whm
             float speedup{ 1.0 };        //< If we want to fasten up/slower down the simulation
             float errorRate{ 0.1 };      //< Rate with which pickers do a mistake x [errors/min]
             std::string layoutPath;      //< Path to a file with warehouse layout description
-            bool preprocess{ false };    //< Preprocess (optimize) orders before starting/picking them
+            bool realistic{ false };     //< Triggers realistic wh simulation (seizing facilities, ...); disabled by default
+            bool preprocess{ false };    //< Preprocess (optimize) orders before starting/picking them; disabled by default
 #endif
         };
 

@@ -32,7 +32,7 @@ namespace whm
             ~WarehouseSimulator_t();
 
             void runSimulation();
-            void orderFinished();
+            void orderFinished(double);
 
             utils::WhmArgs_t getArguments();
             void setArguments(const utils::WhmArgs_t&);
@@ -70,6 +70,7 @@ namespace whm
             void Behavior()
             {
                 double waitDuration = 0.0;
+                double processDuration = Time;
                 auto& sim = WarehouseSimulator_t::getWhSimulator();
 
                 const auto& handleFacility = [&](int32_t itemID)
@@ -100,10 +101,9 @@ namespace whm
                     WarehouseItem_t* whLoc = sim.lookupWhLoc(locationID);
                     std::pair<size_t, size_t> slotPos;
                     whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), 0, slotPos);
-                    waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) +
-                                    (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * 10 /*TODO: Appropriate factor*/) / sim.getArguments().workerSpeed;
-
-                    
+                    static const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
+                    waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
+                                    (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getArguments().workerSpeed;
 
                     handleFacility(locationID);
                 }
@@ -125,7 +125,7 @@ namespace whm
 
                 handleFacility(locationID);
 
-                sim.orderFinished();
+                sim.orderFinished(Time - processDuration);
             }
 
         public:
@@ -146,7 +146,8 @@ namespace whm
 
                 if(++it != layout.getWhOrders().end())
                 {
-                    Activate(Time + 1); // TODO: Poisson distribution more appropriate?
+                    // TODO: Poisson distribution
+                    Activate(Time + (WarehouseSimulator_t::getWhSimulator().getArguments().realistic ? 1 : 1));
                 }
             }
 
