@@ -23,9 +23,9 @@
 
 namespace constants
 {
-    static const int numberDimensions       = 4;      ///< Number of dimensions (i.e. number of SKUs)
+    static const int numberDimensions       = 50;     ///< Number of dimensions (i.e. number of SKUs)
     static const int problemMin             = 0;      ///< Slot min number
-    static const int problemMax             = 4;      ///< Slot max number
+    static const int problemMax             = 50;     ///< Slot max number
     static const int populationSize         = 20;     ///< Population size
     static const int selectionSize          = 5;      ///< Size of selected part of population
     static const int eliteSize              = 1;      ///< Size of elite part of population (unchanged)
@@ -118,13 +118,13 @@ namespace whm
 
     double WarehouseOptimizer_t::randomGauss(double mi, double sigma)
     {
-        static std::normal_distribution<double> dist(mi, sigma);
+        std::normal_distribution<double> dist(mi, sigma);
         return dist(rand);
     }
 
     double WarehouseOptimizer_t::randomFromInterval(double a, double b)
     {
-        static std::uniform_real_distribution<> dist(a, b);
+        std::uniform_real_distribution<> dist(a, b);
         return dist(rand);
     }
 
@@ -251,7 +251,6 @@ namespace whm
         for(int32_t p = 0; p < constants::populationSize; ++p)
         {
             population[p].fitness = simulateWarehouse(population[p].genes);
-            std::cout << population[p].fitness << std::endl;
         }
 
         std::sort(population.begin(), population.end(),

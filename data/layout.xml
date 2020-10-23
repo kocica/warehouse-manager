@@ -41,14 +41,14 @@
 
 <WarehouseItem>
     <Attributes id="11" type="0" x="1931" y="1120" w="100" h="250" o="0"/>
-    <LocationRackDimensions slots_x="2" slots_y="1"/>
+    <LocationRackDimensions slots_x="5" slots_y="5"/>
     <WarehousePort id="0" conn_id="7"/>
     <WarehousePort id="1" conn_id="14"/>
 </WarehouseItem>
 
 <WarehouseItem>
     <Attributes id="12" type="0" x="803" y="1736" w="100" h="250" o="-90"/>
-    <LocationRackDimensions slots_x="2" slots_y="1"/>
+    <LocationRackDimensions slots_x="5" slots_y="5"/>
     <WarehousePort id="0" conn_id="13"/>
     <WarehousePort id="1" conn_id="5"/>
 </WarehouseItem>
