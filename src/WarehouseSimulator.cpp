@@ -109,7 +109,7 @@ namespace whm
         }
     }
 
-    void WarehouseSimulator_t::runSimulation()
+    double WarehouseSimulator_t::runSimulation()
     {
         whPathFinder->precalculatePaths(whLayout.getWhItems());
 
@@ -125,11 +125,12 @@ namespace whm
             preprocessOrders();
         }
 
-        simStart = Time;
-
         Init(0);
+        clearSimulation();
         (new OrderRequest_t(whLayout))->Activate();
         Run();
+
+        return Time;
     }
 
     void WarehouseSimulator_t::orderFinished(double duration)
@@ -151,8 +152,24 @@ namespace whm
             Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Max order process time: <%f>", maxDuration);
             Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Sum order process time: <%f>", sumDuration);
             Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Avg order process time: <%f>", sumDuration / finished);
-            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in: <%f>", Time - simStart);
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in: <%f>", Time);
             Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
+
+            // Reset
+            finished = 0;
+            minDuration = DBL_MAX;
+            maxDuration = DBL_MIN;
+            sumDuration = 0.0;
+
+            Stop(); // Abort();
+        }
+    }
+
+    void WarehouseSimulator_t::clearSimulation()
+    {
+        for(auto& whFacility : whFacilities)
+        {
+            whFacility.second->Clear();
         }
     }
 

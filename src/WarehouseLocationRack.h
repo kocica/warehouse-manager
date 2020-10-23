@@ -29,7 +29,7 @@ namespace whm
             WarehouseLocationRack_t(WarehouseItem_t*, size_t, size_t);
             ~WarehouseLocationRack_t();
 
-            LocationSlot_t at(size_t, size_t) const;
+            LocationSlot_t& at(size_t, size_t);
             void setAt(size_t, size_t, const LocationSlot_t&);
 
             void init(size_t, size_t);

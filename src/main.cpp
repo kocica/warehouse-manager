@@ -14,10 +14,13 @@
 #include "Utils.h"
 #include "Logger.h"
 #include "WarehouseLayout.h"
-#ifndef WHM_GEN
-#  include "WarehouseSimulator.h"
-#else
+#ifdef WHM_GEN
 #  include "WarehouseDataGenerator.h"
+#else
+#  include "WarehouseSimulator.h"
+#  ifdef WHM_OPT
+#    include "WarehouseOptimizer.h"
+#  endif
 #endif
 
 // Qt
@@ -51,16 +54,18 @@ int main(int argc, char *argv[])
         const auto& args = whm::utils::parseArgs(argc, argv);
 
 #  ifdef WHM_GEN
-            whm::WarehouseDataGenerator_t gen{args};
-
-            gen.generateData(args.mi, args.sigma);
+            whm::WarehouseDataGenerator_t{args}.generateData(args.mi, args.sigma);
 #  else
             whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(args.layoutPath);
             whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.articlesPath);
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
+#    ifdef WHM_OPT
+            whm::WarehouseOptimizer_t{args}.evolve();
+#    else
             whm::WarehouseSimulator_t::getWhSimulator().setArguments(args);
             whm::WarehouseSimulator_t::getWhSimulator().runSimulation();
+#    endif
 #  endif
 #endif
 

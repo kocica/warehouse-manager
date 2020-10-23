@@ -2,6 +2,7 @@
 warehouse_manager_sim
 warehouse_manager_gen
 warehouse_manager_gui
+warehouse_manager_opt
 
 # Qt
 qrc*

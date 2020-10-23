@@ -10,6 +10,7 @@
 BIN_NAME_SIM = warehouse_manager_sim
 BIN_NAME_GEN = warehouse_manager_gen
 BIN_NAME_GUI = warehouse_manager_gui
+BIN_NAME_OPT = warehouse_manager_opt
 
 README     = README
 
@@ -35,8 +36,13 @@ GUI_SOURCES = $(wildcard $(GUI)/*.cpp)
 GUI_HEADERS = $(wildcard $(GUI)/*.h)
 GUI_OBJS    = $(patsubst %.cpp, %.o, $(GUI_SOURCES))
 
-#all: $(BIN_NAME_SIM) $(BIN_NAME_GEN) $(BIN_NAME_GUI)
+#all: $(BIN_NAME_SIM) $(BIN_NAME_GEN) $(BIN_NAME_GUI) $(BIN_NAME_OPT)
 .PHONY: clean
+
+$(BIN_NAME_OPT): CFLAGS += -DWHM_OPT
+$(BIN_NAME_OPT): $(HEADERS) $(SOURCES) $(OBJS)
+	$(CC) $(CFLAGS) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) -o $@ $(LDFLAGS)
+	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 $(BIN_NAME_GEN): CFLAGS += -DWHM_GEN
 $(BIN_NAME_GEN): $(HEADERS) $(SOURCES) $(OBJS)
@@ -59,4 +65,4 @@ doxygen:
 
 clean:
 	-@cd $(GUI) && make clean && rm -f moc_* .qmake.stash
-	rm -f $(BIN_NAME_SIM) $(BIN_NAME_GEN) $(BIN_NAME_GUI) $(GUI)/$(BIN_NAME_GUI) $(GUI)/Makefile $(SRC)/*.o
+	rm -f $(BIN_NAME_SIM) $(BIN_NAME_GEN) $(BIN_NAME_GUI) $(BIN_NAME_OPT) $(GUI)/$(BIN_NAME_GUI) $(GUI)/Makefile $(SRC)/*.o

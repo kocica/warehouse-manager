@@ -340,7 +340,16 @@ namespace whm
 
         void MainWindow::on_simulationRun_triggered()
         {
+            // TODO: New button or rename
+            QString file = QFileDialog::getSaveFileName(this, tr("Export location slots"), "", tr("Article location allocation (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
 
+            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+            ::whm::WarehouseLayout_t::getWhLayout().dump();
+            ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(file.toUtf8().constData());
         }
 
         void MainWindow::on_simulationStep_triggered()

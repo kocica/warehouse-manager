@@ -34,7 +34,7 @@ namespace whm
     }
 
     template<typename T>
-    WarehouseLocationSlot_t<T> WarehouseLocationRack_t<T>::at(size_t x, size_t y) const
+    WarehouseLocationSlot_t<T>& WarehouseLocationRack_t<T>::at(size_t x, size_t y)
     {
         // TODO: assert; exception
         if (y > slots.size() || x > slots[0].size())

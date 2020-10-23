@@ -31,7 +31,7 @@ namespace whm
             WarehouseSimulator_t();
             ~WarehouseSimulator_t();
 
-            void runSimulation();
+            double runSimulation();
             void orderFinished(double);
 
             utils::WhmArgs_t getArguments();
@@ -47,11 +47,11 @@ namespace whm
             WarehousePathInfo_t* lookupShortestPath(int32_t, const std::vector<int32_t>&);
 
         protected:
+            void clearSimulation();
             void preprocessOrders();
             void prepareWhSimulation();
 
         private:
-            double simStart;
             utils::WhmArgs_t args;
 
             WarehouseLayout_t& whLayout;
