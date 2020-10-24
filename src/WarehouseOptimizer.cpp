@@ -136,6 +136,7 @@ namespace whm
         }
     }
 
+    // Don't select the best fitness to keep the diversity
     Solution WarehouseOptimizer_t::selectTrunc(const std::vector<Solution>& pop)
     {
         return pop.at(randomFromInterval(0, constants::selectionSize));
@@ -172,34 +173,49 @@ namespace whm
         }
     }
 
+    /// @see http://www.permutationcity.co.uk/projects/mutants/tsp.html
     void WarehouseOptimizer_t::crossoverOrdered(std::vector<int32_t>& lhsInd, std::vector<int32_t>& rhsInd)
     {
-        const int32_t placeholder = -1;
-        int32_t a = randomFromInterval(0, constants::numberDimensions);
-        int32_t b = randomFromInterval(0, constants::numberDimensions);
+        int32_t pos = 0;
+        int32_t placeholder = -1;
 
         std::vector<int32_t> o1, o1_missing;
         std::vector<int32_t> o2, o2_missing;
 
-        if(a > b) std::swap(a, b);
-
-        for(int32_t i = 0; i < a; ++i)
+        while(true)
         {
-            o1.push_back(lhsInd.at(i));
-            o2.push_back(rhsInd.at(i));
-        }
+            int32_t a = randomFromInterval(pos, constants::numberDimensions);
+            int32_t b = randomFromInterval(pos, constants::numberDimensions);
 
-        // Insert placeholders
-        for(int32_t i = a; i < b; ++i)
-        {
-            o1.push_back(placeholder);
-            o2.push_back(placeholder);
-        }
+            if(a > b) std::swap(a, b);
 
-        for(int32_t i = b; i < constants::numberDimensions; ++i)
-        {
-            o1.push_back(lhsInd.at(i));
-            o2.push_back(rhsInd.at(i));
+            for(int32_t i = pos; i < a; ++i)
+            {
+                o1.push_back(lhsInd.at(i));
+                o2.push_back(rhsInd.at(i));
+            }
+
+            // Insert placeholders
+            for(int32_t i = a; i < b; ++i)
+            {
+                o1.push_back(placeholder);
+                o2.push_back(placeholder);
+            }
+
+            if(b >= constants::numberDimensions - 1)
+            {
+                for(int32_t i = b; i < constants::numberDimensions; ++i)
+                {
+                    o1.push_back(lhsInd.at(i));
+                    o2.push_back(rhsInd.at(i));
+                }
+
+                break;
+            }
+            else
+            {
+                pos = b;
+            }
         }
 
         // Find missing elements
@@ -224,6 +240,7 @@ namespace whm
             }
         }
 
+        // Assign new offsprings
         lhsInd.assign(o1.begin(), o1.end());
         rhsInd.assign(o2.begin(), o2.end());
     }
@@ -301,6 +318,7 @@ namespace whm
 
         for(int32_t p = 0; p < constants::populationSize; ++p)
         {
+            // Fitness = objective function (simulation time)
             population[p].fitness = simulateWarehouse(population[p].genes);
         }
 
