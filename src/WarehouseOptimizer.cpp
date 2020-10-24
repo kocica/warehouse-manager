@@ -7,6 +7,8 @@
  * @brief   Class providing optimization of warehouse using genetic algorithms
  */
 
+#ifdef WHM_OPT
+
 // Std
 #include <utility>
 #include <iostream>
@@ -44,14 +46,14 @@ namespace whm
         rand.seed(rd());
 
         int32_t slotID{ 0 };
-        int32_t productID{ 0 };
+        int32_t articleID{ 0 };
 
-        std::vector<std::string> products;
-        importProducts(products);
+        std::vector<std::string> articles;
+        whm::WarehouseLayout_t::getWhLayout().importArticles(args.articlesPath, articles);
 
-        for(auto& product : products)
+        for(auto& article : articles)
         {
-            skuEnc.insert(std::make_pair(productID++, product));
+            skuEnc.insert(std::make_pair(articleID++, article));
         }
 
         auto& items = whm::WarehouseLayout_t::getWhLayout().getWhItems();
@@ -73,37 +75,6 @@ namespace whm
                 }
             }
         }
-    }
-
-    void WarehouseOptimizer_t::importProducts(std::vector<std::string>& products)
-    {
-        std::ifstream csvStream;
-        csvStream.open(args.articlesPath);
-
-        // Ignore header
-        std::string header;
-        std::getline(csvStream, header);
-
-        while(csvStream)
-        {
-            std::string dummy, article;
-
-            std::getline(csvStream, dummy,   ';');
-            std::getline(csvStream, dummy,   ';');
-            std::getline(csvStream, dummy,   ';');
-            std::getline(csvStream, article, ';');
-            std::getline(csvStream, dummy);
-
-            if(!article.empty())
-            {
-                if(std::find(products.begin(), products.end(), article) == products.end())
-                {
-                    products.push_back(std::move(article));
-                }
-            }
-        }
-
-        csvStream.close();
     }
 
     WarehouseOptimizer_t::~WarehouseOptimizer_t()
@@ -347,6 +318,8 @@ namespace whm
         updateAllocations(chromosome);
 
         // Export allocation to a csv file
-        whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(args.articlesPath);
+        whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(args.locationsPath);
     }
 }
+
+#endif

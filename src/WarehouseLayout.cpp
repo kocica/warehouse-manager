@@ -199,6 +199,33 @@ namespace whm
         csvStream.close();
     }
 
+    void WarehouseLayout_t::importArticles(const std::string& csvFilename, std::vector<std::string>& articles)
+    {
+        std::ifstream csvStream;
+        csvStream.open(csvFilename);
+
+        // Ignore header
+        std::string header;
+        std::getline(csvStream, header);
+
+        while(csvStream)
+        {
+            std::string article;
+            std::getline(csvStream, article);
+
+            if(!article.empty())
+            {
+                article.pop_back();
+                if(std::find(articles.begin(), articles.end(), article) == articles.end())
+                {
+                    articles.push_back(std::move(article));
+                }
+            }
+        }
+
+        csvStream.close();
+    }
+
     void WarehouseLayout_t::addWhItem(WarehouseItem_t* i)
     {
         whItems.push_back(i);
@@ -258,8 +285,15 @@ namespace whm
                       });
     }
 
+    void WarehouseLayout_t::clearWhOrders()
+    {
+        whOrders.clear();
+    }
+
     void WarehouseLayout_t::clearWhLayout()
     {
+        clearWhOrders();
+
         for (WarehouseItem_t* whItem : whItems)
         {
             delete whItem;

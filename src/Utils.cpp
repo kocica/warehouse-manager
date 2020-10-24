@@ -20,7 +20,8 @@ namespace whm
                          "\t-h\tPrints this usage\n"
                          "\t-v\tTriggers verbose mode\n"
                          "\t-o\tPath to a file with customer orders\n"
-                         "\t-a\tPath to a file with article-slot allocation\n"
+                         "\t-a\tPath to a file with articles\n"
+                         "\t-i\tPath to a file with article-slot allocation\n"
 #ifdef WHM_GEN
                          "\t-c\tNumber of generated orders per set\n"
                          "\t-m\tGauss distribution mi (mean value)\n"
@@ -44,7 +45,7 @@ namespace whm
 
             // TODO: Handle catch invalid_argument exception and missing arguments
 
-            while ((c = getopt (argc, argv, "s:w:t:f:o:a:l:c:m:d:vpr")) != -1)
+            while ((c = getopt (argc, argv, "s:w:t:f:o:a:i:l:c:m:d:vpr")) != -1)
             {
                 switch(c)
                 {
@@ -53,6 +54,9 @@ namespace whm
                         break;
                     case 'a':
                         args.articlesPath = optarg;
+                        break;
+                    case 'i':
+                        args.locationsPath = optarg;
                         break;
 #ifdef WHM_GEN
                     case 'c':

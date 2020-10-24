@@ -7,6 +7,8 @@
  * @brief   Class providing optimization of warehouse using genetic algorithms
  */
 
+#ifdef WHM_OPT
+
 #pragma once
 
 #include <map>
@@ -66,9 +68,6 @@ namespace whm
             void saveBestChromosome(std::vector<int32_t>&);
             void updateAllocations(std::vector<int32_t>&);
 
-            // Import articles
-            void importProducts(std::vector<std::string>&);
-
         private:
             std::mt19937_64 rand;
 
@@ -78,3 +77,5 @@ namespace whm
             std::map<int32_t, WarehouseLocationSlot_t<std::string>*> slotEnc;
     };
 }
+
+#endif

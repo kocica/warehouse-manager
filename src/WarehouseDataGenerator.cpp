@@ -46,7 +46,7 @@ namespace whm
         // Import products
         std::vector<WarehouseProduct_t> whProducts;
 
-        importProducts(whProducts);
+        WarehouseLayout_t::getWhLayout().importArticles(args.articlesPath, whProducts);
 
         // Generate ADU (average daily units) for each product
         std::map<WarehouseProduct_t, int32_t> whProductsAdu;
@@ -80,37 +80,6 @@ namespace whm
         generateOrders(ordersMi, ordersSigma);
     }
 
-    void WarehouseDataGenerator_t::importProducts(std::vector<WarehouseProduct_t>& whProducts)
-    {
-        std::ifstream csvStream;
-        csvStream.open(args.articlesPath);
-
-        // Ignore header
-        std::string header;
-        std::getline(csvStream, header);
-
-        while(csvStream)
-        {
-            std::string dummy, article;
-
-            std::getline(csvStream, dummy,   ';');
-            std::getline(csvStream, dummy,   ';');
-            std::getline(csvStream, dummy,   ';');
-            std::getline(csvStream, article, ';');
-            std::getline(csvStream, dummy);
-
-            if(!article.empty())
-            {
-                if(std::find(whProducts.begin(), whProducts.end(), article) == whProducts.end())
-                {
-                    whProducts.push_back(std::move(article));
-                }
-            }
-        }
-
-        csvStream.close();
-    }
-
     void WarehouseDataGenerator_t::generateOrders(double mi, double sigma)
     {
         auto& layout = WarehouseLayout_t::getWhLayout();
@@ -119,31 +88,40 @@ namespace whm
         std::mt19937 gen(rd());
         std::normal_distribution<> normalDist{mi, sigma};
         std::uniform_real_distribution<> uniformDist{0, 1};
+        std::vector<std::string> suffixes = { "_train", "_test" };
 
-        for(int32_t orderID = 0; orderID < args.orderCount; ++orderID)
+        // Generate set of orders for each suffix
+        for(auto& suffix : suffixes)
         {
-            WarehouseOrder_t<WarehouseProduct_t> order;
-            std::vector<WarehouseOrderLine_t<WarehouseProduct_t>> lines;
+            layout.clearWhOrders();
 
-            order.setWhOrderID(orderID);
-
-            for(int32_t lineID = 0; lineID < std::round(normalDist(gen)); ++lineID)
+            for(int32_t orderID = 0; orderID < args.orderCount; ++orderID)
             {
-                WarehouseOrderLine_t<WarehouseProduct_t> line(order);
+                WarehouseOrder_t<WarehouseProduct_t> order;
+                std::vector<WarehouseOrderLine_t<WarehouseProduct_t>> lines;
 
-                double prob = uniformDist(gen);
+                order.setWhOrderID(orderID);
 
-                line.setWhLineID(lineID);
-                line.setArticle(lookupArticle(prob));
+                for(int32_t lineID = 0; lineID < std::round(normalDist(gen)); ++lineID)
+                {
+                    WarehouseOrderLine_t<WarehouseProduct_t> line(order);
 
-                lines.emplace_back(std::move(line));
+                    double prob = uniformDist(gen);
+
+                    line.setWhLineID(lineID);
+                    line.setArticle(lookupArticle(prob));
+
+                    lines.emplace_back(std::move(line));
+                }
+
+                order.setWhOrderLines(lines);
+                layout.addWhOrder(order);
             }
 
-            order.setWhOrderLines(lines);
-            layout.addWhOrder(order);
+            std::string savePath = args.ordersPath;
+            savePath.replace(savePath.find("."), 0, suffix);
+            layout.exportCustomerOrders(savePath);
         }
-
-        layout.exportCustomerOrders(args.ordersPath);
     }
 
     WarehouseProduct_t WarehouseDataGenerator_t::lookupArticle(double prob)

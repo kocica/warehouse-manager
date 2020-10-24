@@ -38,8 +38,6 @@ namespace whm
         private:
             void generateOrders(double mi, double sigma);
 
-            void importProducts(std::vector<WarehouseProduct_t>&);
-
             int32_t sumAdu(const std::map<WarehouseProduct_t, int32_t>&);
 
             WarehouseProduct_t lookupArticle(double);

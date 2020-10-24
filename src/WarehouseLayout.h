@@ -58,6 +58,9 @@ namespace whm
             void importCustomerOrders(const std::string&);
             void exportCustomerOrders(const std::string&);
 
+            // Import articles
+            void importArticles(const std::string&, std::vector<std::string>&);
+
             const WarehouseItemContainer_t& getWhItems() const;
             const WarehouseConnContainer_t& getWhConns() const;
             const WarehouseOrderContainer_t& getWhOrders() const;
@@ -71,6 +74,7 @@ namespace whm
             void eraseWhOrder(const WarehouseOrder_t<std::string>&);
 
             void dump() const;
+            void clearWhOrders();
             void clearWhLayout();
 
             int32_t getRatio() const;

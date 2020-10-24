@@ -1,55 +1,13 @@
-# Test
+# Usage
 
+Configurator:
+  ./warehouse_manager_gui
 
-Fast mover products: ART003; ART004
-Slow mover products: ART001; ART002
+Generator:
+  ./warehouse_manager_gen -o gen_orders.xml -a data/articles.csv -c 100 -m 10 -d 5
 
-Warm locations: 12
-Cold locations: 11
+Simulator:
+  ./warehouse_manager_sim -o data/orders.xml -i data/locations.csv -l data/layout.xml -p -r
 
-
-=== Optimal:
-11;0;0;ART001;0
-11;1;0;ART002;0
-11;0;1;;0
-11;1;1;;0
-11;0;2;;0
-11;1;2;;0
-11;0;3;;0
-11;1;3;;0
-11;0;4;;0
-11;1;4;;0
-12;0;0;ART003;0
-12;1;0;ART004;0
-12;0;1;;0
-12;1;1;;0
-12;0;2;;0
-12;1;2;;0
-12;0;3;;0
-12;1;3;;0
-12;0;4;;0
-12;1;4;;0
-
-
-
-=== Non optimal:
-11;0;0;ART003;0
-11;1;0;ART004;0
-11;0;1;;0
-11;1;1;;0
-11;0;2;;0
-11;1;2;;0
-11;0;3;;0
-11;1;3;;0
-11;0;4;;0
-11;1;4;;0
-12;0;0;ART001;0
-12;1;0;ART002;0
-12;0;1;;0
-12;1;1;;0
-12;0;2;;0
-12;1;2;;0
-12;0;3;;0
-12;1;3;;0
-12;0;4;;0
-12;1;4;;0
+Optimizer:
+  ./warehouse_manager_opt -o data/orders.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv -p -r

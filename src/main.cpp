@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
             whm::WarehouseDataGenerator_t{args}.generateData(args.mi, args.sigma);
 #  else
             whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(args.layoutPath);
-            whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.articlesPath);
+            whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.locationsPath);
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
 #    ifdef WHM_OPT

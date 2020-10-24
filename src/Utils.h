@@ -26,7 +26,8 @@ namespace whm
         struct WhmArgs_t
         {
             std::string ordersPath;      //< Path to a file with customer orders
-            std::string articlesPath;    //< Path to a file with article-slot allocation
+            std::string articlesPath;    //< Path to a file with articles
+            std::string locationsPath;   //< Path to a file with article-slot allocation
 #ifdef WHM_GEN
             int32_t orderCount{ 1000 };  //< Number of generated orders; default 1000 orders per set
             double mi{ 10 };             //< Gauss distribution mi (mean value)
