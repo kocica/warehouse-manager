@@ -26,7 +26,7 @@ namespace whm
 
         doc->LoadFile(xmlFilename.c_str());
 
-        tinyxml2::XMLElement* cfg = doc->FirstChildElement("optimizer_config");
+        tinyxml2::XMLElement* cfg = doc->FirstChildElement("configuration");
 
         const tinyxml2::XMLAttribute* attribute = cfg->FirstAttribute();
 

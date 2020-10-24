@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
         const auto& args = whm::utils::parseArgs(argc, argv);
 
 #  ifdef WHM_GEN
-            whm::WarehouseDataGenerator_t{args}.generateData(args.mi, args.sigma);
+            whm::WarehouseDataGenerator_t{args}.generateData();
 #  else
             whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(args.layoutPath);
             whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.locationsPath);

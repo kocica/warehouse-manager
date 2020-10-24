@@ -13,6 +13,7 @@
 
 // Local
 #include "Utils.h"
+#include "ConfigParser.h"
 
 // Std
 #include <map>
@@ -22,16 +23,15 @@ namespace whm
 {
     using WarehouseProduct_t = std::string;
 
+    /// Generator based on gauss distribution
+    /// Values mi and sigma are retrieved from configuration file
     class WarehouseDataGenerator_t
     {
         public:
             WarehouseDataGenerator_t(const utils::WhmArgs_t&);
             ~WarehouseDataGenerator_t();
 
-            /// Gauss distribution generator
-            /// @param mi mean value
-            /// @param sigma std. deviation
-            void generateData(double mi, double sigma);
+            void generateData();
 
             void dump() const;
 
@@ -43,6 +43,7 @@ namespace whm
             WarehouseProduct_t lookupArticle(double);
 
         private:
+            ConfigParser_t cfg;
             utils::WhmArgs_t args;
             std::map<WarehouseProduct_t, double> whProductsProb;
     };

@@ -22,11 +22,7 @@ namespace whm
                          "\t-o\tPath to a file with customer orders\n"
                          "\t-a\tPath to a file with articles\n"
                          "\t-i\tPath to a file with article-slot allocation\n"
-#ifdef WHM_GEN
-                         "\t-c\tNumber of generated orders per set\n"
-                         "\t-m\tGauss distribution mi (mean value)\n"
-                         "\t-d\tGauss distribution sigma (standard deviation)\n"
-#else
+
                          "\t-r\tRealistic simulation (seizing facilities, ...)\n"
                          "\t-p\tPreprocess (optimize) orders\n"
                          "\t-s\tTote speed on conveyor\n"
@@ -34,7 +30,6 @@ namespace whm
                          "\t-t\tDispatched totes per minute\n"
                          "\t-f\tSpeed up / Slow down the simulation by this factor\n"
                          "\t-l\tPath to a file with warehouse layout description\n"
-#endif
                         ;
         }
 
@@ -45,7 +40,7 @@ namespace whm
 
             // TODO: Handle catch invalid_argument exception and missing arguments
 
-            while ((c = getopt (argc, argv, "s:w:t:f:o:a:i:l:c:m:d:vpr")) != -1)
+            while ((c = getopt (argc, argv, "s:w:t:f:o:a:i:l:vpr")) != -1)
             {
                 switch(c)
                 {
@@ -58,17 +53,7 @@ namespace whm
                     case 'i':
                         args.locationsPath = optarg;
                         break;
-#ifdef WHM_GEN
-                    case 'c':
-                        args.orderCount = atoi(optarg);;
-                        break;
-                    case 'm':
-                        args.mi = atof(optarg);
-                        break;
-                    case 'd':
-                        args.sigma = atof(optarg);
-                        break;
-#else
+
                     case 's':
                         args.toteSpeed = atof(optarg);
                         break;
@@ -90,7 +75,6 @@ namespace whm
                     case 'r':
                         args.realistic = true;
                         break;
-#endif
                     case 'v':
                         whm::Logger_t::getLogger().setVerbose(true);
                         break;

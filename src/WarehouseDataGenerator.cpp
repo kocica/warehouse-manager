@@ -27,7 +27,8 @@
 namespace whm
 {
     WarehouseDataGenerator_t::WarehouseDataGenerator_t(const utils::WhmArgs_t& args_)
-        : args{args_}
+        : cfg{ ConfigParser_t{ "cfg/generator.xml" } }
+        , args{ args_ }
     {
 
     }
@@ -37,8 +38,11 @@ namespace whm
 
     }
 
-    void WarehouseDataGenerator_t::generateData(double mi, double sigma)
+    void WarehouseDataGenerator_t::generateData()
     {
+        double mi = cfg.getAs<double>("mi");
+        double sigma = cfg.getAs<double>("sigma");
+
         std::random_device rd;   // Source of 'true' randomness for initializing random seed
         std::mt19937 gen(rd());  // Mersenne twister pseudo-random number generator
         std::normal_distribution<> normalDist{mi, sigma}; // Normal (gauss) distribution setup
@@ -73,8 +77,8 @@ namespace whm
                       });
 
         // Generate orders in two (or more) runs with the same product probabilities for training and evaluation
-        double ordersMi = double(adu) / args.orderCount;
-        double ordersSigma = sigma / args.orderCount;
+        double ordersMi = double(adu) / cfg.getAs<int32_t>("orderCount");
+        double ordersSigma = sigma / cfg.getAs<int32_t>("orderCount");
 
         dump();
         generateOrders(ordersMi, ordersSigma);
@@ -95,7 +99,7 @@ namespace whm
         {
             layout.clearWhOrders();
 
-            for(int32_t orderID = 0; orderID < args.orderCount; ++orderID)
+            for(int32_t orderID = 0; orderID < cfg.getAs<int32_t>("orderCount"); ++orderID)
             {
                 WarehouseOrder_t<WarehouseProduct_t> order;
                 std::vector<WarehouseOrderLine_t<WarehouseProduct_t>> lines;

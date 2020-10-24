@@ -17,8 +17,7 @@ namespace whm
     class ConfigParser_t
     {
         public:
-             ConfigParser_t() = delete;
-             ConfigParser_t(const std::string&);
+            ConfigParser_t(const std::string&);
             ~ConfigParser_t() = default;
 
             template<typename U>
