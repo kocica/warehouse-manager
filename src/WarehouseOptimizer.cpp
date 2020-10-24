@@ -28,16 +28,16 @@ namespace constants
 {
     whm::ConfigParser_t cfg("cfg/optimizer.xml");
 
-    static const int numberDimensions       = cfg.getAs<int32_t>("numberDimensions");     ///< Number of dimensions (i.e. number of SKUs)
-    static const int problemMin             = cfg.getAs<int32_t>("problemMin");           ///< Slot min number
-    static const int problemMax             = cfg.getAs<int32_t>("problemMax");           ///< Slot max number
-    static const int populationSize         = cfg.getAs<int32_t>("populationSize");       ///< Population size
-    static const int selectionSize          = cfg.getAs<int32_t>("selectionSize");        ///< Size of selected part of population
-    static const int eliteSize              = cfg.getAs<int32_t>("eliteSize");            ///< Size of elite part of population (unchanged)
-    static const int maxGenerations         = cfg.getAs<int32_t>("maxGenerations");       ///< Maximal number of generations
-    static const double probCrossover       = cfg.getAs<double>("probCrossover");         ///< Probability of crossover
-    static const double probMutationInd     = cfg.getAs<double>("probMutationInd");       ///< Probability of individual mutation
-    static const double probMutationGene    = cfg.getAs<double>("probMutationGene");      ///< Probability of gene mutation
+    static const auto numberDimensions       = cfg.getAs<int32_t>("numberDimensions");     ///< Number of dimensions (i.e. number of SKUs)
+    static const auto problemMin             = cfg.getAs<int32_t>("problemMin");           ///< Slot min number
+    static const auto problemMax             = cfg.getAs<int32_t>("problemMax");           ///< Slot max number
+    static const auto populationSize         = cfg.getAs<int32_t>("populationSize");       ///< Population size
+    static const auto selectionSize          = cfg.getAs<int32_t>("selectionSize");        ///< Size of selected part of population
+    static const auto eliteSize              = cfg.getAs<int32_t>("eliteSize");            ///< Size of elite part of population (unchanged)
+    static const auto maxGenerations         = cfg.getAs<int32_t>("maxGenerations");       ///< Maximal number of generations
+    static const auto probCrossover          = cfg.getAs<double>("probCrossover");         ///< Probability of crossover
+    static const auto probMutationInd        = cfg.getAs<double>("probMutationInd");       ///< Probability of individual mutation
+    static const auto probMutationGene       = cfg.getAs<double>("probMutationGene");      ///< Probability of gene mutation
 }
 
 namespace whm
@@ -286,9 +286,7 @@ namespace whm
                         return lhs.fitness < rhs.fitness;
                     });
 
-            whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "Generation %2d", gen);
-            for (int p=0; p<constants::populationSize; p++) fprintf(stderr, "%.2f ", population[p].fitness);
-            std::cout << std::endl;
+            whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "==== Generation %2d ====", gen);
         }
 
         saveBestChromosome(population.at(0).genes);

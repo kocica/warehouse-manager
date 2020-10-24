@@ -4,67 +4,10 @@ Configurator:
   ./warehouse_manager_gui
 
 Generator:
-  ./warehouse_manager_gen -o data/orders.xml -a data/articles.csv -c 500 -m 25 -d 15
+  ./warehouse_manager_gen -o data/orders.xml -a data/articles.csv
 
 Simulator (evaluate on test set of orders):
-  ./warehouse_manager_sim -o data/orders_test.xml -i data/locations.csv -l data/layout.xml -p -r
+  ./warehouse_manager_sim -o data/orders_test.xml -i data/locations.csv -l data/layout.xml
 
 Optimizer (train on train set of orders):
-  ./warehouse_manager_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv -p -r
-
-
-
-
-
-
-
-
-
-
-Test before optimization:
-
-basty@FKO-PC:/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager$ ./warehouse_manager_sim -o gen_train.xml -i data/locations.csv -l data/layout.xml -p -r
-<20-10-24 09:18:04> [INFO] src/WarehouseSimulator.cpp (orderFinished():150) >> =====================================================
-<20-10-24 09:18:04> [INFO] src/WarehouseSimulator.cpp (orderFinished():151) >>  Min order process time: <69.700000>
-<20-10-24 09:18:04> [INFO] src/WarehouseSimulator.cpp (orderFinished():152) >>  Max order process time: <2164.499984>
-<20-10-24 09:18:04> [INFO] src/WarehouseSimulator.cpp (orderFinished():153) >>  Sum order process time: <631416.594674>
-<20-10-24 09:18:04> [INFO] src/WarehouseSimulator.cpp (orderFinished():154) >>  Avg order process time: <1262.833189>
-<20-10-24 09:18:04> [INFO] src/WarehouseSimulator.cpp (orderFinished():155) >>  Simulation finished in: <2581.499984>
-<20-10-24 09:18:04> [INFO] src/WarehouseSimulator.cpp (orderFinished():156) >> =====================================================
-
-
-basty@FKO-PC:/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager$ ./warehouse_manager_sim -o gen_test.xml -i data/locations.csv -l data/layout.xml -p -r
-<20-10-24 09:18:09> [INFO] src/WarehouseSimulator.cpp (orderFinished():150) >> =====================================================
-<20-10-24 09:18:09> [INFO] src/WarehouseSimulator.cpp (orderFinished():151) >>  Min order process time: <75.700000>
-<20-10-24 09:18:09> [INFO] src/WarehouseSimulator.cpp (orderFinished():152) >>  Max order process time: <2287.299982>
-<20-10-24 09:18:09> [INFO] src/WarehouseSimulator.cpp (orderFinished():153) >>  Sum order process time: <660514.394297>
-<20-10-24 09:18:09> [INFO] src/WarehouseSimulator.cpp (orderFinished():154) >>  Avg order process time: <1321.028789>
-<20-10-24 09:18:09> [INFO] src/WarehouseSimulator.cpp (orderFinished():155) >>  Simulation finished in: <2700.299982>
-<20-10-24 09:18:09> [INFO] src/WarehouseSimulator.cpp (orderFinished():156) >> =====================================================
-
-
-
-
-Test after optimization (500 sec saved):
-
-<20-10-24 09:18:54> [INFO] src/WarehouseOptimizer.cpp (evolve():286) >> Generation 99
-2059.30 2068.50 2074.70 2195.50 2206.30 2221.70 2229.50 2244.30 2252.50 2260.50 2283.10 2305.10 2312.90 2317.50 2318.10 2332.50 2347.50 2437.70 2463.90 2768.90
-
-basty@FKO-PC:/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager$ ./warehouse_manager_sim -o gen_train.xml -i data/locations.csv -l data/layout.xml -p -r
-<20-10-24 09:43:43> [INFO] src/WarehouseSimulator.cpp (orderFinished():150) >> =====================================================
-<20-10-24 09:43:43> [INFO] src/WarehouseSimulator.cpp (orderFinished():151) >>  Min order process time: <71.700000>
-<20-10-24 09:43:43> [INFO] src/WarehouseSimulator.cpp (orderFinished():152) >>  Max order process time: <1635.499993>
-<20-10-24 09:43:43> [INFO] src/WarehouseSimulator.cpp (orderFinished():153) >>  Sum order process time: <471071.197577>
-<20-10-24 09:43:43> [INFO] src/WarehouseSimulator.cpp (orderFinished():154) >>  Avg order process time: <942.142395>
-<20-10-24 09:43:43> [INFO] src/WarehouseSimulator.cpp (orderFinished():155) >>  Simulation finished in: <2056.299993>
-<20-10-24 09:43:43> [INFO] src/WarehouseSimulator.cpp (orderFinished():156) >> =====================================================
-
-
-basty@FKO-PC:/mnt/c/Users/filip.kocica/Desktop/FIT/warehouse-manager$ ./warehouse_manager_sim -o gen_test.xml -i data/locations.csv -l data/layout.xml -p -r
-<20-10-24 09:43:48> [INFO] src/WarehouseSimulator.cpp (orderFinished():150) >> =====================================================
-<20-10-24 09:43:48> [INFO] src/WarehouseSimulator.cpp (orderFinished():151) >>  Min order process time: <69.900000>
-<20-10-24 09:43:48> [INFO] src/WarehouseSimulator.cpp (orderFinished():152) >>  Max order process time: <1729.699996>
-<20-10-24 09:43:48> [INFO] src/WarehouseSimulator.cpp (orderFinished():153) >>  Sum order process time: <505607.998509>
-<20-10-24 09:43:48> [INFO] src/WarehouseSimulator.cpp (orderFinished():154) >>  Avg order process time: <1011.215997>
-<20-10-24 09:43:48> [INFO] src/WarehouseSimulator.cpp (orderFinished():155) >>  Simulation finished in: <2190.099996>
-<20-10-24 09:43:48> [INFO] src/WarehouseSimulator.cpp (orderFinished():156) >> =====================================================
+  ./warehouse_manager_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv
