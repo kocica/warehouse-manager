@@ -72,16 +72,6 @@ namespace whm
         /**
          * @brief Convert generic string to lowercase
          */
-        std::string toLower(std::string s)
-        {
-            std::transform(s.begin(), s.end(), s.begin(),
-                           [](unsigned char c)
-                           -> unsigned char
-                           {
-                               return std::tolower(c);
-                           });
-
-            return s;
-        }
+        std::string toLower(std::string s);
     }
 }
