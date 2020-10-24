@@ -16,6 +16,7 @@
 
 // Local
 #include "Logger.h"
+#include "ConfigParser.h"
 #include "WarehouseItem.h"
 #include "WarehouseLayout.h"
 #include "WarehouseSimulator.h"
@@ -25,16 +26,18 @@
 
 namespace constants
 {
-    static const int numberDimensions       = 50;     ///< Number of dimensions (i.e. number of SKUs)
-    static const int problemMin             = 0;      ///< Slot min number
-    static const int problemMax             = 50;     ///< Slot max number
-    static const int populationSize         = 20;     ///< Population size
-    static const int selectionSize          = 5;      ///< Size of selected part of population
-    static const int eliteSize              = 1;      ///< Size of elite part of population (unchanged)
-    static const int maxGenerations         = 100;    ///< Maximal number of generations
-    static const double probCrossover       = 0.7;    ///< Probability of crossover
-    static const double probMutationInd     = 0.8;    ///< Probability of individual mutation
-    static const double probMutationGene    = 0.4;    ///< Probability of gene mutation
+    whm::ConfigParser_t parser("cfg/optimizer.xml");
+
+    static const int numberDimensions       = parser.getAs<int32_t>("numberDimensions");     ///< Number of dimensions (i.e. number of SKUs)
+    static const int problemMin             = parser.getAs<int32_t>("problemMin");           ///< Slot min number
+    static const int problemMax             = parser.getAs<int32_t>("problemMax");           ///< Slot max number
+    static const int populationSize         = parser.getAs<int32_t>("populationSize");       ///< Population size
+    static const int selectionSize          = parser.getAs<int32_t>("selectionSize");        ///< Size of selected part of population
+    static const int eliteSize              = parser.getAs<int32_t>("eliteSize");            ///< Size of elite part of population (unchanged)
+    static const int maxGenerations         = parser.getAs<int32_t>("maxGenerations");       ///< Maximal number of generations
+    static const double probCrossover       = parser.getAs<double>("probCrossover");         ///< Probability of crossover
+    static const double probMutationInd     = parser.getAs<double>("probMutationInd");       ///< Probability of individual mutation
+    static const double probMutationGene    = parser.getAs<double>("probMutationGene");      ///< Probability of gene mutation
 }
 
 namespace whm
