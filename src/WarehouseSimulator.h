@@ -11,8 +11,13 @@
 
 #ifndef WHM_GEN
 
+// Std
 #include <map>
 
+// Simlib
+#include <simlib.h>
+
+// Local
 #include "Utils.h"
 #include "WarehouseItem.h"
 #include "WarehouseOrder.h"
@@ -20,8 +25,6 @@
 #include "WarehouseItemType.h"
 #include "WarehousePathFinder.h"
 #include "WarehouseLocationRack.h"
-
-#include "../include/simlib.h"
 
 namespace whm
 {

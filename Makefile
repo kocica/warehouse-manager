@@ -20,7 +20,7 @@ QFLAGS     = -qt=qt5
 CC         = g++
 CFLAGS     = -std=c++17 -pedantic -Wall -Wextra
 
-LDFLAGS    = libs/simlib.so
+LDFLAGS    = -lsimlib -lm
 LDLIBS     = 
 DOXYGEN    = doxygen
 
@@ -41,7 +41,7 @@ GUI_OBJS    = $(patsubst %.cpp, %.o, $(GUI_SOURCES))
 
 $(BIN_NAME_OPT): CFLAGS += -DWHM_OPT
 $(BIN_NAME_OPT): $(HEADERS) $(SOURCES) $(OBJS)
-	$(CC) $(CFLAGS) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) $(LDFLAGS) -o $@
 	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 $(BIN_NAME_GEN): CFLAGS += -DWHM_GEN
@@ -50,7 +50,7 @@ $(BIN_NAME_GEN): $(HEADERS) $(SOURCES) $(OBJS)
 	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 $(BIN_NAME_SIM): $(HEADERS) $(SOURCES) $(OBJS)
-	$(CC) $(CFLAGS) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) $(LDFLAGS) -o $@
 	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 $(BIN_NAME_GUI): $(HEADERS) $(SOURCES) $(OBJS) $(GUI_SOURCES) $(GUI_HEADERS)
