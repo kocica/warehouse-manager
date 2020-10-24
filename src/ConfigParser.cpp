@@ -15,6 +15,7 @@
 #include "tinyxml2.h"
 
 // Local
+#include "Utils.h"
 #include "Logger.h"
 #include "ConfigParser.h"
 
@@ -71,6 +72,12 @@ namespace whm
     std::string ConfigParser_t::getAs(const std::string& name)
     {
         return findByName(name);
+    }
+
+    template<>
+    bool ConfigParser_t::getAs(const std::string& name)
+    {
+        return utils::toLower(findByName(name)) == "true";
     }
 
     void ConfigParser_t::dump() const

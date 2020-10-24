@@ -19,6 +19,7 @@
 
 // Local
 #include "Utils.h"
+#include "ConfigParser.h"
 #include "WarehouseItem.h"
 #include "WarehouseOrder.h"
 #include "WarehouseLayout.h"
@@ -37,7 +38,9 @@ namespace whm
             double runSimulation();
             void orderFinished(double);
 
-            utils::WhmArgs_t getArguments();
+            ConfigParser_t& getConfig();
+
+            utils::WhmArgs_t getArguments() const;
             void setArguments(const utils::WhmArgs_t&);
 
             static WarehouseSimulator_t& getWhSimulator();
@@ -55,6 +58,7 @@ namespace whm
             void prepareWhSimulation();
 
         private:
+            ConfigParser_t cfg;
             utils::WhmArgs_t args;
 
             WarehouseLayout_t& whLayout;
@@ -81,7 +85,7 @@ namespace whm
                                                 simlib3::Store* whFacility = sim.getWhItemFacility(itemID);
 
                                                 Enter(*whFacility, 1);
-                                                Wait(waitDuration * sim.getArguments().speedup);
+                                                Wait(waitDuration * sim.getConfig().getAs<double>("speedup"));
                                                 Leave(*whFacility, 1);
                                              };
 
@@ -94,7 +98,7 @@ namespace whm
 
                     for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
                     {
-                        waitDuration = pathItem.second / sim.getArguments().toteSpeed;
+                        waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
 
                         handleFacility(pathItem.first);
                     }
@@ -106,7 +110,7 @@ namespace whm
                     whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), 0, slotPos);
                     static const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
                     waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
-                                    (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getArguments().workerSpeed;
+                                    (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getConfig().getAs<double>("workerSpeed");
 
                     handleFacility(locationID);
                 }
@@ -117,14 +121,14 @@ namespace whm
 
                 for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
                 {
-                    waitDuration = pathItem.second / sim.getArguments().toteSpeed;
+                    waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
 
                     handleFacility(pathItem.first);
                 }
 
                 locationID = dispatchID;
 
-                waitDuration = (60 / sim.getArguments().totesPerMin);
+                waitDuration = (60 / sim.getConfig().getAs<int32_t>("totesPerMin"));
 
                 handleFacility(locationID);
 
@@ -150,7 +154,7 @@ namespace whm
                 if(++it != layout.getWhOrders().end())
                 {
                     // TODO: Poisson distribution
-                    Activate(Time + (WarehouseSimulator_t::getWhSimulator().getArguments().realistic ? 1 : 1));
+                    Activate(Time + (WarehouseSimulator_t::getWhSimulator().getConfig().getAs<bool>("realistic") ? 1 : 1));
                 }
             }
 

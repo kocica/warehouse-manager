@@ -11,9 +11,12 @@
 
 // Std
 #include <vector>
+#include <cctype>
+#include <string>
 #include <iostream>
 #include <stdlib.h>
 #include <unistd.h>
+#include <algorithm>
 #include <unordered_set>
 
 namespace whm
@@ -22,22 +25,15 @@ namespace whm
     {
         /**
          * @brief Plain old data filled with parsed arguments
+         * 
+         * @note Most of the parameters moved to each app configuration file in "cfg" directory
          */
         struct WhmArgs_t
         {
             std::string ordersPath;      //< Path to a file with customer orders
             std::string articlesPath;    //< Path to a file with articles
             std::string locationsPath;   //< Path to a file with article-slot allocation
-
-            float toteSpeed{ 1.0 };      //< How fast tote moves on conv; default 0.5 [m/s]
-            float workerSpeed{ 1.0 };    //< How fast picker performs material handling; default x [x]
-            float totesPerMin{ 120.0 };  //< How many totes are dispatched in one minute; default 15 [totes/min]
-            float speedup{ 1.0 };        //< If we want to fasten up/slower down the simulation
-            float errorRate{ 0.1 };      //< Rate with which pickers do a mistake x [errors/min]
             std::string layoutPath;      //< Path to a file with warehouse layout description
-            bool realistic{ false };     //< Triggers realistic wh simulation (seizing facilities, ...); disabled by default
-            bool preprocess{ false };    //< Preprocess (optimize) orders before starting/picking them; disabled by default
-
         };
 
         /**
@@ -71,6 +67,21 @@ namespace whm
             }
 
             return false;
+        }
+
+        /**
+         * @brief Convert generic string to lowercase
+         */
+        std::string toLower(std::string s)
+        {
+            std::transform(s.begin(), s.end(), s.begin(),
+                           [](unsigned char c)
+                           -> unsigned char
+                           {
+                               return std::tolower(c);
+                           });
+
+            return s;
         }
     }
 }

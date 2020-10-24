@@ -25,7 +25,8 @@
 namespace whm
 {
     WarehouseSimulator_t::WarehouseSimulator_t()
-        : whLayout{ WarehouseLayout_t::getWhLayout() }
+        : cfg{ ConfigParser_t{ "cfg/simulator.xml" } }
+        , whLayout{ WarehouseLayout_t::getWhLayout() }
         , whPathFinder{ new WarehousePathFinder_t() }
     {
 
@@ -62,11 +63,11 @@ namespace whm
 
             if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
             {
-                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), args.realistic ? 1 : 1000);
+                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), cfg.getAs<bool>("realistic") ? 1 : 1000);
             }
             else
             {
-                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), args.realistic ? 5 : 1000 /*TODO: Calculate*/);
+                whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), cfg.getAs<bool>("realistic") ? 5 : 1000 /*TODO: Calculate*/);
             }
         }
     }
@@ -120,7 +121,7 @@ namespace whm
 
         prepareWhSimulation();
 
-        if(args.preprocess)
+        if(cfg.getAs<bool>("preprocess"))
         {
             preprocessOrders();
         }
@@ -178,9 +179,14 @@ namespace whm
         args = args_;
     }
 
-    utils::WhmArgs_t WarehouseSimulator_t::getArguments()
+    utils::WhmArgs_t WarehouseSimulator_t::getArguments() const
     {
         return args;
+    }
+
+    ConfigParser_t& WarehouseSimulator_t::getConfig()
+    {
+        return cfg;
     }
 
     WarehousePathInfo_t* WarehouseSimulator_t::lookupShortestPath(int32_t currentLocID, const std::vector<int32_t>& targetLocIDs)

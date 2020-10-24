@@ -1,0 +1,7 @@
+<configuration toteSpeed="1.0"
+               workerSpeed="1.0"
+               totesPerMin="120"
+               speedup="1.0"
+               errorRate="0.1"
+               realistic="true"
+               preprocess="true" />
