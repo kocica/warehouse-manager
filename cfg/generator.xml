@@ -1,3 +1,4 @@
-<configuration orderCount="100"
-               mi="20"
-               sigma="10" />
+<configuration orderCount="1000"
+               mi="200"
+               sigma="100"
+               sigmaLines="10" />

@@ -14,7 +14,7 @@
 namespace whm
 {
     template<typename T>
-    WarehouseOrderLine_t<T>::WarehouseOrderLine_t(const WarehouseOrder_t<T>& whOrder_)
+    WarehouseOrderLine_t<T>::WarehouseOrderLine_t(WarehouseOrder_t<T>* whOrder_)
         : whOrder{ whOrder_ }
     {
 
@@ -51,9 +51,9 @@ namespace whm
     }
 
     template<typename T>
-    WarehouseOrder_t<T> WarehouseOrderLine_t<T>::getWhOrder() const
+    WarehouseOrder_t<T>& WarehouseOrderLine_t<T>::getWhOrder() const
     {
-        return this->whOrder;
+        return *this->whOrder;
     }
 
     template<typename T>

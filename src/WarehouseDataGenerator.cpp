@@ -78,7 +78,7 @@ namespace whm
 
         // Generate orders in two (or more) runs with the same product probabilities for training and evaluation
         double ordersMi = double(adu) / cfg.getAs<int32_t>("orderCount");
-        double ordersSigma = sigma / cfg.getAs<int32_t>("orderCount");
+        double ordersSigma = cfg.getAs<int32_t>("sigmaLines");
 
         dump();
         generateOrders(ordersMi, ordersSigma);
@@ -106,7 +106,10 @@ namespace whm
 
                 order.setWhOrderID(orderID);
 
-                for(int32_t lineID = 0; lineID < std::round(normalDist(gen)); ++lineID)
+                // TODO: Accumulate error from round
+                int32_t lineCount = std::round(normalDist(gen));
+
+                for(int32_t lineID = 0; lineID < std::max(1, lineCount); ++lineID)
                 {
                     WarehouseOrderLine_t<WarehouseProduct_t> line(order);
 

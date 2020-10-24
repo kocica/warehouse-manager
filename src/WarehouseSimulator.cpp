@@ -112,18 +112,25 @@ namespace whm
 
     double WarehouseSimulator_t::runSimulation()
     {
-        whPathFinder->precalculatePaths(whLayout.getWhItems());
+        static bool multipleExperiment{ false };
 
-        if(Logger_t::getLogger().isVerbose())
+        if(!multipleExperiment)
         {
-            whPathFinder->dump();
-        }
+            whPathFinder->precalculatePaths(whLayout.getWhItems());
 
-        prepareWhSimulation();
+            if(Logger_t::getLogger().isVerbose())
+            {
+                whPathFinder->dump();
+            }
 
-        if(cfg.getAs<bool>("preprocess"))
-        {
-            preprocessOrders();
+            prepareWhSimulation();
+
+            if(cfg.getAs<bool>("preprocess"))
+            {
+                preprocessOrders();
+            }
+
+            multipleExperiment = true;
         }
 
         Init(0);

@@ -68,7 +68,7 @@ namespace whm
 
         for (tinyxml2::XMLElement* whLineXml = elem->FirstChildElement("WarehouseOrderLine"); whLineXml; whLineXml = whLineXml->NextSiblingElement("WarehouseOrderLine"))
         {
-            WarehouseOrderLine_t whLine(*this);
+            WarehouseOrderLine_t whLine(this);
             whLine.deserializeFromXml(whLineXml);
             this->whOrderLines.emplace_back(std::move(whLine));
         }
