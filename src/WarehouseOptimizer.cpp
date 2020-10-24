@@ -13,6 +13,7 @@
 #include <utility>
 #include <iostream>
 #include <algorithm>
+#include <functional>
 
 // Local
 #include "Logger.h"
@@ -22,6 +23,11 @@
 #include "WarehouseSimulator.h"
 #include "WarehouseOptimizer.h"
 #include "WarehouseLocationRack.h"
+
+
+/// @note: Choose mutation and crossover operators in constructor
+std::function<void(std::vector<int32_t>&)>                            selectedMutation;
+std::function<void(std::vector<int32_t>&, std::vector<int32_t>&)>     selectedCrossover;
 
 
 namespace constants
@@ -40,11 +46,15 @@ namespace constants
     static const auto probMutationGene       = cfg.getAs<double>("probMutationGene");      ///< Probability of gene mutation
 }
 
+
 namespace whm
 {
     WarehouseOptimizer_t::WarehouseOptimizer_t(utils::WhmArgs_t args_)
         : args{ args_ }
     {
+        selectedMutation  = std::bind(&WarehouseOptimizer_t::mutateInverse, this, std::placeholders::_1);
+        selectedCrossover = std::bind(&WarehouseOptimizer_t::crossoverOrdered, this, std::placeholders::_1, std::placeholders::_2);
+
         std::random_device rd;
         rand.seed(rd());
 
@@ -162,6 +172,62 @@ namespace whm
         }
     }
 
+    void WarehouseOptimizer_t::crossoverOrdered(std::vector<int32_t>& lhsInd, std::vector<int32_t>& rhsInd)
+    {
+        const int32_t placeholder = -1;
+        int32_t a = randomFromInterval(0, constants::numberDimensions);
+        int32_t b = randomFromInterval(0, constants::numberDimensions);
+
+        std::vector<int32_t> o1, o1_missing;
+        std::vector<int32_t> o2, o2_missing;
+
+        if(a > b) std::swap(a, b);
+
+        for(int32_t i = 0; i < a; ++i)
+        {
+            o1.push_back(lhsInd.at(i));
+            o2.push_back(rhsInd.at(i));
+        }
+
+        // Insert placeholders
+        for(int32_t i = a; i < b; ++i)
+        {
+            o1.push_back(placeholder);
+            o2.push_back(placeholder);
+        }
+
+        for(int32_t i = b; i < constants::numberDimensions; ++i)
+        {
+            o1.push_back(lhsInd.at(i));
+            o2.push_back(rhsInd.at(i));
+        }
+
+        // Find missing elements
+        for(int32_t i = 0; i < constants::numberDimensions; ++i)
+        {
+            if(std::find(o1.begin(), o1.end(), i) == o1.end()) o1_missing.push_back(i);
+            if(std::find(o2.begin(), o2.end(), i) == o2.end()) o2_missing.push_back(i);
+        }
+
+        // Replace placeholders
+        for(int32_t i = 0; i < constants::numberDimensions; ++i)
+        {
+            if(std::find(o1_missing.begin(), o1_missing.end(), rhsInd.at(i)) != o1_missing.end())
+            {
+                auto it = std::find(o1.begin(), o1.end(), placeholder);
+                *it     = rhsInd.at(i);
+            }
+            if(std::find(o2_missing.begin(), o2_missing.end(), lhsInd.at(i)) != o2_missing.end())
+            {
+                auto it = std::find(o2.begin(), o2.end(), placeholder);
+                *it     = lhsInd.at(i);
+            }
+        }
+
+        lhsInd.assign(o1.begin(), o1.end());
+        rhsInd.assign(o2.begin(), o2.end());
+    }
+
     void WarehouseOptimizer_t::crossoverOnePoint(std::vector<int32_t>& lhsInd, std::vector<int32_t>& rhsInd)
     {
         int32_t point = randomFromInterval(0, constants::numberDimensions);
@@ -180,7 +246,7 @@ namespace whm
         {
             for(int32_t i = 0; i <= constants::numberDimensions * constants::probMutationGene; i++)
             {
-                mutateInvert(ind.genes);
+                selectedMutation(ind.genes);
             }
         }
     }
@@ -206,7 +272,18 @@ namespace whm
         ind[pos] = val;
     }
 
-    void WarehouseOptimizer_t::mutateInvert(std::vector<int32_t>& ind)
+    void WarehouseOptimizer_t::mutateOrdered(std::vector<int32_t>& ind)
+    {
+        int32_t a = randomFromInterval(0, constants::numberDimensions);
+        int32_t b = randomFromInterval(0, constants::numberDimensions);
+
+        if(a == b) return;
+
+        ind.insert(ind.begin() + b, ind.at(a));
+        ind.erase (ind.begin() + a);
+    }
+
+    void WarehouseOptimizer_t::mutateInverse(std::vector<int32_t>& ind)
     {
         int32_t a = randomFromInterval(0, constants::numberDimensions);
         int32_t b = randomFromInterval(0, constants::numberDimensions);
@@ -250,7 +327,7 @@ namespace whm
 
                 if(flipCoin(constants::probCrossover))
                 {
-                    //crossoverOnePoint(mum.genes, dad.genes);
+                    selectedCrossover(mum.genes, dad.genes);
                 }
 
                 Solution bro = mum;

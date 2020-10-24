@@ -53,13 +53,15 @@ namespace whm
             // Crossover
             void crossoverAverage(std::vector<int32_t>&, std::vector<int32_t>&);
             void crossoverUniform(std::vector<int32_t>&, std::vector<int32_t>&);
+            void crossoverOrdered(std::vector<int32_t>&, std::vector<int32_t>&);
             void crossoverOnePoint(std::vector<int32_t>&, std::vector<int32_t>&);
 
             // Mutate
             void mutate(Solution&);
             void mutateRand(std::vector<int32_t>&);
             void mutateGauss(std::vector<int32_t>&);
-            void mutateInvert(std::vector<int32_t>&);
+            void mutateOrdered(std::vector<int32_t>&);
+            void mutateInverse(std::vector<int32_t>&);
 
             // Simulation
             double simulateWarehouse(std::vector<int32_t>&);
