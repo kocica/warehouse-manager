@@ -295,13 +295,10 @@ namespace whm
     {
         int32_t a = randomFromInterval(0, constants::numberDimensions);
         int32_t b = randomFromInterval(0, constants::numberDimensions);
-        int32_t v = ind.at(a);
 
-        if(b != 0) b--;
         if(a == b) return;
 
-        ind.erase (ind.begin() + a);
-        ind.insert(ind.begin() + b, v);
+        std::rotate(ind.begin() + a, ind.begin() + b, ind.begin() + b + 1);
     }
 
     void WarehouseOptimizer_t::mutateInverse(std::vector<int32_t>& ind)
