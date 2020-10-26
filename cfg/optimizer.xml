@@ -13,11 +13,11 @@
 
 <configuration numberDimensions="50"
                problemMin="0"
-               problemMax="50"
+               problemMax="60"
                populationSize="20"
                selectionSize="5"
                eliteSize="1"
                maxGenerations="100"
-               probCrossover="0.7"
-               probMutationInd="0.8"
-               probMutationGene="0.4" />
+               probCrossover="0.6"
+               probMutationInd="0.4"
+               probMutationGene="0.2" />

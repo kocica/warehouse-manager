@@ -228,18 +228,22 @@ namespace whm
         }
 
         // Replace placeholders
-        for(int32_t i = 0; i < constants::numberDimensions; ++i)
+        for(size_t i = 0; i < o1_missing.size(); ++i)
         {
-            if(std::find(o1_missing.begin(), o1_missing.end(), rhsInd.at(i)) != o1_missing.end())
-            {
+            //if(std::find(rhsInd.begin(), rhsInd.end(), o1_missing.at(i)) != rhsInd.end())
+            //{
                 auto it = std::find(o1.begin(), o1.end(), placeholder);
-                *it     = rhsInd.at(i);
-            }
-            if(std::find(o2_missing.begin(), o2_missing.end(), lhsInd.at(i)) != o2_missing.end())
-            {
+                *it     = o1_missing.at(i);
+            //}
+        }
+
+        for(size_t i = 0; i < o2_missing.size(); ++i)
+        {
+            //if(std::find(lhsInd.begin(), lhsInd.end(), o2_missing.at(i)) != lhsInd.end())
+            //{
                 auto it = std::find(o2.begin(), o2.end(), placeholder);
-                *it     = lhsInd.at(i);
-            }
+                *it     = o2_missing.at(i);
+            //}
         }
 
         // Assign new offsprings
@@ -392,6 +396,13 @@ namespace whm
 
     void WarehouseOptimizer_t::updateAllocations(std::vector<int32_t>& ind)
     {
+        // Clear current allocations first
+        for(auto& slot : slotEnc)
+        {
+            slot.second->setArticle(std::string());
+        }
+
+        // Set new allocations
         for(int32_t i = 0; i < static_cast<int32_t>(ind.size()); ++i)
         {
             auto itSku  = skuEnc.find(i);

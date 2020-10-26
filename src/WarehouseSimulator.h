@@ -36,7 +36,7 @@ namespace whm
             ~WarehouseSimulator_t();
 
             double runSimulation();
-            void orderFinished(double);
+            void orderFinished(double, int32_t);
 
             void printStats(bool);
 
@@ -80,6 +80,7 @@ namespace whm
 
             void Behavior()
             {
+                int32_t distance{ 0 };
                 double waitDuration = 0.0;
                 double processDuration = Time;
                 auto& sim = WarehouseSimulator_t::getWhSimulator();
@@ -102,6 +103,8 @@ namespace whm
 
                     for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
                     {
+                        distance += pathItem.second;
+
                         waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
 
                         handleFacility(pathItem.first);
@@ -125,6 +128,8 @@ namespace whm
 
                 for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
                 {
+                    distance += pathItem.second;
+
                     waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
 
                     handleFacility(pathItem.first);
@@ -136,7 +141,7 @@ namespace whm
 
                 handleFacility(locationID);
 
-                sim.orderFinished(Time - processDuration);
+                sim.orderFinished(Time - processDuration, distance);
             }
 
         public:

@@ -142,33 +142,37 @@ namespace whm
         return Time;
     }
 
-    void WarehouseSimulator_t::orderFinished(double duration)
+    void WarehouseSimulator_t::orderFinished(double duration, int32_t distance)
     {
-        static size_t finished = 0;
-        static double minDuration = DBL_MAX;
-        static double maxDuration = DBL_MIN;
-        static double sumDuration = 0.0;
+        static size_t  finished = 0;
+        static double  minDuration = DBL_MAX;
+        static double  maxDuration = DBL_MIN;
+        static double  sumDuration = 0.0;
+        static int32_t sumDistance = 0;
 
         ++finished;
         minDuration = duration < minDuration ? duration : minDuration;
         maxDuration = duration > maxDuration ? duration : maxDuration;
         sumDuration = duration + sumDuration ;
+        sumDistance = distance + sumDistance ;
 
         if(finished == whLayout.getWhOrders().size())
         {
             if(stats)
             {
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Min order process time: <%f>", minDuration);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Max order process time: <%f>", maxDuration);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Sum order process time: <%f>", sumDuration);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Avg order process time: <%f>", sumDuration / finished);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in: <%f>", Time);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed orders count:   [-] <%d>", finished);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Total traveled distance:  [m] <%d>", sumDistance);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Min order process time:   [s] <%f>", minDuration);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Max order process time:   [s] <%f>", maxDuration);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Sum order process time:   [s] <%f>", sumDuration);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in:   [s] <%f>", Time);
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
 
                 // Facility load statistics
                 for(auto& whFacility : whFacilities)
                 {
+                    // TODO: Print only Total facility load: <x> %
                     if(lookupWhLoc(whFacility.first)->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
                     {
                         whFacility.second->SetName(std::to_string(lookupWhLoc(whFacility.first)->getWhItemID()).c_str());
@@ -182,6 +186,7 @@ namespace whm
             minDuration = DBL_MAX;
             maxDuration = DBL_MIN;
             sumDuration = 0.0;
+            sumDistance = 0;
 
             Stop(); // Abort();
         }
