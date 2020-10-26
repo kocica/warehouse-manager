@@ -111,7 +111,7 @@ namespace whm
 
                 for(int32_t lineID = 0; lineID < std::max(1, lineCount); ++lineID)
                 {
-                    WarehouseOrderLine_t<WarehouseProduct_t> line(order);
+                    WarehouseOrderLine_t<WarehouseProduct_t> line(nullptr);
 
                     double prob = uniformDist(gen);
 

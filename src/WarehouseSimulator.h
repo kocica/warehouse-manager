@@ -38,6 +38,8 @@ namespace whm
             double runSimulation();
             void orderFinished(double);
 
+            void printStats(bool);
+
             ConfigParser_t& getConfig();
 
             utils::WhmArgs_t getArguments() const;
@@ -58,6 +60,8 @@ namespace whm
             void prepareWhSimulation();
 
         private:
+            bool stats;
+
             ConfigParser_t cfg;
             utils::WhmArgs_t args;
 
@@ -85,7 +89,7 @@ namespace whm
                                                 simlib3::Store* whFacility = sim.getWhItemFacility(itemID);
 
                                                 Enter(*whFacility, 1);
-                                                Wait(waitDuration * sim.getConfig().getAs<double>("speedup"));
+                                                Wait(waitDuration / sim.getConfig().getAs<double>("simSpeedup"));
                                                 Leave(*whFacility, 1);
                                              };
 
@@ -154,7 +158,7 @@ namespace whm
                 if(++it != layout.getWhOrders().end())
                 {
                     // TODO: Poisson distribution
-                    Activate(Time + (WarehouseSimulator_t::getWhSimulator().getConfig().getAs<bool>("realistic") ? 1 : 1));
+                    Activate(Time + (WarehouseSimulator_t::getWhSimulator().getConfig().getAs<double>("orderRequestInterval")));
                 }
             }
 

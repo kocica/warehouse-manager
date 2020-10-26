@@ -52,8 +52,10 @@ namespace whm
     WarehouseOptimizer_t::WarehouseOptimizer_t(utils::WhmArgs_t args_)
         : args{ args_ }
     {
-        selectedMutation  = std::bind(&WarehouseOptimizer_t::mutateInverse, this, std::placeholders::_1);
+        selectedMutation  = std::bind(&WarehouseOptimizer_t::mutateOrdered, this, std::placeholders::_1);
         selectedCrossover = std::bind(&WarehouseOptimizer_t::crossoverOrdered, this, std::placeholders::_1, std::placeholders::_2);
+
+        whm::WarehouseSimulator_t::getWhSimulator().printStats(false);
 
         std::random_device rd;
         rand.seed(rd());
@@ -293,11 +295,13 @@ namespace whm
     {
         int32_t a = randomFromInterval(0, constants::numberDimensions);
         int32_t b = randomFromInterval(0, constants::numberDimensions);
+        int32_t v = ind.at(a);
 
+        if(b != 0) b--;
         if(a == b) return;
 
-        ind.insert(ind.begin() + b, ind.at(a));
         ind.erase (ind.begin() + a);
+        ind.insert(ind.begin() + b, v);
     }
 
     void WarehouseOptimizer_t::mutateInverse(std::vector<int32_t>& ind)
@@ -382,6 +386,8 @@ namespace whm
                     });
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "==== Generation %2d ====", gen);
+            std::for_each(population.begin(), population.end(), [](Solution& s){ std::cout << s.fitness << " "; });
+            std::cout << std::endl;
         }
 
         saveBestChromosome(population.at(0).genes);

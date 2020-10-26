@@ -1,3 +1,16 @@
+<!--
+        numberDimensions ................. Number of dimensions (i.e. number of SKUs)
+        problemMin ....................... Slot min number
+        problemMax ....................... Slot max number
+        populationSize ................... Population size
+        selectionSize .................... Size of selected part of population
+        eliteSize ........................ Size of elite part of population (unchanged)
+        maxGenerations ................... Maximal number of generations
+        probCrossover .................... Probability of crossover
+        probMutationInd .................. Probability of individual mutation
+        probMutationGene ................. Probability of gene mutation
+  -->
+
 <configuration numberDimensions="50"
                problemMin="0"
                problemMax="50"
