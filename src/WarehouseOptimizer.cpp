@@ -27,7 +27,7 @@
 
 /// @note: Choose mutation, crossover and selection operators in the constructor
 std::function<void(std::vector<int32_t>&)>                            selectedMutation;
-std::function<void(const std::vector<whm::Solution>&)>                selectedSelection;
+std::function<whm::Solution(const std::vector<whm::Solution>&)>       selectedSelection;
 std::function<void(std::vector<int32_t>&, std::vector<int32_t>&)>     selectedCrossover;
 
 
@@ -54,7 +54,7 @@ namespace whm
         : args{ args_ }
     {
         selectedMutation  = std::bind(&WarehouseOptimizer_t::mutateOrdered, this, std::placeholders::_1);
-        selectedSelection = std::bind(&WarehouseOptimizer_t::selectRoulette, this, std::placeholders::_1);
+        selectedSelection = std::bind(&WarehouseOptimizer_t::selectTournam, this, std::placeholders::_1);
         selectedCrossover = std::bind(&WarehouseOptimizer_t::crossoverOrdered, this, std::placeholders::_1, std::placeholders::_2);
 
         whm::WarehouseSimulator_t::getWhSimulator().printStats(false);
@@ -178,6 +178,48 @@ namespace whm
                 return ind;
             }
         }
+
+        return Solution();
+    }
+
+    Solution WarehouseOptimizer_t::selectRank(const std::vector<Solution>& pop)
+    {
+        // Note: This method has a slower convergance
+
+        std::vector<Solution> popCopy = pop;
+
+        std::sort(popCopy.begin(), popCopy.end(),
+                  [](Solution& lhs, Solution& rhs)
+                  -> bool
+                  {
+                      return lhs.fitness > rhs.fitness;
+                  });
+
+        int32_t sumFitness{ 0 };
+
+        // Assign fitness 1 - N
+        for(int32_t i = 0; i < constants::populationSize; ++i)
+        {
+            sumFitness += i;
+            popCopy.at(i).fitness = i + 1;
+        }
+
+        int32_t it   = 0;
+        int32_t rand = randomFromInterval(0, sumFitness);
+
+        // TODO: Maybe shuffle popCopy before selection?
+
+        for(const Solution& ind : popCopy)
+        {
+            it += ind.fitness;
+
+            if(rand <= it)
+            {
+                return ind;
+            }
+        }
+
+        return Solution();
     }
 
     void WarehouseOptimizer_t::crossoverAverage(std::vector<int32_t>& lhsInd, std::vector<int32_t>& rhsInd)
@@ -373,8 +415,8 @@ namespace whm
 
             for(int32_t i = 0; i < (constants::populationSize - constants::eliteSize) / 2; i++)
             {
-                Solution mum = selectTrunc(population);
-                Solution dad = selectTrunc(population);
+                Solution mum = selectedSelection(population);
+                Solution dad = selectedSelection(population);
 
                 if(flipCoin(constants::probCrossover))
                 {
@@ -393,7 +435,7 @@ namespace whm
 
             if((constants::populationSize - constants::eliteSize) & 1)
             {
-                Solution mutant = selectTrunc(population);
+                Solution mutant = selectedSelection(population);
 
                 mutate(mutant);
 

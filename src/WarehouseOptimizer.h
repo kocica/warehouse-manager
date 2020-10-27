@@ -47,6 +47,7 @@ namespace whm
             void initPopulationRand(std::vector<Solution>&);
 
             // Selection
+            Solution selectRank(const std::vector<Solution>&);
             Solution selectTrunc(const std::vector<Solution>&);
             Solution selectTournam(const std::vector<Solution>&);
             Solution selectRoulette(const std::vector<Solution>&);
