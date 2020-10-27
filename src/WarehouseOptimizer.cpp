@@ -54,7 +54,7 @@ namespace whm
         : args{ args_ }
     {
         selectedMutation  = std::bind(&WarehouseOptimizer_t::mutateOrdered, this, std::placeholders::_1);
-        selectedSelection = std::bind(&WarehouseOptimizer_t::selectTournam, this, std::placeholders::_1);
+        selectedSelection = std::bind(&WarehouseOptimizer_t::selectTrunc, this, std::placeholders::_1);
         selectedCrossover = std::bind(&WarehouseOptimizer_t::crossoverOrdered, this, std::placeholders::_1, std::placeholders::_2);
 
         whm::WarehouseSimulator_t::getWhSimulator().printStats(false);
@@ -291,29 +291,28 @@ namespace whm
         }
 
         // Find missing elements
-        for(int32_t i = 0; i < constants::numberDimensions; ++i)
+        for(int32_t i = 0; i < constants::problemMax; ++i)
         {
             if(std::find(o1.begin(), o1.end(), i) == o1.end()) o1_missing.push_back(i);
             if(std::find(o2.begin(), o2.end(), i) == o2.end()) o2_missing.push_back(i);
         }
 
-        // Replace placeholders
+        // Replace placeholders in offspring 1
         for(size_t i = 0; i < o1_missing.size(); ++i)
         {
-            //if(std::find(rhsInd.begin(), rhsInd.end(), o1_missing.at(i)) != rhsInd.end())
-            //{
                 auto it = std::find(o1.begin(), o1.end(), placeholder);
-                *it     = o1_missing.at(i);
-            //}
+                auto r  = randomFromInterval(0, o1_missing.size());
+                *it     = o1_missing.at(r);
+                o1_missing.erase(o1_missing.begin() + r); // Make sure we won't use it again
         }
 
+        // Replace placeholders in offspring 2
         for(size_t i = 0; i < o2_missing.size(); ++i)
         {
-            //if(std::find(lhsInd.begin(), lhsInd.end(), o2_missing.at(i)) != lhsInd.end())
-            //{
                 auto it = std::find(o2.begin(), o2.end(), placeholder);
-                *it     = o2_missing.at(i);
-            //}
+                auto r  = randomFromInterval(0, o2_missing.size());
+                *it     = o2_missing.at(r);
+                o2_missing.erase(o2_missing.begin() + r); // Make sure we won't use it again
         }
 
         // Assign new offsprings
