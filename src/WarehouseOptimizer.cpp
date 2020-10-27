@@ -250,6 +250,7 @@ namespace whm
     {
         int32_t pos = 0;
         int32_t placeholder = -1;
+        int32_t placeholderCount = 0;
 
         std::vector<int32_t> o1, o1_missing;
         std::vector<int32_t> o2, o2_missing;
@@ -270,6 +271,7 @@ namespace whm
             // Insert placeholders
             for(int32_t i = a; i < b; ++i)
             {
+                ++placeholderCount;
                 o1.push_back(placeholder);
                 o2.push_back(placeholder);
             }
@@ -298,7 +300,7 @@ namespace whm
         }
 
         // Replace placeholders in offspring 1
-        for(size_t i = 0; i < o1_missing.size(); ++i)
+        for(int32_t i = 0; i < placeholderCount; ++i)
         {
                 auto it = std::find(o1.begin(), o1.end(), placeholder);
                 auto r  = randomFromInterval(0, o1_missing.size());
@@ -307,7 +309,7 @@ namespace whm
         }
 
         // Replace placeholders in offspring 2
-        for(size_t i = 0; i < o2_missing.size(); ++i)
+        for(int32_t i = 0; i < placeholderCount; ++i)
         {
                 auto it = std::find(o2.begin(), o2.end(), placeholder);
                 auto r  = randomFromInterval(0, o2_missing.size());
