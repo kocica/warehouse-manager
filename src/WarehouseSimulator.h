@@ -36,7 +36,7 @@ namespace whm
             ~WarehouseSimulator_t();
 
             double runSimulation();
-            void orderFinished(double, int32_t);
+            void orderFinished(double, double, int32_t);
 
             void printStats(bool);
 
@@ -74,101 +74,29 @@ namespace whm
 
     class OrderProcessor_t : public simlib3::Process
     {
-        private:
-            int32_t locationID{ 0 };
-            WarehouseOrder_t<std::string> order;
-
-            void Behavior()
-            {
-                int32_t distance{ 0 };
-                double waitDuration = 0.0;
-                double processDuration = Time;
-                auto& sim = WarehouseSimulator_t::getWhSimulator();
-
-                const auto& handleFacility = [&](int32_t itemID)
-                                             {
-                                                simlib3::Store* whFacility = sim.getWhItemFacility(itemID);
-
-                                                Enter(*whFacility, 1);
-                                                Wait(waitDuration / sim.getConfig().getAs<double>("simSpeedup"));
-                                                Leave(*whFacility, 1);
-                                             };
-
-                locationID = sim.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)->getWhItemID();
-
-                for(const WarehouseOrderLine_t<std::string>& orderLine : order)
-                {
-                    const std::vector<int32_t>& targetLocations = sim.lookupWhLocations(orderLine.getArticle(), orderLine.getQuantity());
-                    const WarehousePathInfo_t* shortestPath = sim.lookupShortestPath(locationID, targetLocations);
-
-                    for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
-                    {
-                        distance += pathItem.second;
-
-                        waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
-
-                        handleFacility(pathItem.first);
-                    }
-
-                    locationID = shortestPath->targetWhItemID;
-
-                    WarehouseItem_t* whLoc = sim.lookupWhLoc(locationID);
-                    std::pair<size_t, size_t> slotPos;
-                    whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), 0, slotPos);
-                    static const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
-                    waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
-                                    (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getConfig().getAs<double>("workerSpeed");
-
-                    handleFacility(locationID);
-                }
-
-                int32_t dispatchID = sim.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_DISPATCH)->getWhItemID();
-
-                const WarehousePathInfo_t* shortestPath = sim.lookupShortestPath(locationID, std::vector<int32_t>{ dispatchID });
-
-                for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
-                {
-                    distance += pathItem.second;
-
-                    waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
-
-                    handleFacility(pathItem.first);
-                }
-
-                locationID = dispatchID;
-
-                waitDuration = (60 / sim.getConfig().getAs<int32_t>("totesPerMin"));
-
-                handleFacility(locationID);
-
-                sim.orderFinished(Time - processDuration, distance);
-            }
-
         public:
-            OrderProcessor_t(WarehouseOrder_t<std::string> order_) : order(order_) { }
+            OrderProcessor_t(WarehouseOrder_t<std::string>);
+
+        protected:
+            void Behavior();
+
+        private:
+            WarehouseOrder_t<std::string> order;
     };
 
 
     class OrderRequest_t : public simlib3::Event
     {
+        public:
+            OrderRequest_t(WarehouseLayout_t&);
+
+        protected:
+            void Behavior();
+
         private:
             WarehouseLayout_t& layout;
 
             std::vector<WarehouseOrder_t<std::string>>::const_iterator it;
-
-            void Behavior()
-            {
-                (new OrderProcessor_t(*it))->Activate();
-
-                if(++it != layout.getWhOrders().end())
-                {
-                    // TODO: Poisson distribution
-                    Activate(Time + (WarehouseSimulator_t::getWhSimulator().getConfig().getAs<double>("orderRequestInterval")));
-                }
-            }
-
-        public:
-            OrderRequest_t(WarehouseLayout_t& layout_) : layout(layout_), it(layout.getWhOrders().begin()) {}
     };
 }
 

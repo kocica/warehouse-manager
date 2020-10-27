@@ -25,8 +25,9 @@
 #include "WarehouseLocationRack.h"
 
 
-/// @note: Choose mutation and crossover operators in constructor
+/// @note: Choose mutation, crossover and selection operators in the constructor
 std::function<void(std::vector<int32_t>&)>                            selectedMutation;
+std::function<void(const std::vector<whm::Solution>&)>                selectedSelection;
 std::function<void(std::vector<int32_t>&, std::vector<int32_t>&)>     selectedCrossover;
 
 
@@ -53,6 +54,7 @@ namespace whm
         : args{ args_ }
     {
         selectedMutation  = std::bind(&WarehouseOptimizer_t::mutateOrdered, this, std::placeholders::_1);
+        selectedSelection = std::bind(&WarehouseOptimizer_t::selectRoulette, this, std::placeholders::_1);
         selectedCrossover = std::bind(&WarehouseOptimizer_t::crossoverOrdered, this, std::placeholders::_1, std::placeholders::_2);
 
         whm::WarehouseSimulator_t::getWhSimulator().printStats(false);
@@ -146,10 +148,36 @@ namespace whm
 
     Solution WarehouseOptimizer_t::selectTournam(const std::vector<Solution>& pop)
     {
+        // TODO: Select N chromosomes instead of two
+
         int32_t a = randomFromInterval(0, pop.size());
         int32_t b = randomFromInterval(0, pop.size());
 
         return pop[a].fitness < pop[b].fitness ? pop[a] : pop[b];
+    }
+
+    Solution WarehouseOptimizer_t::selectRoulette(const std::vector<Solution>& pop)
+    {
+        // Since this is minimization problem, we need to invert fitnesses of each individual
+
+        double maxFitness{ 0.0 };
+        double sumFitness{ 0.0 };
+
+        for(const Solution& ind : pop) maxFitness = std::max(ind.fitness, maxFitness);
+        for(const Solution& ind : pop) sumFitness = sumFitness + maxFitness - ind.fitness;
+
+        double it   = 0.0;
+        double rand = randomFromInterval(0, sumFitness);
+
+        for(const Solution& ind : pop)
+        {
+            it += maxFitness - ind.fitness;
+
+            if(rand <= it)
+            {
+                return ind;
+            }
+        }
     }
 
     void WarehouseOptimizer_t::crossoverAverage(std::vector<int32_t>& lhsInd, std::vector<int32_t>& rhsInd)

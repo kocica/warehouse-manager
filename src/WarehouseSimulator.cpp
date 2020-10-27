@@ -142,19 +142,21 @@ namespace whm
         return Time;
     }
 
-    void WarehouseSimulator_t::orderFinished(double duration, int32_t distance)
+    void WarehouseSimulator_t::orderFinished(double duration, double durationNonSim, int32_t distance)
     {
-        static size_t  finished = 0;
-        static double  minDuration = DBL_MAX;
-        static double  maxDuration = DBL_MIN;
-        static double  sumDuration = 0.0;
-        static int32_t sumDistance = 0;
+        static size_t  finished     = 0;
+        static double  minDuration  = DBL_MAX;
+        static double  maxDuration  = DBL_MIN;
+        static double  sumDuration  = 0.0;
+        static double  sumDurNonSim = 0.0;
+        static int32_t sumDistance  = 0;
 
         ++finished;
-        minDuration = duration < minDuration ? duration : minDuration;
-        maxDuration = duration > maxDuration ? duration : maxDuration;
-        sumDuration = duration + sumDuration ;
-        sumDistance = distance + sumDistance ;
+        minDuration  = duration < minDuration ? duration : minDuration;
+        maxDuration  = duration > maxDuration ? duration : maxDuration;
+        sumDuration  = duration + sumDuration ;
+        sumDurNonSim = durationNonSim + sumDurNonSim;
+        sumDistance  = distance + sumDistance ;
 
         if(finished == whLayout.getWhOrders().size())
         {
@@ -163,6 +165,7 @@ namespace whm
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed orders count:   [-] <%d>", finished);
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Total traveled distance:  [m] <%d>", sumDistance);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Duration non-realistic:   [s] <%f>", sumDurNonSim);
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Min order process time:   [s] <%f>", minDuration);
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Max order process time:   [s] <%f>", maxDuration);
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Sum order process time:   [s] <%f>", sumDuration);
@@ -182,11 +185,12 @@ namespace whm
             }
 
             // Reset
-            finished = 0;
-            minDuration = DBL_MAX;
-            maxDuration = DBL_MIN;
-            sumDuration = 0.0;
-            sumDistance = 0;
+            finished     = 0;
+            minDuration  = DBL_MAX;
+            maxDuration  = DBL_MIN;
+            sumDuration  = 0.0;
+            sumDurNonSim = 0.0;
+            sumDistance  = 0;
 
             Stop(); // Abort();
         }
@@ -286,6 +290,105 @@ namespace whm
 
         std::cerr << "Failed to find location!" << std::endl;
         return nullptr;
+    }
+
+    // ================================================================================================================
+
+    OrderRequest_t::OrderRequest_t(WarehouseLayout_t& layout_)
+        : layout(layout_)
+        , it(layout.getWhOrders().begin())
+    {
+
+    }
+
+    void OrderProcessor_t::Behavior()
+    {
+        int32_t locationID = 0;
+        int32_t totalDistance = 0;
+        double  totalDuration = 0.0;
+        double  waitDuration = 0.0;
+        double  processDuration = Time;
+        auto&   sim = WarehouseSimulator_t::getWhSimulator();
+
+        const auto& handleFacility = [&](int32_t itemID)
+                                        {
+                                        simlib3::Store* whFacility = sim.getWhItemFacility(itemID);
+
+                                        Enter(*whFacility, 1);
+                                        Wait(waitDuration / sim.getConfig().getAs<double>("simSpeedup"));
+                                        Leave(*whFacility, 1);
+                                        };
+
+        locationID = sim.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)->getWhItemID();
+
+        for(const WarehouseOrderLine_t<std::string>& orderLine : order)
+        {
+            const std::vector<int32_t>& targetLocations = sim.lookupWhLocations(orderLine.getArticle(), orderLine.getQuantity());
+            const WarehousePathInfo_t* shortestPath = sim.lookupShortestPath(locationID, targetLocations);
+
+            for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
+            {
+                waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
+
+                totalDuration += waitDuration;
+                totalDistance += pathItem.second;
+
+                handleFacility(pathItem.first);
+            }
+
+            locationID = shortestPath->targetWhItemID;
+
+            WarehouseItem_t* whLoc = sim.lookupWhLoc(locationID);
+            std::pair<size_t, size_t> slotPos;
+            whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), 0, slotPos);
+            static const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
+            waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
+                            (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getConfig().getAs<double>("workerSpeed");
+
+            totalDuration += waitDuration;
+            handleFacility(locationID);
+        }
+
+        int32_t dispatchID = sim.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_DISPATCH)->getWhItemID();
+
+        const WarehousePathInfo_t* shortestPath = sim.lookupShortestPath(locationID, std::vector<int32_t>{ dispatchID });
+
+        for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
+        {
+            waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
+
+            totalDuration += waitDuration;
+            totalDistance += pathItem.second;
+
+            handleFacility(pathItem.first);
+        }
+
+        locationID = dispatchID;
+
+        waitDuration = (60 / sim.getConfig().getAs<int32_t>("totesPerMin"));
+
+        totalDuration += waitDuration;
+
+        handleFacility(locationID);
+
+        sim.orderFinished(Time - processDuration, totalDuration, totalDistance);
+    }
+
+    OrderProcessor_t::OrderProcessor_t(WarehouseOrder_t<std::string> order_)
+        : order(order_)
+    {
+
+    }
+
+    void OrderRequest_t::Behavior()
+    {
+        (new OrderProcessor_t(*it))->Activate();
+
+        if(++it != layout.getWhOrders().end())
+        {
+            // TODO: Poisson distribution
+            Activate(Time + (WarehouseSimulator_t::getWhSimulator().getConfig().getAs<double>("orderRequestInterval")));
+        }
     }
 }
 

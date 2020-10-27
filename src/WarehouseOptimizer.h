@@ -49,6 +49,7 @@ namespace whm
             // Selection
             Solution selectTrunc(const std::vector<Solution>&);
             Solution selectTournam(const std::vector<Solution>&);
+            Solution selectRoulette(const std::vector<Solution>&);
 
             // Crossover
             void crossoverAverage(std::vector<int32_t>&, std::vector<int32_t>&);
