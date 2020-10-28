@@ -14,17 +14,22 @@
 #include <map>
 #include <vector>
 #include <random>
+#include <functional>
 
 #include "Utils.h"
 #include "WarehouseLocationSlot.h"
 
 namespace whm
 {
-    struct Solution
+    struct Solution_t
     {
         double fitness{ 0.0 };        //< How good chromosome is
         std::vector<int32_t> genes;   //< Chromosome
     };
+
+    using MutationFunctor_t  = std::function<void(std::vector<int32_t>&)>;
+    using SelectionFunctor_t = std::function<Solution_t(const std::vector<Solution_t>&)>;
+    using CrossoverFunctor_t = std::function<void(std::vector<int32_t>&, std::vector<int32_t>&)>;
 
     class WarehouseOptimizer_t
     {
@@ -44,13 +49,13 @@ namespace whm
 
             // Initialize
             void initIndividualRand(std::vector<int32_t>&);
-            void initPopulationRand(std::vector<Solution>&);
+            void initPopulationRand(std::vector<Solution_t>&);
 
             // Selection
-            Solution selectRank(const std::vector<Solution>&);
-            Solution selectTrunc(const std::vector<Solution>&);
-            Solution selectTournam(const std::vector<Solution>&);
-            Solution selectRoulette(const std::vector<Solution>&);
+            Solution_t selectRank(const std::vector<Solution_t>&);
+            Solution_t selectTrunc(const std::vector<Solution_t>&);
+            Solution_t selectTournam(const std::vector<Solution_t>&);
+            Solution_t selectRoulette(const std::vector<Solution_t>&);
 
             // Crossover
             void crossoverAverage(std::vector<int32_t>&, std::vector<int32_t>&);
@@ -59,7 +64,7 @@ namespace whm
             void crossoverOnePoint(std::vector<int32_t>&, std::vector<int32_t>&);
 
             // Mutate
-            void mutate(Solution&);
+            void mutate(Solution_t&);
             void mutateRand(std::vector<int32_t>&);
             void mutateGauss(std::vector<int32_t>&);
             void mutateOrdered(std::vector<int32_t>&);
@@ -68,17 +73,20 @@ namespace whm
             // Simulation
             double simulateWarehouse(std::vector<int32_t>&);
 
-            // Save result
+            // Store results
             void saveBestChromosome(std::vector<int32_t>&);
             void updateAllocations(std::vector<int32_t>&);
 
         private:
             std::mt19937_64 rand;
-
             utils::WhmArgs_t args;
 
             std::map<int32_t, std::string> skuEnc;
             std::map<int32_t, WarehouseLocationSlot_t<std::string>*> slotEnc;
+
+            MutationFunctor_t  mutationFunctor;
+            SelectionFunctor_t selectionFunctor;
+            CrossoverFunctor_t crossoverFunctor;
     };
 }
 

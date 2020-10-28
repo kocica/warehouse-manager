@@ -10,10 +10,10 @@
 #ifdef WHM_OPT
 
 // Std
+#include <map>
 #include <utility>
 #include <iostream>
 #include <algorithm>
-#include <functional>
 
 // Local
 #include "Logger.h"
@@ -25,16 +25,10 @@
 #include "WarehouseLocationRack.h"
 
 
-/// @note: Choose mutation, crossover and selection operators in the constructor
-std::function<void(std::vector<int32_t>&)>                            selectedMutation;
-std::function<whm::Solution(const std::vector<whm::Solution>&)>       selectedSelection;
-std::function<void(std::vector<int32_t>&, std::vector<int32_t>&)>     selectedCrossover;
-
+whm::ConfigParser_t cfg("cfg/optimizer.xml");
 
 namespace constants
 {
-    whm::ConfigParser_t cfg("cfg/optimizer.xml");
-
     static const auto numberDimensions       = cfg.getAs<int32_t>("numberDimensions");     ///< Number of dimensions (i.e. number of SKUs)
     static const auto problemMin             = cfg.getAs<int32_t>("problemMin");           ///< Slot min number
     static const auto problemMax             = cfg.getAs<int32_t>("problemMax");           ///< Slot max number
@@ -42,6 +36,7 @@ namespace constants
     static const auto selectionSize          = cfg.getAs<int32_t>("selectionSize");        ///< Size of selected part of population
     static const auto eliteSize              = cfg.getAs<int32_t>("eliteSize");            ///< Size of elite part of population (unchanged)
     static const auto maxGenerations         = cfg.getAs<int32_t>("maxGenerations");       ///< Maximal number of generations
+    static const auto saveWeightsAfter       = cfg.getAs<int32_t>("saveWeightsAfter");     ///< Save weights after N generations
     static const auto probCrossover          = cfg.getAs<double>("probCrossover");         ///< Probability of crossover
     static const auto probMutationInd        = cfg.getAs<double>("probMutationInd");       ///< Probability of individual mutation
     static const auto probMutationGene       = cfg.getAs<double>("probMutationGene");      ///< Probability of gene mutation
@@ -53,9 +48,28 @@ namespace whm
     WarehouseOptimizer_t::WarehouseOptimizer_t(utils::WhmArgs_t args_)
         : args{ args_ }
     {
-        selectedMutation  = std::bind(&WarehouseOptimizer_t::mutateOrdered, this, std::placeholders::_1);
-        selectedSelection = std::bind(&WarehouseOptimizer_t::selectTrunc, this, std::placeholders::_1);
-        selectedCrossover = std::bind(&WarehouseOptimizer_t::crossoverOrdered, this, std::placeholders::_1, std::placeholders::_2);
+        std::map<std::string, MutationFunctor_t> mutatorMap =
+        {
+            { "mutateOrdered",     std::bind(&WarehouseOptimizer_t::mutateOrdered,    this, std::placeholders::_1) },
+            { "mutateInverse",     std::bind(&WarehouseOptimizer_t::mutateInverse,    this, std::placeholders::_1) }
+        };
+
+        std::map<std::string, SelectionFunctor_t> selectorMap =
+        {
+            { "selectRank",        std::bind(&WarehouseOptimizer_t::selectRank,       this, std::placeholders::_1) },
+            { "selectTrunc",       std::bind(&WarehouseOptimizer_t::selectTrunc,      this, std::placeholders::_1) },
+            { "selectTournam",     std::bind(&WarehouseOptimizer_t::selectTournam,    this, std::placeholders::_1) },
+            { "selectRoulette",    std::bind(&WarehouseOptimizer_t::selectRoulette,   this, std::placeholders::_1) }
+        };
+
+        std::map<std::string, CrossoverFunctor_t> crossoverMap =
+        {
+            { "crossoverOrdered",  std::bind(&WarehouseOptimizer_t::crossoverOrdered, this, std::placeholders::_1, std::placeholders::_2) }
+        };
+
+        mutationFunctor  = mutatorMap[cfg.getAs<std::string>("mutationFunctor")];
+        selectionFunctor = selectorMap[cfg.getAs<std::string>("selectionFunctor")];
+        crossoverFunctor = crossoverMap[cfg.getAs<std::string>("crossoverFunctor")];
 
         whm::WarehouseSimulator_t::getWhSimulator().printStats(false);
 
@@ -132,7 +146,7 @@ namespace whm
         }
     }
 
-    void WarehouseOptimizer_t::initPopulationRand(std::vector<Solution>& pop)
+    void WarehouseOptimizer_t::initPopulationRand(std::vector<Solution_t>& pop)
     {
         for(int32_t p = 0; p < static_cast<int32_t>(pop.size()); ++p)
         {
@@ -141,12 +155,12 @@ namespace whm
     }
 
     // Don't select the best fitness to keep the diversity
-    Solution WarehouseOptimizer_t::selectTrunc(const std::vector<Solution>& pop)
+    Solution_t WarehouseOptimizer_t::selectTrunc(const std::vector<Solution_t>& pop)
     {
         return pop.at(randomFromInterval(0, constants::selectionSize));
     }
 
-    Solution WarehouseOptimizer_t::selectTournam(const std::vector<Solution>& pop)
+    Solution_t WarehouseOptimizer_t::selectTournam(const std::vector<Solution_t>& pop)
     {
         // TODO: Select N chromosomes instead of two
 
@@ -156,20 +170,20 @@ namespace whm
         return pop[a].fitness < pop[b].fitness ? pop[a] : pop[b];
     }
 
-    Solution WarehouseOptimizer_t::selectRoulette(const std::vector<Solution>& pop)
+    Solution_t WarehouseOptimizer_t::selectRoulette(const std::vector<Solution_t>& pop)
     {
         // Since this is minimization problem, we need to invert fitnesses of each individual
 
         double maxFitness{ 0.0 };
         double sumFitness{ 0.0 };
 
-        for(const Solution& ind : pop) maxFitness = std::max(ind.fitness, maxFitness);
-        for(const Solution& ind : pop) sumFitness = sumFitness + maxFitness - ind.fitness;
+        for(const Solution_t& ind : pop) maxFitness = std::max(ind.fitness, maxFitness);
+        for(const Solution_t& ind : pop) sumFitness = sumFitness + maxFitness - ind.fitness;
 
         double it   = 0.0;
         double rand = randomFromInterval(0, sumFitness);
 
-        for(const Solution& ind : pop)
+        for(const Solution_t& ind : pop)
         {
             it += maxFitness - ind.fitness;
 
@@ -179,17 +193,17 @@ namespace whm
             }
         }
 
-        return Solution();
+        return Solution_t();
     }
 
-    Solution WarehouseOptimizer_t::selectRank(const std::vector<Solution>& pop)
+    Solution_t WarehouseOptimizer_t::selectRank(const std::vector<Solution_t>& pop)
     {
         // Note: This method has a slower convergance
 
-        std::vector<Solution> popCopy = pop;
+        std::vector<Solution_t> popCopy = pop;
 
         std::sort(popCopy.begin(), popCopy.end(),
-                  [](Solution& lhs, Solution& rhs)
+                  [](Solution_t& lhs, Solution_t& rhs)
                   -> bool
                   {
                       return lhs.fitness > rhs.fitness;
@@ -209,7 +223,7 @@ namespace whm
 
         // TODO: Maybe shuffle popCopy before selection?
 
-        for(const Solution& ind : popCopy)
+        for(const Solution_t& ind : popCopy)
         {
             it += ind.fitness;
 
@@ -219,7 +233,7 @@ namespace whm
             }
         }
 
-        return Solution();
+        return Solution_t();
     }
 
     void WarehouseOptimizer_t::crossoverAverage(std::vector<int32_t>& lhsInd, std::vector<int32_t>& rhsInd)
@@ -334,13 +348,13 @@ namespace whm
         }
     }
 
-    void WarehouseOptimizer_t::mutate(Solution& ind)
+    void WarehouseOptimizer_t::mutate(Solution_t& ind)
     {
         if(flipCoin(constants::probMutationInd))
         {
             for(int32_t i = 0; i <= constants::numberDimensions * constants::probMutationGene; i++)
             {
-                selectedMutation(ind.genes);
+                mutationFunctor(ind.genes);
             }
         }
     }
@@ -388,7 +402,7 @@ namespace whm
 
     void WarehouseOptimizer_t::evolve()
     {
-        std::vector<Solution> population(constants::populationSize);
+        std::vector<Solution_t> population(constants::populationSize);
 
         initPopulationRand(population);
 
@@ -399,7 +413,7 @@ namespace whm
         }
 
         std::sort(population.begin(), population.end(),
-                  [](Solution& lhs, Solution& rhs)
+                  [](Solution_t& lhs, Solution_t& rhs)
                   -> bool
                   {
                       return lhs.fitness < rhs.fitness;
@@ -407,7 +421,7 @@ namespace whm
 
         for(int32_t gen = 0; gen < constants::maxGenerations; ++gen)
         {
-            std::vector<Solution> newPopulation;
+            std::vector<Solution_t> newPopulation;
 
             for(int32_t p = 0; p < constants::eliteSize; ++p)
             {
@@ -416,18 +430,18 @@ namespace whm
 
             for(int32_t i = 0; i < (constants::populationSize - constants::eliteSize) / 2; i++)
             {
-                Solution mum = selectedSelection(population);
-                Solution dad = selectedSelection(population);
+                Solution_t mum = selectionFunctor(population);
+                Solution_t dad = selectionFunctor(population);
 
                 if(flipCoin(constants::probCrossover))
                 {
-                    selectedCrossover(mum.genes, dad.genes);
+                    crossoverFunctor(mum.genes, dad.genes);
                 }
 
-                Solution bro = mum;
+                Solution_t bro = mum;
                 mutate(bro);
 
-                Solution sis = dad;
+                Solution_t sis = dad;
                 mutate(sis);
 
                 newPopulation.push_back(sis);
@@ -436,7 +450,7 @@ namespace whm
 
             if((constants::populationSize - constants::eliteSize) & 1)
             {
-                Solution mutant = selectedSelection(population);
+                Solution_t mutant = selectionFunctor(population);
 
                 mutate(mutant);
 
@@ -451,17 +465,24 @@ namespace whm
             }
 
             std::sort(population.begin(), population.end(),
-                    [](Solution& lhs, Solution& rhs)
+                    [](Solution_t& lhs, Solution_t& rhs)
                     -> bool
                     {
                         return lhs.fitness < rhs.fitness;
                     });
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "==== Generation %2d ====", gen);
-            std::for_each(population.begin(), population.end(), [](Solution& s){ std::cout << s.fitness << " "; });
+            std::for_each(population.begin(), population.end(), [](Solution_t& s){ std::cout << s.fitness << " "; });
             std::cout << std::endl;
+
+            // Each N iterations save weights
+            if(gen % constants::saveWeightsAfter)
+            {
+                saveBestChromosome(population.at(0).genes);
+            }
         }
 
+        // Save the evolution best Solution_t
         saveBestChromosome(population.at(0).genes);
     }
 
