@@ -24,7 +24,6 @@ PROFILE    = #-pg
 
 LDFLAGS    = -lsimlib -lm
 LDLIBS     = 
-DOXYGEN    = doxygen
 
 SRC        = src
 CFG        = cfg
@@ -38,7 +37,12 @@ GUI_SOURCES = $(wildcard $(GUI)/*.cpp)
 GUI_HEADERS = $(wildcard $(GUI)/*.h)
 GUI_OBJS    = $(patsubst %.cpp, %.o, $(GUI_SOURCES))
 
-#all: $(BIN_NAME_SIM) $(BIN_NAME_GEN) $(BIN_NAME_GUI) $(BIN_NAME_OPT)
+all:
+	make warehouse_manager_gen
+	make warehouse_manager_sim
+	make warehouse_manager_opt
+	make warehouse_manager_gui
+
 .PHONY: clean
 
 $(BIN_NAME_OPT): CFLAGS += -DWHM_OPT
@@ -58,12 +62,10 @@ $(BIN_NAME_SIM): $(HEADERS) $(SOURCES) $(OBJS)
 $(BIN_NAME_GUI): $(HEADERS) $(SOURCES) $(OBJS) $(GUI_SOURCES) $(GUI_HEADERS)
 	@cd $(GUI) && $(QMAKE) $(QFLAGS) && make
 	@mv $(shell pwd)/$(GUI)/$(BIN_NAME_GUI) .
+	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
-
-doxygen:
-	$(DOXYGEN) $(CFG)/doxyConf
 
 clean:
 	-@cd $(GUI) && make clean && rm -f moc_* .qmake.stash
