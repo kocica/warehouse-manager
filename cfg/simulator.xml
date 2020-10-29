@@ -16,4 +16,4 @@
                preprocess="true"
                locationCapacity="1"
                conveyorCapacity="5"
-               orderRequestInterval="10" />
+               orderRequestInterval="1" />

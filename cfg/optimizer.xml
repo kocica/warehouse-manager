@@ -2,40 +2,26 @@
         numberDimensions ................. Number of dimensions (i.e. number of SKUs)
         problemMin ....................... Slot min number
         problemMax ....................... Slot max number
-
         populationSize ................... Population size
         selectionSize .................... Size of selected part of population
         eliteSize ........................ Size of elite part of population (unchanged)
         maxGenerations ................... Maximal number of generations
-
         probCrossover .................... Probability of crossover
         probMutationInd .................. Probability of individual mutation
         probMutationGene ................. Probability of gene mutation
-
-        saveWeightsAfter ................. Save weights after N generations
-
-        mutationFunctor .................. Selected mutation operator
-        selectionFunctor ................. Selected selection operator
-        crossoverFunctor ................. Selected crossover operator
   -->
 
-<configuration
-      numberDimensions="50"
-      problemMin="0"
-      problemMax="60"
-
-      populationSize="20"
-      selectionSize="5"
-      eliteSize="1"
-      maxGenerations="100"
-
-      probCrossover="0.6"
-      probMutationInd="0.4"
-      probMutationGene="0.2"
-
-      saveWeightsAfter="1000"
-
-      mutationFunctor="mutateOrdered"
-      selectionFunctor="selectTournam"
-      crossoverFunctor="crossoverOrdered"
-/>
+<configuration numberDimensions="15"
+               problemMin="0"
+               problemMax="60"
+               populationSize="20"
+               selectionSize="5"
+               eliteSize="1"
+               maxGenerations="100000"
+               probCrossover="0.6"
+               probMutationInd="0.4"
+               probMutationGene="0.2"
+               saveWeightsAfter="1000"
+               mutationFunctor="mutateInverse"
+               selectionFunctor="selectRoulette"
+               crossoverFunctor="crossoverOrdered" />

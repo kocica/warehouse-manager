@@ -262,20 +262,26 @@ namespace whm
     /// @see http://www.permutationcity.co.uk/projects/mutants/tsp.html
     void WarehouseOptimizer_t::crossoverOrdered(std::vector<int32_t>& lhsInd, std::vector<int32_t>& rhsInd)
     {
-        int32_t pos = 0;
+        int32_t a, b;
+        int32_t pos =  0;
         int32_t placeholder = -1;
         int32_t placeholderCount = 0;
 
-        std::vector<int32_t> o1, o1_missing;
-        std::vector<int32_t> o2, o2_missing;
+        std::vector<int32_t> o1, o1_missing, o1_replacements;
+        std::vector<int32_t> o2, o2_missing, o2_replacements;
 
         while(true)
         {
-            int32_t a = randomFromInterval(pos, constants::numberDimensions);
-            int32_t b = randomFromInterval(pos, constants::numberDimensions);
+            do
+            {
+                a = randomFromInterval(pos, constants::numberDimensions);
+                b = randomFromInterval(pos, constants::numberDimensions);
+            }
+            while(a == b);
 
             if(a > b) std::swap(a, b);
 
+            // Insert from first parent
             for(int32_t i = pos; i < a; ++i)
             {
                 o1.push_back(lhsInd.at(i));
@@ -313,22 +319,30 @@ namespace whm
             if(std::find(o2.begin(), o2.end(), i) == o2.end()) o2_missing.push_back(i);
         }
 
+        // Filter missing elements and leave only those which are in the second parent (keep the order)
+        for(int32_t i = 0; i < static_cast<int32_t>(rhsInd.size()); i++)
+        {
+            if(std::find(o1_missing.begin(), o1_missing.end(), rhsInd.at(i)) != o1_missing.end()) o1_replacements.push_back(rhsInd.at(i));
+        }
+
+        // Filter missing elements and leave only those which are in the second parent (keep the order)
+        for(int32_t i = 0; i < static_cast<int32_t>(lhsInd.size()); i++)
+        {
+            if(std::find(o2_missing.begin(), o2_missing.end(), lhsInd.at(i)) != o2_missing.end()) o2_replacements.push_back(lhsInd.at(i));
+        }
+
         // Replace placeholders in offspring 1
         for(int32_t i = 0; i < placeholderCount; ++i)
         {
                 auto it = std::find(o1.begin(), o1.end(), placeholder);
-                auto r  = randomFromInterval(0, o1_missing.size());
-                *it     = o1_missing.at(r);
-                o1_missing.erase(o1_missing.begin() + r); // Make sure we won't use it again
+                *it     = o1_replacements.at(i);
         }
 
         // Replace placeholders in offspring 2
         for(int32_t i = 0; i < placeholderCount; ++i)
         {
                 auto it = std::find(o2.begin(), o2.end(), placeholder);
-                auto r  = randomFromInterval(0, o2_missing.size());
-                *it     = o2_missing.at(r);
-                o2_missing.erase(o2_missing.begin() + r); // Make sure we won't use it again
+                *it     = o2_replacements.at(i);
         }
 
         // Assign new offsprings
@@ -382,18 +396,28 @@ namespace whm
 
     void WarehouseOptimizer_t::mutateOrdered(std::vector<int32_t>& ind)
     {
-        int32_t a = randomFromInterval(0, constants::numberDimensions);
-        int32_t b = randomFromInterval(0, constants::numberDimensions);
+        int32_t a, b;
 
-        if(a == b) return;
+        do
+        {
+            a = randomFromInterval(0, constants::numberDimensions);
+            b = randomFromInterval(0, constants::numberDimensions);
+        }
+        while(a == b);
 
         std::rotate(ind.begin() + a, ind.begin() + b, ind.begin() + b + 1);
     }
 
     void WarehouseOptimizer_t::mutateInverse(std::vector<int32_t>& ind)
     {
-        int32_t a = randomFromInterval(0, constants::numberDimensions);
-        int32_t b = randomFromInterval(0, constants::numberDimensions);
+        int32_t a, b;
+
+        do
+        {
+            a = randomFromInterval(0, constants::numberDimensions);
+            b = randomFromInterval(0, constants::numberDimensions);
+        }
+        while(a == b);
 
         if(a > b) std::swap(a, b);
 
