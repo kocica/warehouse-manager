@@ -25,21 +25,23 @@
 #include "WarehouseLocationRack.h"
 
 
-whm::ConfigParser_t cfg("cfg/optimizer.xml");
-
-namespace constants
+namespace
 {
-    static const auto numberDimensions       = cfg.getAs<int32_t>("numberDimensions");     ///< Number of dimensions (i.e. number of SKUs)
-    static const auto problemMin             = cfg.getAs<int32_t>("problemMin");           ///< Slot min number
-    static const auto problemMax             = cfg.getAs<int32_t>("problemMax");           ///< Slot max number
-    static const auto populationSize         = cfg.getAs<int32_t>("populationSize");       ///< Population size
-    static const auto selectionSize          = cfg.getAs<int32_t>("selectionSize");        ///< Size of selected part of population
-    static const auto eliteSize              = cfg.getAs<int32_t>("eliteSize");            ///< Size of elite part of population (unchanged)
-    static const auto maxGenerations         = cfg.getAs<int32_t>("maxGenerations");       ///< Maximal number of generations
-    static const auto saveWeightsAfter       = cfg.getAs<int32_t>("saveWeightsAfter");     ///< Save weights after N generations
-    static const auto probCrossover          = cfg.getAs<double>("probCrossover");         ///< Probability of crossover
-    static const auto probMutationInd        = cfg.getAs<double>("probMutationInd");       ///< Probability of individual mutation
-    static const auto probMutationGene       = cfg.getAs<double>("probMutationGene");      ///< Probability of gene mutation
+    whm::ConfigParser_t cfg("cfg/optimizer.xml");
+
+    // Dynamically modifiable optimization parameters (getters for better readablity)
+
+    auto numberDimensions       = [](){ return cfg.getAs<int32_t>("numberDimensions"); };    ///< Number of dimensions (i.e. number of SKUs)
+    auto problemMin             = [](){ return cfg.getAs<int32_t>("problemMin");       };    ///< Slot min number
+    auto problemMax             = [](){ return cfg.getAs<int32_t>("problemMax");       };    ///< Slot max number
+    auto populationSize         = [](){ return cfg.getAs<int32_t>("populationSize");   };    ///< Population size
+    auto selectionSize          = [](){ return cfg.getAs<int32_t>("selectionSize");    };    ///< Size of selected part of population
+    auto eliteSize              = [](){ return cfg.getAs<int32_t>("eliteSize");        };    ///< Size of elite part of population (unchanged)
+    auto maxGenerations         = [](){ return cfg.getAs<int32_t>("maxGenerations");   };    ///< Maximal number of generations
+    auto saveWeightsAfter       = [](){ return cfg.getAs<int32_t>("saveWeightsAfter"); };    ///< Save weights after N generations
+    auto probCrossover          = [](){ return cfg.getAs<double>("probCrossover");     };    ///< Probability of crossover
+    auto probMutationInd        = [](){ return cfg.getAs<double>("probMutationInd");   };    ///< Probability of individual mutation
+    auto probMutationGene       = [](){ return cfg.getAs<double>("probMutationGene");  };    ///< Probability of gene mutation
 }
 
 
@@ -132,13 +134,13 @@ namespace whm
 
     void WarehouseOptimizer_t::initIndividualRand(std::vector<int32_t>& ind)
     {
-        for(int32_t d = 0; d < constants::numberDimensions; ++d)
+        for(int32_t d = 0; d < numberDimensions(); ++d)
         {
             int32_t r{ 0 };
 
             do
             {
-                r = randomFromInterval(constants::problemMin, constants::problemMax);
+                r = randomFromInterval(problemMin(), problemMax());
             }
             while(std::find(ind.begin(), ind.end(), r) != ind.end());
 
@@ -157,7 +159,7 @@ namespace whm
     // Don't select the best fitness to keep the diversity
     Solution_t WarehouseOptimizer_t::selectTrunc(const std::vector<Solution_t>& pop)
     {
-        return pop.at(randomFromInterval(0, constants::selectionSize));
+        return pop.at(randomFromInterval(0, selectionSize()));
     }
 
     Solution_t WarehouseOptimizer_t::selectTournam(const std::vector<Solution_t>& pop)
@@ -212,7 +214,7 @@ namespace whm
         int32_t sumFitness{ 0 };
 
         // Assign fitness 1 - N
-        for(int32_t i = 0; i < constants::populationSize; ++i)
+        for(int32_t i = 0; i < populationSize(); ++i)
         {
             sumFitness += i;
             popCopy.at(i).fitness = i + 1;
@@ -238,7 +240,7 @@ namespace whm
 
     void WarehouseOptimizer_t::crossoverAverage(std::vector<int32_t>& lhsInd, std::vector<int32_t>& rhsInd)
     {
-        for(int32_t i = 0; i < constants::numberDimensions; ++i)
+        for(int32_t i = 0; i < numberDimensions(); ++i)
         {
             auto tmp = lhsInd[i] + rhsInd[i];
             lhsInd[i] = 0.4 * tmp;
@@ -248,7 +250,7 @@ namespace whm
 
     void WarehouseOptimizer_t::crossoverUniform(std::vector<int32_t>& lhsInd, std::vector<int32_t>& rhsInd)
     {
-        for(int32_t i = 0; i < constants::numberDimensions; i++)
+        for(int32_t i = 0; i < numberDimensions(); i++)
         {
             if(flipCoin(0.5))
             {
@@ -274,8 +276,8 @@ namespace whm
         {
             do
             {
-                a = randomFromInterval(pos, constants::numberDimensions);
-                b = randomFromInterval(pos, constants::numberDimensions);
+                a = randomFromInterval(pos, numberDimensions());
+                b = randomFromInterval(pos, numberDimensions());
             }
             while(a == b);
 
@@ -296,9 +298,9 @@ namespace whm
                 o2.push_back(placeholder);
             }
 
-            if(b >= constants::numberDimensions - 1)
+            if(b >= numberDimensions() - 1)
             {
-                for(int32_t i = b; i < constants::numberDimensions; ++i)
+                for(int32_t i = b; i < numberDimensions(); ++i)
                 {
                     o1.push_back(lhsInd.at(i));
                     o2.push_back(rhsInd.at(i));
@@ -313,7 +315,7 @@ namespace whm
         }
 
         // Find missing elements
-        for(int32_t i = 0; i < constants::problemMax; ++i)
+        for(int32_t i = 0; i < problemMax(); ++i)
         {
             if(std::find(o1.begin(), o1.end(), i) == o1.end()) o1_missing.push_back(i);
             if(std::find(o2.begin(), o2.end(), i) == o2.end()) o2_missing.push_back(i);
@@ -352,9 +354,9 @@ namespace whm
 
     void WarehouseOptimizer_t::crossoverOnePoint(std::vector<int32_t>& lhsInd, std::vector<int32_t>& rhsInd)
     {
-        int32_t point = randomFromInterval(0, constants::numberDimensions);
+        int32_t point = randomFromInterval(0, numberDimensions());
 
-        for(int32_t i = point; i < constants::numberDimensions; ++i)
+        for(int32_t i = point; i < numberDimensions(); ++i)
         {
             auto tmp  = lhsInd[i];
             lhsInd[i] = rhsInd[i];
@@ -364,9 +366,9 @@ namespace whm
 
     void WarehouseOptimizer_t::mutate(Solution_t& ind)
     {
-        if(flipCoin(constants::probMutationInd))
+        if(flipCoin(probMutationInd()))
         {
-            for(int32_t i = 0; i <= constants::numberDimensions * constants::probMutationGene; i++)
+            for(int32_t i = 0; i <= numberDimensions() * probMutationGene(); i++)
             {
                 mutationFunctor(ind.genes);
             }
@@ -375,21 +377,21 @@ namespace whm
 
     void WarehouseOptimizer_t::mutateRand(std::vector<int32_t>& ind)
     {
-        int32_t pos = randomFromInterval(0, constants::numberDimensions);
-        int32_t val = randomFromInterval(constants::problemMin, constants::problemMax);
+        int32_t pos = randomFromInterval(0, numberDimensions());
+        int32_t val = randomFromInterval(problemMin(), problemMax());
 
         ind[pos] = val;
     }
 
     void WarehouseOptimizer_t::mutateGauss(std::vector<int32_t>& ind)
     {
-        double sigma = (constants::problemMax - constants::problemMin) * 0.1;
+        double sigma = (problemMax() - problemMin()) * 0.1;
 
-        int32_t pos = randomFromInterval(0, constants::numberDimensions);
+        int32_t pos = randomFromInterval(0, numberDimensions());
         int32_t val = randomGauss(ind[pos], sigma);
 
-        if(val < constants::problemMin) val = constants::problemMin;
-        if(val > constants::problemMax) val = constants::problemMax;
+        if(val < problemMin()) val = problemMin();
+        if(val > problemMax()) val = problemMax();
 
         ind[pos] = val;
     }
@@ -400,8 +402,8 @@ namespace whm
 
         do
         {
-            a = randomFromInterval(0, constants::numberDimensions);
-            b = randomFromInterval(0, constants::numberDimensions);
+            a = randomFromInterval(0, numberDimensions());
+            b = randomFromInterval(0, numberDimensions());
         }
         while(a == b);
 
@@ -414,8 +416,8 @@ namespace whm
 
         do
         {
-            a = randomFromInterval(0, constants::numberDimensions);
-            b = randomFromInterval(0, constants::numberDimensions);
+            a = randomFromInterval(0, numberDimensions());
+            b = randomFromInterval(0, numberDimensions());
         }
         while(a == b);
 
@@ -426,11 +428,11 @@ namespace whm
 
     void WarehouseOptimizer_t::evolve()
     {
-        std::vector<Solution_t> population(constants::populationSize);
+        std::vector<Solution_t> population(populationSize());
 
         initPopulationRand(population);
 
-        for(int32_t p = 0; p < constants::populationSize; ++p)
+        for(int32_t p = 0; p < populationSize(); ++p)
         {
             // Fitness = objective function (simulation time)
             population[p].fitness = simulateWarehouse(population[p].genes);
@@ -443,21 +445,21 @@ namespace whm
                       return lhs.fitness < rhs.fitness;
                   });
 
-        for(int32_t gen = 0; gen < constants::maxGenerations; ++gen)
+        for(int32_t gen = 0; gen < maxGenerations(); ++gen)
         {
             std::vector<Solution_t> newPopulation;
 
-            for(int32_t p = 0; p < constants::eliteSize; ++p)
+            for(int32_t p = 0; p < eliteSize(); ++p)
             {
                 newPopulation.push_back(population[p]);
             }
 
-            for(int32_t i = 0; i < (constants::populationSize - constants::eliteSize) / 2; i++)
+            for(int32_t i = 0; i < (populationSize() - eliteSize()) / 2; i++)
             {
                 Solution_t mum = selectionFunctor(population);
                 Solution_t dad = selectionFunctor(population);
 
-                if(flipCoin(constants::probCrossover))
+                if(flipCoin(probCrossover()))
                 {
                     crossoverFunctor(mum.genes, dad.genes);
                 }
@@ -472,7 +474,7 @@ namespace whm
                 newPopulation.push_back(bro);
             }
 
-            if((constants::populationSize - constants::eliteSize) & 1)
+            if((populationSize() - eliteSize()) & 1)
             {
                 Solution_t mutant = selectionFunctor(population);
 
@@ -483,7 +485,7 @@ namespace whm
 
             population = std::move(newPopulation);
 
-            for(int32_t p = 0; p < constants::populationSize; ++p)
+            for(int32_t p = 0; p < populationSize(); ++p)
             {
                 population[p].fitness = simulateWarehouse(population[p].genes);
             }
@@ -500,7 +502,7 @@ namespace whm
             std::cout << std::endl;
 
             // Each N iterations save weights
-            if(gen % constants::saveWeightsAfter)
+            if(gen % saveWeightsAfter())
             {
                 saveBestChromosome(population.at(0).genes);
             }

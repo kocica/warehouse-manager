@@ -9,15 +9,24 @@
         probCrossover .................... Probability of crossover
         probMutationInd .................. Probability of individual mutation
         probMutationGene ................. Probability of gene mutation
+        saveWeightsAfter ................. Save weights after N generations
+        replaceWithRand .................. Part of population to be replaced with new random individuals
+        mutationFunctor .................. Selected mutation operator
+        selectionFunctor ................. Selected selection operator
+        crossoverFunctor ................. Selected crossover operator
   -->
 
 <configuration numberDimensions="15"
                problemMin="0"
                problemMax="60"
-               populationSize="20"
-               selectionSize="5"
-               eliteSize="1"
-               maxGenerations="10000"
+               populationSize="2000"
+               selectionSize="200"
+               eliteSize="10"
+               maxGenerations="1000"
                probCrossover="0.6"
                probMutationInd="0.4"
-               probMutationGene="0.2" />
+               probMutationGene="0.2"
+               saveWeightsAfter="1"
+               mutationFunctor="mutateInverse"
+               selectionFunctor="selectRoulette"
+               crossoverFunctor="crossoverOrdered" />

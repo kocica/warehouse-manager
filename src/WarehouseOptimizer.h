@@ -74,8 +74,8 @@ namespace whm
             double simulateWarehouse(std::vector<int32_t>&);
 
             // Store results
-            void saveBestChromosome(std::vector<int32_t>&);
             void updateAllocations(std::vector<int32_t>&);
+            void saveBestChromosome(std::vector<int32_t>&);
 
         private:
             std::mt19937_64 rand;
