@@ -10,23 +10,26 @@
         probMutationInd .................. Probability of individual mutation
         probMutationGene ................. Probability of gene mutation
         saveWeightsAfter ................. Save weights after N generations
-        replaceWithRand .................. Part of population to be replaced with new random individuals
+        maxTrialValue .................... After exceeding this number, individual is replaced with new random one
         mutationFunctor .................. Selected mutation operator
         selectionFunctor ................. Selected selection operator
         crossoverFunctor ................. Selected crossover operator
+        initialWeights ................... Allocations to start evolution from
   -->
 
-<configuration numberDimensions="15"
+<configuration initialWeights="data/locations.csv"
+               numberDimensions="15"
                problemMin="0"
                problemMax="60"
                populationSize="2000"
-               selectionSize="200"
+               selectionSize="1000"
                eliteSize="10"
                maxGenerations="1000"
                probCrossover="0.6"
                probMutationInd="0.4"
                probMutationGene="0.2"
                saveWeightsAfter="1"
+               maxTrialValue="10"
                mutationFunctor="mutateInverse"
                selectionFunctor="selectRoulette"
                crossoverFunctor="crossoverOrdered" />

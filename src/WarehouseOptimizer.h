@@ -24,6 +24,7 @@ namespace whm
     struct Solution_t
     {
         double fitness{ 0.0 };        //< How good chromosome is
+        int32_t trialValue{ 0 };      //< Counter of iterations fitness did not improve
         std::vector<int32_t> genes;   //< Chromosome
     };
 
@@ -50,6 +51,7 @@ namespace whm
             // Initialize
             void initIndividualRand(std::vector<int32_t>&);
             void initPopulationRand(std::vector<Solution_t>&);
+            void initPopulationWeights(std::vector<Solution_t>&);
 
             // Selection
             Solution_t selectRank(const std::vector<Solution_t>&);
@@ -84,7 +86,7 @@ namespace whm
             std::map<int32_t, std::string> skuEnc;
             std::map<int32_t, WarehouseLocationSlot_t<std::string>*> slotEnc;
 
-            MutationFunctor_t  mutationFunctor;
+            MutationFunctor_t mutationFunctor;
             SelectionFunctor_t selectionFunctor;
             CrossoverFunctor_t crossoverFunctor;
     };

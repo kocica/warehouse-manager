@@ -21,11 +21,13 @@ namespace whm
             ~ConfigParser_t() = default;
 
             template<typename U>
-            U getAs(const std::string&);
+            U getAs(const std::string&) const;
+
+            bool isSet(const std::string&) const;
 
         protected:
             void dump() const;
-            std::string findByName(const std::string&);
+            std::string findByName(const std::string&) const;
 
         private:
             std::map<std::string, std::string> parsedValues;

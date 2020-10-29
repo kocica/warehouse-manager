@@ -43,7 +43,7 @@ namespace whm
         delete doc;
     }
 
-    std::string ConfigParser_t::findByName(const std::string& name)
+    std::string ConfigParser_t::findByName(const std::string& name) const
     {
         auto it = parsedValues.find(name);
 
@@ -56,26 +56,31 @@ namespace whm
         return it->second;
     }
 
+    bool ConfigParser_t::isSet(const std::string& name) const
+    {
+        return parsedValues.find(name) != parsedValues.end() && findByName(name) != std::string();
+    }
+
     template<>
-    int32_t ConfigParser_t::getAs(const std::string& name)
+    int32_t ConfigParser_t::getAs(const std::string& name) const
     {
         return std::stoi(findByName(name));
     }
 
     template<>
-    double ConfigParser_t::getAs(const std::string& name)
+    double ConfigParser_t::getAs(const std::string& name) const
     {
         return std::stod(findByName(name));
     }
 
     template<>
-    std::string ConfigParser_t::getAs(const std::string& name)
+    std::string ConfigParser_t::getAs(const std::string& name) const
     {
         return findByName(name);
     }
 
     template<>
-    bool ConfigParser_t::getAs(const std::string& name)
+    bool ConfigParser_t::getAs(const std::string& name) const
     {
         return utils::toLower(findByName(name)) == "true";
     }

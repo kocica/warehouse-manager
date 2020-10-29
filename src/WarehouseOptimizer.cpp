@@ -39,6 +39,7 @@ namespace
     auto eliteSize              = [](){ return cfg.getAs<int32_t>("eliteSize");        };    ///< Size of elite part of population (unchanged)
     auto maxGenerations         = [](){ return cfg.getAs<int32_t>("maxGenerations");   };    ///< Maximal number of generations
     auto saveWeightsAfter       = [](){ return cfg.getAs<int32_t>("saveWeightsAfter"); };    ///< Save weights after N generations
+    auto maxTrialValue          = [](){ return cfg.getAs<int32_t>("maxTrialValue");    };    ///< New rand offspring after N iterations (same fitness)
     auto probCrossover          = [](){ return cfg.getAs<double>("probCrossover");     };    ///< Probability of crossover
     auto probMutationInd        = [](){ return cfg.getAs<double>("probMutationInd");   };    ///< Probability of individual mutation
     auto probMutationGene       = [](){ return cfg.getAs<double>("probMutationGene");  };    ///< Probability of gene mutation
@@ -156,6 +157,29 @@ namespace whm
         }
     }
 
+    void WarehouseOptimizer_t::initPopulationWeights(std::vector<Solution_t>& pop)
+    {
+        std::vector<std::string> articles;
+        whm::WarehouseLayout_t::getWhLayout().importArticles(args.articlesPath, articles);
+        whm::WarehouseLayout_t::getWhLayout().importLocationSlots(cfg.getAs<std::string>("initialWeights"));
+
+        for(auto& article : articles)
+        {
+            for(auto& slot : slotEnc)
+            {
+                if(article == slot.second->getArticle())
+                {
+                    pop[0].genes.push_back(slot.first);
+                }
+            }
+        }
+
+        for(int32_t p = 1; p < static_cast<int32_t>(pop.size()); ++p)
+        {
+            initIndividualRand(pop[p].genes);
+        }
+    }
+
     // Don't select the best fitness to keep the diversity
     Solution_t WarehouseOptimizer_t::selectTrunc(const std::vector<Solution_t>& pop)
     {
@@ -164,12 +188,23 @@ namespace whm
 
     Solution_t WarehouseOptimizer_t::selectTournam(const std::vector<Solution_t>& pop)
     {
-        // TODO: Select N chromosomes instead of two
+        std::vector<Solution_t> selectedInds;
 
-        int32_t a = randomFromInterval(0, pop.size());
-        int32_t b = randomFromInterval(0, pop.size());
+        for(int32_t i = 0; i < 5; ++i)
+        {
+            int32_t r = randomFromInterval(problemMin(), problemMax());
 
-        return pop[a].fitness < pop[b].fitness ? pop[a] : pop[b];
+            selectedInds.push_back(pop.at(r));
+        }
+
+        std::sort(selectedInds.begin(), selectedInds.end(),
+                  [](Solution_t& lhs, Solution_t& rhs)
+                  -> bool
+                  {
+                      return lhs.fitness < rhs.fitness;
+                  });
+
+        return selectedInds.at(0);
     }
 
     Solution_t WarehouseOptimizer_t::selectRoulette(const std::vector<Solution_t>& pop)
@@ -430,7 +465,14 @@ namespace whm
     {
         std::vector<Solution_t> population(populationSize());
 
-        initPopulationRand(population);
+        if(cfg.isSet("initialWeights"))
+        {
+            initPopulationWeights(population);
+        }
+        else
+        {
+            initPopulationRand(population);
+        }
 
         for(int32_t p = 0; p < populationSize(); ++p)
         {
@@ -487,7 +529,11 @@ namespace whm
 
             for(int32_t p = 0; p < populationSize(); ++p)
             {
-                population[p].fitness = simulateWarehouse(population[p].genes);
+                double newFitness = simulateWarehouse(population[p].genes);
+
+                population[p].trialValue = newFitness <= population[p].fitness ? population[p].trialValue + 1 : 0;
+
+                population[p].fitness = newFitness;
             }
 
             std::sort(population.begin(), population.end(),
@@ -502,9 +548,20 @@ namespace whm
             std::cout << std::endl;
 
             // Each N iterations save weights
-            if(gen % saveWeightsAfter())
+            if((gen % saveWeightsAfter()) == 0)
             {
                 saveBestChromosome(population.at(0).genes);
+            }
+
+            // Discard chromosomes with trialValue > N and generate brand new offsprings (ignore elite part)
+            for(int32_t p = eliteSize(); p < populationSize(); ++p)
+            {
+                if(population[p].trialValue > maxTrialValue())
+                {
+                    population[p].fitness = 0;
+                    population[p].trialValue = 0;
+                    initIndividualRand(population[p].genes);
+                }
             }
         }
 
