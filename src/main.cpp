@@ -19,7 +19,7 @@
 #else
 #  include "WarehouseSimulator.h"
 #  ifdef WHM_OPT
-#    include "WarehouseOptimizer.h"
+#    include "WarehouseOptimizerGA.h"
 #  endif
 #endif
 
@@ -61,7 +61,11 @@ int main(int argc, char *argv[])
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
 #    ifdef WHM_OPT
-            whm::WarehouseOptimizer_t{args}.evolve();
+            whm::WarehouseOptimizerBase_t* optimizer = new whm::WarehouseOptimizerGA_t{args};
+
+            optimizer->optimize();
+
+            delete optimizer;
 #    else
             whm::WarehouseSimulator_t::getWhSimulator().setArguments(args);
             whm::WarehouseSimulator_t::getWhSimulator().runSimulation();
