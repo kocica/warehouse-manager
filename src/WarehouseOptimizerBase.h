@@ -16,6 +16,7 @@
 #include <random>
 
 #include "Utils.h"
+#include "ConfigParser.h"
 #include "WarehouseLocationSlot.h"
 
 namespace whm

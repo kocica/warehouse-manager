@@ -1,4 +1,6 @@
 <!--
+        ===================================== General params =====================================
+
         numberDimensions ................. Number of dimensions (i.e. number of SKUs)
         problemMin ....................... Slot min number
         problemMax ....................... Slot max number
@@ -6,30 +8,42 @@
         selectionSize .................... Size of selected part of population
         eliteSize ........................ Size of elite part of population (unchanged)
         maxGenerations ................... Maximal number of generations
+        initialWeights ................... Allocations to start evolution from
+        saveWeightsAfter ................. Save weights after N iterations
+        maxTrialValue .................... After exceeding this number, individual is replaced with new random one
+
+        ===================================== Genetic algorithm =====================================
+
         probCrossover .................... Probability of crossover
         probMutationInd .................. Probability of individual mutation
         probMutationGene ................. Probability of gene mutation
-        saveWeightsAfter ................. Save weights after N generations
-        maxTrialValue .................... After exceeding this number, individual is replaced with new random one
         mutationFunctor .................. Selected mutation operator
         selectionFunctor ................. Selected selection operator
         crossoverFunctor ................. Selected crossover operator
-        initialWeights ................... Allocations to start evolution from
+
+        ===================================== Artificial bee colony =================================
+
+        foodSize ......................... Number of food locations
   -->
 
-<configuration initialWeights=""
-               numberDimensions="15"
+<configuration numberDimensions="4"
                problemMin="0"
-               problemMax="60"
-               populationSize="2000"
-               selectionSize="1999"
+               problemMax="8"
+               populationSize="10"
+               selectionSize="9"
                eliteSize="1"
                maxGenerations="1000"
+               initialWeights=""
+               saveWeightsAfter="1"
+               maxTrialValue="0"
+
+
                probCrossover="0.6"
                probMutationInd="0.4"
                probMutationGene="0.2"
-               saveWeightsAfter="1"
-               maxTrialValue="10"
                mutationFunctor="mutateInverse"
                selectionFunctor="selectTournam"
-               crossoverFunctor="crossoverOrdered" />
+               crossoverFunctor="crossoverOrdered"
+
+
+               foodSize="5"/>

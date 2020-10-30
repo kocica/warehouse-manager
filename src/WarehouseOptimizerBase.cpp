@@ -17,7 +17,6 @@
 
 // Local
 #include "Logger.h"
-#include "ConfigParser.h"
 #include "WarehouseItem.h"
 #include "WarehouseLayout.h"
 #include "WarehouseSimulator.h"
