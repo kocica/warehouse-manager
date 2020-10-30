@@ -60,84 +60,132 @@ namespace whm
 
     void WarehouseOptimizerABC_t::updateBee(std::vector<Solution_t>& pop, int32_t p)
     {
-        // Select random variable to change
-        int32_t randVar = randomFromInterval(0, cfg.getAs<int32_t>("numberDimensions"));
-
-        // Find available values
-        std::vector<int32_t> availableVals;
-        for(int32_t i = 0; i < cfg.getAs<int32_t>("problemMax"); ++i)
-        {
-            if(std::find(pop[p].genes.begin(), pop[p].genes.end(), i) == pop[p].genes.end())
-            {
-                availableVals.push_back(i);
-            }
-        }
-
         // Select random partner (/= actual one)
-        int32_t randPar{ 0 };
+        int32_t partner_j{ 0 };
+        int32_t partner_k{ 0 };
 
         do
         {
-            randPar = randomFromInterval(0, cfg.getAs<int32_t>("foodSize"));
+            partner_j = randomFromInterval(0, cfg.getAs<int32_t>("foodSize"));
+            partner_k = randomFromInterval(0, cfg.getAs<int32_t>("foodSize"));
         }
-        while(p == randPar);
-        //while(pop[p].genes[randVar] == pop[randPar].genes[randVar]);
+        while(p == partner_j || p == partner_k || partner_j == partner_k);
 
-        // TODO: Create new food location (check how its solved TSP!)
-        int32_t randLoc{ 0 };
+        // Create new food location
+        // https://www.sciencedirect.com/science/article/pii/S2210650216304588
 
-        std::vector<int32_t> availableValsRange;
+        auto x_i = pop[p].genes;
+        auto x_j = pop[partner_j].genes;
+        auto x_k = pop[partner_k].genes;
+        std::vector<int32_t> y_i;
+        std::vector<SwapOperator_t> sos;
 
-        if(pop[p].genes[randVar] < pop[randPar].genes[randVar])
+        int32_t randTechnique{ 0 };
+
+        if(bestSolution.genes.empty())
         {
-            for(int32_t i = pop[p].genes[randVar]; i < pop[randPar].genes[randVar]; ++i)
-            {
-                if(std::find(availableVals.begin(), availableVals.end(), i) != availableVals.end())
-                {
-                    availableValsRange.push_back(i);
-                }
-            }
+            randTechnique = randomFromInterval(0, 2);
         }
         else
         {
-            for(int32_t i = pop[randPar].genes[randVar]; i < pop[p].genes[randVar]; ++i)
-            {
-                if(std::find(availableVals.begin(), availableVals.end(), i) != availableVals.end())
-                {
-                    availableValsRange.push_back(i);
-                }
-            }
+            randTechnique = randomFromInterval(0, 7);
         }
 
-        if(!availableValsRange.empty())
+        switch(randTechnique)
         {
-            int32_t randPos = randomFromInterval(0, availableValsRange.size());
-            randLoc = availableValsRange[randPos];
+            case 0:
+                sos = getSwap(x_i, x_k);
+                y_i = applySwap(x_j, sos);
+                break;
+            case 1:
+                sos = getSwap(x_j, x_k);
+                y_i = applySwap(x_i, sos);
+                break;
+            case 2:
+                sos = getSwap(x_i, x_k);
+                y_i = applySwap(bestSolution.genes, sos);
+                break;
+            case 3:
+                sos = getSwap(x_i, bestSolution.genes);
+                y_i = applySwap(x_i, sos);
+                break;
+            case 4:
+                sos = getSwap(bestSolution.genes, x_k);
+                y_i = applySwap(bestSolution.genes, sos);
+                break;
+            case 5:
+                sos = getSwap(bestSolution.genes, worstSolution.genes);
+                y_i = applySwap(x_i, sos);
+                break;
+            case 6:
+                sos = getSwap(bestSolution.genes, x_i);
+                y_i = applySwap(x_j, sos);
+                break;
         }
-        else
-        {
-            int32_t randPos = randomFromInterval(0, availableVals.size());
-            randLoc = availableVals[randPos];
-        }
-
-        // Create new allocation
-        auto sol = pop[p].genes;
-        sol[randVar] = randLoc;
 
         // Calculate fitness for new location
-        double fitness = simulateWarehouse(sol);
+        double fitness = simulateWarehouse(y_i);
 
         // In case its better solution, update food
         if(fitness < pop[p].fitness)
         {
             pop[p].fitness = fitness;
             pop[p].trialValue = 0;
-            pop[p].genes = sol;
+            pop[p].genes = y_i;
         }
         else
         {
             pop[p].trialValue++;
         }
+    }
+
+    std::vector<int32_t> WarehouseOptimizerABC_t::applySwap(std::vector<int32_t>& sol, std::vector<SwapOperator_t>& sos)
+    {
+        std::vector<int32_t> y_i = sol;
+
+        // for(auto it = sos.rbegin(); it != sos.rend(); ++it)
+        for(auto it = sos.begin(); it != sos.end(); ++it)
+        {
+            iter_swap(y_i.begin() + it->first, y_i.begin() + it->second);
+        }
+
+        return y_i;
+    }
+
+    std::vector<SwapOperator_t> WarehouseOptimizerABC_t::getSwap(std::vector<int32_t>& lhs, std::vector<int32_t>& rhs)
+    {
+        std::vector<int32_t> lhsCopy = lhs;
+        std::vector<int32_t> rhsCopy = rhs;
+        std::vector<SwapOperator_t> swapOperators;
+
+        for(int32_t i = cfg.getAs<int32_t>("problemMin"); i < cfg.getAs<int32_t>("problemMax"); ++i)
+        {
+            if(lhsCopy == rhsCopy)
+            {
+                return swapOperators;
+            }
+
+            auto lhsIt = std::find(lhsCopy.begin(), lhsCopy.end(), i);
+            auto rhsIt = std::find(rhsCopy.begin(), rhsCopy.end(), i);
+
+            if(lhsIt != lhsCopy.end() &&
+               rhsIt != rhsCopy.end())
+            {
+                auto lhsPos = lhsIt - lhsCopy.begin();
+                auto rhsPos = rhsIt - rhsCopy.begin();
+
+                if(lhsPos == rhsPos)
+                {
+                    continue;
+                }
+
+                iter_swap(rhsCopy.begin() + lhsPos, rhsCopy.begin() + rhsPos);
+
+                swapOperators.emplace_back(std::make_pair(lhsPos, rhsPos));
+            }
+        }
+
+        return swapOperators;
     }
 
     bool WarehouseOptimizerABC_t::isBestSolution(const Solution_t& solution)
@@ -164,12 +212,17 @@ namespace whm
     void WarehouseOptimizerABC_t::memorizeBestSolution(std::vector<Solution_t>& pop)
     {
         bestSolution = pop[0];
+        worstSolution = pop[0];
 
         for(int32_t p = 1; p < cfg.getAs<int32_t>("foodSize"); ++p)
         {
             if(pop[p].fitness < bestSolution.fitness)
             {
                 bestSolution = pop[p];
+            }
+            else if(pop[p].fitness > worstSolution.fitness)
+            {
+                worstSolution = pop[p];
             }
         }
 
@@ -210,6 +263,12 @@ namespace whm
             {
                 saveBestSolution(bestSolution.genes);
             }
+
+            for(int32_t p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
+            {
+                std::cout << population[p].fitness << " ";
+            }
+            std::cout << std::endl;
         }
 
         saveBestSolution(bestSolution.genes);

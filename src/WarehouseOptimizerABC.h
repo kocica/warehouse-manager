@@ -11,10 +11,14 @@
 
 #pragma once
 
+#include <utility>
+
 #include "WarehouseOptimizerBase.h"
 
 namespace whm
 {
+    using SwapOperator_t = std::pair<int32_t, int32_t>;
+
     class WarehouseOptimizerABC_t : public WarehouseOptimizerBase_t
     {
         public:
@@ -36,8 +40,12 @@ namespace whm
             void updateBee(std::vector<Solution_t>&, int32_t);
             void memorizeBestSolution(std::vector<Solution_t>&);
 
+            std::vector<SwapOperator_t> getSwap(std::vector<int32_t>&, std::vector<int32_t>&);
+            std::vector<int32_t> applySwap(std::vector<int32_t>&, std::vector<SwapOperator_t>&);
+
         private:
             Solution_t bestSolution;
+            Solution_t worstSolution;
     };
 }
 
