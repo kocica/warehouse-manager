@@ -4,16 +4,16 @@
         numberDimensions ................. Number of dimensions (i.e. number of SKUs)
         problemMin ....................... Slot min number
         problemMax ....................... Slot max number
-        populationSize ................... Population size
-        selectionSize .................... Size of selected part of population
-        eliteSize ........................ Size of elite part of population (unchanged)
-        maxGenerations ................... Maximal number of generations
+        maxIterations .................... Maximal number of generations
         initialWeights ................... Allocations to start evolution from
-        saveWeightsAfter ................. Save weights after N iterations
-        maxTrialValue .................... After exceeding this number, individual is replaced with new random one
+        saveWeightsPeriod ................ Save weights after N iterations
+        maxTrialValue .................... When exceeded, individual is replaced with random one
 
         ===================================== Genetic algorithm =====================================
 
+        populationSize ................... Population size
+        selectionSize .................... Size of selected part of population
+        eliteSize ........................ Size of elite part of population (unchanged)
         probCrossover .................... Probability of crossover
         probMutationInd .................. Probability of individual mutation
         probMutationGene ................. Probability of gene mutation
@@ -23,21 +23,22 @@
 
         ===================================== Artificial bee colony =================================
 
-        foodSize ......................... Number of food locations
+        foodSize ......................... Number of food locations for honey bee's
+
+        =============================================================================================
   -->
 
 <configuration numberDimensions="4"
                problemMin="0"
                problemMax="8"
+               maxIterations="1000"
+               initialWeights=""
+               saveWeightsPeriod="1"
+               maxTrialValue="10"
+
                populationSize="10"
                selectionSize="9"
                eliteSize="1"
-               maxGenerations="1000"
-               initialWeights=""
-               saveWeightsAfter="1"
-               maxTrialValue="0"
-
-
                probCrossover="0.6"
                probMutationInd="0.4"
                probMutationGene="0.2"
@@ -45,5 +46,4 @@
                selectionFunctor="selectTournam"
                crossoverFunctor="crossoverOrdered"
 
-
-               foodSize="5"/>
+               foodSize="100"/>

@@ -80,7 +80,8 @@ namespace whm
         {
             randPar = randomFromInterval(0, cfg.getAs<int32_t>("foodSize"));
         }
-        while(pop[p].genes[randVar] == pop[randPar].genes[randVar]);
+        while(p == randPar);
+        //while(pop[p].genes[randVar] == pop[randPar].genes[randVar]);
 
         // TODO: Create new food location (check how its solved TSP!)
         int32_t randLoc{ 0 };
@@ -139,11 +140,16 @@ namespace whm
         }
     }
 
+    bool WarehouseOptimizerABC_t::isBestSolution(const Solution_t& solution)
+    {
+        return solution == bestSolution;
+    }
+
     void WarehouseOptimizerABC_t::scoutBeePhase(std::vector<Solution_t>& pop)
     {
         for(int32_t p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
         {
-            if(pop[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
+            if(!isBestSolution(pop[p]) && pop[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
             {
                 pop[p].trialValue = 0;
                 pop[p].genes = std::vector<int32_t>();
@@ -189,7 +195,7 @@ namespace whm
             population[p].fitness = simulateWarehouse(population[p].genes);
         }
 
-        for(int32_t i = 0; i < cfg.getAs<int32_t>("maxGenerations"); ++i)
+        for(int32_t i = 0; i < cfg.getAs<int32_t>("maxIterations"); ++i)
         {
             std::cout << "Iteration " << i << std::endl;
 
@@ -199,7 +205,14 @@ namespace whm
             memorizeBestSolution(population);
 
             scoutBeePhase(population);
+
+            if((i % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)
+            {
+                saveBestSolution(bestSolution.genes);
+            }
         }
+
+        saveBestSolution(bestSolution.genes);
     }
 }
 

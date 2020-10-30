@@ -16,18 +16,12 @@
 #include <random>
 
 #include "Utils.h"
+#include "Solution.h"
 #include "ConfigParser.h"
 #include "WarehouseLocationSlot.h"
 
 namespace whm
 {
-    struct Solution_t
-    {
-        double fitness{ 0.0 };        //< How good solution is
-        int32_t trialValue{ 0 };      //< Counter of iterations fitness did not improve
-        std::vector<int32_t> genes;   //< Solution
-    };
-
     class WarehouseOptimizerBase_t
     {
         public:

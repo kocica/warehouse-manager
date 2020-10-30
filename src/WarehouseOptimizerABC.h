@@ -32,6 +32,7 @@ namespace whm
             void onlookerBeePhase(std::vector<Solution_t>&);
 
         protected:
+            bool isBestSolution(const Solution_t&);
             void updateBee(std::vector<Solution_t>&, int32_t);
             void memorizeBestSolution(std::vector<Solution_t>&);
 

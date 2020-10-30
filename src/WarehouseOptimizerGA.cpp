@@ -368,7 +368,7 @@ namespace whm
                       return lhs.fitness < rhs.fitness;
                   });
 
-        for(int32_t gen = 0; gen < cfg.getAs<int32_t>("maxGenerations"); ++gen)
+        for(int32_t gen = 0; gen < cfg.getAs<int32_t>("maxIterations"); ++gen)
         {
             std::vector<Solution_t> newPopulation;
 
@@ -429,7 +429,7 @@ namespace whm
             std::cout << std::endl;
 
             // Each N iterations save weights
-            if((gen % cfg.getAs<int32_t>("saveWeightsAfter")) == 0)
+            if((gen % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)
             {
                 saveBestSolution(population.at(0).genes);
             }
