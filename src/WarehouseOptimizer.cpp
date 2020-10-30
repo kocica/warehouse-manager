@@ -188,12 +188,19 @@ namespace whm
 
     Solution_t WarehouseOptimizer_t::selectTournam(const std::vector<Solution_t>& pop)
     {
+        int32_t r{ 0 };
+        std::vector<int32_t> generated;
         std::vector<Solution_t> selectedInds;
 
         for(int32_t i = 0; i < 5; ++i)
         {
-            int32_t r = randomFromInterval(problemMin(), problemMax());
+            do
+            {
+                r = randomFromInterval(problemMin(), problemMax());
+            }
+            while(std::find(generated.begin(), generated.end(), r) != generated.end());
 
+            generated.push_back(r);
             selectedInds.push_back(pop.at(r));
         }
 
@@ -441,6 +448,8 @@ namespace whm
             b = randomFromInterval(0, numberDimensions());
         }
         while(a == b);
+
+        if(a > b) std::swap(a, b);
 
         std::rotate(ind.begin() + a, ind.begin() + b, ind.begin() + b + 1);
     }

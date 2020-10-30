@@ -17,13 +17,13 @@
         initialWeights ................... Allocations to start evolution from
   -->
 
-<configuration initialWeights="data/locations.csv"
+<configuration initialWeights=""
                numberDimensions="15"
                problemMin="0"
                problemMax="60"
                populationSize="2000"
-               selectionSize="1000"
-               eliteSize="10"
+               selectionSize="1999"
+               eliteSize="1"
                maxGenerations="1000"
                probCrossover="0.6"
                probMutationInd="0.4"
@@ -31,5 +31,5 @@
                saveWeightsAfter="1"
                maxTrialValue="10"
                mutationFunctor="mutateInverse"
-               selectionFunctor="selectRoulette"
+               selectionFunctor="selectTournam"
                crossoverFunctor="crossoverOrdered" />
