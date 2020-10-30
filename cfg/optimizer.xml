@@ -24,6 +24,7 @@
         ===================================== Artificial bee colony =================================
 
         foodSize ......................... Number of food locations for honey bee's
+        keepBest ......................... Don't drop the best solution found
 
         =============================================================================================
   -->
@@ -46,4 +47,5 @@
                selectionFunctor="selectTournam"
                crossoverFunctor="crossoverOrdered"
 
-               foodSize="100"/>
+               foodSize="100"
+               keepBest="true" />

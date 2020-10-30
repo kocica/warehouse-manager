@@ -84,11 +84,12 @@ namespace whm
 
         if(bestSolution.genes.empty())
         {
+            // First iteration
             randTechnique = randomFromInterval(0, 2);
         }
         else
         {
-            randTechnique = randomFromInterval(0, 7);
+            randTechnique = randomFromInterval(0, 8);
         }
 
         switch(randTechnique)
@@ -118,6 +119,14 @@ namespace whm
                 y_i = applySwap(x_i, sos);
                 break;
             case 6:
+            {
+                sos = getSwap(x_k, x_i);
+                auto sos2 = getSwap(bestSolution.genes, x_k);
+                std::move(sos2.begin(), sos2.end(), std::back_inserter(sos));
+                y_i = applySwap(x_i, sos);
+                break;
+            }
+            case 7:
                 sos = getSwap(bestSolution.genes, x_i);
                 y_i = applySwap(x_j, sos);
                 break;
@@ -190,7 +199,7 @@ namespace whm
 
     bool WarehouseOptimizerABC_t::isBestSolution(const Solution_t& solution)
     {
-        return solution == bestSolution;
+        return cfg.getAs<bool>("keepBest") && solution == bestSolution;
     }
 
     void WarehouseOptimizerABC_t::scoutBeePhase(std::vector<Solution_t>& pop)
@@ -263,12 +272,6 @@ namespace whm
             {
                 saveBestSolution(bestSolution.genes);
             }
-
-            for(int32_t p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
-            {
-                std::cout << population[p].fitness << " ";
-            }
-            std::cout << std::endl;
         }
 
         saveBestSolution(bestSolution.genes);
