@@ -569,6 +569,8 @@ namespace whm
                 {
                     population[p].fitness = 0;
                     population[p].trialValue = 0;
+                    population[p].genes = std::vector<int32_t>();
+
                     initIndividualRand(population[p].genes);
                 }
             }
