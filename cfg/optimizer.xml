@@ -26,6 +26,13 @@
         foodSize ......................... Number of food locations for honey bee's
         keepBest ......................... Don't drop the best solution found
 
+        ===================================== Particle swarm optimization ===========================
+
+        numberParticles .................. Number of particles
+        c1 ............................... Correction factor 1
+        c2 ............................... Correction factor 2
+        w ................................ Inertia weight
+
         =============================================================================================
   -->
 
@@ -48,4 +55,10 @@
                crossoverFunctor="crossoverOrdered"
 
                foodSize="100"
-               keepBest="true" />
+               keepBest="true"
+
+               numberParticles="100"
+               c1="1.4"
+               c2="1.4"
+               w="0.7"
+/>
