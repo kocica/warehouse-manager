@@ -235,6 +235,7 @@ namespace whm
             }
         }
 
+        histFitness.push_back(bestSolution.fitness);
         std::cout << "Best Fitness: " << bestSolution.fitness << std::endl;
     }
 
@@ -270,10 +271,12 @@ namespace whm
 
             if((i % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)
             {
+                saveFitnessPlot();
                 saveBestSolution(bestSolution.genes);
             }
         }
 
+        saveFitnessPlot();
         saveBestSolution(bestSolution.genes);
     }
 }

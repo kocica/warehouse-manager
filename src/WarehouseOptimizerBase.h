@@ -47,6 +47,7 @@ namespace whm
             double simulateWarehouse(std::vector<int32_t>&);
 
             // Store results
+            void saveFitnessPlot();
             void saveBestSolution(std::vector<int32_t>&);
             void updateAllocations(std::vector<int32_t>&);
 
@@ -58,6 +59,9 @@ namespace whm
             // Generic sku/slot encoding
             std::map<int32_t, std::string> skuEnc;
             std::map<int32_t, WarehouseLocationSlot_t<std::string>*> slotEnc;
+
+            // Fitness history for plot
+            std::vector<double> histFitness;
     };
 }
 

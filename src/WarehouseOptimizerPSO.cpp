@@ -38,12 +38,12 @@ namespace whm
             globalBest = actualBest;
         }
 
+        histFitness.push_back(globalBest.fitness);
         std::cout << "Best Fitness: " << globalBest.fitness << std::endl;
     }
 
     double WarehouseOptimizerPSO_t::getVelocity(Solution_t& sol, double weighing, double random)
     {
-        //     (1 - (1 / sol.fitness)) * random * weighing;
         return (1 / sol.fitness) * random * weighing;
     }
 
@@ -89,7 +89,26 @@ namespace whm
             }
 
             pop[p].genes = mergedParts;
-            pop[p].fitness = simulateWarehouse(pop[p].genes);
+            double f = simulateWarehouse(pop[p].genes);
+
+            if(f <= pop[p].fitness)
+            {
+                pop[p].trialValue++;
+
+                if(pop[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
+                {
+                    pop[p].trialValue = 0;
+                    pop[p].genes = std::vector<int32_t>();
+
+                    initIndividualRand(pop[p].genes);
+
+                    pop[p].fitness = simulateWarehouse(pop[p].genes);
+                }
+            }
+            else
+            {
+                pop[p].fitness = f;
+            }
 
             if(pop[p].fitness < personalBest[p].fitness)
             {
@@ -178,11 +197,6 @@ namespace whm
         {
             std::cout << "Iteration " << i << std::endl;
 
-            for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
-            {
-                std::cout << population[p].fitness << " ";
-            }
-            std::cout << std::endl;
 
             updateVelocities(population);
 
@@ -190,10 +204,12 @@ namespace whm
 
             if((i % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)
             {
+                saveFitnessPlot();
                 saveBestSolution(globalBest.genes);
             }
         }
 
+        saveFitnessPlot();
         saveBestSolution(globalBest.genes);
     }
 }

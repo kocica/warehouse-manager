@@ -22,8 +22,9 @@ CFLAGS     = -std=c++17 -pedantic -Wall -Wextra -O3
 
 PROFILE    = #-pg
 
-LDFLAGS    = -lsimlib -lm
+LDFLAGS    = -lsimlib -lm -lpython2.7
 LDLIBS     = 
+INCLUDE    = -I/usr/include/python2.7
 
 SRC        = src
 CFG        = cfg
@@ -65,7 +66,7 @@ $(BIN_NAME_GUI): $(HEADERS) $(SOURCES) $(OBJS) $(GUI_SOURCES) $(GUI_HEADERS)
 	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	-@cd $(GUI) && make clean && rm -f moc_* .qmake.stash

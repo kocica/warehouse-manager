@@ -425,12 +425,14 @@ namespace whm
                     });
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "==== Generation %2d ====", gen);
-            std::for_each(population.begin(), population.end(), [](Solution_t& s){ std::cout << s.fitness << " "; });
-            std::cout << std::endl;
+            std::cout << "Best fitness: " << population.at(0).fitness << std::endl;
+
+            histFitness.push_back(population.at(0).fitness);
 
             // Each N iterations save weights
             if((gen % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)
             {
+                saveFitnessPlot();
                 saveBestSolution(population.at(0).genes);
             }
 
@@ -448,7 +450,7 @@ namespace whm
             }
         }
 
-        // Save the evolution best Solution_t
+        saveFitnessPlot();
         saveBestSolution(population.at(0).genes);
     }
 }

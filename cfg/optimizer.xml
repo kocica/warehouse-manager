@@ -6,8 +6,9 @@
         problemMax ....................... Slot max number
         maxIterations .................... Maximal number of generations
         initialWeights ................... Allocations to start evolution from
-        saveWeightsPeriod ................ Save weights after N iterations
+        saveWeightsPeriod ................ Save weights and plot after N iterations
         maxTrialValue .................... When exceeded, individual is replaced with random one
+        plotPath ......................... Where fitness plot should be saved
 
         ===================================== Genetic algorithm =====================================
 
@@ -43,6 +44,7 @@
                initialWeights=""
                saveWeightsPeriod="1"
                maxTrialValue="10"
+               plotPath="./data/plot.png"
 
                populationSize="10"
                selectionSize="9"

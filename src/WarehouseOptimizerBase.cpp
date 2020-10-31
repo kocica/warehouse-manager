@@ -17,6 +17,7 @@
 
 // Local
 #include "Logger.h"
+#include "matplotlibcpp.h"
 #include "WarehouseItem.h"
 #include "WarehouseLayout.h"
 #include "WarehouseSimulator.h"
@@ -156,6 +157,13 @@ namespace whm
         // Run simulation and return elapsed time
         whm::WarehouseSimulator_t::getWhSimulator().setArguments(args);
         return whm::WarehouseSimulator_t::getWhSimulator().runSimulation();
+    }
+
+    void WarehouseOptimizerBase_t::saveFitnessPlot()
+    {
+        // Plot fitness convergence
+        matplotlibcpp::plot(histFitness);
+        matplotlibcpp::save(cfg.getAs<std::string>("plotPath"));
     }
 
     void WarehouseOptimizerBase_t::saveBestSolution(std::vector<int32_t>& chromosome)
