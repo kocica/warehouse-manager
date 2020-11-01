@@ -44,7 +44,7 @@
 <configuration numberDimensions="4"
                problemMin="0"
                problemMax="8"
-               maxIterations="1"
+               maxIterations="100"
                initialWeights=""
                saveWeightsPeriod="1"
                maxTrialValue="10"
@@ -68,7 +68,7 @@
                c2="1.4"
                w="0.7"
 
-               populationSizeDE="5"
+               populationSizeDE="1000"
                scalingFactor="0.6"
-               probCrossoverDE="0.7"
+               probCrossoverDE="0.9"
 />

@@ -39,11 +39,12 @@ namespace whm
             ProbGenes_t mutate(const std::vector<Solution_t>&, int32_t);
 
             // Select
-            int32_t rand(const std::vector<Solution_t>&, int32_t);
-            int32_t best(const std::vector<Solution_t>&, int32_t);
+            std::vector<int32_t> rand(const std::vector<Solution_t>&, int32_t);
+            std::vector<int32_t> best(const std::vector<Solution_t>&, int32_t);
 
             // Crossover
             ProbGenes_t crossover(const ProbGenes_t&, const ProbGenes_t&, int32_t);
+            std::vector<int32_t> crossoverOrdered(const std::vector<int32_t>&, const std::vector<int32_t>&);
 
             // Utils
             ProbGenes_t getRemainingSet(const ProbGenes_t&, double);
