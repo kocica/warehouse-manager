@@ -20,6 +20,7 @@
 #  include "WarehouseSimulator.h"
 #  ifdef WHM_OPT
 #    include "WarehouseOptimizerGA.h"
+#    include "WarehouseOptimizerDE.h"
 #    include "WarehouseOptimizerABC.h"
 #    include "WarehouseOptimizerPSO.h"
 #  endif
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
 #    ifdef WHM_OPT
             // TODO: Decide optimizer using cfg or param
 
-            whm::WarehouseOptimizerBase_t* optimizer = new whm::WarehouseOptimizerPSO_t{args};
+            whm::WarehouseOptimizerBase_t* optimizer = new whm::WarehouseOptimizerDE_t{args};
 
             optimizer->optimize();
 

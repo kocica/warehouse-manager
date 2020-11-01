@@ -34,13 +34,17 @@
         c2 ............................... Correction factor 2
         w ................................ Inertia weight
 
+        ===================================== Differential evolution ================================
+
+
+
         =============================================================================================
   -->
 
 <configuration numberDimensions="4"
                problemMin="0"
                problemMax="8"
-               maxIterations="1000"
+               maxIterations="1"
                initialWeights=""
                saveWeightsPeriod="1"
                maxTrialValue="10"
@@ -63,4 +67,8 @@
                c1="1.4"
                c2="1.4"
                w="0.7"
+
+               populationSizeDE="5"
+               scalingFactor="0.6"
+               probCrossoverDE="0.7"
 />

@@ -102,6 +102,7 @@ namespace whm
 
     void WarehouseOptimizerBase_t::initPopulationRand(std::vector<Solution_t>& pop)
     {
+        // TODO: Do not do a completely random init
         for(int32_t p = 0; p < static_cast<int32_t>(pop.size()); ++p)
         {
             initIndividualRand(pop[p].genes);
