@@ -132,7 +132,7 @@ namespace whm
         }
     }
 
-    void WarehouseOptimizerBase_t::updateAllocations(std::vector<int32_t>& ind)
+    void WarehouseOptimizerBase_t::updateAllocations(const std::vector<int32_t>& ind) const
     {
         // Clear current allocations first
         for(auto& slot : slotEnc)
@@ -160,14 +160,14 @@ namespace whm
         return whm::WarehouseSimulator_t::getWhSimulator().runSimulation();
     }
 
-    void WarehouseOptimizerBase_t::saveFitnessPlot()
+    void WarehouseOptimizerBase_t::saveFitnessPlot() const
     {
         // Plot fitness convergence
         matplotlibcpp::plot(histFitness);
         matplotlibcpp::save(cfg.getAs<std::string>("plotPath"));
     }
 
-    void WarehouseOptimizerBase_t::saveBestSolution(std::vector<int32_t>& chromosome)
+    void WarehouseOptimizerBase_t::saveBestSolution(std::vector<int32_t>& chromosome) const
     {
         // Update article/location allocation
         updateAllocations(chromosome);

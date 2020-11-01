@@ -10,8 +10,15 @@
 #ifdef WHM_OPT
 
 #include <float.h>
+#include <cstdint>
+#include <iostream>
+#include <algorithm>
 
+#include "Logger.h"
+#include "WarehouseItem.h"
+#include "WarehouseLayout.h"
 #include "WarehouseOptimizerDE.h"
+#include "WarehouseLocationRack.h"
 
 namespace whm
 {
@@ -290,6 +297,45 @@ namespace whm
         return genes;
     }
 
+    int32_t WarehouseOptimizerDE_t::lookupOptimalSlot(const std::vector<int32_t>& genes)
+    {
+        std::vector<WarehouseItem_t*> locations;
+
+        updateAllocations(genes);
+
+        for(auto* item : whm::WarehouseLayout_t::getWhLayout().getWhItems())
+        {
+            if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+            {
+                locations.push_back(item);
+            }
+        }
+
+        std::sort(locations.begin(), locations.end(), [](auto* lhs, auto* rhs) -> bool
+                                                      {
+                                                          return lhs->getWhLocationRack()->getOccupationLevel() <
+                                                                 rhs->getWhLocationRack()->getOccupationLevel() ;
+                                                      });
+
+        for(auto const& loc : locations)
+        {
+            auto slot = loc->getWhLocationRack()->getFirstFreeSlot();
+
+            if(slot)
+            {
+                for(auto e : slotEnc)
+                {
+                    if(slot == e.second)
+                    {
+                        return e.first;
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+
     void WarehouseOptimizerDE_t::optimize()
     {
         std::vector<Solution_t> population(cfg.getAs<int32_t>("populationSizeDE"));
@@ -315,19 +361,13 @@ namespace whm
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
             {
                 ProbGenes_t mutant = mutate(population, p);
-                ProbGenes_t remainers = getRemainingSet(mutant, randomFromInterval(0, 1));
+                ProbGenes_t remainers = getRemainingSet(mutant, randomFromInterval(0.5, 1));
 
                 while(static_cast<int32_t>(remainers.size()) < cfg.getAs<int32_t>("numberDimensions"))
                 {
-                    int32_t rand{ 0 };
+                    int32_t slot = lookupOptimalSlot(probGenesToGenes(remainers));
 
-                    do
-                    {
-                        rand = randomFromInterval(cfg.getAs<int32_t>("problemMin"), cfg.getAs<int32_t>("problemMax"));
-                    }
-                    while(std::find_if(remainers.begin(), remainers.end(), [rand](auto v){ return v.first == rand; }) != remainers.end());
-
-                    remainers.push_back(std::make_pair(rand, 1.0));
+                    remainers.push_back(std::make_pair(slot, 1.0));
                 }
 
                 trailVector.push_back(ProbGenes_t(remainers.begin(), remainers.begin() + cfg.getAs<int32_t>("numberDimensions")));
@@ -343,6 +383,20 @@ namespace whm
                     population[p].genes   = x_new;
                     population[p].fitness = fx_new;
                 }
+                else
+                {
+                    population[p].trialValue++;
+
+                    if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
+                    {
+                        population[p].trialValue = 0;
+                        population[p].genes = std::vector<int32_t>();
+
+                        initIndividualRand(population[p].genes);
+
+                        population[p].fitness = simulateWarehouse(population[p].genes);
+                    }
+                }
             }
 
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
@@ -354,6 +408,7 @@ namespace whm
             }
 
             std::cout << "Iteration " << gen << ": " << bestInd.fitness << std::endl;
+            histFitness.push_back(bestInd.fitness);
 
             if((gen % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)
             {

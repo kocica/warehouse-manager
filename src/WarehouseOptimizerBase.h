@@ -47,9 +47,9 @@ namespace whm
             double simulateWarehouse(std::vector<int32_t>&);
 
             // Store results
-            void saveFitnessPlot();
-            void saveBestSolution(std::vector<int32_t>&);
-            void updateAllocations(std::vector<int32_t>&);
+            void saveFitnessPlot() const;
+            void saveBestSolution(std::vector<int32_t>&) const;
+            void updateAllocations(const std::vector<int32_t>&) const;
 
         protected:
             std::mt19937 rand;

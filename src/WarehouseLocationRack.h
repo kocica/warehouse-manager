@@ -45,6 +45,9 @@ namespace whm
             int32_t getSlotCountX() const;
             int32_t getSlotCountY() const;
 
+            int32_t getOccupationLevel() const;
+            LocationSlot_t* getFirstFreeSlot();
+
             void dump() const;
 
         private:

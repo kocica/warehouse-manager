@@ -23,6 +23,8 @@ namespace whm
             WarehouseLocationSlot_t();
             ~WarehouseLocationSlot_t();
 
+            bool isOccupied() const;
+
             T getArticle() const;
             void setArticle(const T&);
 

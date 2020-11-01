@@ -29,6 +29,12 @@ namespace whm
     }
 
     template<typename T>
+    bool WarehouseLocationSlot_t<T>::isOccupied() const
+    {
+        return this->article != std::string();
+    }
+
+    template<typename T>
     T WarehouseLocationSlot_t<T>::getArticle() const
     {
         return this->article;

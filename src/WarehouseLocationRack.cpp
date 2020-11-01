@@ -148,5 +148,41 @@ namespace whm
         return static_cast<int32_t>(slots.size() > 0 ? slots[0].size() : 0);
     }
 
+    template<typename T>
+    int32_t WarehouseLocationRack_t<T>::getOccupationLevel() const
+    {
+        int32_t occLevel{ 0 };
+
+        for (size_t i = 0; i < slots.size(); i++)
+        {
+            for (size_t j = 0; j < slots[i].size(); j++)
+            {
+                if(slots[i][j].isOccupied())
+                {
+                    occLevel++;
+                }
+            }
+        }
+
+        return occLevel;
+    }
+
+    template<typename T>
+    WarehouseLocationSlot_t<T>* WarehouseLocationRack_t<T>::getFirstFreeSlot()
+    {
+        for (size_t i = 0; i < slots.size(); i++)
+        {
+            for (size_t j = 0; j < slots[i].size(); j++)
+            {
+                if(!slots[i][j].isOccupied())
+                {
+                    return &slots[i][j];
+                }
+            }
+        }
+
+        return nullptr;
+    }
+
     template class WarehouseLocationRack_t<std::string>;
 }

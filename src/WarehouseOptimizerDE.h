@@ -38,7 +38,7 @@ namespace whm
             // Mutation
             ProbGenes_t mutate(const std::vector<Solution_t>&, int32_t);
 
-            // Select
+            // Selection
             std::vector<int32_t> rand(const std::vector<Solution_t>&, int32_t);
             std::vector<int32_t> best(const std::vector<Solution_t>&, int32_t);
 
@@ -47,6 +47,7 @@ namespace whm
             std::vector<int32_t> crossoverOrdered(const std::vector<int32_t>&, const std::vector<int32_t>&);
 
             // Utils
+            int32_t lookupOptimalSlot(const std::vector<int32_t>&);
             ProbGenes_t getRemainingSet(const ProbGenes_t&, double);
             ProbGenes_t genesToProbGenes(const std::vector<int32_t>&);
             std::vector<int32_t> probGenesToGenes(const ProbGenes_t&);
