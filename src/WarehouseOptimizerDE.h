@@ -35,10 +35,12 @@ namespace whm
             ProbGenes_t operatorAdd(const ProbGenes_t&, const ProbGenes_t&);
             ProbGenes_t operatorSub(const ProbGenes_t&, const ProbGenes_t&);
 
-            // Selection
-
             // Mutation
             ProbGenes_t mutate(const std::vector<Solution_t>&, int32_t);
+
+            // Select
+            int32_t rand(const std::vector<Solution_t>&, int32_t);
+            int32_t best(const std::vector<Solution_t>&, int32_t);
 
             // Crossover
             ProbGenes_t crossover(const ProbGenes_t&, const ProbGenes_t&, int32_t);
