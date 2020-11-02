@@ -68,7 +68,7 @@ namespace whm
         {
             do
             {
-                r = randomFromInterval(cfg.getAs<int32_t>("problemMin"), cfg.getAs<int32_t>("problemMax"));
+                r = randomFromInterval(0, cfg.getAs<int32_t>("populationSize"));
             }
             while(std::find(generated.begin(), generated.end(), r) != generated.end());
 

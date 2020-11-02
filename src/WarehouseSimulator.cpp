@@ -12,8 +12,8 @@
 // Std
 #include <chrono>
 #include <thread>
+#include <limits>
 #include <utility>
-#include <float.h>
 #include <iostream>
 #include <algorithm>
 
@@ -144,12 +144,12 @@ namespace whm
 
     void WarehouseSimulator_t::orderFinished(double duration, double durationNonSim, int32_t distance)
     {
-        static size_t  finished     = 0;
-        static double  minDuration  = DBL_MAX;
-        static double  maxDuration  = DBL_MIN;
+        static double  minDuration  = std::numeric_limits<double>::max();
+        static double  maxDuration  = std::numeric_limits<double>::min();
         static double  sumDuration  = 0.0;
         static double  sumDurNonSim = 0.0;
         static int32_t sumDistance  = 0;
+        static size_t  finished     = 0;
 
         ++finished;
         minDuration  = duration < minDuration ? duration : minDuration;
@@ -186,8 +186,8 @@ namespace whm
 
             // Reset
             finished     = 0;
-            minDuration  = DBL_MAX;
-            maxDuration  = DBL_MIN;
+            minDuration  = std::numeric_limits<double>::max();
+            maxDuration  = std::numeric_limits<double>::min();
             sumDuration  = 0.0;
             sumDurNonSim = 0.0;
             sumDistance  = 0;

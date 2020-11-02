@@ -30,6 +30,7 @@ namespace whm
          */
         struct WhmArgs_t
         {
+            int32_t optimizer{ 0 };      //< Optimizer to be used
             std::string ordersPath;      //< Path to a file with customer orders
             std::string articlesPath;    //< Path to a file with articles
             std::string locationsPath;   //< Path to a file with article-slot allocation

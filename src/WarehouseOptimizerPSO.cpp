@@ -9,9 +9,16 @@
 
 #ifdef WHM_OPT
 
-#include <float.h>
+#include <limits>
+#include <cstdint>
+#include <iostream>
+#include <algorithm>
 
+#include "Logger.h"
+#include "WarehouseItem.h"
+#include "WarehouseLayout.h"
 #include "WarehouseOptimizerPSO.h"
+#include "WarehouseLocationRack.h"
 
 namespace whm
 {
@@ -51,9 +58,9 @@ namespace whm
     {
         for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
         {
-            double currentVel  = getVelocity(pop[p],          cfg.getAs<double>("w"),  1);
-            double persBestVel = getVelocity(personalBest[p], cfg.getAs<double>("c1"), randomFromInterval(0, 1));
-            double globBestVel = getVelocity(globalBest,      cfg.getAs<double>("c2"), randomFromInterval(0, 1));
+            double currentVel  = getVelocity(pop[p],          cfg.getAs<double>("weighing"), 1);
+            double persBestVel = getVelocity(personalBest[p], cfg.getAs<double>("correctionFactor1"), randomFromInterval(0, 1));
+            double globBestVel = getVelocity(globalBest,      cfg.getAs<double>("correctionFactor2"), randomFromInterval(0, 1));
             double totalVel    = currentVel + persBestVel + globBestVel;
 
             int32_t currLen = (currentVel  / totalVel) * cfg.getAs<int32_t>("numberDimensions");
@@ -65,27 +72,11 @@ namespace whm
             std::vector<int32_t> globPart    = getSolutionPart(globalBest.genes, globLen);
             std::vector<int32_t> mergedParts = mergeSolutionParts(currPart, persPart, globPart);
 
-            std::vector<int32_t> leftover;
-
-            for(int32_t i = cfg.getAs<int32_t>("problemMin"); i < cfg.getAs<int32_t>("problemMax"); ++i)
+            while(static_cast<int32_t>(mergedParts.size()) < cfg.getAs<int32_t>("numberDimensions"))
             {
-                if(std::find(mergedParts.begin(), mergedParts.end(), i) == mergedParts.end())
-                {
-                    leftover.push_back(i);
-                }
-            }
+                int32_t slot = lookupOptimalSlot(mergedParts);
 
-            for(int32_t v : leftover)
-            {
-                if(static_cast<int32_t>(mergedParts.size()) == cfg.getAs<int32_t>("numberDimensions"))
-                {
-                    break;
-                }
-
-                if(std::find(pop[p].genes.begin(), pop[p].genes.end(), v) != pop[p].genes.end())
-                {
-                    mergedParts.push_back(v);
-                }
+                mergedParts.push_back(slot);
             }
 
             pop[p].genes = mergedParts;
@@ -115,6 +106,45 @@ namespace whm
                 personalBest[p] = pop[p];
             }
         }
+    }
+
+    int32_t WarehouseOptimizerPSO_t::lookupOptimalSlot(const std::vector<int32_t>& genes)
+    {
+        std::vector<WarehouseItem_t*> locations;
+
+        updateAllocations(genes);
+
+        for(auto* item : whm::WarehouseLayout_t::getWhLayout().getWhItems())
+        {
+            if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+            {
+                locations.push_back(item);
+            }
+        }
+
+        std::sort(locations.begin(), locations.end(), [](auto* lhs, auto* rhs) -> bool
+                                                      {
+                                                          return lhs->getWhLocationRack()->getOccupationLevel() <
+                                                                 rhs->getWhLocationRack()->getOccupationLevel() ;
+                                                      });
+
+        for(auto const& loc : locations)
+        {
+            auto slot = loc->getWhLocationRack()->getFirstFreeSlot();
+
+            if(slot)
+            {
+                for(auto e : slotEnc)
+                {
+                    if(slot == e.second)
+                    {
+                        return e.first;
+                    }
+                }
+            }
+        }
+
+        return -1;
     }
 
     std::vector<int32_t> WarehouseOptimizerPSO_t::getSolutionPart(std::vector<int32_t>& sol, int32_t len)
@@ -189,7 +219,7 @@ namespace whm
             personalBest.push_back(population[p]);
         }
 
-        globalBest.fitness = DBL_MAX;
+        globalBest.fitness = std::numeric_limits<double>::max();
 
         storeGlobalBest(population);
 

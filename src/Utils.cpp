@@ -23,6 +23,7 @@ namespace whm
                          "\t-a\tPath to a file with articles\n"
                          "\t-i\tPath to a file with article-slot allocation\n"
                          "\t-l\tPath to a file with warehouse layout description\n"
+                         "\t-O\tOptimizer to be used: | 1: GA | 2: DE | 3: ABC | 4:PSO |\n"
                         ;
         }
 
@@ -31,9 +32,7 @@ namespace whm
             int c;
             WhmArgs_t args;
 
-            // TODO: Handle catch invalid_argument exception and missing arguments
-
-            while ((c = getopt (argc, argv, "o:a:i:l:v")) != -1)
+            while ((c = getopt (argc, argv, "o:a:i:l:O:v")) != -1)
             {
                 switch(c)
                 {
@@ -48,6 +47,9 @@ namespace whm
                         break;
                     case 'l':
                         args.layoutPath = optarg;
+                        break;
+                    case 'O':
+                        args.optimizer = std::stoi(optarg);
                         break;
                     case 'v':
                         whm::Logger_t::getLogger().setVerbose(true);

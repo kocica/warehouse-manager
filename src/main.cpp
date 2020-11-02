@@ -64,9 +64,16 @@ int main(int argc, char *argv[])
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
 #    ifdef WHM_OPT
-            // TODO: Decide optimizer using cfg or param
+            whm::WarehouseOptimizerBase_t* optimizer{ nullptr };
 
-            whm::WarehouseOptimizerBase_t* optimizer = new whm::WarehouseOptimizerDE_t{args};
+            switch(args.optimizer)
+            {
+                case 1: optimizer = new whm::WarehouseOptimizerGA_t{args};  break;
+                case 2: optimizer = new whm::WarehouseOptimizerDE_t{args};  break;
+                case 3: optimizer = new whm::WarehouseOptimizerABC_t{args}; break;
+                case 4: optimizer = new whm::WarehouseOptimizerPSO_t{args}; break;
+                default: whm::Logger_t::getLogger().print(LOG_LOC, whm::LogLevel_t::E_ERROR, "Unknown optimizer"); return 1;
+            }
 
             optimizer->optimize();
 

@@ -35,6 +35,7 @@ namespace whm
                                                     std::vector<int32_t>&,
                                                     std::vector<int32_t>&);
 
+            int32_t lookupOptimalSlot(const std::vector<int32_t>&);
         private:
             Solution_t globalBest;
             std::vector<Solution_t> personalBest;

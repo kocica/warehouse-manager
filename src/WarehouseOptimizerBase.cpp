@@ -162,9 +162,16 @@ namespace whm
 
     void WarehouseOptimizerBase_t::saveFitnessPlot() const
     {
-        // Plot fitness convergence
-        matplotlibcpp::plot(histFitness);
-        matplotlibcpp::save(cfg.getAs<std::string>("plotPath"));
+        // Plot fitness convergence or just dump to output
+        if(cfg.isSet("plotPath"))
+        {
+            matplotlibcpp::plot(histFitness);
+            matplotlibcpp::save(cfg.getAs<std::string>("plotPath"));
+        }
+        else
+        {
+            std::for_each(histFitness.begin(), histFitness.end(), [](double v){ std::cout << v << ", "; });
+        }
     }
 
     void WarehouseOptimizerBase_t::saveBestSolution(std::vector<int32_t>& chromosome) const

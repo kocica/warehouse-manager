@@ -9,7 +9,7 @@
 
 #ifdef WHM_OPT
 
-#include <float.h>
+#include <limits>
 #include <cstdint>
 #include <iostream>
 #include <algorithm>
@@ -25,7 +25,7 @@ namespace whm
     WarehouseOptimizerDE_t::WarehouseOptimizerDE_t(utils::WhmArgs_t args_)
         : WarehouseOptimizerBase_t{ args_ }
     {
-        bestInd.fitness = DBL_MAX;
+        bestInd.fitness = std::numeric_limits<double>::max();
     }
 
     std::vector<int32_t> WarehouseOptimizerDE_t::rand(const std::vector<Solution_t>& pop, int32_t j)
@@ -50,7 +50,7 @@ namespace whm
     {
         int32_t r{ 0 };
         std::vector<int32_t> selectedInds{ j };
-        std::vector<int32_t> targetVector{ best(pop, j) };
+        std::vector<int32_t> targetVector{ rand(pop, j) };
 
         for(int32_t i = 0; i < 2; ++i)
         {
@@ -361,7 +361,7 @@ namespace whm
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
             {
                 ProbGenes_t mutant = mutate(population, p);
-                ProbGenes_t remainers = getRemainingSet(mutant, randomFromInterval(0.5, 1));
+                ProbGenes_t remainers = getRemainingSet(mutant, randomFromInterval(0.2, 1));
 
                 while(static_cast<int32_t>(remainers.size()) < cfg.getAs<int32_t>("numberDimensions"))
                 {

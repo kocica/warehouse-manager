@@ -30,25 +30,27 @@
         ===================================== Particle swarm optimization ===========================
 
         numberParticles .................. Number of particles
-        c1 ............................... Correction factor 1
-        c2 ............................... Correction factor 2
-        w ................................ Inertia weight
+        correctionFactor1 ................ Correction factor 1
+        correctionFactor2 ................ Correction factor 2
+        weighing ......................... Inertia weight
 
         ===================================== Differential evolution ================================
 
-
+        populationSizeDE ................. Population size for differential evolution alg
+        scalingFactor .................... Scaling factor
+        probCrossoverDE .................. Crossover probability for differential evolution alg
 
         =============================================================================================
   -->
 
-<configuration numberDimensions="4"
+<configuration numberDimensions="30"
                problemMin="0"
-               problemMax="8"
-               maxIterations="100"
+               problemMax="60"
+               maxIterations="1000"
                initialWeights=""
-               saveWeightsPeriod="1"
+               saveWeightsPeriod="10"
                maxTrialValue="10"
-               plotPath="./data/plot.png"
+               plotPath=""
 
                populationSize="10"
                selectionSize="9"
@@ -63,12 +65,12 @@
                foodSize="100"
                keepBest="true"
 
-               numberParticles="100"
-               c1="1.4"
-               c2="1.4"
-               w="0.7"
+               numberParticles="2000"
+               correctionFactor1="1.4"
+               correctionFactor2="1.4"
+               weighing="0.7"
 
-               populationSizeDE="1000"
+               populationSizeDE="2000"
                scalingFactor="0.6"
-               probCrossoverDE="0.9"
+               probCrossoverDE="0.6"
 />
