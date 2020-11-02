@@ -81,14 +81,7 @@ namespace whm
     {
         int32_t k = randomFromInterval(0, cfg.getAs<int32_t>("populationSizeDE"));
 
-        if(flipCoin(cfg.getAs<double>("probCrossoverDE")) || (j == k))
-        {
-            return v;
-        }
-        else
-        {
-            return x;
-        }
+        return (flipCoin(cfg.getAs<double>("probCrossoverDE")) || (j == k)) ? v : x;
     }
 
     std::vector<int32_t> WarehouseOptimizerDE_t::crossoverOrdered(const std::vector<int32_t>& lhsInd, const std::vector<int32_t>& rhsInd)
@@ -103,8 +96,7 @@ namespace whm
         int32_t placeholder = -1;
         int32_t placeholderCount = 0;
 
-        std::vector<int32_t> o1, o1_missing, o1_replacements;
-        std::vector<int32_t> o2, o2_missing, o2_replacements;
+        std::vector<int32_t> o, o_missing, o_replacements;
 
         while(true)
         {
@@ -117,27 +109,22 @@ namespace whm
 
             if(a > b) std::swap(a, b);
 
-            // Insert from first parent
             for(int32_t i = pos; i < a; ++i)
             {
-                o1.push_back(lhsInd.at(i));
-                o2.push_back(rhsInd.at(i));
+                o.push_back(lhsInd.at(i));
             }
 
-            // Insert placeholders
             for(int32_t i = a; i < b; ++i)
             {
                 ++placeholderCount;
-                o1.push_back(placeholder);
-                o2.push_back(placeholder);
+                o.push_back(placeholder);
             }
 
             if(b >= cfg.getAs<int32_t>("numberDimensions") - 1)
             {
                 for(int32_t i = b; i < cfg.getAs<int32_t>("numberDimensions"); ++i)
                 {
-                    o1.push_back(lhsInd.at(i));
-                    o2.push_back(rhsInd.at(i));
+                    o.push_back(lhsInd.at(i));
                 }
 
                 break;
@@ -148,41 +135,23 @@ namespace whm
             }
         }
 
-        // Find missing elements
         for(int32_t i = 0; i < cfg.getAs<int32_t>("problemMax"); ++i)
         {
-            if(std::find(o1.begin(), o1.end(), i) == o1.end()) o1_missing.push_back(i);
-            if(std::find(o2.begin(), o2.end(), i) == o2.end()) o2_missing.push_back(i);
+            if(std::find(o.begin(), o.end(), i) == o.end()) o_missing.push_back(i);
         }
 
-        // Filter missing elements and leave only those which are in the second parent (keep the order)
         for(int32_t i = 0; i < static_cast<int32_t>(rhsInd.size()); i++)
         {
-            if(std::find(o1_missing.begin(), o1_missing.end(), rhsInd.at(i)) != o1_missing.end()) o1_replacements.push_back(rhsInd.at(i));
+            if(std::find(o_missing.begin(), o_missing.end(), rhsInd.at(i)) != o_missing.end()) o_replacements.push_back(rhsInd.at(i));
         }
 
-        // Filter missing elements and leave only those which are in the second parent (keep the order)
-        for(int32_t i = 0; i < static_cast<int32_t>(lhsInd.size()); i++)
-        {
-            if(std::find(o2_missing.begin(), o2_missing.end(), lhsInd.at(i)) != o2_missing.end()) o2_replacements.push_back(lhsInd.at(i));
-        }
-
-        // Replace placeholders in offspring 1
         for(int32_t i = 0; i < placeholderCount; ++i)
         {
-                auto it = std::find(o1.begin(), o1.end(), placeholder);
-                *it     = o1_replacements.at(i);
+                auto it = std::find(o.begin(), o.end(), placeholder);
+                *it     = o_replacements.at(i);
         }
 
-        // Replace placeholders in offspring 2
-        for(int32_t i = 0; i < placeholderCount; ++i)
-        {
-                auto it = std::find(o2.begin(), o2.end(), placeholder);
-                *it     = o2_replacements.at(i);
-        }
-
-        // Assign new offsprings
-        return o1;
+        return o;
     }
 
     ProbGenes_t WarehouseOptimizerDE_t::getRemainingSet(const ProbGenes_t& pgs, double alpha)
@@ -407,7 +376,7 @@ namespace whm
                 }
             }
 
-            std::cout << "Iteration " << gen << ": " << bestInd.fitness << std::endl;
+            std::cout << "[DE] Iteration " << gen << ": " << bestInd.fitness << std::endl;
             histFitness.push_back(bestInd.fitness);
 
             if((gen % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)

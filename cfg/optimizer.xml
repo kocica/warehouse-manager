@@ -52,8 +52,8 @@
                maxTrialValue="10"
                plotPath=""
 
-               populationSize="10"
-               selectionSize="9"
+               populationSize="2000"
+               selectionSize="1999"
                eliteSize="1"
                probCrossover="0.6"
                probMutationInd="0.4"
@@ -62,7 +62,7 @@
                selectionFunctor="selectTournam"
                crossoverFunctor="crossoverOrdered"
 
-               foodSize="100"
+               foodSize="2000"
                keepBest="true"
 
                numberParticles="2000"

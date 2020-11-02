@@ -46,22 +46,13 @@ namespace whm
             skuEnc.insert(std::make_pair(articleID++, article));
         }
 
-        auto& items = whm::WarehouseLayout_t::getWhLayout().getWhItems();
-
-        for(auto* item : items)
+        for(auto* item : whm::WarehouseLayout_t::getWhLayout().getWhItems())
         {
             if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
             {
-                auto* rack = item->getWhLocationRack();
-
-                for(int32_t y = 0; y < rack->getSlotCountY(); ++y)
+                for(auto* slot : item->getWhLocationRack()->getSortedSlots())
                 {
-                    for(int32_t x = 0; x < rack->getSlotCountX(); ++x)
-                    {
-                        auto* item = &rack->at(x, y);
-
-                        slotEnc.insert(std::make_pair(slotID++, item));
-                    }
+                    slotEnc.insert(std::make_pair(slotID++, slot));
                 }
             }
         }
@@ -102,7 +93,6 @@ namespace whm
 
     void WarehouseOptimizerBase_t::initPopulationRand(std::vector<Solution_t>& pop)
     {
-        // TODO: Do not do a completely random init
         for(int32_t p = 0; p < static_cast<int32_t>(pop.size()); ++p)
         {
             initIndividualRand(pop[p].genes);
@@ -171,6 +161,7 @@ namespace whm
         else
         {
             std::for_each(histFitness.begin(), histFitness.end(), [](double v){ std::cout << v << ", "; });
+            std::cout << std::endl;
         }
     }
 

@@ -23,7 +23,7 @@ namespace whm
                          "\t-a\tPath to a file with articles\n"
                          "\t-i\tPath to a file with article-slot allocation\n"
                          "\t-l\tPath to a file with warehouse layout description\n"
-                         "\t-O\tOptimizer to be used: | 1: GA | 2: DE | 3: ABC | 4:PSO |\n"
+                         "\t-O\tOptimizer to be used: [ 1: GA | 2: DE | 3: ABC | 4:PSO ]\n"
                         ;
         }
 

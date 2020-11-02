@@ -236,7 +236,7 @@ namespace whm
         }
 
         histFitness.push_back(bestSolution.fitness);
-        std::cout << "Best Fitness: " << bestSolution.fitness << std::endl;
+        std::cout << "[ABC] Best Fitness: " << bestSolution.fitness << std::endl;
     }
 
     void WarehouseOptimizerABC_t::optimize()

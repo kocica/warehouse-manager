@@ -22,10 +22,11 @@ namespace whm
     template<typename T>
     class WarehouseLocationRack_t
     {
-        using LocationSlot_t = WarehouseLocationSlot_t<T>;
-        using LocationSlots_t = std::vector<std::vector<LocationSlot_t>>;
-
         public:
+            using LocationSlot_t = WarehouseLocationSlot_t<T>;
+            using LocationSlots_t = std::vector<std::vector<LocationSlot_t>>;
+            using SortedLocationSlots_t = std::vector<LocationSlot_t*>;
+
             WarehouseLocationRack_t(WarehouseItem_t*, size_t, size_t);
             ~WarehouseLocationRack_t();
 
@@ -45,6 +46,9 @@ namespace whm
             int32_t getSlotCountX() const;
             int32_t getSlotCountY() const;
 
+            const LocationSlots_t& getSlots() const;
+            const SortedLocationSlots_t& getSortedSlots() const;
+
             int32_t getOccupationLevel() const;
             LocationSlot_t* getFirstFreeSlot();
 
@@ -52,6 +56,8 @@ namespace whm
 
         private:
             LocationSlots_t slots;
+            SortedLocationSlots_t sortedSlots;
+
             WarehouseItem_t* whItem{ nullptr };
     };
 }

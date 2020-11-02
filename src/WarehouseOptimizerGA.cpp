@@ -425,7 +425,7 @@ namespace whm
                     });
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "==== Generation %2d ====", gen);
-            std::cout << "Best fitness: " << population.at(0).fitness << std::endl;
+            std::cout << "[GA] Best fitness: " << population.at(0).fitness << std::endl;
 
             histFitness.push_back(population.at(0).fitness);
 

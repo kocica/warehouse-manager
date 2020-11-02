@@ -8,6 +8,7 @@
  */
 
 #include <iostream>
+#include <algorithm>
 
 #include "Logger.h"
 #include "WarehouseLocationRack.h"
@@ -19,6 +20,22 @@ namespace whm
         : whItem{ whItem_ }
     {
         init(slotsX, slotsY);
+
+        for(size_t y = 0; y < slotsY; ++y)
+        {
+            for(size_t x = 0; x < slotsX; ++x)
+            {
+                sortedSlots.push_back(&this->at(x, y));
+            }
+        }
+
+        std::sort(sortedSlots.begin(), sortedSlots.end(),
+                  [x = slotsX, y = slotsY](LocationSlot_t* lhs, LocationSlot_t* rhs)
+                  -> bool
+                  {
+                      return (lhs->getCoords().first / double(x)) + (lhs->getCoords().second / double(y)) <
+                             (rhs->getCoords().first / double(x)) + (rhs->getCoords().second / double(y)) ;
+                  });
     }
 
     template<typename T>
@@ -170,18 +187,27 @@ namespace whm
     template<typename T>
     WarehouseLocationSlot_t<T>* WarehouseLocationRack_t<T>::getFirstFreeSlot()
     {
-        for (size_t i = 0; i < slots.size(); i++)
+        for (auto* slot : sortedSlots)
         {
-            for (size_t j = 0; j < slots[i].size(); j++)
+            if(!slot->isOccupied())
             {
-                if(!slots[i][j].isOccupied())
-                {
-                    return &slots[i][j];
-                }
+                return slot;
             }
         }
 
         return nullptr;
+    }
+
+    template<typename T>
+    const typename WarehouseLocationRack_t<T>::LocationSlots_t& WarehouseLocationRack_t<T>::getSlots() const
+    {
+        return slots;
+    }
+
+    template<typename T>
+    const typename WarehouseLocationRack_t<T>::SortedLocationSlots_t& WarehouseLocationRack_t<T>::getSortedSlots() const
+    {
+        return sortedSlots;
     }
 
     template class WarehouseLocationRack_t<std::string>;

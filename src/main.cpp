@@ -45,9 +45,8 @@ int main(int argc, char *argv[])
 
         window.setGeometry(
             QStyle::alignedRect(
-                Qt::LeftToRight,
-                Qt::AlignLeft,
-                qApp->desktop()->availableGeometry().size() /* * 0.75 */,
+                Qt::LeftToRight, Qt::AlignLeft,
+                qApp->desktop()->availableGeometry().size(),
                 qApp->desktop()->availableGeometry()
             )
         );
@@ -93,7 +92,7 @@ int main(int argc, char *argv[])
     }
     catch(std::exception& e)
     {
-        std::cerr << "Unexpected problem has occured during the simulation ("
+        std::cerr << "Unexpected problem has occured ("
                   << e.what() << ")" << std::endl;
     }
 }

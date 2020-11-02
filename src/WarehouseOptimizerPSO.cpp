@@ -46,7 +46,6 @@ namespace whm
         }
 
         histFitness.push_back(globalBest.fitness);
-        std::cout << "Best Fitness: " << globalBest.fitness << std::endl;
     }
 
     double WarehouseOptimizerPSO_t::getVelocity(Solution_t& sol, double weighing, double random)
@@ -225,9 +224,6 @@ namespace whm
 
         for(int32_t i = 0; i < cfg.getAs<int32_t>("maxIterations"); ++i)
         {
-            std::cout << "Iteration " << i << std::endl;
-
-
             updateVelocities(population);
 
             storeGlobalBest(population);
@@ -237,6 +233,8 @@ namespace whm
                 saveFitnessPlot();
                 saveBestSolution(globalBest.genes);
             }
+
+            std::cout << "[PSO] Best Fitness: " << globalBest.fitness << std::endl;
         }
 
         saveFitnessPlot();
