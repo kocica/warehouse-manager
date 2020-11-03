@@ -72,5 +72,5 @@
 
                populationSizeDE="2000"
                scalingFactor="0.6"
-               probCrossoverDE="0.6"
+               probCrossoverDE="0.7"
 />

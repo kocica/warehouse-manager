@@ -77,11 +77,23 @@ namespace whm
                                                    cfg.getAs<double>("scalingFactor")));
     }
 
-    ProbGenes_t WarehouseOptimizerDE_t::crossover(const ProbGenes_t& v, const ProbGenes_t& x, int32_t j)
+    std::vector<int32_t> WarehouseOptimizerDE_t::binomicalCrossover(const std::vector<int32_t>& v, const std::vector<int32_t>& x, int32_t j)
     {
-        int32_t k = randomFromInterval(0, cfg.getAs<int32_t>("populationSizeDE"));
+        std::vector<int32_t> x_new;
 
-        return (flipCoin(cfg.getAs<double>("probCrossoverDE")) || (j == k)) ? v : x;
+        for(int32_t k = 0; k < cfg.getAs<int32_t>("numberDimensions"); ++k)
+        {
+            if(flipCoin(cfg.getAs<double>("probCrossoverDE")) || (j == k))
+            {
+                x_new.push_back(v.at(k));
+            }
+            else
+            {
+                x_new.push_back(x.at(k));
+            }
+        }
+
+        return x_new;
     }
 
     std::vector<int32_t> WarehouseOptimizerDE_t::crossoverOrdered(const std::vector<int32_t>& lhsInd, const std::vector<int32_t>& rhsInd)
@@ -344,6 +356,7 @@ namespace whm
 
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
             {
+                //auto x_new  = binomicalCrossover(probGenesToGenes(trailVector[p]), population[p].genes, p);
                 auto x_new  = crossoverOrdered(probGenesToGenes(trailVector[p]), population[p].genes);
                 auto fx_new = simulateWarehouse(x_new);
 

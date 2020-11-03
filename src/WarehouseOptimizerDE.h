@@ -43,8 +43,8 @@ namespace whm
             std::vector<int32_t> best(const std::vector<Solution_t>&, int32_t);
 
             // Crossover
-            ProbGenes_t crossover(const ProbGenes_t&, const ProbGenes_t&, int32_t);
             std::vector<int32_t> crossoverOrdered(const std::vector<int32_t>&, const std::vector<int32_t>&);
+            std::vector<int32_t> binomicalCrossover(const std::vector<int32_t>&, const std::vector<int32_t>&, int32_t);
 
             // Utils
             int32_t lookupOptimalSlot(const std::vector<int32_t>&);
