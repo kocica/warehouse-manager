@@ -417,6 +417,20 @@ namespace whm
                 population[p].fitness = newFitness;
             }
 
+            // Discard chromosomes with trialValue > N and generate brand new offsprings (ignore elite part)
+            for(int32_t p = cfg.getAs<int32_t>("eliteSize"); p < cfg.getAs<int32_t>("populationSize"); ++p)
+            {
+                if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
+                {
+                    population[p].trialValue = 0;
+                    population[p].genes = std::vector<int32_t>();
+
+                    initIndividualRand(population[p].genes);
+
+                    population[p].fitness = simulateWarehouse(population[p].genes);
+                }
+            }
+
             std::sort(population.begin(), population.end(),
                     [](Solution_t& lhs, Solution_t& rhs)
                     -> bool
@@ -433,19 +447,6 @@ namespace whm
             {
                 saveFitnessPlot();
                 saveBestSolution(population.at(0).genes);
-            }
-
-            // Discard chromosomes with trialValue > N and generate brand new offsprings (ignore elite part)
-            for(int32_t p = cfg.getAs<int32_t>("eliteSize"); p < cfg.getAs<int32_t>("populationSize"); ++p)
-            {
-                if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
-                {
-                    population[p].fitness = 0;
-                    population[p].trialValue = 0;
-                    population[p].genes = std::vector<int32_t>();
-
-                    initIndividualRand(population[p].genes);
-                }
             }
         }
 

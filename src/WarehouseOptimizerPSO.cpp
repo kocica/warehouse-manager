@@ -401,24 +401,25 @@ namespace whm
                 }
             }
 
+            for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
+            {
+                if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
+                {
+                    population[p].trialValue = 0;
+                    population[p].genes = std::vector<int32_t>();
+
+                    initIndividualRand(population[p].genes);
+
+                    population[p].fitness = simulateWarehouse(population[p].genes);
+                }
+            }
+
             storeGlobalBest(personalBest);
 
             if((i % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)
             {
                 saveFitnessPlot();
                 saveBestSolution(globalBest.genes);
-            }
-
-            for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
-            {
-                if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
-                {
-                    population[p].fitness = 0;
-                    population[p].trialValue = 0;
-                    population[p].genes = std::vector<int32_t>();
-
-                    initIndividualRand(population[p].genes);
-                }
             }
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[PSO] [%3d] Best fitness: %f", i, globalBest.fitness);
