@@ -49,6 +49,7 @@ namespace whm
 
         private:
             Solution_t globalBest;
+
             std::vector<Solution_t> personalBest;
 
             CrossoverFunctor_t crossoverFunctor;

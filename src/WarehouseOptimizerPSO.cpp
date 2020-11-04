@@ -53,8 +53,6 @@ namespace whm
         {
             globalBest = actualBest;
         }
-
-        histFitness.push_back(globalBest.fitness);
     }
 
     std::vector<int32_t> WarehouseOptimizerPSO_t::crossoverHeuristic(const std::vector<int32_t>& x1,
@@ -391,7 +389,11 @@ namespace whm
             {
                 population[p].genes = crossoverFunctor(personalBest[p].genes, globalBest.genes);
 
-                population[p].fitness = simulateWarehouse(population[p].genes);
+                double newFitness = simulateWarehouse(population[p].genes);
+
+                population[p].trialValue = newFitness <= population[p].fitness ? population[p].trialValue + 1 : 0;
+
+                population[p].fitness = newFitness;
 
                 if(population[p].fitness <= personalBest[p].fitness)
                 {
@@ -407,7 +409,20 @@ namespace whm
                 saveBestSolution(globalBest.genes);
             }
 
-            std::cout << "[PSO] Best Fitness: " << globalBest.fitness << std::endl;
+            for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
+            {
+                if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
+                {
+                    population[p].fitness = 0;
+                    population[p].trialValue = 0;
+                    population[p].genes = std::vector<int32_t>();
+
+                    initIndividualRand(population[p].genes);
+                }
+            }
+
+            whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[PSO] [%3d] Best fitness: %f", i, globalBest.fitness);
+            histFitness.push_back(globalBest.fitness);
         }
 
         saveFitnessPlot();

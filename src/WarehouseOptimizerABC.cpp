@@ -10,6 +10,7 @@
 #ifdef WHM_OPT
 
 #include "Utils.h"
+#include "Logger.h"
 #include "WarehouseOptimizerABC.h"
 
 namespace whm
@@ -247,9 +248,6 @@ namespace whm
                 worstSolution = pop[p];
             }
         }
-
-        histFitness.push_back(bestSolution.fitness);
-        std::cout << "[ABC] Best Fitness: " << bestSolution.fitness << std::endl;
     }
 
     void WarehouseOptimizerABC_t::optimize()
@@ -267,14 +265,11 @@ namespace whm
 
         for(int32_t p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
         {
-            // Fitness = objective function (simulation time)
             population[p].fitness = simulateWarehouse(population[p].genes);
         }
 
         for(int32_t i = 0; i < cfg.getAs<int32_t>("maxIterations"); ++i)
         {
-            std::cout << "Iteration " << i << std::endl;
-
             employedBeePhase(population);
             onlookerBeePhase(population);
 
@@ -287,6 +282,9 @@ namespace whm
                 saveFitnessPlot();
                 saveBestSolution(bestSolution.genes);
             }
+
+            whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[ABC] [%3d] Best fitness: %f", i, bestSolution.fitness);
+            histFitness.push_back(bestSolution.fitness);
         }
 
         saveFitnessPlot();

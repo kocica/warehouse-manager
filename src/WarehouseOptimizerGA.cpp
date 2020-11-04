@@ -424,8 +424,7 @@ namespace whm
                         return lhs.fitness < rhs.fitness;
                     });
 
-            whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "==== Generation %2d ====", gen);
-            std::cout << "[GA] Best fitness: " << population.at(0).fitness << std::endl;
+            whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[GA] [%3d] Best fitness: %f", gen, population.at(0).fitness);
 
             histFitness.push_back(population.at(0).fitness);
 

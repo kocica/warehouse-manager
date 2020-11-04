@@ -412,18 +412,18 @@ namespace whm
                 }
             }
 
-            std::cout << "[DE] Iteration " << gen << ": " << bestInd.fitness << std::endl;
+            whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[DE] [%3d] Best fitness: %f", gen, bestInd.fitness);
             histFitness.push_back(bestInd.fitness);
 
             if((gen % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)
             {
                 saveFitnessPlot();
-                saveBestSolution(population.at(0).genes);
+                saveBestSolution(bestInd.genes);
             }
         }
 
         saveFitnessPlot();
-        saveBestSolution(population.at(0).genes);
+        saveBestSolution(bestInd.genes);
     }
 }
 
