@@ -62,7 +62,7 @@
                selectionFunctor="selectTournam"
                crossoverFunctor="crossoverOrdered"
 
-               foodSize="2000"
+               foodSize="1000"
                keepBest="true"
 
                numberParticles="2000"

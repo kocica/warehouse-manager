@@ -9,6 +9,7 @@
 
 #ifdef WHM_OPT
 
+#include "Utils.h"
 #include "WarehouseOptimizerABC.h"
 
 namespace whm
@@ -167,30 +168,42 @@ namespace whm
         std::vector<int32_t> rhsCopy = rhs;
         std::vector<SwapOperator_t> swapOperators;
 
-        for(int32_t i = cfg.getAs<int32_t>("problemMin"); i < cfg.getAs<int32_t>("problemMax"); ++i)
+        using namespace utils;
+
+        while(true)
         {
-            if(lhsCopy == rhsCopy)
+            std::vector<int32_t> lastLhs = lhsCopy;
+            std::vector<int32_t> lastRhs = rhsCopy;
+
+            for(int32_t i = cfg.getAs<int32_t>("problemMin"); i < cfg.getAs<int32_t>("problemMax"); ++i)
             {
-                return swapOperators;
-            }
-
-            auto lhsIt = std::find(lhsCopy.begin(), lhsCopy.end(), i);
-            auto rhsIt = std::find(rhsCopy.begin(), rhsCopy.end(), i);
-
-            if(lhsIt != lhsCopy.end() &&
-               rhsIt != rhsCopy.end())
-            {
-                auto lhsPos = lhsIt - lhsCopy.begin();
-                auto rhsPos = rhsIt - rhsCopy.begin();
-
-                if(lhsPos == rhsPos)
+                if(lhsCopy == rhsCopy)
                 {
-                    continue;
+                    return swapOperators;
                 }
 
-                iter_swap(rhsCopy.begin() + lhsPos, rhsCopy.begin() + rhsPos);
+                auto lhsIt = std::find(lhsCopy.begin(), lhsCopy.end(), i);
+                auto rhsIt = std::find(rhsCopy.begin(), rhsCopy.end(), i);
 
-                swapOperators.emplace_back(std::make_pair(lhsPos, rhsPos));
+                if(lhsIt != lhsCopy.end() && rhsIt != rhsCopy.end())
+                {
+                    auto lhsPos = lhsIt - lhsCopy.begin();
+                    auto rhsPos = rhsIt - rhsCopy.begin();
+
+                    if(lhsPos == rhsPos)
+                    {
+                        continue;
+                    }
+
+                    iter_swap(rhsCopy.begin() + lhsPos, rhsCopy.begin() + rhsPos);
+
+                    swapOperators.emplace_back(std::make_pair(lhsPos, rhsPos));
+                }
+            }
+
+            if(lastLhs == lhsCopy && lastRhs == rhsCopy)
+            {
+                return swapOperators;
             }
         }
 
