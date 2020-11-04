@@ -30,15 +30,17 @@
         ===================================== Particle swarm optimization ===========================
 
         numberParticles .................. Number of particles
-        correctionFactor1 ................ Correction factor 1
-        correctionFactor2 ................ Correction factor 2
+        correctionFactor1 ................ Correction factor 1 (personal influence)
+        correctionFactor2 ................ Correction factor 2 (social influence)
         weighing ......................... Inertia weight
+        crossoverFunctorPSO .............. Crossover function (crossoverOrdered; crossoverHeuristic)
 
         ===================================== Differential evolution ================================
 
         populationSizeDE ................. Population size for differential evolution alg
         scalingFactor .................... Scaling factor
         probCrossoverDE .................. Crossover probability for differential evolution alg
+        crossoverFunctorDE ............... Crossover function (crossoverOrdered; crossoverBinomical)
 
         =============================================================================================
   -->
@@ -52,6 +54,7 @@
                maxTrialValue="10"
                plotPath=""
 
+
                populationSize="2000"
                selectionSize="1999"
                eliteSize="1"
@@ -62,15 +65,20 @@
                selectionFunctor="selectTournam"
                crossoverFunctor="crossoverOrdered"
 
+
                foodSize="1000"
                keepBest="true"
+
 
                numberParticles="2000"
                correctionFactor1="1.4"
                correctionFactor2="1.4"
                weighing="0.7"
+               crossoverFunctorPSO="crossoverOrdered"
+
 
                populationSizeDE="2000"
                scalingFactor="0.6"
                probCrossoverDE="0.7"
+               crossoverFunctorDE="crossoverOrdered"
 />

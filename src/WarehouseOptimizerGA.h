@@ -17,13 +17,12 @@
 
 namespace whm
 {
-    using MutationFunctor_t  = std::function<void(std::vector<int32_t>&)>;
-    using SelectionFunctor_t = std::function<Solution_t(const std::vector<Solution_t>&)>;
-    using CrossoverFunctor_t = std::function<void(std::vector<int32_t>&, std::vector<int32_t>&)>;
-
-
     class WarehouseOptimizerGA_t : public WarehouseOptimizerBase_t
     {
+        using MutationFunctor_t  = std::function<void(std::vector<int32_t>&)>;
+        using SelectionFunctor_t = std::function<Solution_t(const std::vector<Solution_t>&)>;
+        using CrossoverFunctor_t = std::function<void(std::vector<int32_t>&, std::vector<int32_t>&)>;
+
         public:
             WarehouseOptimizerGA_t() = delete;
             WarehouseOptimizerGA_t(utils::WhmArgs_t);

@@ -26,6 +26,14 @@ namespace whm
         : WarehouseOptimizerBase_t{ args_ }
     {
         bestInd.fitness = std::numeric_limits<double>::max();
+
+        std::map<std::string, CrossoverFunctor_t> crossoverMap =
+        {
+            { "crossoverOrdered",   std::bind(&WarehouseOptimizerDE_t::crossoverOrdered,   this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) },
+            { "crossoverBinomical", std::bind(&WarehouseOptimizerDE_t::crossoverBinomical, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3) }
+        };
+
+        crossoverFunctor = crossoverMap[cfg.getAs<std::string>("crossoverFunctorDE")];
     }
 
     std::vector<int32_t> WarehouseOptimizerDE_t::rand(const std::vector<Solution_t>& pop, int32_t j)
@@ -64,10 +72,10 @@ namespace whm
         }
 
         // Mutation computed using formula: v = omega * x_a + scale * (x_b - x_c)
-        // Where: j =/= a =/= b =/= c
-        //        x_a = target vector
-        //        x_b = randomly selected vector 1
-        //        x_c = randomly selected vector 2
+        // Where: j /= a /= b /= c
+        //        x_a   = target vector
+        //        x_b   = randomly selected vector 1
+        //        x_c   = randomly selected vector 2
         //        omega = rand  E [0,1]
         //        scale = const E [0,2]
 
@@ -77,7 +85,7 @@ namespace whm
                                                    cfg.getAs<double>("scalingFactor")));
     }
 
-    std::vector<int32_t> WarehouseOptimizerDE_t::binomicalCrossover(const std::vector<int32_t>& v, const std::vector<int32_t>& x, int32_t j)
+    std::vector<int32_t> WarehouseOptimizerDE_t::crossoverBinomical(const std::vector<int32_t>& v, const std::vector<int32_t>& x, int32_t j)
     {
         std::vector<int32_t> x_new;
 
@@ -85,19 +93,35 @@ namespace whm
         {
             if(flipCoin(cfg.getAs<double>("probCrossoverDE")) || (j == k))
             {
-                x_new.push_back(v.at(k));
+                if(std::find(x_new.begin(), x_new.end(), v.at(k)) == x_new.end())
+                {
+                    x_new.push_back(v.at(k));
+                }
+                else
+                {
+                    x_new.push_back(lookupOptimalSlot(x_new));
+                }
             }
             else
             {
-                x_new.push_back(x.at(k));
+                if(std::find(x_new.begin(), x_new.end(), x.at(k)) == x_new.end())
+                {
+                    x_new.push_back(x.at(k));
+                }
+                else
+                {
+                    x_new.push_back(lookupOptimalSlot(x_new));
+                }
             }
         }
 
         return x_new;
     }
 
-    std::vector<int32_t> WarehouseOptimizerDE_t::crossoverOrdered(const std::vector<int32_t>& lhsInd, const std::vector<int32_t>& rhsInd)
+    std::vector<int32_t> WarehouseOptimizerDE_t::crossoverOrdered(const std::vector<int32_t>& lhsInd, const std::vector<int32_t>& rhsInd, int32_t j)
     {
+        (void)j;
+
         if(!flipCoin(cfg.getAs<double>("probCrossoverDE")))
         {
             return lhsInd;
@@ -356,8 +380,7 @@ namespace whm
 
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
             {
-                //auto x_new  = binomicalCrossover(probGenesToGenes(trailVector[p]), population[p].genes, p);
-                auto x_new  = crossoverOrdered(probGenesToGenes(trailVector[p]), population[p].genes);
+                auto x_new  = crossoverFunctor(probGenesToGenes(trailVector[p]), population[p].genes, p);
                 auto fx_new = simulateWarehouse(x_new);
 
                 if(fx_new <= population[p].fitness)

@@ -11,12 +11,16 @@
 
 #pragma once
 
+#include <functional>
+
 #include "WarehouseOptimizerBase.h"
 
 namespace whm
 {
     class WarehouseOptimizerPSO_t : public WarehouseOptimizerBase_t
     {
+        using CrossoverFunctor_t = std::function<std::vector<int32_t>(std::vector<int32_t>&, std::vector<int32_t>&)>;
+
         public:
             WarehouseOptimizerPSO_t() = delete;
             WarehouseOptimizerPSO_t(utils::WhmArgs_t);
@@ -32,7 +36,9 @@ namespace whm
             int32_t lookupOptimalSlot(const std::vector<int32_t>&);
             int32_t lookupOptimalSlot(const std::vector<int32_t>&, int32_t, int32_t);
 
-            std::vector<int32_t> heuristicCrossover(const std::vector<int32_t>&,
+            std::vector<int32_t> crossoverOrdered(const std::vector<int32_t>&,
+                                                  const std::vector<int32_t>&);
+            std::vector<int32_t> crossoverHeuristic(const std::vector<int32_t>&,
                                                     const std::vector<int32_t>&);
 
             std::vector<int32_t> getSolutionPart(std::vector<int32_t>&,
@@ -44,6 +50,8 @@ namespace whm
         private:
             Solution_t globalBest;
             std::vector<Solution_t> personalBest;
+
+            CrossoverFunctor_t crossoverFunctor;
     };
 }
 

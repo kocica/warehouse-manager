@@ -12,6 +12,7 @@
 #pragma once
 
 #include <utility>
+#include <functional>
 
 #include "WarehouseOptimizerBase.h"
 
@@ -22,6 +23,10 @@ namespace whm
 
     class WarehouseOptimizerDE_t : public WarehouseOptimizerBase_t
     {
+        using CrossoverFunctor_t = std::function<std::vector<int32_t>(const std::vector<int32_t>&,
+                                                                      const std::vector<int32_t>&,
+                                                                      int32_t)>;
+
         public:
             WarehouseOptimizerDE_t() = delete;
             WarehouseOptimizerDE_t(utils::WhmArgs_t);
@@ -43,8 +48,8 @@ namespace whm
             std::vector<int32_t> best(const std::vector<Solution_t>&, int32_t);
 
             // Crossover
-            std::vector<int32_t> crossoverOrdered(const std::vector<int32_t>&, const std::vector<int32_t>&);
-            std::vector<int32_t> binomicalCrossover(const std::vector<int32_t>&, const std::vector<int32_t>&, int32_t);
+            std::vector<int32_t> crossoverOrdered(const std::vector<int32_t>&, const std::vector<int32_t>&, int32_t);
+            std::vector<int32_t> crossoverBinomical(const std::vector<int32_t>&, const std::vector<int32_t>&, int32_t);
 
             // Utils
             int32_t lookupOptimalSlot(const std::vector<int32_t>&);
@@ -54,6 +59,8 @@ namespace whm
 
         private:
             Solution_t bestInd;
+
+            CrossoverFunctor_t crossoverFunctor;
     };
 }
 
