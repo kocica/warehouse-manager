@@ -14,6 +14,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include "Utils.h"
 #include "Logger.h"
 #include "WarehouseItem.h"
 #include "WarehouseLayout.h"
@@ -47,6 +48,61 @@ namespace whm
 
         histFitness.push_back(globalBest.fitness);
     }
+
+    std::vector<int32_t> WarehouseOptimizerPSO_t::heuristicCrossover(const std::vector<int32_t>& x1,
+                                                                     const std::vector<int32_t>& x2)
+    {
+        using namespace utils;
+
+        int32_t v = randomFromInterval(cfg.getAs<int32_t>("problemMin"), cfg.getAs<int32_t>("problemMax"));
+
+        std::vector<int32_t> x{ v };
+
+        int32_t i = 0;
+        int32_t j = 0;
+
+        while(i < cfg.getAs<int32_t>("numberDimensions") &&
+              j < cfg.getAs<int32_t>("numberDimensions"))
+        {
+            if(std::find(x.begin(), x.end(), x1.at(i)) != x.end() &&
+               std::find(x.begin(), x.end(), x2.at(j)) != x.end())
+            {
+                ++i; ++j;
+            }
+            else if(std::find(x.begin(), x.end(), x1.at(i)) != x.end())
+            {
+                x.push_back(x2.at(j)); ++j;
+            }
+            else if(std::find(x.begin(), x.end(), x2.at(j)) != x.end())
+            {
+                x.push_back(x1.at(i)); ++i;
+            }
+            else
+            {
+                if(lookupOptimalSlot(x, x1.at(i), x2.at(j)) == 1)
+                {
+                    x.push_back(x1.at(i)); ++i;
+                }
+                else
+                {
+                    x.push_back(x2.at(j)); ++j;
+                }
+            }
+
+            if(static_cast<int32_t>(x.size()) > cfg.getAs<int32_t>("numberDimensions"))
+            {
+                return std::vector<int32_t>(x.begin(), x.begin() + cfg.getAs<int32_t>("numberDimensions"));
+            }
+        }
+
+        while(static_cast<int32_t>(x.size()) < cfg.getAs<int32_t>("numberDimensions"))
+        {
+            x.push_back(lookupOptimalSlot(x));
+        }
+
+        return x;
+    }
+
 
     double WarehouseOptimizerPSO_t::getVelocity(Solution_t& sol, double weighing, double random)
     {
@@ -105,6 +161,43 @@ namespace whm
                 personalBest[p] = pop[p];
             }
         }
+    }
+
+    int32_t WarehouseOptimizerPSO_t::lookupOptimalSlot(const std::vector<int32_t>& genes, int32_t x1, int32_t x2)
+    {
+        auto x1slot = slotEnc[x1];
+        auto x2slot = slotEnc[x2];
+
+        std::vector<WarehouseItem_t*> locations;
+
+        updateAllocations(genes);
+
+        for(auto* item : whm::WarehouseLayout_t::getWhLayout().getWhItems())
+        {
+            if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+            {
+                locations.push_back(item);
+            }
+        }
+
+        std::sort(locations.begin(), locations.end(), [](auto* lhs, auto* rhs) -> bool
+                                                      {
+                                                          return lhs->getWhLocationRack()->getOccupationLevel() <
+                                                                 rhs->getWhLocationRack()->getOccupationLevel() ;
+                                                      });
+
+        for(auto const& loc : locations)
+        {
+            auto slots = loc->getWhLocationRack()->getSortedSlots();
+
+            for(auto* slot : slots)
+            {
+                if(slot == x1slot) return 1;
+                if(slot == x2slot) return 2;
+            }
+        }
+
+        return -1;
     }
 
     int32_t WarehouseOptimizerPSO_t::lookupOptimalSlot(const std::vector<int32_t>& genes)
@@ -224,7 +317,36 @@ namespace whm
 
         for(int32_t i = 0; i < cfg.getAs<int32_t>("maxIterations"); ++i)
         {
-            updateVelocities(population);
+            for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
+            {
+                population[p].genes = heuristicCrossover(personalBest[p].genes, globalBest.genes);
+
+                double f = simulateWarehouse(population[p].genes);
+
+                if(f <= population[p].fitness)
+                {
+                    population[p].trialValue++;
+
+                    if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
+                    {
+                        population[p].trialValue = 0;
+                        population[p].genes = std::vector<int32_t>();
+
+                        initIndividualRand(population[p].genes);
+
+                        population[p].fitness = simulateWarehouse(population[p].genes);
+                    }
+                }
+                else
+                {
+                    population[p].fitness = f;
+                }
+
+                if(population[p].fitness <= personalBest[p].fitness)
+                {
+                    personalBest[p] = population[p];
+                }
+            }
 
             storeGlobalBest(population);
 

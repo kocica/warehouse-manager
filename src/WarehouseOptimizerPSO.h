@@ -29,13 +29,18 @@ namespace whm
             void updateVelocities(std::vector<Solution_t>&);
             double getVelocity(Solution_t&, double, double);
 
+            int32_t lookupOptimalSlot(const std::vector<int32_t>&);
+            int32_t lookupOptimalSlot(const std::vector<int32_t>&, int32_t, int32_t);
+
+            std::vector<int32_t> heuristicCrossover(const std::vector<int32_t>&,
+                                                    const std::vector<int32_t>&);
+
             std::vector<int32_t> getSolutionPart(std::vector<int32_t>&,
                                                  int32_t);
             std::vector<int32_t> mergeSolutionParts(std::vector<int32_t>&,
                                                     std::vector<int32_t>&,
                                                     std::vector<int32_t>&);
 
-            int32_t lookupOptimalSlot(const std::vector<int32_t>&);
         private:
             Solution_t globalBest;
             std::vector<Solution_t> personalBest;
