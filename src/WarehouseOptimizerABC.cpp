@@ -18,7 +18,11 @@ namespace whm
     WarehouseOptimizerABC_t::WarehouseOptimizerABC_t(utils::WhmArgs_t args_)
         : WarehouseOptimizerBase_t{ args_ }
     {
-
+        // Init rule counters of each equation to one, as per paper
+        for(int32_t i = 0; i < 8; ++i)
+        {
+            ruleCounters.push_back(1);
+        }
     }
 
     void WarehouseOptimizerABC_t::employedBeePhase(std::vector<Solution_t>& pop)
@@ -82,19 +86,7 @@ namespace whm
         std::vector<int32_t> y_i;
         std::vector<SwapOperator_t> sos;
 
-        int32_t randTechnique{ 0 };
-
-        if(bestSolution.genes.empty())
-        {
-            // First iteration
-            randTechnique = randomFromInterval(0, 2);
-        }
-        else
-        {
-            randTechnique = randomFromInterval(0, 8);
-        }
-
-        switch(randTechnique)
+        switch(selectTechnique())
         {
             case 0:
                 sos = getSwap(x_i, x_k);
@@ -161,6 +153,23 @@ namespace whm
         }
 
         return y_i;
+    }
+
+    std::vector<SwapOperator_t> WarehouseOptimizerABC_t::filterSwap(const std::vector<SwapOperator_t>& sos)
+    {
+        std::vector<SwapOperator_t> ret;
+
+        double r = randomFromInterval(0, 1);
+
+        for(const SwapOperator_t& so : sos)
+        {
+            if(flipCoin(r))
+            {
+                ret.push_back(so);
+            }
+        }
+
+        return ret;
     }
 
     std::vector<SwapOperator_t> WarehouseOptimizerABC_t::getSwap(std::vector<int32_t>& lhs, std::vector<int32_t>& rhs)
@@ -250,6 +259,33 @@ namespace whm
         }
     }
 
+    int32_t WarehouseOptimizerABC_t::selectTechnique()
+    {
+        int32_t sumCounters{ 0 };
+
+        std::for_each(ruleCounters.begin(), ruleCounters.end(), [&sumCounters](int32_t c)
+                                                                -> void
+                                                                {
+                                                                    sumCounters += c;
+                                                                });
+
+        while(true)
+        {
+            for(int32_t i = 0; i < 8; ++i)
+            {
+                double rho_i = ruleCounters[i] / static_cast<double>(sumCounters);
+
+                if(flipCoin(rho_i))
+                {
+                    ruleCounters[i] += 1;
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
     void WarehouseOptimizerABC_t::optimize()
     {
         std::vector<Solution_t> population(cfg.getAs<int32_t>("foodSize"));
@@ -268,9 +304,12 @@ namespace whm
             population[p].fitness = simulateWarehouse(population[p].genes);
         }
 
+        memorizeBestSolution(population);
+
         for(int32_t i = 0; i < cfg.getAs<int32_t>("maxIterations"); ++i)
         {
             employedBeePhase(population);
+
             onlookerBeePhase(population);
 
             memorizeBestSolution(population);

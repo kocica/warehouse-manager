@@ -30,22 +30,27 @@ namespace whm
             void optimize() override;
 
         protected:
-            // Artificial bee colony phases
+            // ABC phases
             void scoutBeePhase(std::vector<Solution_t>&);
             void employedBeePhase(std::vector<Solution_t>&);
             void onlookerBeePhase(std::vector<Solution_t>&);
 
-        protected:
+            // Helpers
+            int32_t selectTechnique();
             bool isBestSolution(const Solution_t&);
             void updateBee(std::vector<Solution_t>&, int32_t);
             void memorizeBestSolution(std::vector<Solution_t>&);
 
+            // Swap operators
+            std::vector<SwapOperator_t> filterSwap(const std::vector<SwapOperator_t>&);
             std::vector<SwapOperator_t> getSwap(std::vector<int32_t>&, std::vector<int32_t>&);
             std::vector<int32_t> applySwap(std::vector<int32_t>&, std::vector<SwapOperator_t>&);
 
         private:
             Solution_t bestSolution;
             Solution_t worstSolution;
+
+            std::vector<int32_t> ruleCounters;
     };
 }
 
