@@ -387,7 +387,18 @@ namespace whm
         {
             for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
             {
-                population[p].genes = crossoverFunctor(personalBest[p].genes, globalBest.genes);
+                std::vector<int32_t> v;
+
+                if(flipCoin(0.5))
+                {
+                    v = personalBest[p].genes;
+                }
+                else
+                {
+                    v = globalBest.genes;
+                }
+
+                population[p].genes = crossoverFunctor(population[p].genes, v);
 
                 double newFitness = simulateWarehouse(population[p].genes);
 

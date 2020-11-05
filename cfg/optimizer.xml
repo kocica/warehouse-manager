@@ -74,7 +74,7 @@
                correctionFactor1="1.4"
                correctionFactor2="1.4"
                weighing="0.7"
-               crossoverFunctorPSO="crossoverOrdered"
+               crossoverFunctorPSO="crossoverHeuristic"
 
 
                populationSizeDE="2000"

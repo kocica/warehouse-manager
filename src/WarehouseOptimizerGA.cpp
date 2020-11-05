@@ -439,7 +439,6 @@ namespace whm
                     });
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[GA] [%3d] Best fitness: %f", gen, population.at(0).fitness);
-
             histFitness.push_back(population.at(0).fitness);
 
             // Each N iterations save weights
