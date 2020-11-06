@@ -86,7 +86,7 @@ namespace whm
         std::vector<int32_t> y_i;
         std::vector<SwapOperator_t> sos;
 
-        switch(selectTechnique())
+        switch(static_cast<int32_t>(randomFromInterval(0, 8)))
         {
             case 0:
                 sos = getSwap(x_i, x_k);
