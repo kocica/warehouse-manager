@@ -22,6 +22,15 @@ namespace whm
         E_WAREHOUSE_DISPATCH
     };
 
+    enum class WarehousePortType_t : int
+    {
+        E_PORT_MID,
+        E_PORT_LEFT,
+        E_PORT_RIGHT,
+        E_PORT_TOP,
+        E_PORT_BOTTOM
+    };
+
     template <typename E>
     constexpr auto to_underlying(E e) noexcept
     {

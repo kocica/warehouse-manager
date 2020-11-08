@@ -21,11 +21,12 @@ namespace whm
     {
         UiWarehousePort_t *UiWarehousePort_t::selectedPort = nullptr;
 
-        UiWarehousePort_t::UiWarehousePort_t(QGraphicsScene *s, QGraphicsItem* parent, MainWindow *ui, int32_t id, int32_t x, int32_t y, int32_t w, int32_t h)
+        UiWarehousePort_t::UiWarehousePort_t(QGraphicsScene *s, QGraphicsItem* parent, MainWindow *ui, int32_t id, int32_t x, int32_t y, int32_t w, int32_t h, WarehousePortType_t t)
             : BaseShapeGraphicItem_t(x, y, w, h, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, parent)
             , ui(ui)
             , whItem(dynamic_cast<UiWarehouseItem_t*>(parent))
             , whPortID(id)
+            , whPortType(t)
         {
             this->showHandles(false);
 
@@ -65,11 +66,41 @@ namespace whm
                     }
                     else
                     {
-                        // TODO: Are object on the same level and/or connected?
-
                         if (isWhItemCombinationAllowed(this->getWhItem()->getWhItemType(),
                                                selectedPort->getWhItem()->getWhItemType()))
                         {
+                            auto dstItem = this->getWhItem();
+                            auto dstPort = this;
+                            auto srcItem = selectedPort->getWhItem();
+                            auto srcPort = selectedPort;
+
+                            if(dstPort->getType() == WarehousePortType_t::E_PORT_RIGHT &&
+                               srcPort->getType() == WarehousePortType_t::E_PORT_LEFT)
+                            {
+                                srcItem->setO(dstItem->getO());
+
+                                auto dstRect = dstItem->getRect();
+                                auto srcRect = srcItem->getRect();
+
+                                if(dstItem->getO() == -90 || dstItem->getO() == 270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() - srcRect.height());
+                                }
+                                if(dstItem->getO() == 180 || dstItem->getO() == -180)
+                                {
+                                    srcItem->setO(dstItem->getO());
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() - srcRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                                if(dstItem->getO() == 90 || dstItem->getO() == -270)
+                                {
+                                    srcItem->setO(dstItem->getO());
+                                    srcItem->moveBy(dstRect.bottomLeft().x() - srcRect.bottomLeft().x(),
+                                                    dstRect.bottomLeft().y() - srcRect.bottomLeft().y() + srcRect.height());
+                                }
+                            }
+
                             this->whConn = new UiWarehouseConnection_t(selectedPort, this);
                             selectedPort->setWhConn(this->whConn);
                             selectedPort->connect();
@@ -87,12 +118,17 @@ namespace whm
 
         int32_t UiWarehousePort_t::getWhPortID() const
         {
-            return whPortID;
+            return this->whPortID;
         }
 
         UiWarehouseItem_t* UiWarehousePort_t::getWhItem() const
         {
             return this->whItem;
+        }
+
+        WarehousePortType_t UiWarehousePort_t::getType() const
+        {
+            return this->whPortType;
         }
 
         void UiWarehousePort_t::select()

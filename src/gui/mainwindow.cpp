@@ -47,8 +47,8 @@ namespace whm
         {
             ui->setupUi(this);
             ui->view->setStyleSheet("background-color: rgb(255, 255, 255)");
-            ui->view->setGeometry(0, 0, qApp->desktop()->availableGeometry().size().width() * 0.8,
-                                        qApp->desktop()->availableGeometry().size().height() * 0.8);
+            ui->view->setGeometry(0, 0, qApp->desktop()->availableGeometry().size().width() * 0.7,
+                                        qApp->desktop()->availableGeometry().size().height() * 0.7);
 
             setWindowTitle("Warehouse Manager");
 

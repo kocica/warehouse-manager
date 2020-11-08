@@ -63,7 +63,7 @@ $(BIN_NAME_SIM): $(HEADERS) $(SOURCES) $(OBJS)
 $(BIN_NAME_GUI): $(HEADERS) $(SOURCES) $(OBJS) $(GUI_SOURCES) $(GUI_HEADERS)
 	@cd $(GUI) && $(QMAKE) $(QFLAGS) && make
 	@mv $(shell pwd)/$(GUI)/$(BIN_NAME_GUI) .
-	find . -type f -name "*.cpp" -exec touch --no-create {} +
+#	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@

@@ -16,6 +16,7 @@
 #include "../Logger.h"
 #include "mainwindow.h"
 #include "UiWarehouseItem.h"
+#include "../WarehouseItemType.h"
 #include "UiWarehouseConnection.h"
 
 namespace whm
@@ -25,7 +26,7 @@ namespace whm
         class UiWarehousePort_t : BaseShapeGraphicItem_t
         {
             public:
-                UiWarehousePort_t(QGraphicsScene*, QGraphicsItem*, MainWindow*, int32_t, int32_t, int32_t, int32_t, int32_t);
+                UiWarehousePort_t(QGraphicsScene*, QGraphicsItem*, MainWindow*, int32_t, int32_t, int32_t, int32_t, int32_t, WarehousePortType_t);
                 virtual ~UiWarehousePort_t();
 
                 void select();
@@ -36,6 +37,7 @@ namespace whm
                 void setWhConn(UiWarehouseConnection_t*);
 
                 int32_t getWhPortID() const;
+                WarehousePortType_t getType() const;
                 UiWarehouseItem_t* getWhItem() const;
 
                 void dump() const;
@@ -53,6 +55,7 @@ namespace whm
                 UiWarehouseConnection_t* whConn{ nullptr };
 
                 int32_t whPortID{ 0 };
+                WarehousePortType_t whPortType;
 
                 // Shared across all instances
                 static UiWarehousePort_t* selectedPort;
