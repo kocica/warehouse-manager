@@ -39,8 +39,8 @@ namespace whm
                 QRectF getRect() const;
 
                 void showHandles(bool enabled);
-                void updateChildren(int dx, int dy);
-                void shiftGraphicItem(int dx, int dy);
+                void updateChildren(int dx, int dy, bool s = true);
+                void shiftGraphicItem(int dx, int dy, bool s);
                 void setGraphicItemOrientation(int o);
 
                 QGraphicsItem* getParent() const;
@@ -52,6 +52,7 @@ namespace whm
                 void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
                 void setDrawBoundingRect(bool draw);
                 void createHandles();
+                void updateHandles();
 
                 QRectF mRect;
                 QPointF mOrigin;

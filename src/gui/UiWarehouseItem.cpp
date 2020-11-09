@@ -58,6 +58,22 @@ namespace whm
             QObject::connect(&infoTimeout, &QTimer::timeout, [&](){ info->hide(); });
         }
 
+        void UiWarehouseItem_t::moveItem(qreal x, qreal y)
+        {
+            qreal w = this->mRect.width();
+            qreal h = this->mRect.height();
+
+            this->updateChildren(x, y, false);
+
+            this->mRect.setTopLeft(QPoint(this->mRect.topLeft().x() + x, this->mRect.topLeft().y() + y));
+            this->mRect.setBottomRight(QPoint(this->mRect.topLeft().x() + w, this->mRect.topLeft().y() + h));
+
+            this->mOrigin.setX(this->mOrigin.x() + x);
+            this->mOrigin.setY(this->mOrigin.y() + y);
+
+            this->updateHandles();
+        }
+
         UiWarehouseItem_t::~UiWarehouseItem_t()
         {
             for (UiWarehousePort_t* whPort : whPorts)

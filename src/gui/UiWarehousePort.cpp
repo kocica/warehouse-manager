@@ -87,17 +87,20 @@ namespace whm
                                     srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
                                                     dstRect.topLeft().y() - srcRect.topLeft().y() - srcRect.height());
                                 }
-                                if(dstItem->getO() == 180 || dstItem->getO() == -180)
+                                else if(dstItem->getO() == 180 || dstItem->getO() == -180)
                                 {
-                                    srcItem->setO(dstItem->getO());
                                     srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() - srcRect.width(),
                                                     dstRect.topLeft().y() - srcRect.topLeft().y());
                                 }
-                                if(dstItem->getO() == 90 || dstItem->getO() == -270)
+                                else if(dstItem->getO() == 90 || dstItem->getO() == -270)
                                 {
-                                    srcItem->setO(dstItem->getO());
                                     srcItem->moveBy(dstRect.bottomLeft().x() - srcRect.bottomLeft().x(),
                                                     dstRect.bottomLeft().y() - srcRect.bottomLeft().y() + srcRect.height());
+                                }
+                                else
+                                {
+                                    srcItem->moveBy(dstRect.topRight().x() - srcRect.topRight().x() + srcRect.width(),
+                                                    dstRect.topRight().y() - srcRect.topRight().y());
                                 }
                             }
 

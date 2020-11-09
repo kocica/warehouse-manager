@@ -57,6 +57,8 @@ namespace whm
                 void setH(int32_t h)   { mRect.setHeight(h); }
                 void setO(int32_t o)   { this->setGraphicItemOrientation(o); }
 
+                void moveItem(qreal, qreal);
+
                 UiWarehousePortContainer_t getWhPorts() const;
 
             protected:

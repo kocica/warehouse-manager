@@ -202,7 +202,7 @@ namespace whm
             return mParentItem;
         }
 
-        void BaseGraphicItem_t::updateChildren(int dx, int dy)
+        void BaseGraphicItem_t::updateChildren(int dx, int dy, bool s)
         {
             QList<QGraphicsItem*> items = scene()->items();
 
@@ -214,16 +214,25 @@ namespace whm
 
                     if (parentBaseItem && this->id() == parentBaseItem->id())
                     {
-                        baseItem->shiftGraphicItem(dx, dy);
+                        baseItem->shiftGraphicItem(dx, dy, s);
                     }
                 }
             }
         }
 
-        void BaseGraphicItem_t::shiftGraphicItem(int dx, int dy)
+        void BaseGraphicItem_t::shiftGraphicItem(int dx, int dy, bool s)
         {
-            this->mRect.setTopLeft(QPointF(this->mRect.topLeft().x() + (dx/2.0), this->mRect.topLeft().y() + (dy/2.0)));
-            this->mRect.setBottomRight(QPointF(this->mRect.bottomRight().x() + (dx/2.0), this->mRect.bottomRight().y() + (dy/2.0)));
+            int32_t dx2 = dx;
+            int32_t dy2 = dy;
+
+            if(s)
+            {
+                dx2 /= 2.0;
+                dy2 /= 2.0;
+            }
+
+            this->mRect.setTopLeft(QPointF(this->mRect.topLeft().x() + dx2, this->mRect.topLeft().y() + dy2));
+            this->mRect.setBottomRight(QPointF(this->mRect.bottomRight().x() + dx2, this->mRect.bottomRight().y() + dy2));
 
             this->mOrigin.setX((dx * mRect.width()) + mRect.center().x());
             this->mOrigin.setY((dy * mRect.height()) + mRect.center().y());
@@ -354,55 +363,60 @@ namespace whm
                         break;
                 }
 
-                QPointF left(mRect.left(),mRect.top() + mRect.height()/2);
-                QPointF right(mRect.right(),mRect.top() + mRect.height()/2);
-                QPointF top(mRect.left()+mRect.width()/2,mRect.top());
-                QPointF bottom(mRect.left()+mRect.width()/2,mRect.bottom());
-                int size = (mRect.width() + mRect.height())/2 / 10;
-                QPointF rotate(top.x(),top.y()-(5*size));
-
-                foreach (Handle *handle, mHandles)
-                {
-                    switch (handle->type())
-                    {
-                        case Handle::HANDLE_TYPE_LEFT:
-                            handle->setPos(left);
-                            break;
-                        case Handle::HANDLE_TYPE_RIGHT:
-                            handle->setPos(right);
-                            break;
-                        case Handle::HANDLE_TYPE_TOP:
-                            handle->setPos(top);
-                            break;
-                        case Handle::HANDLE_TYPE_BOTTOM:
-                            handle->setPos(bottom);
-                            break;
-                        case Handle::HANDLE_TYPE_TOPLEFT:
-                            handle->setPos(mRect.topLeft());
-                            break;
-                        case Handle::HANDLE_TYPE_TOPRIGHT:
-                            handle->setPos(mRect.topRight());
-                            break;
-                        case Handle::HANDLE_TYPE_BOTTOMLEFT:
-                            handle->setPos(mRect.bottomLeft());
-                            break;
-                        case Handle::HANDLE_TYPE_BOTTOMRIGHT:
-                            handle->setPos(mRect.bottomRight());
-                            break;
-                        case Handle::HANDLE_TYPE_ROTATE:
-                            handle->setPos(rotate);
-                            break;
-                        case Handle::HANDLE_TYPE_ORIGIN:
-                            handle->setPos(mOrigin);
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                updateHandles();
             }
             else
             {
                 QGraphicsItem::mouseMoveEvent(event);
+            }
+        }
+
+        void BaseGraphicItem_t::updateHandles()
+        {
+            QPointF left(mRect.left(),mRect.top() + mRect.height()/2);
+            QPointF right(mRect.right(),mRect.top() + mRect.height()/2);
+            QPointF top(mRect.left()+mRect.width()/2,mRect.top());
+            QPointF bottom(mRect.left()+mRect.width()/2,mRect.bottom());
+            int size = (mRect.width() + mRect.height())/2 / 10;
+            QPointF rotate(top.x(),top.y()-(5*size));
+
+            foreach (Handle *handle, mHandles)
+            {
+                switch (handle->type())
+                {
+                    case Handle::HANDLE_TYPE_LEFT:
+                        handle->setPos(left);
+                        break;
+                    case Handle::HANDLE_TYPE_RIGHT:
+                        handle->setPos(right);
+                        break;
+                    case Handle::HANDLE_TYPE_TOP:
+                        handle->setPos(top);
+                        break;
+                    case Handle::HANDLE_TYPE_BOTTOM:
+                        handle->setPos(bottom);
+                        break;
+                    case Handle::HANDLE_TYPE_TOPLEFT:
+                        handle->setPos(mRect.topLeft());
+                        break;
+                    case Handle::HANDLE_TYPE_TOPRIGHT:
+                        handle->setPos(mRect.topRight());
+                        break;
+                    case Handle::HANDLE_TYPE_BOTTOMLEFT:
+                        handle->setPos(mRect.bottomLeft());
+                        break;
+                    case Handle::HANDLE_TYPE_BOTTOMRIGHT:
+                        handle->setPos(mRect.bottomRight());
+                        break;
+                    case Handle::HANDLE_TYPE_ROTATE:
+                        handle->setPos(rotate);
+                        break;
+                    case Handle::HANDLE_TYPE_ORIGIN:
+                        handle->setPos(mOrigin);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
