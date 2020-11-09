@@ -74,14 +74,14 @@ namespace whm
                             auto srcItem = selectedPort->getWhItem();
                             auto srcPort = selectedPort;
 
-                            srcItem->setO(dstItem->getO());
-                            auto dstRect = dstItem->getRect();
-                            auto srcRect = srcItem->getRect();
-
                             // A bit stubborn but there is no other way...
                             if(dstPort->getType() == WarehousePortType_t::E_PORT_RIGHT &&
                                srcPort->getType() == WarehousePortType_t::E_PORT_LEFT)
                             {
+                                srcItem->setO(dstItem->getO());
+                                auto dstRect = dstItem->getRect();
+                                auto srcRect = srcItem->getRect();
+
                                 if(dstItem->getO() == -90 || dstItem->getO() == 270)
                                 {
                                     srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
@@ -106,6 +106,10 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_LEFT &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_RIGHT)
                             {
+                                srcItem->setO(dstItem->getO());
+                                auto dstRect = dstItem->getRect();
+                                auto srcRect = srcItem->getRect();
+
                                 if(dstItem->getO() == -90 || dstItem->getO() == 270)
                                 {
                                     srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
@@ -131,6 +135,8 @@ namespace whm
                                     srcPort->getType() == WarehousePortType_t::E_PORT_TOP)
                             {
                                 srcItem->setO(dstItem->getO() + 90);
+                                auto dstRect = dstItem->getRect();
+                                auto srcRect = srcItem->getRect();
 
                                 if(dstItem->getO() == -90 || dstItem->getO() == 270)
                                 {
@@ -152,11 +158,6 @@ namespace whm
                                     srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() - srcRect.width(),
                                                     dstRect.topLeft().y() - srcRect.topLeft().y());
                                 }
-                            }
-                            else if(dstPort->getType() == WarehousePortType_t::E_PORT_TOP &&
-                                    srcPort->getType() == WarehousePortType_t::E_PORT_LEFT)
-                            {
-                                srcItem->setO(dstItem->getO() - 90);
                             }
 
                             this->whConn = new UiWarehouseConnection_t(selectedPort, this);
