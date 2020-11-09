@@ -109,6 +109,7 @@ namespace whm
                             selectedPort->connect();
                             connect();
                             UiWarehouseLayout_t::getWhLayout().addWhConn(this->whConn);
+                            ui->reset();
                         }
                         else
                         {

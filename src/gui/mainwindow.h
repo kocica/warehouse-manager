@@ -35,6 +35,8 @@ namespace whm
 
                 Ui::MainWindow* getUi() const { return ui; }
 
+                void reset();
+
                 QPoint getWidgetPosition(QPoint);
 
             private slots:

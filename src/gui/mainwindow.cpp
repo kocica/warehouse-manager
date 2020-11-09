@@ -361,5 +361,13 @@ namespace whm
         {
 
         }
+
+        void MainWindow::reset()
+        {
+            ::whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
+            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+            UiWarehouseLayout_t::getWhLayout().clearWhLayout();
+            UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
+        }
     }
 }
