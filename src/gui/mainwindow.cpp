@@ -340,7 +340,7 @@ namespace whm
 
         void MainWindow::on_simulationRun_triggered()
         {
-            // TODO: New button or rename
+            // TODO: New button for export or rename
             QString file = QFileDialog::getSaveFileName(this, tr("Export location slots"), "", tr("Article location allocation (*.csv)"));
             if (file.cbegin() == file.cend())
             {

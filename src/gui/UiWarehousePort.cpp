@@ -74,14 +74,14 @@ namespace whm
                             auto srcItem = selectedPort->getWhItem();
                             auto srcPort = selectedPort;
 
+                            srcItem->setO(dstItem->getO());
+                            auto dstRect = dstItem->getRect();
+                            auto srcRect = srcItem->getRect();
+
+                            // A bit stubborn but there is no other way...
                             if(dstPort->getType() == WarehousePortType_t::E_PORT_RIGHT &&
                                srcPort->getType() == WarehousePortType_t::E_PORT_LEFT)
                             {
-                                srcItem->setO(dstItem->getO());
-
-                                auto dstRect = dstItem->getRect();
-                                auto srcRect = srcItem->getRect();
-
                                 if(dstItem->getO() == -90 || dstItem->getO() == 270)
                                 {
                                     srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
@@ -94,14 +94,69 @@ namespace whm
                                 }
                                 else if(dstItem->getO() == 90 || dstItem->getO() == -270)
                                 {
-                                    srcItem->moveBy(dstRect.bottomLeft().x() - srcRect.bottomLeft().x(),
-                                                    dstRect.bottomLeft().y() - srcRect.bottomLeft().y() + srcRect.height());
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() + dstRect.height());
                                 }
                                 else
                                 {
-                                    srcItem->moveBy(dstRect.topRight().x() - srcRect.topRight().x() + srcRect.width(),
-                                                    dstRect.topRight().y() - srcRect.topRight().y());
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() + dstRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
                                 }
+                            }
+                            else if(dstPort->getType() == WarehousePortType_t::E_PORT_LEFT &&
+                                    srcPort->getType() == WarehousePortType_t::E_PORT_RIGHT)
+                            {
+                                if(dstItem->getO() == -90 || dstItem->getO() == 270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() + dstRect.height());
+                                }
+                                else if(dstItem->getO() == 180 || dstItem->getO() == -180)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() + dstRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                                else if(dstItem->getO() == 90 || dstItem->getO() == -270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() - srcRect.height());
+                                }
+                                else
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() - srcRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                            }
+                            else if(dstPort->getType() == WarehousePortType_t::E_PORT_LEFT &&
+                                    srcPort->getType() == WarehousePortType_t::E_PORT_TOP)
+                            {
+                                srcItem->setO(dstItem->getO() + 90);
+
+                                if(dstItem->getO() == -90 || dstItem->getO() == 270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() + dstRect.height());
+                                }
+                                else if(dstItem->getO() == 180 || dstItem->getO() == -180)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() + dstRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                                else if(dstItem->getO() == 90 || dstItem->getO() == -270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() - srcRect.height());
+                                }
+                                else
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() - srcRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                            }
+                            else if(dstPort->getType() == WarehousePortType_t::E_PORT_TOP &&
+                                    srcPort->getType() == WarehousePortType_t::E_PORT_LEFT)
+                            {
+                                srcItem->setO(dstItem->getO() - 90);
                             }
 
                             this->whConn = new UiWarehouseConnection_t(selectedPort, this);

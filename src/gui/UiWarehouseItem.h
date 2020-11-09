@@ -48,7 +48,7 @@ namespace whm
                 int32_t getW() const { return mRect.width(); }
                 int32_t getH() const { return mRect.height(); }
                 int32_t getO() const { return this->mOrientation; }
-                QRectF getRect() const;
+                QRectF getRect();
 
                 void setWhItemID(int32_t id) { whItemID = id; }
                 void setX(int32_t x)   { mRect.setX(x); }
