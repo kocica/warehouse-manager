@@ -159,6 +159,90 @@ namespace whm
                                                     dstRect.topLeft().y() - srcRect.topLeft().y());
                                 }
                             }
+                            else if(dstPort->getType() == WarehousePortType_t::E_PORT_TOP &&
+                                    srcPort->getType() == WarehousePortType_t::E_PORT_LEFT)
+                            {
+                                srcItem->setO(dstItem->getO() - 90);
+                                auto dstRect = dstItem->getRect();
+                                auto srcRect = srcItem->getRect();
+
+                                if(dstItem->getO() == -90 || dstItem->getO() == 270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() - srcRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                                else if(dstItem->getO() == 180 || dstItem->getO() == -180)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() + dstRect.height());
+                                }
+                                else if(dstItem->getO() == 90 || dstItem->getO() == -270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() + dstRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                                else
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() - srcRect.height());
+                                }
+                            }
+                            else if(dstPort->getType() == WarehousePortType_t::E_PORT_RIGHT &&
+                                    srcPort->getType() == WarehousePortType_t::E_PORT_TOP)
+                            {
+                                srcItem->setO(dstItem->getO() - 90);
+                                auto dstRect = dstItem->getRect();
+                                auto srcRect = srcItem->getRect();
+
+                                if(dstItem->getO() == -90 || dstItem->getO() == 270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() - srcRect.height());
+                                }
+                                else if(dstItem->getO() == 180 || dstItem->getO() == -180)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() - srcRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                                else if(dstItem->getO() == 90 || dstItem->getO() == -270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() + dstRect.height());
+                                }
+                                else
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() + dstRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                            }
+                            else if(dstPort->getType() == WarehousePortType_t::E_PORT_TOP &&
+                                    srcPort->getType() == WarehousePortType_t::E_PORT_RIGHT)
+                            {
+                                srcItem->setO(dstItem->getO() + 90);
+                                auto dstRect = dstItem->getRect();
+                                auto srcRect = srcItem->getRect();
+
+                                if(dstItem->getO() == -90 || dstItem->getO() == 270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() - srcRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                                else if(dstItem->getO() == 180 || dstItem->getO() == -180)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() + dstRect.height());
+                                }
+                                else if(dstItem->getO() == 90 || dstItem->getO() == -270)
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x() + dstRect.width(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y());
+                                }
+                                else
+                                {
+                                    srcItem->moveBy(dstRect.topLeft().x() - srcRect.topLeft().x(),
+                                                    dstRect.topLeft().y() - srcRect.topLeft().y() - srcRect.height());
+                                }
+                            }
 
                             this->whConn = new UiWarehouseConnection_t(selectedPort, this);
                             selectedPort->setWhConn(this->whConn);
