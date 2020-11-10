@@ -40,23 +40,32 @@ namespace whm
             int32_t slotW = i.getW()/i.getSlotCountX();
             int32_t slotH = i.getH()/i.getSlotCountY();
 
-            auto* rack = i.getWhLocationRack();
-
             int32_t x2 = i.getX();
             for(int32_t c1 = 0; c1 < i.getSlotCountX(); c1++)
             {
                 int32_t y2 = i.getY();
                 for(int32_t c2 = 0; c2 < i.getSlotCountY(); c2++)
                 {
-                    auto* slot = new UiWarehouseSlot_t(x2, y2, slotW, slotH, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, this);
-                    slot->setArticle(rack->at(c1, c2).getArticle());
-                    whSlots.push_back(slot);
+                    whSlots.push_back(new UiWarehouseSlot_t(x2, y2, slotW, slotH, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, this));
                     y2 += slotH;
                 }
                 x2 += slotW;
             }
 
             this->setBrush(Qt::darkRed);
+        }
+
+        void UiWarehouseItemLocation_t::importSlots(::whm::WarehouseItem_t& i)
+        {
+            auto* rack = i.getWhLocationRack();
+
+            for(int32_t c1 = 0; c1 < i.getSlotCountX(); c1++)
+            {
+                for(int32_t c2 = 0; c2 < i.getSlotCountY(); c2++)
+                {
+                    whSlots[(c1 * i.getSlotCountY()) + c2]->setArticle(rack->at(c1, c2).getArticle());
+                }
+            }
         }
 
         UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t t)

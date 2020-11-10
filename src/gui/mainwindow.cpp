@@ -21,6 +21,7 @@
 #include "BaseShapeGraphicItem.h"
 #include "UiWarehouseItemLocation.h"
 #include "UiWarehouseItemConveyor.h"
+#include "../WarehouseItem.h"
 #include "../WarehouseLayout.h"
 
 // Qt
@@ -293,7 +294,6 @@ namespace whm
             ui->view->scene()->update();
 
             ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(file.toUtf8().constData());
-            ::whm::WarehouseLayout_t::getWhLayout().importLocationSlots("data/locations.csv"); // TODO: !!!
             ::whm::WarehouseLayout_t::getWhLayout().dump();
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().dump();
@@ -347,13 +347,37 @@ namespace whm
             }
 
             ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
-            ::whm::WarehouseLayout_t::getWhLayout().dump();
             ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(file.toUtf8().constData());
         }
 
         void MainWindow::on_simulationStep_triggered()
         {
+            // TODO: New button for import locations or rename
+            QString file = QFileDialog::getOpenFileName(this, tr("Import location slots"), "", tr("Article location allocation (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
 
+            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+            ::whm::WarehouseLayout_t::getWhLayout().importLocationSlots(file.toUtf8().constData());
+
+            auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
+            auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
+
+            for(auto* item : items)
+            {
+                if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                {
+                    for(auto* uiItem : uiItems)
+                    {
+                        if(item->getWhItemID() == uiItem->getWhItemID())
+                        {
+                            dynamic_cast<UiWarehouseItemLocation_t*>(uiItem)->importSlots(*item);
+                        }
+                    }
+                }
+            }
         }
 
         void MainWindow::on_simulationStop_triggered()

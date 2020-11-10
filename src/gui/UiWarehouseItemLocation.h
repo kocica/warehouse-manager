@@ -29,6 +29,8 @@ namespace whm
                 // Construct from TUI
                 UiWarehouseItemLocation_t(QGraphicsScene*, MainWindow*, ::whm::WarehouseItem_t&);
 
+                void importSlots(::whm::WarehouseItem_t&);
+
                 ~UiWarehouseItemLocation_t() = default;
 
                 int32_t getSlotCountX() const { return this->slotsX; }

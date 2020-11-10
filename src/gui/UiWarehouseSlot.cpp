@@ -27,6 +27,12 @@ namespace whm
                 this->article = a;
                 this->setBrush(Qt::magenta);
             }
+            else
+            {
+                this->article = std::string();
+                this->setBrush(Qt::white);
+            }
+            
         }
     }
 }
