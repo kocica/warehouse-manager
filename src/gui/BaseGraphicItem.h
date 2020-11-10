@@ -42,6 +42,7 @@ namespace whm
                 void updateChildren(int dx, int dy, bool s = true);
                 void shiftGraphicItem(int dx, int dy, bool s);
                 void setGraphicItemOrientation(int o);
+                void setLineWidth(int32_t w);
 
                 QGraphicsItem* getParent() const;
 
@@ -63,6 +64,7 @@ namespace whm
                 bool mDrawHandles;
 
                 int32_t mOrientation{ 0 };
+                int32_t mLineWidth{ 3 };
 
                 QList<Handle *> mHandles;
                 QGraphicsItem* mParentItem{ nullptr };

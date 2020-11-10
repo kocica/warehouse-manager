@@ -41,6 +41,7 @@ namespace whm
             private:
                 ItemType mType;
                 QPixmap mPixmap;
+                bool mDrawPixmap{ false };
         };
     }
 }

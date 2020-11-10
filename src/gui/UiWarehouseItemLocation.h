@@ -13,6 +13,7 @@
 #include "../Logger.h"
 #include "UiWarehouseItem.h"
 #include "UiWarehousePort.h"
+#include "UiWarehouseSlot.h"
 
 namespace whm
 {
@@ -37,6 +38,8 @@ namespace whm
             private:
                 int32_t slotsX{ 0 };
                 int32_t slotsY{ 0 };
+
+                std::vector<UiWarehouseSlot_t*> whSlots;
         };
     }
 }

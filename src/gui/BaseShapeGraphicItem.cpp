@@ -30,7 +30,7 @@ namespace whm
         void BaseShapeGraphicItem_t::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
         {
             QPen pen(Qt::black);
-            pen.setWidth(3);
+            pen.setWidth(this->mLineWidth);
             painter->setPen(pen);
 
             if(mRect.left() > mRect.right())
@@ -65,6 +65,10 @@ namespace whm
             {
                 case ITEM_RECTANGLE:
                     painter->drawRect(this->mRect);
+                    if(mDrawPixmap)
+                    {
+                        painter->drawPixmap(this->mRect.toRect(),this->mPixmap);
+                    }
                     break;
                 case ITEM_ELLIPSE:
                     painter->drawEllipse(this->mRect);
@@ -84,6 +88,7 @@ namespace whm
 
         void BaseShapeGraphicItem_t::setPixmap(QString path)
         {
+            this->mDrawPixmap = true;
             this->mPixmap = QPixmap(path);
         }
 

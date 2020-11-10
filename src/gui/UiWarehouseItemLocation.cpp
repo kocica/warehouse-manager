@@ -67,8 +67,21 @@ namespace whm
                 // TODO: Remove from layout and deleteLater()?
             }*/
 
+            // Ports
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x + w/2 - portSizeX, y + h/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_LEFT));
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + w/2            , y + h/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_RIGHT));
+
+            // Slots
+            int32_t slotW = w/locX->text().toInt();
+            int32_t slotH = h/locY->text().toInt();
+
+            for(int32_t x2 = x; x2 < (x+w); x2 += slotW)
+            {
+                for(int32_t y2 = y; y2 < (y+h); y2 += slotH)
+                {
+                    whSlots.emplace_back(new UiWarehouseSlot_t(x2, y2, slotW, slotH, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, this));
+                }
+            }
         }
     }
 }

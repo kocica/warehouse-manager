@@ -21,6 +21,7 @@ SOURCES +=  ../main.cpp \
             ../WarehouseLocationRack.cpp \
             UiCursor.cpp \
             MainWindow.cpp \
+            UiWarehouseSlot.cpp \
             UiWarehousePort.cpp \
             UiWarehouseItem.cpp \
             UiWarehouseLayout.cpp \
@@ -46,6 +47,7 @@ HEADERS +=  ../Utils.h \
             ../WarehouseLocationRack.h \
             MainWindow.h \
             UiCursor.h \
+            UiWarehouseSlot.h \
             UiWarehousePort.h \
             UiWarehouseItem.h \
             UiWarehouseLayout.h \

@@ -8,5 +8,6 @@
         <file>img/clear.png</file>
         <file>img/select.png</file>
         <file>img/delete.png</file>
+        <file>img/conv.png</file>
     </qresource>
 </RCC>

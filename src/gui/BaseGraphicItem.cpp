@@ -111,7 +111,7 @@ namespace whm
             Q_UNUSED(widget);
 
             QPen pen(Qt::black);
-            pen.setWidth(3);
+            pen.setWidth(this->mLineWidth);
             painter->setPen(pen);
 
             if(this->isSelected())
@@ -428,6 +428,11 @@ namespace whm
             this->setTransform(QTransform().translate(mOrigin.x(), mOrigin.y())
                                            .rotate(angle)
                                            .translate(-mOrigin.x(), -mOrigin.y()), true);
+        }
+
+        void BaseGraphicItem_t::setLineWidth(int32_t w)
+        {
+            this->mLineWidth = w;
         }
 
         void BaseGraphicItem_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
