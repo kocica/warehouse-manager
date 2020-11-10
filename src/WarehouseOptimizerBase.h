@@ -58,7 +58,7 @@ namespace whm
 
             // Generic sku/slot encoding
             std::map<int32_t, std::string> skuEnc;
-            std::map<int32_t, WarehouseLocationSlot_t<std::string>*> slotEnc;
+            std::map<int32_t, WarehouseLocationSlot_t*> slotEnc;
 
             // Fitness history for plot
             std::vector<double> histFitness;
