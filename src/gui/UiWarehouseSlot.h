@@ -21,6 +21,11 @@ namespace whm
             public:
                 UiWarehouseSlot_t(int32_t, int32_t, int32_t, int32_t, BaseShapeGraphicItem_t::ItemType, QGraphicsScene*, QGraphicsItem*);
                 ~UiWarehouseSlot_t() = default;
+
+                void setArticle(const std::string&);
+
+            private:
+                std::string article;
         };
     }
 }

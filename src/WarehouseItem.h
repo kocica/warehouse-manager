@@ -30,8 +30,6 @@ namespace whm
 namespace whm
 {
     class WarehousePort_t;
-
-    template<typename>
     class WarehouseLocationRack_t;
 
     class WarehouseItem_t
@@ -63,7 +61,7 @@ namespace whm
             int32_t getO() const                { return o; }
 
             WarehousePortContainer_t getWhPorts() const;
-            WarehouseLocationRack_t<std::string>* getWhLocationRack() const;
+            WarehouseLocationRack_t* getWhLocationRack() const;
 
             void dump() const;
 
@@ -86,6 +84,6 @@ namespace whm
 
             WarehousePortContainer_t whPorts;
 
-            WarehouseLocationRack_t<std::string>* whLocRack{ nullptr };
+            WarehouseLocationRack_t* whLocRack{ nullptr };
     };
 }

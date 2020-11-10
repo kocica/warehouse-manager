@@ -19,24 +19,22 @@ namespace whm
 {
     class WarehouseItem_t;
 
-    template<typename T>
     class WarehouseLocationRack_t
     {
         public:
-            using LocationSlot_t = WarehouseLocationSlot_t<T>;
-            using LocationSlots_t = std::vector<std::vector<LocationSlot_t>>;
-            using SortedLocationSlots_t = std::vector<LocationSlot_t*>;
+            using SortedLocationSlots_t = std::vector<WarehouseLocationSlot_t*>;
+            using LocationSlots_t = std::vector<std::vector<WarehouseLocationSlot_t>>;
 
             WarehouseLocationRack_t(WarehouseItem_t*, size_t, size_t);
             ~WarehouseLocationRack_t();
 
-            LocationSlot_t& at(size_t, size_t);
-            void setAt(size_t, size_t, const LocationSlot_t&);
+            WarehouseLocationSlot_t& at(size_t, size_t);
+            void setAt(size_t, size_t, const WarehouseLocationSlot_t&);
 
             void init(size_t, size_t);
 
-            bool containsArticle(const T&, int32_t);
-            bool containsArticle(const T&, int32_t, std::pair<size_t, size_t>&);
+            bool containsArticle(const std::string&, int32_t);
+            bool containsArticle(const std::string&, int32_t, std::pair<size_t, size_t>&);
 
             void exportSlots(std::ostream&) const;
             void importSlots(std::istream&);
@@ -50,12 +48,12 @@ namespace whm
             const SortedLocationSlots_t& getSortedSlots() const;
 
             int32_t getOccupationLevel() const;
-            LocationSlot_t* getFirstFreeSlot();
+            WarehouseLocationSlot_t* getFirstFreeSlot();
 
             void dump() const;
 
         private:
-            LocationSlots_t slots;
+            LocationSlots_t whSlots;
             SortedLocationSlots_t sortedSlots;
 
             WarehouseItem_t* whItem{ nullptr };

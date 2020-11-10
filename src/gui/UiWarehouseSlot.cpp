@@ -18,7 +18,15 @@ namespace whm
         {
             this->showHandles(false);
             this->setLineWidth(1);
-            this->setBrush(Qt::magenta);
+        }
+
+        void UiWarehouseSlot_t::setArticle(const std::string& a)
+        {
+            if(!a.empty())
+            {
+                this->article = a;
+                this->setBrush(Qt::magenta);
+            }
         }
     }
 }

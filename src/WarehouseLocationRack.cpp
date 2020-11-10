@@ -15,8 +15,7 @@
 
 namespace whm
 {
-    template<typename T>
-    WarehouseLocationRack_t<T>::WarehouseLocationRack_t(WarehouseItem_t* whItem_, size_t slotsX, size_t slotsY)
+    WarehouseLocationRack_t::WarehouseLocationRack_t(WarehouseItem_t* whItem_, size_t slotsX, size_t slotsY)
         : whItem{ whItem_ }
     {
         init(slotsX, slotsY);
@@ -30,7 +29,7 @@ namespace whm
         }
 
         std::sort(sortedSlots.begin(), sortedSlots.end(),
-                  [x = slotsX, y = slotsY](LocationSlot_t* lhs, LocationSlot_t* rhs)
+                  [x = slotsX, y = slotsY](WarehouseLocationSlot_t* lhs, WarehouseLocationSlot_t* rhs)
                   -> bool
                   {
                       return (lhs->getCoords().first / double(x)) + (lhs->getCoords().second / double(y)) <
@@ -38,111 +37,89 @@ namespace whm
                   });
     }
 
-    template<typename T>
-    WarehouseLocationRack_t<T>::~WarehouseLocationRack_t()
+    WarehouseLocationRack_t::~WarehouseLocationRack_t()
     {
 
     }
 
-    template<typename T>
-    WarehouseItem_t* WarehouseLocationRack_t<T>::getWhItem() const
+    WarehouseItem_t* WarehouseLocationRack_t::getWhItem() const
     {
         return this->whItem;
     }
 
-    template<typename T>
-    WarehouseLocationSlot_t<T>& WarehouseLocationRack_t<T>::at(size_t x, size_t y)
+    WarehouseLocationSlot_t& WarehouseLocationRack_t::at(size_t x, size_t y)
     {
-        // TODO: assert; exception
-        if (y > slots.size() || x > slots[0].size())
-        {
-            std::cerr << "Index is outside of bounds!" << std::endl;
-        }
-
-        return slots[y][x];
+        return whSlots[y][x];
     }
 
-    template<typename T>
-    void WarehouseLocationRack_t<T>::setAt(size_t x, size_t y, const WarehouseLocationSlot_t<T>& s)
+    void WarehouseLocationRack_t::setAt(size_t x, size_t y, const WarehouseLocationSlot_t& s)
     {
-        // TODO: assert; exception
-        if (y > slots.size() || x > slots[0].size())
-        {
-            std::cerr << "Index is outside of bounds!" << std::endl;
-        }
-
-        slots[y][x] = s;
+        whSlots[y][x] = s;
     }
 
-    template<typename T>
-    void WarehouseLocationRack_t<T>::init(size_t x, size_t y)
+    void WarehouseLocationRack_t::init(size_t x, size_t y)
     {
-        slots = LocationSlots_t(y, std::vector<WarehouseLocationSlot_t<T>>(x));
+        whSlots = LocationSlots_t(y, std::vector<WarehouseLocationSlot_t>(x));
 
-        for (size_t i = 0; i < slots.size(); i++)
+        for (size_t i = 0; i < whSlots.size(); i++)
         {
-            for (size_t j = 0; j < slots[i].size(); j++)
+            for (size_t j = 0; j < whSlots[i].size(); j++)
             {
-                slots[i][j].setWhLocRack(this);
-                slots[i][j].setCoords(std::make_pair(j, i));
+                whSlots[i][j].setWhLocRack(this);
+                whSlots[i][j].setCoords(std::make_pair(j, i));
             }
         }
     }
 
-    template<typename T>
-    void WarehouseLocationRack_t<T>::dump() const
+    void WarehouseLocationRack_t::dump() const
     {
-        for (size_t i = 0; i < slots.size(); i++)
+        for (size_t i = 0; i < whSlots.size(); i++)
         {
-            for (size_t j = 0; j < slots[i].size(); j++)
+            for (size_t j = 0; j < whSlots[i].size(); j++)
             {
-                slots[i][j].dump();
+                whSlots[i][j].dump();
             }
             std::cout << std::endl;
         }
     }
 
-    template<typename T>
-    void WarehouseLocationRack_t<T>::exportSlots(std::ostream& csvStream) const
+    void WarehouseLocationRack_t::exportSlots(std::ostream& csvStream) const
     {
-        for (size_t i = 0; i < slots.size(); i++)
+        for (size_t i = 0; i < whSlots.size(); i++)
         {
-            for (size_t j = 0; j < slots[i].size(); j++)
+            for (size_t j = 0; j < whSlots[i].size(); j++)
             {
-                slots[i][j].exportSlot(csvStream);
+                whSlots[i][j].exportSlot(csvStream);
             }
         }
     }
 
-    template<typename T>
-    void WarehouseLocationRack_t<T>::importSlots(std::istream& csvStream)
+    void WarehouseLocationRack_t::importSlots(std::istream& csvStream)
     {
-        for (size_t i = 0; i < slots.size(); i++)
+        for (size_t i = 0; i < whSlots.size(); i++)
         {
-            for (size_t j = 0; j < slots[i].size(); j++)
+            for (size_t j = 0; j < whSlots[i].size(); j++)
             {
-                slots[i][j].importSlot(csvStream);
+                whSlots[i][j].importSlot(csvStream);
             }
         }
     }
 
-    template<typename T>
-    bool WarehouseLocationRack_t<T>::containsArticle(const T& article, int32_t quantity)
+    bool WarehouseLocationRack_t::containsArticle(const std::string& article, int32_t quantity)
     {
         std::pair<size_t, size_t> c;
         return containsArticle(article, quantity, c);
     }
 
-    template<typename T>
-    bool WarehouseLocationRack_t<T>::containsArticle(const T& article, int32_t quantity, std::pair<size_t, size_t>& coords)
+    bool WarehouseLocationRack_t::containsArticle(const std::string& article, int32_t quantity, std::pair<size_t, size_t>& coords)
     {
         (void)quantity;
 
-        for (size_t i = 0; i < slots.size(); i++)
+        for (size_t i = 0; i < whSlots.size(); i++)
         {
-            for (size_t j = 0; j < slots[i].size(); j++)
+            for (size_t j = 0; j < whSlots[i].size(); j++)
             {
-                if(slots[i][j].getArticle() == article && slots[i][j].getQuantity() >= 0 /*quantity*/)
+                if(whSlots[i][j].getArticle() == article && whSlots[i][j].getQuantity() >= 0 /*quantity*/)
                 {
                     coords = std::make_pair(j, i);
                     return true;
@@ -153,28 +130,25 @@ namespace whm
         return false;
     }
 
-    template<typename T>
-    int32_t WarehouseLocationRack_t<T>::getSlotCountY() const
+    int32_t WarehouseLocationRack_t::getSlotCountY() const
     {
-        return static_cast<int32_t>(slots.size());
+        return static_cast<int32_t>(whSlots.size());
     }
 
-    template<typename T>
-    int32_t WarehouseLocationRack_t<T>::getSlotCountX() const
+    int32_t WarehouseLocationRack_t::getSlotCountX() const
     {
-        return static_cast<int32_t>(slots.size() > 0 ? slots[0].size() : 0);
+        return static_cast<int32_t>(whSlots.size() > 0 ? whSlots[0].size() : 0);
     }
 
-    template<typename T>
-    int32_t WarehouseLocationRack_t<T>::getOccupationLevel() const
+    int32_t WarehouseLocationRack_t::getOccupationLevel() const
     {
         int32_t occLevel{ 0 };
 
-        for (size_t i = 0; i < slots.size(); i++)
+        for (size_t i = 0; i < whSlots.size(); i++)
         {
-            for (size_t j = 0; j < slots[i].size(); j++)
+            for (size_t j = 0; j < whSlots[i].size(); j++)
             {
-                if(slots[i][j].isOccupied())
+                if(whSlots[i][j].isOccupied())
                 {
                     occLevel++;
                 }
@@ -184,8 +158,7 @@ namespace whm
         return occLevel;
     }
 
-    template<typename T>
-    WarehouseLocationSlot_t<T>* WarehouseLocationRack_t<T>::getFirstFreeSlot()
+    WarehouseLocationSlot_t* WarehouseLocationRack_t::getFirstFreeSlot()
     {
         for (auto* slot : sortedSlots)
         {
@@ -198,17 +171,13 @@ namespace whm
         return nullptr;
     }
 
-    template<typename T>
-    const typename WarehouseLocationRack_t<T>::LocationSlots_t& WarehouseLocationRack_t<T>::getSlots() const
+    const typename WarehouseLocationRack_t::LocationSlots_t& WarehouseLocationRack_t::getSlots() const
     {
-        return slots;
+        return whSlots;
     }
 
-    template<typename T>
-    const typename WarehouseLocationRack_t<T>::SortedLocationSlots_t& WarehouseLocationRack_t<T>::getSortedSlots() const
+    const typename WarehouseLocationRack_t::SortedLocationSlots_t& WarehouseLocationRack_t::getSortedSlots() const
     {
         return sortedSlots;
     }
-
-    template class WarehouseLocationRack_t<std::string>;
 }

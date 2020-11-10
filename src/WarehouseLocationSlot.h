@@ -13,10 +13,8 @@
 
 namespace whm
 {
-    template<typename>
     class WarehouseLocationRack_t;
 
-    template<typename T>
     class WarehouseLocationSlot_t
     {
         public:
@@ -25,8 +23,8 @@ namespace whm
 
             bool isOccupied() const;
 
-            T getArticle() const;
-            void setArticle(const T&);
+            std::string getArticle() const;
+            void setArticle(const std::string&);
 
             int32_t getQuantity() const;
             void setQuantity(const int32_t);
@@ -34,8 +32,8 @@ namespace whm
             std::pair<size_t, size_t> getCoords() const;
             void setCoords(const std::pair<size_t, size_t>&);
 
-            WarehouseLocationRack_t<T>* getWhLocRack() const;
-            void setWhLocRack(WarehouseLocationRack_t<T>*);
+            WarehouseLocationRack_t* getWhLocRack() const;
+            void setWhLocRack(WarehouseLocationRack_t*);
 
             void exportSlot(std::ostream&) const;
             void importSlot(std::istream&);
@@ -43,10 +41,10 @@ namespace whm
             void dump() const;
 
         private:
-            T article;
+            std::string article;
             size_t x{ 0 };
             size_t y{ 0 };
             int32_t quantity{ 0 };
-            WarehouseLocationRack_t<T>* whLocRack{ nullptr };
+            WarehouseLocationRack_t* whLocRack{ nullptr };
     };
 }

@@ -56,7 +56,7 @@ namespace whm
         if (whItemType == WarehouseItemType_t::E_LOCATION_SHELF)
         {
             const auto& uiItemLoc = static_cast<gui::UiWarehouseItemLocation_t&>(uiItem);
-            whLocRack = new WarehouseLocationRack_t<std::string>(this, uiItemLoc.getSlotCountX(), uiItemLoc.getSlotCountY());
+            whLocRack = new WarehouseLocationRack_t(this, uiItemLoc.getSlotCountX(), uiItemLoc.getSlotCountY());
         }
     }
 #endif
@@ -132,7 +132,7 @@ namespace whm
             int32_t slotsX = locationRack->IntAttribute("slots_x");
             int32_t slotsY = locationRack->IntAttribute("slots_y");
 
-            whLocRack = new WarehouseLocationRack_t<std::string>(this, slotsX, slotsY);
+            whLocRack = new WarehouseLocationRack_t(this, slotsX, slotsY);
         }
 
         for (tinyxml2::XMLElement* whPortXml = elem->FirstChildElement("WarehousePort"); whPortXml; whPortXml = whPortXml->NextSiblingElement("WarehousePort"))
@@ -149,7 +149,7 @@ namespace whm
         return whPorts;
     }
 
-    WarehouseLocationRack_t<std::string>* WarehouseItem_t::getWhLocationRack() const
+    WarehouseLocationRack_t* WarehouseItem_t::getWhLocationRack() const
     {
         return whLocRack;
     }

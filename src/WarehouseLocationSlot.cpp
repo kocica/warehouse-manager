@@ -16,81 +16,68 @@
 
 namespace whm
 {
-    template<typename T>
-    WarehouseLocationSlot_t<T>::WarehouseLocationSlot_t()
+    WarehouseLocationSlot_t::WarehouseLocationSlot_t()
     {
 
     }
 
-    template<typename T>
-    WarehouseLocationSlot_t<T>::~WarehouseLocationSlot_t()
+    WarehouseLocationSlot_t::~WarehouseLocationSlot_t()
     {
 
     }
 
-    template<typename T>
-    bool WarehouseLocationSlot_t<T>::isOccupied() const
+    bool WarehouseLocationSlot_t::isOccupied() const
     {
         return this->article != std::string();
     }
 
-    template<typename T>
-    T WarehouseLocationSlot_t<T>::getArticle() const
+    std::string WarehouseLocationSlot_t::getArticle() const
     {
         return this->article;
     }
 
-    template<typename T>
-    void WarehouseLocationSlot_t<T>::setArticle(const T& a)
+    void WarehouseLocationSlot_t::setArticle(const std::string& a)
     {
         this->article = a;
     }
 
-    template<typename T>
-    int32_t WarehouseLocationSlot_t<T>::getQuantity() const
+    int32_t WarehouseLocationSlot_t::getQuantity() const
     {
         return this->quantity;
     }
 
-    template<typename T>
-    void WarehouseLocationSlot_t<T>::setQuantity(const int32_t q)
+    void WarehouseLocationSlot_t::setQuantity(const int32_t q)
     {
         this->quantity = q;
     }
 
-    template<typename T>
-    std::pair<size_t, size_t> WarehouseLocationSlot_t<T>::getCoords() const
+    std::pair<size_t, size_t> WarehouseLocationSlot_t::getCoords() const
     {
         return std::make_pair(x, y);
     }
 
-    template<typename T>
-    void WarehouseLocationSlot_t<T>::setCoords(const std::pair<size_t, size_t>& coords)
+    void WarehouseLocationSlot_t::setCoords(const std::pair<size_t, size_t>& coords)
     {
         this->x = coords.first;
         this->y = coords.second;
     }
 
-    template<typename T>
-    WarehouseLocationRack_t<T>* WarehouseLocationSlot_t<T>::getWhLocRack() const
+    WarehouseLocationRack_t* WarehouseLocationSlot_t::getWhLocRack() const
     {
         return this->whLocRack;
     }
 
-    template<typename T>
-    void WarehouseLocationSlot_t<T>::setWhLocRack(WarehouseLocationRack_t<T>* whLocRack_)
+    void WarehouseLocationSlot_t::setWhLocRack(WarehouseLocationRack_t* whLocRack_)
     {
         this->whLocRack = whLocRack_;
     }
 
-    template<typename T>
-    void WarehouseLocationSlot_t<T>::dump() const
+    void WarehouseLocationSlot_t::dump() const
     {
         std::cout << this->article << " (" << this->quantity << ") ";
     }
 
-    template<typename T>
-    void WarehouseLocationSlot_t<T>::exportSlot(std::ostream& csvStream) const
+    void WarehouseLocationSlot_t::exportSlot(std::ostream& csvStream) const
     {
         csvStream << this->whLocRack->getWhItem()->getWhItemID() << ";"
                   << this->x << ";"
@@ -99,8 +86,7 @@ namespace whm
                   << this->quantity << std::endl;
     }
 
-    template<typename T>
-    void WarehouseLocationSlot_t<T>::importSlot(std::istream& csvStream)
+    void WarehouseLocationSlot_t::importSlot(std::istream& csvStream)
     {
         std::string i, x, y, a, q;
 
@@ -129,6 +115,4 @@ namespace whm
             std::cerr << "Incorrect csv value!" << std::endl;
         }
     }
-
-    template class WarehouseLocationSlot_t<std::string>;
 }

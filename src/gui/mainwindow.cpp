@@ -293,6 +293,7 @@ namespace whm
             ui->view->scene()->update();
 
             ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(file.toUtf8().constData());
+            ::whm::WarehouseLayout_t::getWhLayout().importLocationSlots("data/locations.csv"); // TODO: !!!
             ::whm::WarehouseLayout_t::getWhLayout().dump();
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().dump();
