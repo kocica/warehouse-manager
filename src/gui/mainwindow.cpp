@@ -202,9 +202,7 @@ namespace whm
 
                 if(w == 0 || h == 0)
                 {
-                    QMessageBox err;
-                    err.critical(0, "Error", "Invalid dimenstions entered");
-                    err.setFixedSize(500, 200);
+                    QMessageBox::critical(nullptr, "Error", "Invalid dimenstions entered!");
                     return;
                 }
 

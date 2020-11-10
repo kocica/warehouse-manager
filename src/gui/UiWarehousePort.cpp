@@ -9,11 +9,24 @@
 
 #include <iostream>
 
+#include <QMessageBox>
+
 #include "UiCursor.h"
 #include "UiWarehousePort.h"
 #include "UiWarehouseItem.h"
 #include "UiWarehouseLayout.h"
 #include "UiWarehouseConnection.h"
+
+namespace
+{
+    using whm::WarehousePortType_t;
+
+    bool isPortCombinationAllowed(WarehousePortType_t lhs, WarehousePortType_t rhs)
+    {
+        return !((lhs == WarehousePortType_t::E_PORT_LEFT  && rhs == WarehousePortType_t::E_PORT_LEFT) ||
+                 (lhs == WarehousePortType_t::E_PORT_RIGHT && rhs == WarehousePortType_t::E_PORT_RIGHT));
+    }
+}
 
 namespace whm
 {
@@ -62,10 +75,19 @@ namespace whm
                     }
                     else if (selectedPort->getWhItem() == this->getWhItem())
                     {
+                        QMessageBox::critical(nullptr, "Error", "Cannot connect same object!");
                         Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot connect same object!");
                     }
                     else
                     {
+                        if (!isPortCombinationAllowed(this->getType(),
+                                              selectedPort->getType()))
+                        {
+                            QMessageBox::critical(nullptr, "Error", "Cannot connect incompatible ports!");
+                            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot connect incompatible ports!");
+                            return;
+                        }
+
                         if (isWhItemCombinationAllowed(this->getWhItem()->getWhItemType(),
                                                selectedPort->getWhItem()->getWhItemType()))
                         {
@@ -477,6 +499,7 @@ namespace whm
                         }
                         else
                         {
+                            QMessageBox::critical(nullptr, "Error", "Cannot connect incompatible types!");
                             Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot connect incompatible types!");
                         }
                     }
@@ -526,6 +549,7 @@ namespace whm
         {
             if(this->whConn != nullptr)
             {
+                QMessageBox::critical(nullptr, "Error", "Already connected!");
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Already connected!");
             }
             else
