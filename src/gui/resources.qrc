@@ -9,5 +9,7 @@
         <file>img/select.png</file>
         <file>img/delete.png</file>
         <file>img/conv.png</file>
+        <file>img/import.png</file>
+        <file>img/export.png</file>
     </qresource>
 </RCC>

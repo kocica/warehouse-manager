@@ -121,6 +121,9 @@ namespace whm
             ui->saveLayout->setIcon(QIcon(":/img/save.png"));
             ui->loadLayout->setIcon(QIcon(":/img/load.png"));
             ui->clearLayout->setIcon(QIcon(":/img/clear.png"));
+            ui->importLocations->setIcon(QIcon(":/img/import.png"));
+            ui->exportLocations->setIcon(QIcon(":/img/export.png"));
+
             ui->deletionMode->setIcon(QIcon(":/img/delete.png"));
             ui->selectionMode->setIcon(QIcon(":/img/select.png"));
 
@@ -337,22 +340,8 @@ namespace whm
             UiWarehouseLayout_t::getWhLayout().clearWhLayout();
         }
 
-        void MainWindow::on_simulationRun_triggered()
+        void MainWindow::on_importLocations_triggered()
         {
-            // TODO: New button for export or rename
-            QString file = QFileDialog::getSaveFileName(this, tr("Export location slots"), "", tr("Article location allocation (*.csv)"));
-            if (file.cbegin() == file.cend())
-            {
-                return;
-            }
-
-            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
-            ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(file.toUtf8().constData());
-        }
-
-        void MainWindow::on_simulationStep_triggered()
-        {
-            // TODO: New button for import locations or rename
             QString file = QFileDialog::getOpenFileName(this, tr("Import location slots"), "", tr("Article location allocation (*.csv)"));
             if (file.cbegin() == file.cend())
             {
@@ -378,6 +367,28 @@ namespace whm
                     }
                 }
             }
+        }
+
+        void MainWindow::on_exportLocations_triggered()
+        {
+            QString file = QFileDialog::getSaveFileName(this, tr("Export location slots"), "", tr("Article location allocation (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+            ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(file.toUtf8().constData());
+        }
+
+        void MainWindow::on_simulationRun_triggered()
+        {
+
+        }
+
+        void MainWindow::on_simulationStep_triggered()
+        {
+
         }
 
         void MainWindow::on_simulationStop_triggered()

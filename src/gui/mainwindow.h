@@ -45,6 +45,8 @@ namespace whm
                 void on_loadLayout_triggered();
                 void on_saveLayout_triggered();
                 void on_clearLayout_triggered();
+                void on_importLocations_triggered();
+                void on_exportLocations_triggered();
 
                 void on_simulationRun_triggered();
                 void on_simulationStep_triggered();

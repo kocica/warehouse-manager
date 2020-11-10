@@ -185,6 +185,8 @@
    <addaction name="loadLayout"/>
    <addaction name="saveLayout"/>
    <addaction name="clearLayout"/>
+   <addaction name="importLocations"/>
+   <addaction name="exportLocations"/>
   </widget>
   <widget class="QToolBar" name="simulationManagement">
    <property name="windowTitle">
@@ -255,6 +257,22 @@
    </property>
    <property name="toolTip">
     <string>Erase everything</string>
+   </property>
+  </action>
+  <action name="importLocations">
+   <property name="text">
+    <string>Import</string>
+   </property>
+   <property name="toolTip">
+    <string>Import locations</string>
+   </property>
+  </action>
+  <action name="exportLocations">
+   <property name="text">
+    <string>Export</string>
+   </property>
+   <property name="toolTip">
+    <string>Export locations</string>
    </property>
   </action>
   <action name="actionLabel">
