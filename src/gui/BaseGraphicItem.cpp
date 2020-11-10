@@ -137,6 +137,7 @@ namespace whm
 
                 QPointF p1;
                 QPointF p2;
+                painter->setBrush(Qt::white);
 
                 if (mDrawHandles)
                 {
@@ -433,6 +434,11 @@ namespace whm
         void BaseGraphicItem_t::setLineWidth(int32_t w)
         {
             this->mLineWidth = w;
+        }
+
+        void BaseGraphicItem_t::setBrush(QBrush b)
+        {
+            this->mBrush = b;
         }
 
         void BaseGraphicItem_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)

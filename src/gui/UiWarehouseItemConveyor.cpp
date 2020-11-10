@@ -42,7 +42,7 @@ namespace whm
 
             this->setGraphicItemOrientation(i.getO()); // We have to rotate the object after its constructed
 
-            this->setPixmap(":/img/conv.png");
+            this->setBrush(Qt::darkGreen);
         }
 
         UiWarehouseItemConveyor_t::UiWarehouseItemConveyor_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t t)
@@ -68,7 +68,7 @@ namespace whm
                 whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 3, x + w/2 - portSizeX/2, y + h/2                , portSizeX, portSizeY, WarehousePortType_t::E_PORT_BOTTOM));
             }
 
-            this->setPixmap(":/img/conv.png");
+            this->setBrush(Qt::darkGreen);
         }
     }
 }

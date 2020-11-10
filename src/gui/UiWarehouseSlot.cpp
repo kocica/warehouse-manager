@@ -18,6 +18,7 @@ namespace whm
         {
             this->showHandles(false);
             this->setLineWidth(1);
+            this->setBrush(Qt::magenta);
         }
     }
 }

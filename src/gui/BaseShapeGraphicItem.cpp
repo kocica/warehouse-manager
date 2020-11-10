@@ -24,6 +24,7 @@ namespace whm
         {
             mRect.setRect(x, y, w, h);
             mType = type;
+            mBrush = QBrush(Qt::white);
             createHandles();
         }
 
@@ -64,6 +65,7 @@ namespace whm
             switch (mType)
             {
                 case ITEM_RECTANGLE:
+                    painter->setBrush(mBrush);
                     painter->drawRect(this->mRect);
                     if(mDrawPixmap)
                     {

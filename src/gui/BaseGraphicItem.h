@@ -12,6 +12,7 @@
 // Qt
 #include <QList>
 #include <QTimer>
+#include <QPainter>
 #include <QGraphicsItem>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsSceneMouseEvent>
@@ -43,6 +44,7 @@ namespace whm
                 void shiftGraphicItem(int dx, int dy, bool s);
                 void setGraphicItemOrientation(int o);
                 void setLineWidth(int32_t w);
+                void setBrush(QBrush b);
 
                 QGraphicsItem* getParent() const;
 
@@ -57,6 +59,7 @@ namespace whm
 
                 QRectF mRect;
                 QPointF mOrigin;
+                QBrush mBrush;
 
                 bool mDrawBoundingRect;
                 bool mSelected;
@@ -64,7 +67,7 @@ namespace whm
                 bool mDrawHandles;
 
                 int32_t mOrientation{ 0 };
-                int32_t mLineWidth{ 3 };
+                int32_t mLineWidth{ 2 };
 
                 QList<Handle *> mHandles;
                 QGraphicsItem* mParentItem{ nullptr };

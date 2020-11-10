@@ -27,12 +27,31 @@ namespace whm
         UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, ::whm::WarehouseItem_t& i)
             : UiWarehouseItem_t(s, ui, i.getX(), i.getY(), i.getW(), i.getH(), i.getType())
         {
+            // Ports
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, i.getX() + i.getW()/2 - portSizeX, i.getY() + i.getH()/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_LEFT));
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, i.getX() + i.getW()/2            , i.getY() + i.getH()/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_RIGHT));
 
             this->setGraphicItemOrientation(i.getO()); // We have to rotate the object after its constructed
 
             setDimensions(i.getSlotCountX(), i.getSlotCountY());
+
+            // Slots
+            int32_t slotW = i.getW()/i.getSlotCountX();
+            int32_t slotH = i.getH()/i.getSlotCountY();
+
+            int32_t x2 = i.getX();
+            for(int32_t c1 = 0; c1 < i.getSlotCountX(); c1++)
+            {
+                int32_t y2 = i.getY();
+                for(int32_t c2 = 0; c2 < i.getSlotCountY(); c2++)
+                {
+                    whSlots.emplace_back(new UiWarehouseSlot_t(x2, y2, slotW, slotH, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, this));
+                    y2 += slotH;
+                }
+                x2 += slotW;
+            }
+
+            this->setBrush(Qt::darkRed);
         }
 
         UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t t)
@@ -75,13 +94,19 @@ namespace whm
             int32_t slotW = w/locX->text().toInt();
             int32_t slotH = h/locY->text().toInt();
 
-            for(int32_t x2 = x; x2 < (x+w); x2 += slotW)
+            int32_t x2 = x;
+            for(int32_t c1 = 0; c1 < locX->text().toInt(); c1++)
             {
-                for(int32_t y2 = y; y2 < (y+h); y2 += slotH)
+                int32_t y2 = y;
+                for(int32_t c2 = 0; c2 < locY->text().toInt(); c2++)
                 {
                     whSlots.emplace_back(new UiWarehouseSlot_t(x2, y2, slotW, slotH, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, this));
+                    y2 += slotH;
                 }
+                x2 += slotW;
             }
+
+            this->setBrush(Qt::darkRed);
         }
     }
 }
