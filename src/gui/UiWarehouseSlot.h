@@ -22,10 +22,14 @@ namespace whm
                 UiWarehouseSlot_t(int32_t, int32_t, int32_t, int32_t, BaseShapeGraphicItem_t::ItemType, QGraphicsScene*, QGraphicsItem*);
                 ~UiWarehouseSlot_t() = default;
 
+                std::string getArticle() const;
                 void setArticle(const std::string&);
+
+                void setSlotHeat(int32_t, int32_t, int32_t);
 
             private:
                 std::string article;
+                int32_t quantity{ 0 };
         };
     }
 }

@@ -30,6 +30,7 @@ namespace whm
                 UiWarehouseItemLocation_t(QGraphicsScene*, MainWindow*, ::whm::WarehouseItem_t&);
 
                 void importSlots(::whm::WarehouseItem_t&);
+                std::vector<UiWarehouseSlot_t*> getSlots() const;
 
                 ~UiWarehouseItemLocation_t() = default;
 

@@ -68,6 +68,11 @@ namespace whm
             }
         }
 
+        std::vector<UiWarehouseSlot_t*> UiWarehouseItemLocation_t::getSlots() const
+        {
+            return whSlots;
+        }
+
         UiWarehouseItemLocation_t::UiWarehouseItemLocation_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t t)
             : UiWarehouseItem_t(s, ui, x, y, w, h, t)
         {
