@@ -38,6 +38,7 @@ SOURCES +=  ../main.cpp \
             UiWarehouseConnection.cpp \
             UiWarehouseItemLocation.cpp \
             UiWarehouseItemConveyor.cpp \
+            UiWarehouseOptimizerThread.cpp \
             BaseGraphicItem.cpp \
             BaseShapeGraphicItem.cpp \
             Handle.cpp
@@ -71,6 +72,7 @@ HEADERS +=  ../Utils.h \
             UiWarehouseConnection.h \
             UiWarehouseItemLocation.h \
             UiWarehouseItemConveyor.h \
+            UiWarehouseOptimizerThread.h \
             BaseGraphicItem.h \
             BaseShapeGraphicItem.h \
             Handle.h
