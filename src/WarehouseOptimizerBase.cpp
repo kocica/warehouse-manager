@@ -17,12 +17,15 @@
 
 // Local
 #include "Logger.h"
-#include "matplotlibcpp.h"
 #include "WarehouseItem.h"
 #include "WarehouseLayout.h"
 #include "WarehouseSimulator.h"
 #include "WarehouseLocationRack.h"
 #include "WarehouseOptimizerBase.h"
+
+#ifdef WHM_PLOT
+#include "matplotlibcpp.h"
+#endif
 
 namespace whm
 {
@@ -57,6 +60,13 @@ namespace whm
             }
         }
     }
+
+#   ifdef WHM_GUI
+    void WarehouseOptimizerBase_t::setUiCallback(UiCallback_t c)
+    {
+        this->uiCallback = c;
+    }
+#   endif
 
     bool WarehouseOptimizerBase_t::flipCoin(double prob)
     {
@@ -155,8 +165,10 @@ namespace whm
         // Plot fitness convergence or just dump to output
         if(cfg.isSet("plotPath"))
         {
+#           ifdef WHM_PLOT
             matplotlibcpp::plot(histFitness);
             matplotlibcpp::save(cfg.getAs<std::string>("plotPath"));
+#           endif
         }
         else
         {

@@ -441,6 +441,14 @@ namespace whm
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[GA] [%3d] Best fitness: %f", gen, population.at(0).fitness);
             histFitness.push_back(population.at(0).fitness);
 
+#           ifdef WHM_GUI
+            if(uiCallback)
+            {
+                updateAllocations(population.at(0).genes);
+                uiCallback(population.at(0).fitness);
+            }
+#           endif
+
             // Each N iterations save weights
             if((gen % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)
             {

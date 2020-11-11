@@ -3,13 +3,15 @@ TARGET            = warehouse_manager_gui
 QT               += core gui widgets
 QMAKE_CXXFLAGS   += -std=c++17
 DEFINES          += QT_DEPRECATED_WARNINGS
-DEFINES          += "WHM_GUI"
+DEFINES          += "WHM_GUI" "WHM_SIM" "WHM_OPT"
+LIBS             += -lsimlib -lm
 
 OBJECTS += ../tinyxml2.o
 
 SOURCES +=  ../main.cpp \
             ../Utils.cpp \
             ../Logger.cpp \
+            ../ConfigParser.cpp \
             ../WarehouseItem.cpp \
             ../WarehousePort.cpp \
             ../WarehouseOrder.cpp \
@@ -19,6 +21,12 @@ SOURCES +=  ../main.cpp \
             ../WarehousePathFinder.cpp \
             ../WarehouseLocationSlot.cpp \
             ../WarehouseLocationRack.cpp \
+            ../WarehouseOptimizerBase.cpp \
+            ../WarehouseOptimizerGA.cpp \
+            ../WarehouseOptimizerDE.cpp \
+            ../WarehouseOptimizerABC.cpp \
+            ../WarehouseOptimizerPSO.cpp \
+            ../WarehouseSimulator.cpp \
             UiCursor.cpp \
             MainWindow.cpp \
             UiWarehouseSlot.cpp \
@@ -36,6 +44,7 @@ SOURCES +=  ../main.cpp \
 
 HEADERS +=  ../Utils.h \
             ../Logger.h \
+            ../ConfigParser.h \
             ../WarehouseItem.h \
             ../WarehousePort.h \
             ../WarehouseOrder.h \
@@ -45,6 +54,12 @@ HEADERS +=  ../Utils.h \
             ../WarehousePathFinder.h \
             ../WarehouseLocationSlot.h \
             ../WarehouseLocationRack.h \
+            ../WarehouseOptimizerBase.h \
+            ../WarehouseOptimizerGA.h \
+            ../WarehouseOptimizerDE.h \
+            ../WarehouseOptimizerABC.h \
+            ../WarehouseOptimizerPSO.h \
+            ../WarehouseSimulator.h \
             MainWindow.h \
             UiCursor.h \
             UiWarehouseSlot.h \

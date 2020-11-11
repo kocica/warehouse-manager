@@ -14,6 +14,7 @@
 #include <map>
 #include <vector>
 #include <random>
+#include <functional>
 
 #include "Utils.h"
 #include "Solution.h"
@@ -31,6 +32,11 @@ namespace whm
 
             // Entry point
             virtual void optimize() = 0;
+
+#           ifdef WHM_GUI
+            using UiCallback_t = std::function<void(double)>;
+            void setUiCallback(UiCallback_t);
+#           endif
 
         protected:
             // Generators
@@ -62,6 +68,10 @@ namespace whm
 
             // Fitness history for plot
             std::vector<double> histFitness;
+
+#           ifdef WHM_GUI
+            UiCallback_t uiCallback;
+#           endif
     };
 }
 

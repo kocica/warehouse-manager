@@ -46,7 +46,7 @@ all:
 
 .PHONY: clean
 
-$(BIN_NAME_OPT): CFLAGS += -DWHM_OPT
+$(BIN_NAME_OPT): CFLAGS += -DWHM_OPT -DWHM_PLOT
 $(BIN_NAME_OPT): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) $(PROFILE) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) $(LDFLAGS) -o $@
 	find . -type f -name "*.cpp" -exec touch --no-create {} +
