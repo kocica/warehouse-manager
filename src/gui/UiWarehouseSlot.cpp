@@ -17,6 +17,7 @@ namespace whm
             : BaseShapeGraphicItem_t(x, y, w, h, t, s, p)
         {
             this->showHandles(false);
+            this->setLocationSlot(true);
             this->setLineWidth(1);
         }
 

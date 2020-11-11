@@ -29,6 +29,7 @@ namespace whm
             , mSelected(false)
             , mConnected(false)
             , mDrawHandles(true)
+            , mLocationSlot(false)
             , mParentItem(parent)
             , mCurrentHandle(0)
         {
@@ -182,6 +183,12 @@ namespace whm
 
         void BaseGraphicItem_t::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
+            if(mLocationSlot)
+            {
+                dynamic_cast<BaseGraphicItem_t*>(mParentItem)->mousePressEvent(event);
+                return;
+            }
+
             QGraphicsItem::mousePressEvent(event);
 
             if(event->buttons() == Qt::LeftButton)
@@ -243,6 +250,11 @@ namespace whm
 
         void BaseGraphicItem_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         {
+            if(mLocationSlot)
+            {
+                dynamic_cast<BaseGraphicItem_t*>(mParentItem)->mouseMoveEvent(event);
+            }
+
             if(!mDrawHandles)
             {
                 return;
@@ -439,8 +451,19 @@ namespace whm
             this->mBrush = b;
         }
 
+        void BaseGraphicItem_t::setLocationSlot(bool s)
+        {
+            this->mLocationSlot = s;
+        }
+
         void BaseGraphicItem_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         {
+            if(mLocationSlot)
+            {
+                dynamic_cast<BaseGraphicItem_t*>(mParentItem)->mouseReleaseEvent(event);
+                return;
+            }
+
             QGraphicsItem::mouseReleaseEvent(event);
             this->mCurrentHandle = 0;
         }

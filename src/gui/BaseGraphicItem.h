@@ -45,7 +45,7 @@ namespace whm
                 void setGraphicItemOrientation(int o);
                 void setLineWidth(int32_t w);
                 void setBrush(QBrush b);
-
+                void setLocationSlot(bool s);
                 QGraphicsItem* getParent() const;
 
             protected:
@@ -65,6 +65,7 @@ namespace whm
                 bool mSelected;
                 bool mConnected;
                 bool mDrawHandles;
+                bool mLocationSlot;
 
                 int32_t mOrientation{ 0 };
                 int32_t mLineWidth{ 2 };
