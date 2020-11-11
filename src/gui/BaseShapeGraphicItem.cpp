@@ -53,8 +53,7 @@ namespace whm
 
             if(this->mConnected)
             {
-                pen.setColor(Qt::blue);
-                painter->setPen(pen);
+                return;
             }
             else if(this->mSelected)
             {

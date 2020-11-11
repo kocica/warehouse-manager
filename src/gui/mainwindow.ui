@@ -2,16 +2,8 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>1130</width>
-    <height>901</height>
-   </rect>
-  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Warehouse Manager</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -50,19 +42,19 @@
       <item>
        <layout class="QGridLayout" name="gridLayout_2" rowstretch="0" columnstretch="0">
         <property name="leftMargin">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="topMargin">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="rightMargin">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="spacing">
-         <number>1</number>
+         <number>0</number>
         </property>
         <item row="0" column="0">
          <layout class="QVBoxLayout" name="frameLayout">
@@ -71,6 +63,12 @@
           </property>
           <item>
            <widget class="QFrame" name="frame">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -86,16 +84,26 @@
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <widget class="QGraphicsView" name="view">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>1400</width>
-               <height>700</height>
-              </rect>
+            <layout class="QGridLayout" name="gridLayout">
+             <property name="leftMargin">
+              <number>0</number>
              </property>
-            </widget>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QGraphicsView" name="view"/>
+             </item>
+            </layout>
             <widget class="QLabel" name="ratioText">
              <property name="geometry">
               <rect>

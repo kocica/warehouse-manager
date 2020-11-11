@@ -124,9 +124,7 @@ namespace whm
                 }
                 else if(this->mConnected)
                 {
-                    pen.setColor(Qt::blue);
-                    painter->setPen(pen);
-                    painter->drawRect(this->mRect);
+                    return;
                 }
                 else if(this->mDrawBoundingRect && mDrawHandles)
                 {
