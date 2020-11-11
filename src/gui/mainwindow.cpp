@@ -382,12 +382,17 @@ namespace whm
 
         void MainWindow::on_simulationRun_triggered()
         {
+            std::string o = ui->ordersLine->text().toUtf8().constData();
+            std::string a = ui->articlesLine->text().toUtf8().constData();
+            std::string l = ui->locationsLine->text().toUtf8().constData();
 
-        }
+            if(o.empty() || a.empty() || l.empty())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Load all required data first!");
+                return;
+            }
 
-        void MainWindow::on_simulationStep_triggered()
-        {
-            auto* optimizerUi = new UiWarehouseOptimizerThread_t;
+            auto* optimizerUi = new UiWarehouseOptimizerThread_t(o, a, l);
 
             connect(optimizerUi, SIGNAL(finished()),
                     optimizerUi, SLOT(deleteLater()));
@@ -395,9 +400,47 @@ namespace whm
             optimizerUi->start();
         }
 
+        void MainWindow::on_simulationStep_triggered()
+        {
+
+        }
+
         void MainWindow::on_simulationStop_triggered()
         {
 
+        }
+
+        void MainWindow::on_ordersLoad_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Import orders"), "", tr("Orders (*.xml)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->ordersLine->setText(file);
+        }
+
+        void MainWindow::on_articlesLoad_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Import articles"), "", tr("Articles (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->articlesLine->setText(file);
+        }
+
+        void MainWindow::on_locationsLoad_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Import locations"), "", tr("Locations (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->locationsLine->setText(file);
         }
 
         void MainWindow::reset()

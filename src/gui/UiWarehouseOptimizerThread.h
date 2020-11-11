@@ -18,7 +18,13 @@ namespace whm
         class UiWarehouseOptimizerThread_t : public QThread
         {
             public:
+                UiWarehouseOptimizerThread_t() = delete;
+                UiWarehouseOptimizerThread_t(const std::string&, const std::string&, const std::string&);
+
                 void run() override;
+
+            private:
+                std::string o, a, l;
         };
     }
 }

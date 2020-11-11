@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1089</width>
+    <height>822</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Warehouse Manager</string>
   </property>
@@ -40,7 +48,10 @@
        <number>0</number>
       </property>
       <item>
-       <layout class="QGridLayout" name="gridLayout_2" rowstretch="0" columnstretch="0">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -53,10 +64,7 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
+        <item>
          <layout class="QVBoxLayout" name="frameLayout">
           <property name="spacing">
            <number>0</number>
@@ -131,6 +139,52 @@
              </property>
             </widget>
            </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="optimizerSettings">
+          <item>
+           <layout class="QHBoxLayout" name="ordersLayout">
+            <item>
+             <widget class="QLineEdit" name="ordersLine"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="ordersLoad">
+              <property name="text">
+               <string>Load orders</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="articlesLayout">
+            <item>
+             <widget class="QLineEdit" name="articlesLine"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="articlesLoad">
+              <property name="text">
+               <string>Load articles</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="locationsLayout">
+            <item>
+             <widget class="QLineEdit" name="locationsLine"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="locationsLoad">
+              <property name="text">
+               <string>Load locations</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>

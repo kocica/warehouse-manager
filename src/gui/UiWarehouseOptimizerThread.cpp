@@ -24,14 +24,20 @@ namespace whm
 {
     namespace gui
     {
+        UiWarehouseOptimizerThread_t::UiWarehouseOptimizerThread_t(const std::string& o_, const std::string& a_, const std::string& l_)
+            : o(o_) , a(a_) , l(l_)
+        {
+
+        }
+
         void UiWarehouseOptimizerThread_t::run()
         {
             whm::utils::WhmArgs_t args;
 
             args.layoutPath    = "data/layout.xml";
-            args.articlesPath  = "data/articles.csv";
-            args.locationsPath = "data/locations.csv";
-            args.ordersPath    = "data/orders_train.xml";
+            args.articlesPath  = a;
+            args.locationsPath = l;
+            args.ordersPath    = o;
 
             whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(args.layoutPath);
             whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.locationsPath);
