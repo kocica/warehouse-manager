@@ -50,5 +50,19 @@ namespace whm
 
             this->setBrush(QColor::fromRgb(r, g, b));
         }
+
+        void UiWarehouseSlot_t::updateSlot(double x, double y, int32_t w, int32_t h)
+        {
+            this->mRect.setTopLeft(QPointF(x, y));
+            this->mRect.setBottomRight(QPointF(x + w, y + h));
+
+            (void)w;
+            (void)h;
+            //this->mRect.setWidth(w);
+            //this->mRect.setHeight(h);
+
+            this->mOrigin.setX(mRect.center().x());
+            this->mOrigin.setY(mRect.center().y());
+        }
     }
 }

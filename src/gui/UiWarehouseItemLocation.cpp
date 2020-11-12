@@ -51,8 +51,6 @@ namespace whm
             this->setGraphicItemOrientation(i.getO()); // We have to rotate the object after its constructed
 
             setDimensions(i.getSlotCountX(), i.getSlotCountY());
-
-            this->setBrush(Qt::darkRed);
         }
 
         void UiWarehouseItemLocation_t::importSlots(::whm::WarehouseItem_t& i)
@@ -124,8 +122,29 @@ namespace whm
             // Ports
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x + w/2 - portSizeX, y + h/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_LEFT));
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + w/2            , y + h/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_RIGHT));
+        }
 
-            this->setBrush(Qt::darkRed);
+        void UiWarehouseItemLocation_t::updateChildrenPositions(double dx, double dy)
+        {
+            portSizeX = getW() / 5;
+            portSizeY = getH() / 5;
+
+            std::for_each(whPorts.begin(), whPorts.end(), [=](auto* p) { p->updatePort(dx/2, dy/2, portSizeX, portSizeY); });
+
+            int32_t slotW = getW() / getSlotCountX();
+            int32_t slotH = getH() / getSlotCountY();
+
+            int32_t x = getX();
+            for(int32_t c1 = 0; c1 < getSlotCountX(); c1++)
+            {
+                int32_t y = getY();
+                for(int32_t c2 = 0; c2 < getSlotCountY(); c2++)
+                {
+                    whSlots[(c1 * getSlotCountY()) + c2]->updateSlot(x, y, slotW, slotH);
+                    y += slotH;
+                }
+                x += slotW;
+            }
         }
     }
 }

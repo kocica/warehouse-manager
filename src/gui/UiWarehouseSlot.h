@@ -26,6 +26,7 @@ namespace whm
                 void setArticle(const std::string&);
 
                 void setSlotHeat(int32_t, int32_t, int32_t);
+                void updateSlot(double, double, int32_t, int32_t);
 
             private:
                 std::string article;

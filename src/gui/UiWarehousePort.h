@@ -23,7 +23,7 @@ namespace whm
 {
     namespace gui
     {
-        class UiWarehousePort_t : BaseShapeGraphicItem_t
+        class UiWarehousePort_t : public BaseShapeGraphicItem_t
         {
             public:
                 UiWarehousePort_t(QGraphicsScene*, QGraphicsItem*, MainWindow*, int32_t, int32_t, int32_t, int32_t, int32_t, WarehousePortType_t);
@@ -32,6 +32,8 @@ namespace whm
                 void select();
                 void connect();
                 void disconnect();
+
+                void updatePort(double, double, int32_t, int32_t);
 
                 bool isConnected() const;
                 void setWhConn(UiWarehouseConnection_t*);

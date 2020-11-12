@@ -48,5 +48,13 @@ namespace whm
 
             this->setBrush(Qt::darkYellow);
         }
+
+        void UiWarehouseItemGate_t::updateChildrenPositions(double dx, double dy)
+        {
+            portSizeX = getW() / 5;
+            portSizeY = getH() / 5;
+
+            std::for_each(whPorts.begin(), whPorts.end(), [=](auto* p) { p->updatePort(dx/2, dy/2, portSizeX, portSizeY); });
+        }
     }
 }

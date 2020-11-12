@@ -63,7 +63,7 @@ namespace whm
             qreal w = this->mRect.width();
             qreal h = this->mRect.height();
 
-            this->updateChildren(x, y, false);
+            this->updateChildren(x, y);
 
             this->mRect.setTopLeft(QPoint(this->mRect.topLeft().x() + x, this->mRect.topLeft().y() + y));
             this->mRect.setBottomRight(QPoint(this->mRect.topLeft().x() + w, this->mRect.topLeft().y() + h));

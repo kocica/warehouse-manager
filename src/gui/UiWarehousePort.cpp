@@ -71,7 +71,10 @@ namespace whm
                     }
                     else if (selectedPort == nullptr)
                     {
-                        select();
+                        if(!this->isConnected())
+                        {
+                            select();
+                        }
                     }
                     else if (selectedPort->getWhItem() == this->getWhItem())
                     {
@@ -505,6 +508,20 @@ namespace whm
                     }
                 }
             }
+        }
+
+        void UiWarehousePort_t::updatePort(double x, double y, int32_t w, int32_t h)
+        {
+            this->mRect.setTopLeft(QPointF(this->mRect.topLeft().x() + x, this->mRect.topLeft().y() + y));
+            this->mRect.setBottomRight(QPointF(this->mRect.bottomRight().x() + x, this->mRect.bottomRight().y() + y));
+
+            (void)w;
+            (void)h;
+            //this->mRect.setWidth(w);
+            //this->mRect.setHeight(h);
+
+            this->mOrigin.setX(mRect.center().x());
+            this->mOrigin.setY(mRect.center().y());
         }
 
         int32_t UiWarehousePort_t::getWhPortID() const

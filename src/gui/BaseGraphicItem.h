@@ -39,9 +39,10 @@ namespace whm
 
                 QRectF getRect() const;
 
+                virtual void updateChildrenPositions(double, double);
                 void showHandles(bool enabled);
-                void updateChildren(int dx, int dy, bool s = true);
-                void shiftGraphicItem(int dx, int dy, bool s);
+                void updateChildren(double, double);
+                void shiftGraphicItem(int dx, int dy);
                 void setGraphicItemOrientation(int o);
                 void setLineWidth(int32_t w);
                 void setBrush(QBrush b);

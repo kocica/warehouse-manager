@@ -36,7 +36,7 @@ namespace whm
                 QRectF boundingRect() const;
 
                 void setType();
-                void setPixmap(QString path);
+                void setPixmap(QPixmap p);
 
             private:
                 ItemType mType;

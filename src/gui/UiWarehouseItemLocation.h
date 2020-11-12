@@ -38,6 +38,8 @@ namespace whm
                 int32_t getSlotCountY() const { return this->slotsY; }
                 void setDimensions(int32_t x, int32_t y) { slotsX = x; slotsY = y; }
 
+                virtual void updateChildrenPositions(double, double) override;
+
             private:
                 int32_t slotsX{ 0 };
                 int32_t slotsY{ 0 };

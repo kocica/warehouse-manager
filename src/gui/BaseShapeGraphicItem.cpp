@@ -65,12 +65,12 @@ namespace whm
             {
                 case ITEM_RECTANGLE:
                     painter->setBrush(mBrush);
-                    painter->setBrushOrigin(this->mRect.topLeft().x(), this->mRect.topLeft().y());
-                    painter->drawRect(this->mRect);
                     if(mDrawPixmap)
                     {
-                        painter->drawPixmap(this->mRect.toRect(),this->mPixmap);
+                        painter->setBrush(mPixmap.scaledToHeight(mRect.height()));
+                        painter->setBrushOrigin(this->mRect.topLeft().x(), this->mRect.topLeft().y());
                     }
+                    painter->drawRect(this->mRect);
                     break;
                 case ITEM_ELLIPSE:
                     painter->drawEllipse(this->mRect);
@@ -88,10 +88,10 @@ namespace whm
             scene()->update();
         }
 
-        void BaseShapeGraphicItem_t::setPixmap(QString path)
+        void BaseShapeGraphicItem_t::setPixmap(QPixmap p)
         {
+            this->mPixmap = p;
             this->mDrawPixmap = true;
-            this->mPixmap = QPixmap(path);
         }
 
         QRectF BaseShapeGraphicItem_t::boundingRect() const

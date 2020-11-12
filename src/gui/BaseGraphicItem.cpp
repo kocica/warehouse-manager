@@ -10,6 +10,9 @@
 // Local
 #include "Handle.h"
 #include "BaseGraphicItem.h"
+#include "UiWarehouseItemGate.h"
+#include "UiWarehouseItemConveyor.h"
+#include "UiWarehouseItemLocation.h"
 
 // Qt
 #include <QUuid>
@@ -208,44 +211,53 @@ namespace whm
             return mParentItem;
         }
 
-        void BaseGraphicItem_t::updateChildren(int dx, int dy, bool s)
+        void BaseGraphicItem_t::updateChildren(double dx, double dy)
         {
             QList<QGraphicsItem*> items = scene()->items();
 
             foreach(QGraphicsItem* i, items)
             {
-                if(auto* baseItem = dynamic_cast<BaseGraphicItem_t*>(i))
+                if(auto* whPort = dynamic_cast<UiWarehousePort_t*>(i))
                 {
-                    auto* parentBaseItem = dynamic_cast<BaseGraphicItem_t*>(baseItem->getParent());
+                    auto* whItemLoc = dynamic_cast<UiWarehouseItemLocation_t*>(whPort->getParent());
 
-                    if (parentBaseItem && this->id() == parentBaseItem->id())
+                    if (whItemLoc && this->id() == whItemLoc->id())
                     {
-                        baseItem->shiftGraphicItem(dx, dy, s);
+                        whItemLoc->updateChildrenPositions(dx, dy); return;
+                    }
+
+                    auto* whItemConv = dynamic_cast<UiWarehouseItemConveyor_t*>(whPort->getParent());
+
+                    if (whItemConv && this->id() == whItemConv->id())
+                    {
+                        whItemConv->updateChildrenPositions(dx, dy); return;
+                    }
+
+                    auto* whItemGate = dynamic_cast<UiWarehouseItemGate_t*>(whPort->getParent());
+
+                    if (whItemGate && this->id() == whItemGate->id())
+                    {
+                        whItemGate->updateChildrenPositions(dx, dy); return;
                     }
                 }
             }
         }
 
-        void BaseGraphicItem_t::shiftGraphicItem(int dx, int dy, bool s)
+        void BaseGraphicItem_t::updateChildrenPositions(double dx, double dy)
         {
-            int32_t dx2 = dx;
-            int32_t dy2 = dy;
+            (void)dx;
+            (void)dy;
 
-            if(s)
-            {
-                dx2 /= 2.0;
-                dy2 /= 2.0;
-            }
+            // Reimplement in derivate classes
+        }
 
-            this->mRect.setTopLeft(QPointF(this->mRect.topLeft().x() + dx2, this->mRect.topLeft().y() + dy2));
-            this->mRect.setBottomRight(QPointF(this->mRect.bottomRight().x() + dx2, this->mRect.bottomRight().y() + dy2));
+        void BaseGraphicItem_t::shiftGraphicItem(int dx, int dy)
+        {
+            this->mRect.setTopLeft(QPointF(this->mRect.topLeft().x() + dx/2.0, this->mRect.topLeft().y() + dy/2.0));
+            this->mRect.setBottomRight(QPointF(this->mRect.bottomRight().x() + dx/2.0, this->mRect.bottomRight().y() + dy/2.0));
 
             this->mOrigin.setX((dx * mRect.width()) + mRect.center().x());
             this->mOrigin.setY((dy * mRect.height()) + mRect.center().y());
-
-            // TODO: Resizing of ports
-            //this->mRect.setWidth(this->mRect.width() + (dx/5.0));
-            //this->mRect.setHeight(this->mRect.height() - (dy/5.0));
         }
 
         void BaseGraphicItem_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event)

@@ -28,6 +28,8 @@ namespace whm
                 // Construct from TUI
                 UiWarehouseItemGate_t(QGraphicsScene*, MainWindow*, ::whm::WarehouseItem_t&);
 
+                virtual void updateChildrenPositions(double, double) override;
+
                 ~UiWarehouseItemGate_t() = default;
         };
     }
