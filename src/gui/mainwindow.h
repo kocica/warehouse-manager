@@ -33,6 +33,8 @@ namespace whm
                 explicit MainWindow(QWidget *parent = Q_NULLPTR);
                 virtual ~MainWindow();
 
+                void resizeEvent(QResizeEvent*);
+
                 Ui::MainWindow* getUi() const { return ui; }
 
                 void reset();

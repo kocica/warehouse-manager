@@ -138,6 +138,9 @@
               <enum>Qt::Horizontal</enum>
              </property>
             </widget>
+            <zorder>view</zorder>
+            <zorder>ratioIndicator</zorder>
+            <zorder>ratioText</zorder>
            </widget>
           </item>
          </layout>

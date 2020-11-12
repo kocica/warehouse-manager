@@ -142,6 +142,14 @@ namespace whm
             return ret;
         }
 
+        void MainWindow::resizeEvent(QResizeEvent* event)
+        {
+            QMainWindow::resizeEvent(event);
+
+            ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
+            ui->ratioText->setText(QString::number(((ui->view->width()/double(whX)) * (whX/whR))/5));
+        }
+
         void MainWindow::mousePressEvent(QMouseEvent *event)
         {
             static std::map<UiCursorMode_t, WarehouseItemType_t> convMap =
