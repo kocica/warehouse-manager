@@ -134,6 +134,7 @@ namespace whm
             multipleExperiment = true;
         }
 
+        //SetCalendar("cq");
         Init(0);
         clearSimulation();
         (new OrderRequest_t(whLayout))->Activate();

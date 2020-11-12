@@ -65,6 +65,7 @@ namespace whm
             {
                 case ITEM_RECTANGLE:
                     painter->setBrush(mBrush);
+                    painter->setBrushOrigin(this->mRect.topLeft().x(), this->mRect.topLeft().y());
                     painter->drawRect(this->mRect);
                     if(mDrawPixmap)
                     {
