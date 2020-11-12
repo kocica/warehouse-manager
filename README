@@ -11,3 +11,14 @@ Simulator (evaluate on test set of orders):
 
 Optimizer (train on train set of orders):
   ./warehouse_manager_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv
+
+
+
+# TODO
+
+ - Doplnit plot (nahodne razeni, slap)
+ - Paralelizace smycky v optimalizatoru
+ - Limity - cas, velikost
+ - Dukaz TSP <-> SLAP
+ - NN (pokud nebude fungovat paralelizace)
+ - Doxygen
