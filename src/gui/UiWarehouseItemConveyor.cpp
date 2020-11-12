@@ -68,7 +68,6 @@ namespace whm
                 whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 3, x + w/2 - portSizeX/2, y + h/2                , portSizeX, portSizeY, WarehousePortType_t::E_PORT_BOTTOM));
             }
 
-            std::cerr << getH() << std::endl;
             this->setBrush(QPixmap(":/img/conv.png").scaledToHeight(getH()));
         }
     }
