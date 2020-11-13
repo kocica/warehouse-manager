@@ -549,6 +549,41 @@ namespace whm
             ui->locationsLine->setText(file);
         }
 
+        void MainWindow::on_configLoad_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Optimalizator configuration"), "", tr("Configuration (*.xml)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->configLoadLine->setText(file);
+
+            whm::ConfigParser_t cfg(file.toUtf8().constData());
+
+            ui->numberDimensions->setValue(cfg.getAs<int32_t>("numberDimensions"));
+            ui->problemMin->setValue(cfg.getAs<int32_t>("problemMin"));
+            ui->problemMax->setValue(cfg.getAs<int32_t>("problemMax"));
+            ui->iterations->setValue(cfg.getAs<int32_t>("maxIterations"));
+            ui->weights->setValue(cfg.getAs<int32_t>("saveWeightsPeriod"));
+            ui->trialValue->setValue(cfg.getAs<int32_t>("maxTrialValue"));
+
+            ui->populationSize->setValue(cfg.getAs<int32_t>("populationSize"));
+            ui->selectionSize->setValue(cfg.getAs<int32_t>("selectionSize"));
+            ui->eliteSize->setValue(cfg.getAs<int32_t>("eliteSize"));
+            ui->probCrossover->setValue(cfg.getAs<double>("probCrossover"));
+            ui->probMutationInd->setValue(cfg.getAs<double>("probMutationInd"));
+            ui->probMutationGene->setValue(cfg.getAs<double>("probMutationGene"));
+
+            if(cfg.getAs<std::string>("crossoverFunctor") == "crossoverOrdered") ui->crossoverGa->setCurrentIndex(0);
+            if(cfg.getAs<std::string>("mutationFunctor")  == "mutateInverse")    ui->mutationGa->setCurrentIndex(0);
+            if(cfg.getAs<std::string>("mutationFunctor")  == "mutateOrdered")    ui->mutationGa->setCurrentIndex(1);
+            if(cfg.getAs<std::string>("selectionFunctor") == "selectTournam")    ui->selectionGa->setCurrentIndex(0);
+            if(cfg.getAs<std::string>("selectionFunctor") == "selectTrunc")      ui->selectionGa->setCurrentIndex(1);
+            if(cfg.getAs<std::string>("selectionFunctor") == "selectRoulette")   ui->selectionGa->setCurrentIndex(2);
+            if(cfg.getAs<std::string>("selectionFunctor") == "selectRank")       ui->selectionGa->setCurrentIndex(3);
+        }
+
         void MainWindow::reset()
         {
             ::whm::WarehouseLayout_t::getWhLayout().clearWhLayout();

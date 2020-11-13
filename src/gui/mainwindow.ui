@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1089</width>
-    <height>822</height>
+    <height>847</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -213,12 +213,12 @@
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
-                <layout class="QHBoxLayout" name="configLayout">
+                <layout class="QHBoxLayout" name="configLoadLayout">
                  <item>
-                  <widget class="QLineEdit" name="configLine"/>
+                  <widget class="QLineEdit" name="configLoadLine"/>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="configButton">
+                  <widget class="QPushButton" name="configLoad">
                    <property name="text">
                     <string>Load config</string>
                    </property>

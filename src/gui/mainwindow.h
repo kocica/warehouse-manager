@@ -69,6 +69,7 @@ namespace whm
                 void on_ordersLoad_clicked();
                 void on_articlesLoad_clicked();
                 void on_locationsLoad_clicked();
+                void on_configLoad_clicked();
 
                 void on_deletionMode_toggled(bool);
                 void on_selectionMode_toggled(bool);
