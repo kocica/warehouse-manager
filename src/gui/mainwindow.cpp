@@ -71,7 +71,7 @@ namespace whm
             form->addRow(&buttons);
 
             // Create scene
-            scene = new CustomizedGraphicsView_t();
+            scene = new CustomizedGraphicsScene_t();
 
             if (dialog->exec() == QDialog::Accepted)
             {
@@ -592,7 +592,7 @@ namespace whm
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
         }
 
-        void CustomizedGraphicsView_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+        void CustomizedGraphicsScene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         {
             auto* item = itemAt(event->scenePos().toPoint(), QTransform());
 

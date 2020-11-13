@@ -26,7 +26,7 @@ namespace whm
 {
     namespace gui
     {
-        class CustomizedGraphicsView_t : public QGraphicsScene
+        class CustomizedGraphicsScene_t : public QGraphicsScene
         {
             void contextMenuEvent(QGraphicsSceneContextMenuEvent*);
         };
@@ -86,7 +86,7 @@ namespace whm
                 int32_t whY{ 0 };
 
                 Ui::MainWindow* ui;
-                CustomizedGraphicsView_t* scene;
+                CustomizedGraphicsScene_t* scene;
 
                 QElapsedTimer optimizationElapsedTime;
 
