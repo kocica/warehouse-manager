@@ -34,12 +34,10 @@ namespace whm
         {
             whm::utils::WhmArgs_t args;
 
-            args.layoutPath    = "data/layout.xml";
             args.articlesPath  = a;
             args.locationsPath = l;
             args.ordersPath    = o;
 
-            whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(args.layoutPath);
             whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.locationsPath);
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
@@ -68,7 +66,7 @@ namespace whm
 
             optimizer->setUiCallback([&](double fitness)
                                      {
-                                        std::cout << "Callback fitness: " << fitness << std::endl;
+                                        emit optimizationStep(fitness);
 
                                         auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
                                         auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();

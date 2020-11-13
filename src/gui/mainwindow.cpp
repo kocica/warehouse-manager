@@ -114,6 +114,7 @@ namespace whm
             ui->layoutManagement->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
             ui->simulationManagement->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
 
+            // Icons
             ui->simulationRun->setIcon(QIcon(":/img/start.png"));
             ui->simulationStop->setIcon(QIcon(":/img/stop.png"));
             ui->simulationStep->setIcon(QIcon(":/img/step.png"));
@@ -126,8 +127,22 @@ namespace whm
 
             ui->deletionMode->setIcon(QIcon(":/img/delete.png"));
             ui->selectionMode->setIcon(QIcon(":/img/select.png"));
-
             ui->selectionMode->toggle();
+
+            // Tabs
+            ui->toolsTab->setTabText(0, "Optimizer");
+            ui->toolsTab->setTabText(1, "Generator");
+            ui->toolsTab->setTabText(2, "Simulator");
+            ui->dataBrowserTab->setTabText(0, "Orders");
+            ui->dataBrowserTab->setTabText(1, "Articles");
+            ui->dataBrowserTab->setTabText(2, "Locations");
+
+            // Plot
+            ui->fitnessPlot->addGraph();
+            ui->fitnessPlot->xAxis->setLabel("Steps");
+            ui->fitnessPlot->yAxis->setLabel("Fitness");
+            ui->fitnessPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
+            ui->fitnessPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
         }
 
         MainWindow::~MainWindow()
@@ -309,6 +324,21 @@ namespace whm
             isSimulationActive() = false;
         }
 
+        void MainWindow::optimizationStep(double fitness)
+        {
+            static int32_t stepCounter{ 0 };
+            static QVector<double> steps;
+            static QVector<double> fitnesses;
+
+            steps.append(++stepCounter);
+            fitnesses.append(fitness);
+
+            ui->fitnessPlot->graph(0)->setData(steps, fitnesses);
+            ui->fitnessPlot->replot();
+            ui->fitnessPlot->graph(0)->rescaleAxes(true);
+            ui->fitnessPlot->update();
+        }
+
         void MainWindow::on_loadLayout_triggered()
         {
             if(isSimulationActive())
@@ -434,6 +464,7 @@ namespace whm
             }
 
             isSimulationActive() = true;
+            whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
 
             auto* optimizerUi = new UiWarehouseOptimizerThread_t(o, a, l);
 
@@ -442,6 +473,9 @@ namespace whm
 
             connect(optimizerUi, SIGNAL(optimizationFinished()),
                     this,        SLOT(simulationFinished()));
+
+            connect(optimizerUi, SIGNAL(optimizationStep(double)),
+                    this,        SLOT(optimizationStep(double)));
 
             optimizerUi->start();
         }

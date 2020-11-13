@@ -27,6 +27,7 @@ namespace whm
 
             signals:
                 void optimizationFinished();
+                void optimizationStep(double);
 
             private:
                 std::string o, a, l;

@@ -41,7 +41,8 @@ SOURCES +=  ../main.cpp \
             UiWarehouseOptimizerThread.cpp \
             BaseGraphicItem.cpp \
             BaseShapeGraphicItem.cpp \
-            Handle.cpp
+            Handle.cpp \
+            qcustomplot.cpp
 
 HEADERS +=  ../Utils.h \
             ../Logger.h \
@@ -75,7 +76,8 @@ HEADERS +=  ../Utils.h \
             UiWarehouseOptimizerThread.h \
             BaseGraphicItem.h \
             BaseShapeGraphicItem.h \
-            Handle.h
+            Handle.h \
+            qcustomplot.h
 
 RESOURCES += resources.qrc
 

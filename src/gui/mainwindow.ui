@@ -31,7 +31,7 @@
      <number>1</number>
     </property>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -146,52 +146,184 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="optimizerSettings">
-          <item>
-           <layout class="QHBoxLayout" name="ordersLayout">
+         <widget class="QTabWidget" name="toolsTab">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="optimizer" native="true">
+           <attribute name="title">
+            <string/>
+           </attribute>
+           <layout class="QVBoxLayout" name="optimizerSettings">
             <item>
-             <widget class="QLineEdit" name="ordersLine"/>
+             <widget class="QGroupBox" name="data">
+              <property name="title">
+               <string>Data</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_3">
+               <item>
+                <layout class="QHBoxLayout" name="ordersLayout">
+                 <item>
+                  <widget class="QLineEdit" name="ordersLine"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="ordersLoad">
+                   <property name="text">
+                    <string>Load orders</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="articlesLayout">
+                 <item>
+                  <widget class="QLineEdit" name="articlesLine"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="articlesLoad">
+                   <property name="text">
+                    <string>Load articles</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="locationsLayout">
+                 <item>
+                  <widget class="QLineEdit" name="locationsLine"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="locationsLoad">
+                   <property name="text">
+                    <string>Load locations</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="ordersLoad">
-              <property name="text">
-               <string>Load orders</string>
+             <widget class="QGroupBox" name="parameters">
+              <property name="title">
+               <string>Parameters</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <item>
+                <layout class="QHBoxLayout" name="configLayout">
+                 <item>
+                  <widget class="QLineEdit" name="configLine"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="configButton">
+                   <property name="text">
+                    <string>Load config</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="optimizerSelectionLayout">
+                 <item>
+                  <widget class="QLabel" name="optimizerSelectionLabel">
+                   <property name="text">
+                    <string>Select optimizer:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="optimizerSelectionBox">
+                   <item>
+                    <property name="text">
+                     <string>Genetic algorithm</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Differential evolution</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Artificial bee colony</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Particle swarm optimization</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCustomPlot" name="fitnessPlot" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>200</height>
+               </size>
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="articlesLayout">
             <item>
-             <widget class="QLineEdit" name="articlesLine"/>
-            </item>
-            <item>
-             <widget class="QPushButton" name="articlesLoad">
-              <property name="text">
-               <string>Load articles</string>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
               </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="locationsLayout">
-            <item>
-             <widget class="QLineEdit" name="locationsLine"/>
-            </item>
-            <item>
-             <widget class="QPushButton" name="locationsLoad">
-              <property name="text">
-               <string>Load locations</string>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
               </property>
-             </widget>
+             </spacer>
             </item>
            </layout>
-          </item>
-         </layout>
+          </widget>
+          <widget class="QWidget" name="generator">
+           <attribute name="title">
+            <string>Page</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="simulator">
+           <attribute name="title">
+            <string>Page</string>
+           </attribute>
+          </widget>
+         </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QTabWidget" name="dataBrowserTab">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="orders">
+         <attribute name="title">
+          <string>Tab 1</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="articles">
+         <attribute name="title">
+          <string>Tab 2</string>
+         </attribute>
+        </widget>
+        <widget class="QWidget" name="locations">
+         <attribute name="title">
+          <string>Page</string>
+         </attribute>
+        </widget>
+       </widget>
       </item>
      </layout>
     </item>
@@ -546,6 +678,14 @@
   </actiongroup>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
