@@ -181,7 +181,7 @@ namespace whm
 
         void UiWarehouseItem_t::hoverEnterEvent(QGraphicsSceneHoverEvent * event)
         {
-            info->setPos(getX(), getY());
+            info->setPos(mRect.topLeft().x(), mRect.topLeft().y());
             info->setFont(QFont("Helvetica", (getW() + getH())/30));
             info->show();
             infoTimeout.start(1000);
