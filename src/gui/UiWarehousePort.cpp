@@ -557,6 +557,11 @@ namespace whm
             return whConn;
         }
 
+        UiWarehouseConnection_t* UiWarehousePort_t::getWhConn() const
+        {
+            return whConn;
+        }
+
         void UiWarehousePort_t::setWhConn(UiWarehouseConnection_t* newConn)
         {
             if(this->whConn != nullptr)

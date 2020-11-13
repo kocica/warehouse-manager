@@ -29,6 +29,7 @@
 #include "../WarehouseOrderLine.h"
 
 // Qt
+#include <QMenu>
 #include <QLabel>
 #include <QDialog>
 #include <QLineEdit>
@@ -70,7 +71,7 @@ namespace whm
             form->addRow(&buttons);
 
             // Create scene
-            scene = new QGraphicsScene();
+            scene = new CustomizedGraphicsView_t();
 
             if (dialog->exec() == QDialog::Accepted)
             {
@@ -494,6 +495,30 @@ namespace whm
             ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().clearWhLayout();
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
+        }
+
+        void CustomizedGraphicsView_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
+        {
+            auto* item = itemAt(event->scenePos().toPoint(), QTransform());
+
+            if(!item)
+            {
+                return;
+            }
+
+            auto* menu = new QMenu(event->widget());
+
+            if(auto* whItem = dynamic_cast<UiWarehouseItem_t*>(item))
+            {
+                if(whItem->isConnected())
+                {
+                    QAction* disconnect = new QAction("Disconnect", this);
+                    connect(disconnect, &QAction::triggered, [&whItem](){ whItem->disconnect(); });
+                    menu->addAction(disconnect);
+                }
+            }
+
+            menu->exec(event->screenPos());
         }
     }
 }

@@ -25,6 +25,11 @@ namespace whm
 {
     namespace gui
     {
+        class CustomizedGraphicsView_t : public QGraphicsScene
+        {
+            void contextMenuEvent(QGraphicsSceneContextMenuEvent*);
+        };
+
         class MainWindow : public QMainWindow
         {
             Q_OBJECT
@@ -78,7 +83,7 @@ namespace whm
                 int32_t whY{ 0 };
 
                 Ui::MainWindow* ui;
-                QGraphicsScene* scene;
+                CustomizedGraphicsView_t* scene;
 
                 bool simulationActive{ false };
         };

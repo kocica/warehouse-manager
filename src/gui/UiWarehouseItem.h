@@ -39,6 +39,7 @@ namespace whm
                 virtual ~UiWarehouseItem_t();
 
                 void dump() const;
+                void disconnect();
                 void removeWhItem();
                 bool isConnected() const;
 

@@ -166,6 +166,19 @@ namespace whm
             BaseGraphicItem_t::mousePressEvent(event);
         }
 
+        void UiWarehouseItem_t::disconnect()
+        {
+            for (UiWarehousePort_t* whPort : whPorts)
+            {
+                if(whPort->isConnected())
+                {
+                    UiWarehouseConnection_t* whConn = whPort->getWhConn();
+
+                    delete whConn;
+                }
+            }
+        }
+
         void UiWarehouseItem_t::hoverEnterEvent(QGraphicsSceneHoverEvent * event)
         {
             info->setPos(getX(), getY());

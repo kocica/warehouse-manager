@@ -37,6 +37,7 @@ namespace whm
 
                 bool isConnected() const;
                 void setWhConn(UiWarehouseConnection_t*);
+                UiWarehouseConnection_t* getWhConn() const;
 
                 int32_t getWhPortID() const;
                 WarehousePortType_t getType() const;
