@@ -13,12 +13,15 @@
 #include <QList>
 #include <QTimer>
 #include <QPainter>
+#include <QMessageBox>
 #include <QGraphicsItem>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsSceneMouseEvent>
 
 // Local
 #include "Handle.h"
+#include "../Logger.h"
+#include "mainwindow.h"
 
 namespace whm
 {
@@ -27,7 +30,7 @@ namespace whm
         class BaseGraphicItem_t : public QGraphicsItem
         {
             public:
-                BaseGraphicItem_t(qreal w, qreal h, QGraphicsScene *scene = 0, QGraphicsItem *parent = 0);
+                BaseGraphicItem_t(qreal w, qreal h, MainWindow* ui, QGraphicsScene *scene = 0, QGraphicsItem *parent = 0);
                 ~BaseGraphicItem_t() = default;
 
                 virtual QRectF boundingRect() const;
@@ -81,6 +84,7 @@ namespace whm
                 QGraphicsTextItem* info{ nullptr };
 
             private:
+                MainWindow* ui{ nullptr };
                 Handle *mCurrentHandle;
                 QString mId;
         };

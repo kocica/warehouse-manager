@@ -17,11 +17,16 @@ namespace whm
     {
         class UiWarehouseOptimizerThread_t : public QThread
         {
+            Q_OBJECT
+
             public:
                 UiWarehouseOptimizerThread_t() = delete;
                 UiWarehouseOptimizerThread_t(const std::string&, const std::string&, const std::string&);
 
                 void run() override;
+
+            signals:
+                void optimizationFinished();
 
             private:
                 std::string o, a, l;

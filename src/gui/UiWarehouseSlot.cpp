@@ -13,8 +13,8 @@ namespace whm
 {
     namespace gui
     {
-        UiWarehouseSlot_t::UiWarehouseSlot_t(int32_t x, int32_t y, int32_t w, int32_t h, BaseShapeGraphicItem_t::ItemType t, QGraphicsScene* s, QGraphicsItem* p)
-            : BaseShapeGraphicItem_t(x, y, w, h, t, s, p)
+        UiWarehouseSlot_t::UiWarehouseSlot_t(int32_t x, int32_t y, int32_t w, int32_t h, BaseShapeGraphicItem_t::ItemType t, MainWindow* ui, QGraphicsScene* s, QGraphicsItem* p)
+            : BaseShapeGraphicItem_t(x, y, w, h, t, ui, s, p)
         {
             this->showHandles(false);
             this->setLocationSlot(true);

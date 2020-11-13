@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "mainwindow.h"
 #include "BaseGraphicItem.h"
 
 namespace whm
@@ -28,7 +29,7 @@ namespace whm
                     ITEM_PIXMAP
                 };
 
-                BaseShapeGraphicItem_t(qreal, qreal, qreal, qreal, ItemType, QGraphicsScene*, QGraphicsItem* p = 0);
+                BaseShapeGraphicItem_t(qreal, qreal, qreal, qreal, ItemType, MainWindow*, QGraphicsScene*, QGraphicsItem* p = 0);
                 ~BaseShapeGraphicItem_t() = default;
 
                 void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);

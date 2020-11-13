@@ -38,7 +38,7 @@ namespace whm
                 int32_t y2 = i.getY();
                 for(int32_t c2 = 0; c2 < i.getSlotCountY(); c2++)
                 {
-                    whSlots.push_back(new UiWarehouseSlot_t(x2, y2, slotW, slotH, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, this));
+                    whSlots.push_back(new UiWarehouseSlot_t(x2, y2, slotW, slotH, BaseShapeGraphicItem_t::ITEM_RECTANGLE, ui, s, this));
                     y2 += slotH;
                 }
                 x2 += slotW;
@@ -113,7 +113,7 @@ namespace whm
                 int32_t y2 = y;
                 for(int32_t c2 = 0; c2 < locY->text().toInt(); c2++)
                 {
-                    whSlots.emplace_back(new UiWarehouseSlot_t(x2, y2, slotW, slotH, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, this));
+                    whSlots.emplace_back(new UiWarehouseSlot_t(x2, y2, slotW, slotH, BaseShapeGraphicItem_t::ITEM_RECTANGLE, ui, s, this));
                     y2 += slotH;
                 }
                 x2 += slotW;

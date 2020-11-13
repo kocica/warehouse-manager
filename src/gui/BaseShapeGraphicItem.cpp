@@ -19,8 +19,8 @@ namespace whm
 {
     namespace gui
     {
-        BaseShapeGraphicItem_t::BaseShapeGraphicItem_t(qreal x, qreal y, qreal w, qreal h, ItemType type, QGraphicsScene *scene, QGraphicsItem *parent)
-            : BaseGraphicItem_t(w, h, scene, parent)
+        BaseShapeGraphicItem_t::BaseShapeGraphicItem_t(qreal x, qreal y, qreal w, qreal h, ItemType type, MainWindow* ui, QGraphicsScene *scene, QGraphicsItem *parent)
+            : BaseGraphicItem_t(w, h, ui, scene, parent)
         {
             mRect.setRect(x, y, w, h);
             mType = type;

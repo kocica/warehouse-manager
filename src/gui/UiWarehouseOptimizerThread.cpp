@@ -105,6 +105,8 @@ namespace whm
                                      });
             optimizer->optimize();
 
+            emit optimizationFinished();
+
             delete optimizer;
         }
     }

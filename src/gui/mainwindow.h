@@ -41,6 +41,11 @@ namespace whm
 
                 QPoint getWidgetPosition(QPoint);
 
+                bool& isSimulationActive();
+
+            public slots:
+                void simulationFinished();
+
             private slots:
                 void mousePressEvent(QMouseEvent *);
 
@@ -74,6 +79,8 @@ namespace whm
 
                 Ui::MainWindow* ui;
                 QGraphicsScene* scene;
+
+                bool simulationActive{ false };
         };
     }
 }

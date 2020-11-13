@@ -27,13 +27,14 @@ namespace whm
 {
     namespace gui
     {
-        BaseGraphicItem_t::BaseGraphicItem_t(qreal w, qreal h, QGraphicsScene *scene, QGraphicsItem *parent)
+        BaseGraphicItem_t::BaseGraphicItem_t(qreal w, qreal h, MainWindow* ui, QGraphicsScene *scene, QGraphicsItem *parent)
             : QGraphicsItem(parent)
             , mSelected(false)
             , mConnected(false)
             , mDrawHandles(true)
             , mLocationSlot(false)
             , mParentItem(parent)
+            , ui(ui)
             , mCurrentHandle(0)
         {
             QUuid id;
@@ -186,6 +187,13 @@ namespace whm
 
         void BaseGraphicItem_t::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
+            if(ui->isSimulationActive())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
+                return;
+            }
+
             if(mLocationSlot)
             {
                 dynamic_cast<BaseGraphicItem_t*>(mParentItem)->mousePressEvent(event);
@@ -262,6 +270,13 @@ namespace whm
 
         void BaseGraphicItem_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         {
+            if(ui->isSimulationActive())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
+                return;
+            }
+
             if(mLocationSlot)
             {
                 dynamic_cast<BaseGraphicItem_t*>(mParentItem)->mouseMoveEvent(event);
@@ -470,6 +485,13 @@ namespace whm
 
         void BaseGraphicItem_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         {
+            if(ui->isSimulationActive())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
+                return;
+            }
+
             if(mLocationSlot)
             {
                 dynamic_cast<BaseGraphicItem_t*>(mParentItem)->mouseReleaseEvent(event);

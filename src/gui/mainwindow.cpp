@@ -152,6 +152,13 @@ namespace whm
 
         void MainWindow::mousePressEvent(QMouseEvent *event)
         {
+            if(isSimulationActive())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
+                return;
+            }
+
             static std::map<UiCursorMode_t, WarehouseItemType_t> convMap =
             {
                 { UiCursorMode_t::E_MODE_WH_ITEM_CONV,     WarehouseItemType_t::E_CONVEYOR },
@@ -181,7 +188,8 @@ namespace whm
                 if (loc.x() < 0 || loc.x() > whX ||
                     loc.y() < 0 || loc.y() > whY)
                 {
-                    std::cerr << "Outside of scene bounds!" << std::endl;
+                    QMessageBox::warning(nullptr, "Warning", "Outside of scene bounds!");
+                    Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Outside of scene bounds!");
                     return;
                 }
 
@@ -290,8 +298,25 @@ namespace whm
             }
         }
 
+        bool& MainWindow::isSimulationActive()
+        {
+            return this->simulationActive;
+        }
+
+        void MainWindow::simulationFinished()
+        {
+            isSimulationActive() = false;
+        }
+
         void MainWindow::on_loadLayout_triggered()
         {
+            if(isSimulationActive())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
+                return;
+            }
+
             QString file = QFileDialog::getOpenFileName(this, tr("Load warehouse layout"), "", tr("Warehouse layouts (*.xml)"));
             if (file.cbegin() == file.cend())
             {
@@ -343,6 +368,13 @@ namespace whm
 
         void MainWindow::on_clearLayout_triggered()
         {
+            if(isSimulationActive())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
+                return;
+            }
+
             ::whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             UiWarehouseLayout_t::getWhLayout().clearWhLayout();
         }
@@ -400,10 +432,15 @@ namespace whm
                 return;
             }
 
+            isSimulationActive() = true;
+
             auto* optimizerUi = new UiWarehouseOptimizerThread_t(o, a, l);
 
             connect(optimizerUi, SIGNAL(finished()),
                     optimizerUi, SLOT(deleteLater()));
+
+            connect(optimizerUi, SIGNAL(optimizationFinished()),
+                    this,        SLOT(simulationFinished()));
 
             optimizerUi->start();
         }

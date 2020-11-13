@@ -35,7 +35,7 @@ namespace whm
         UiWarehousePort_t *UiWarehousePort_t::selectedPort = nullptr;
 
         UiWarehousePort_t::UiWarehousePort_t(QGraphicsScene *s, QGraphicsItem* parent, MainWindow *ui, int32_t id, int32_t x, int32_t y, int32_t w, int32_t h, WarehousePortType_t t)
-            : BaseShapeGraphicItem_t(x, y, w, h, BaseShapeGraphicItem_t::ITEM_RECTANGLE, s, parent)
+            : BaseShapeGraphicItem_t(x, y, w, h, BaseShapeGraphicItem_t::ITEM_RECTANGLE, ui, s, parent)
             , ui(ui)
             , whItem(dynamic_cast<UiWarehouseItem_t*>(parent))
             , whPortID(id)

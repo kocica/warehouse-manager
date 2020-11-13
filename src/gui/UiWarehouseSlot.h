@@ -10,6 +10,7 @@
 #pragma once
 
 #include "../Logger.h"
+#include "mainwindow.h"
 #include "BaseShapeGraphicItem.h"
 
 namespace whm
@@ -19,7 +20,7 @@ namespace whm
         class UiWarehouseSlot_t : public BaseShapeGraphicItem_t
         {
             public:
-                UiWarehouseSlot_t(int32_t, int32_t, int32_t, int32_t, BaseShapeGraphicItem_t::ItemType, QGraphicsScene*, QGraphicsItem*);
+                UiWarehouseSlot_t(int32_t, int32_t, int32_t, int32_t, BaseShapeGraphicItem_t::ItemType, MainWindow*, QGraphicsScene*, QGraphicsItem*);
                 ~UiWarehouseSlot_t() = default;
 
                 std::string getArticle() const;
