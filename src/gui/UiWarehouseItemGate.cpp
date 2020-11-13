@@ -54,7 +54,11 @@ namespace whm
             portSizeX = getW() / 5;
             portSizeY = getH() / 5;
 
-            std::for_each(whPorts.begin(), whPorts.end(), [=](auto* p) { p->updatePort(dx/2, dy/2, portSizeX, portSizeY); });
+            (void) dx;
+            (void) dy;
+            //std::for_each(whPorts.begin(), whPorts.end(), [=](auto* p) { p->updatePort(dx/2.0, dy/2.0, portSizeX, portSizeY); });
+
+            whPorts.at(0)->updatePort(mRect.topLeft().x() + getW() / 2 - (portSizeX/2), mRect.topLeft().y() + getH() / 2 - (portSizeY/2), portSizeX, portSizeY);
         }
     }
 }

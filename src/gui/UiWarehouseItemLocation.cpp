@@ -129,15 +129,20 @@ namespace whm
             portSizeX = getW() / 5;
             portSizeY = getH() / 5;
 
-            std::for_each(whPorts.begin(), whPorts.end(), [=](auto* p) { p->updatePort(dx/2, dy/2, portSizeX, portSizeY); });
+            (void) dx;
+            (void) dy;
+            //std::for_each(whPorts.begin(), whPorts.end(), [=](auto* p) { p->updatePort(dx/2.0, dy/2.0, portSizeX, portSizeY); });
+
+            whPorts.at(0)->updatePort(mRect.topLeft().x() + getW()/2 - portSizeX, mRect.topLeft().y() + getH()/2 - portSizeY/2, portSizeX, portSizeY);
+            whPorts.at(1)->updatePort(mRect.topLeft().x() + getW()/2            , mRect.topLeft().y() + getH()/2 - portSizeY/2, portSizeX, portSizeY);
 
             int32_t slotW = getW() / getSlotCountX();
             int32_t slotH = getH() / getSlotCountY();
 
-            int32_t x = getX();
+            int32_t x = mRect.topLeft().x();
             for(int32_t c1 = 0; c1 < getSlotCountX(); c1++)
             {
-                int32_t y = getY();
+                int32_t y = mRect.topLeft().y();
                 for(int32_t c2 = 0; c2 < getSlotCountY(); c2++)
                 {
                     whSlots[(c1 * getSlotCountY()) + c2]->updateSlot(x, y, slotW, slotH);

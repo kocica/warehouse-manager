@@ -512,13 +512,8 @@ namespace whm
 
         void UiWarehousePort_t::updatePort(double x, double y, int32_t w, int32_t h)
         {
-            this->mRect.setTopLeft(QPointF(this->mRect.topLeft().x() + x, this->mRect.topLeft().y() + y));
-            this->mRect.setBottomRight(QPointF(this->mRect.bottomRight().x() + x, this->mRect.bottomRight().y() + y));
-
-            (void)w;
-            (void)h;
-            //this->mRect.setWidth(w);
-            //this->mRect.setHeight(h);
+            this->mRect.setTopLeft(QPointF(x, y));
+            this->mRect.setBottomRight(QPointF(x + w, y + h));
 
             this->mOrigin.setX(mRect.center().x());
             this->mOrigin.setY(mRect.center().y());

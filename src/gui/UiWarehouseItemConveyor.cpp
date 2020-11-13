@@ -76,7 +76,22 @@ namespace whm
             portSizeX = getW() / 5;
             portSizeY = getH() / 5;
 
-            std::for_each(whPorts.begin(), whPorts.end(), [=](auto* p) { p->updatePort(dx/2, dy/2, portSizeX, portSizeY); });
+            (void) dx;
+            (void) dy;
+            //std::for_each(whPorts.begin(), whPorts.end(), [=](auto* p) { p->updatePort(dx/2.0, dy/2.0, portSizeX, portSizeY); });
+
+            if (getWhItemType() == WarehouseItemType_t::E_CONVEYOR)
+            {
+                whPorts.at(0)->updatePort(mRect.topLeft().x() + getW()/2 - portSizeX, mRect.topLeft().y() + getH()/2 - (portSizeY/2), portSizeX, portSizeY);
+                whPorts.at(1)->updatePort(mRect.topLeft().x() + getW()/2            , mRect.topLeft().y() + getH()/2 - (portSizeY/2), portSizeX, portSizeY);
+            }
+            else if (getWhItemType() == WarehouseItemType_t::E_CONVEYOR_HUB)
+            {
+               whPorts.at(0)->updatePort(mRect.topLeft().x() + getW()/2 - portSizeX  , mRect.topLeft().y() + getH()/2 - (portSizeY/2), portSizeX, portSizeY);
+               whPorts.at(1)->updatePort(mRect.topLeft().x() + getW()/2              , mRect.topLeft().y() + getH()/2 - (portSizeY/2), portSizeX, portSizeY);
+               whPorts.at(2)->updatePort(mRect.topLeft().x() + getW()/2 - portSizeX/2, mRect.topLeft().y() + getH()/2 - portSizeY    , portSizeX, portSizeY);
+               whPorts.at(3)->updatePort(mRect.topLeft().x() + getW()/2 - portSizeX/2, mRect.topLeft().y() + getH()/2                , portSizeX, portSizeY);
+            }
         }
     }
 }

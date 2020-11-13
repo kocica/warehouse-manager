@@ -18,7 +18,7 @@ namespace whm
         {
             this->showHandles(false);
             this->setLocationSlot(true);
-            this->setLineWidth(1);
+            this->setLineWidth(10);
         }
 
         void UiWarehouseSlot_t::setArticle(const std::string& a)
@@ -55,11 +55,6 @@ namespace whm
         {
             this->mRect.setTopLeft(QPointF(x, y));
             this->mRect.setBottomRight(QPointF(x + w, y + h));
-
-            (void)w;
-            (void)h;
-            //this->mRect.setWidth(w);
-            //this->mRect.setHeight(h);
 
             this->mOrigin.setX(mRect.center().x());
             this->mOrigin.setY(mRect.center().y());
