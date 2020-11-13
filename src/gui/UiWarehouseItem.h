@@ -38,9 +38,9 @@ namespace whm
                 UiWarehouseItem_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, WarehouseItemType_t);
                 virtual ~UiWarehouseItem_t();
 
-                WarehouseItemType_t getWhItemType() const;
                 void dump() const;
                 void removeWhItem();
+                bool isConnected() const;
 
                 int32_t getWhItemID() const { return whItemID; }
                 int32_t getX() const { return this->scenePos().x() + this->mRect.topLeft().x(); }
@@ -59,6 +59,7 @@ namespace whm
 
                 void moveItem(qreal, qreal);
 
+                WarehouseItemType_t getWhItemType() const;
                 UiWarehousePortContainer_t getWhPorts() const;
 
             protected:

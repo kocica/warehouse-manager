@@ -10,6 +10,7 @@
 // Local
 #include "Handle.h"
 #include "BaseGraphicItem.h"
+#include "UiWarehouseItem.h"
 #include "UiWarehouseItemGate.h"
 #include "UiWarehouseItemConveyor.h"
 #include "UiWarehouseItemLocation.h"
@@ -270,6 +271,16 @@ namespace whm
 
         void BaseGraphicItem_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         {
+            if(auto* whItem = dynamic_cast<UiWarehouseItem_t*>(this))
+            {
+                if(whItem && whItem->isConnected())
+                {
+                    QMessageBox::warning(nullptr, "Warning", "Cannot move/resize connected items!");
+                    Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot move/resize connected items!");
+                    return;
+                }
+            }
+
             if(ui->isSimulationActive())
             {
                 QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");

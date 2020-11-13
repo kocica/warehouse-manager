@@ -74,6 +74,15 @@ namespace whm
             this->updateHandles();
         }
 
+        bool UiWarehouseItem_t::isConnected() const
+        {
+            return std::any_of(whPorts.begin(), whPorts.end(), [](auto* p)
+                                                               -> bool
+                                                               {
+                                                                   return p->isConnected();
+                                                               });
+        }
+
         UiWarehouseItem_t::~UiWarehouseItem_t()
         {
             for (UiWarehousePort_t* whPort : whPorts)
