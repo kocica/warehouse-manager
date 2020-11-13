@@ -129,19 +129,10 @@ namespace whm
             ui->selectionMode->setIcon(QIcon(":/img/select.png"));
             ui->selectionMode->toggle();
 
-            // Tabs
-            ui->toolsTab->setTabText(0, "Optimizer");
-            ui->toolsTab->setTabText(1, "Generator");
-            ui->toolsTab->setTabText(2, "Simulator");
-            ui->dataBrowserTab->setTabText(0, "Orders");
-            ui->dataBrowserTab->setTabText(1, "Articles");
-            ui->dataBrowserTab->setTabText(2, "Locations");
-
             // Plot
             ui->fitnessPlot->addGraph();
             ui->fitnessPlot->xAxis->setLabel("Steps");
             ui->fitnessPlot->yAxis->setLabel("Fitness");
-            ui->fitnessPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
             ui->fitnessPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
         }
 
@@ -337,6 +328,10 @@ namespace whm
             ui->fitnessPlot->replot();
             ui->fitnessPlot->graph(0)->rescaleAxes(true);
             ui->fitnessPlot->update();
+
+            ui->elapsedTime->setText(QString::number(optimizationElapsedTime.elapsed() / 1000.0) + " [s]");
+
+            ui->optimizationProgressBar->setValue(100 * stepCounter / static_cast<double>(ui->iterations->value()));
         }
 
         void MainWindow::on_loadLayout_triggered()
@@ -466,7 +461,38 @@ namespace whm
             isSimulationActive() = true;
             whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
 
-            auto* optimizerUi = new UiWarehouseOptimizerThread_t(o, a, l);
+            whm::ConfigParser_t cfg;
+
+            // Set config according to the UI input widgets
+            cfg.set("numberDimensions",   std::to_string(ui->numberDimensions->value()));
+            cfg.set("problemMin",         std::to_string(ui->problemMin->value()));
+            cfg.set("problemMax",         std::to_string(ui->problemMax->value()));
+            cfg.set("maxIterations",      std::to_string(ui->iterations->value()));
+            cfg.set("saveWeightsPeriod",  std::to_string(ui->weights->value()));
+            cfg.set("maxTrialValue",      std::to_string(ui->trialValue->value()));
+
+            cfg.set("populationSize",     std::to_string(ui->populationSize->value()));
+            cfg.set("selectionSize",      std::to_string(ui->selectionSize->value()));
+            cfg.set("eliteSize",          std::to_string(ui->eliteSize->value()));
+            cfg.set("probCrossover",      std::to_string(ui->probCrossover->value()));
+            cfg.set("probMutationInd",    std::to_string(ui->probMutationInd->value()));
+            cfg.set("probMutationGene",   std::to_string(ui->probMutationGene->value()));
+
+            if(ui->crossoverGa->currentIndex() == 0) cfg.set("crossoverFunctor", "crossoverOrdered");
+            if(ui->mutationGa->currentIndex()  == 0) cfg.set("mutationFunctor",  "mutateInverse");
+            if(ui->mutationGa->currentIndex()  == 1) cfg.set("mutationFunctor",  "mutateOrdered");
+            if(ui->selectionGa->currentIndex() == 0) cfg.set("selectionFunctor", "selectTournam");
+            if(ui->selectionGa->currentIndex() == 1) cfg.set("selectionFunctor", "selectTrunc");
+            if(ui->selectionGa->currentIndex() == 2) cfg.set("selectionFunctor", "selectRoulette");
+            if(ui->selectionGa->currentIndex() == 3) cfg.set("selectionFunctor", "selectRank");
+
+            cfg.set("articlesPath", a);
+            cfg.set("locationsPath", l);
+            cfg.set("ordersPath", o);
+
+            optimizationElapsedTime.start();
+
+            auto* optimizerUi = new UiWarehouseOptimizerThread_t(cfg);
 
             connect(optimizerUi, SIGNAL(finished()),
                     optimizerUi, SLOT(deleteLater()));

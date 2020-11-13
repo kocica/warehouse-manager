@@ -25,8 +25,20 @@
 
 namespace whm
 {
-    WarehouseOptimizerGA_t::WarehouseOptimizerGA_t(utils::WhmArgs_t args_)
+    WarehouseOptimizerGA_t::WarehouseOptimizerGA_t(const utils::WhmArgs_t& args_)
         : WarehouseOptimizerBase_t{ args_ }
+    {
+        init();
+    }
+
+    WarehouseOptimizerGA_t::WarehouseOptimizerGA_t(const utils::WhmArgs_t& args_, const ConfigParser_t& cfg_)
+        : WarehouseOptimizerBase_t{ args_ }
+    {
+        cfg = cfg_;
+        init();
+    }
+
+    void WarehouseOptimizerGA_t::init()
     {
         std::map<std::string, MutationFunctor_t> mutatorMap =
         {

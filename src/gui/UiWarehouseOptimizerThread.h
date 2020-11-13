@@ -10,6 +10,7 @@
 #pragma once
 
 #include <QThread>
+#include "../ConfigParser.h"
 
 namespace whm
 {
@@ -21,7 +22,7 @@ namespace whm
 
             public:
                 UiWarehouseOptimizerThread_t() = delete;
-                UiWarehouseOptimizerThread_t(const std::string&, const std::string&, const std::string&);
+                UiWarehouseOptimizerThread_t(const whm::ConfigParser_t&);
 
                 void run() override;
 
@@ -30,7 +31,7 @@ namespace whm
                 void optimizationStep(double);
 
             private:
-                std::string o, a, l;
+                whm::ConfigParser_t cfg;
         };
     }
 }

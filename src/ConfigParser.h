@@ -17,6 +17,7 @@ namespace whm
     class ConfigParser_t
     {
         public:
+            ConfigParser_t();
             ConfigParser_t(const std::string&);
             ~ConfigParser_t() = default;
 
@@ -24,6 +25,8 @@ namespace whm
             U getAs(const std::string&) const;
 
             bool isSet(const std::string&) const;
+
+            void set(const std::string&, const std::string&);
 
         protected:
             void dump() const;

@@ -24,8 +24,8 @@ namespace whm
 {
     namespace gui
     {
-        UiWarehouseOptimizerThread_t::UiWarehouseOptimizerThread_t(const std::string& o_, const std::string& a_, const std::string& l_)
-            : o(o_) , a(a_) , l(l_)
+        UiWarehouseOptimizerThread_t::UiWarehouseOptimizerThread_t(const whm::ConfigParser_t& cfg_)
+            : cfg(cfg_)
         {
 
         }
@@ -34,9 +34,9 @@ namespace whm
         {
             whm::utils::WhmArgs_t args;
 
-            args.articlesPath  = a;
-            args.locationsPath = l;
-            args.ordersPath    = o;
+            args.articlesPath  = cfg.getAs<std::string>("articlesPath");
+            args.locationsPath = cfg.getAs<std::string>("locationsPath");
+            args.ordersPath    = cfg.getAs<std::string>("ordersPath");
 
             whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.locationsPath);
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
@@ -62,7 +62,7 @@ namespace whm
 
             whm::WarehouseOptimizerBase_t* optimizer{ nullptr };
 
-            optimizer = new whm::WarehouseOptimizerGA_t{args};
+            optimizer = new whm::WarehouseOptimizerGA_t{args, cfg};
 
             optimizer->setUiCallback([&](double fitness)
                                      {

@@ -21,6 +21,11 @@
 
 namespace whm
 {
+    ConfigParser_t::ConfigParser_t()
+    {
+
+    }
+
     ConfigParser_t::ConfigParser_t(const std::string& xmlFilename)
     {
         tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
@@ -83,6 +88,11 @@ namespace whm
     bool ConfigParser_t::getAs(const std::string& name) const
     {
         return utils::toLower(findByName(name)) == "true";
+    }
+
+    void ConfigParser_t::set(const std::string& key, const std::string& value)
+    {
+        parsedValues.insert(std::make_pair(key, value));
     }
 
     void ConfigParser_t::dump() const

@@ -14,6 +14,7 @@
 
 // Qt
 #include <QMainWindow>
+#include <QElapsedTimer>
 #include <QGraphicsScene>
 
 namespace Ui
@@ -85,6 +86,8 @@ namespace whm
 
                 Ui::MainWindow* ui;
                 CustomizedGraphicsView_t* scene;
+
+                QElapsedTimer optimizationElapsedTime;
 
                 bool simulationActive{ false };
         };

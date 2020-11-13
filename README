@@ -23,11 +23,6 @@ Optimizer (train on train set of orders):
  - NN (pokud nebude fungovat paralelizace)
  - Doxygen
 
- + Segfault pri ukonceni simulace UI zavrenim okna
-
  + Funkce co vrati serazene produkty podle fast/slow moveru (heat)
  + Funkce co vrati serazene sloty podle hot/cold slotu (pomoci path finderu: gate start + gate shipping; sort)
  + Funkce ktera to rozradi podle SLAPu a vyblije nejlepsi slot/article alokaci
-
- + Vpravo proklikavat mezi "Optimizer" "Generator" a "Simulator"
- + Dole si browsovat "Orders" "Locations" a "Articles" v citelne forme (grid)

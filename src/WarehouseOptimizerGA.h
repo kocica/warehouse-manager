@@ -25,7 +25,8 @@ namespace whm
 
         public:
             WarehouseOptimizerGA_t() = delete;
-            WarehouseOptimizerGA_t(utils::WhmArgs_t);
+            WarehouseOptimizerGA_t(const utils::WhmArgs_t&);
+            WarehouseOptimizerGA_t(const utils::WhmArgs_t&, const ConfigParser_t&);
             ~WarehouseOptimizerGA_t() = default;
 
             // Evolution
@@ -50,6 +51,8 @@ namespace whm
             void mutateGauss(std::vector<int32_t>&);
             void mutateOrdered(std::vector<int32_t>&);
             void mutateInverse(std::vector<int32_t>&);
+
+            void init();
 
         private:
             MutationFunctor_t mutationFunctor;
