@@ -33,6 +33,13 @@ namespace whm
 
     }
 
+    WarehouseDataGenerator_t::WarehouseDataGenerator_t(const utils::WhmArgs_t& args_, const ConfigParser_t& cfg_)
+        : cfg{ cfg_ }
+        , args{ args_ }
+    {
+
+    }
+
     WarehouseDataGenerator_t::~WarehouseDataGenerator_t()
     {
 
@@ -126,7 +133,7 @@ namespace whm
             }
 
             std::string savePath = args.ordersPath;
-            savePath.replace(savePath.find("."), 0, suffix);
+            savePath.replace(savePath.find_last_of("."), 0, suffix);
             layout.exportCustomerOrders(savePath);
         }
     }

@@ -46,7 +46,7 @@ all:
 
 .PHONY: clean
 
-$(BIN_NAME_OPT): CFLAGS += -DWHM_OPT -DWHM_PLOT
+$(BIN_NAME_OPT): CFLAGS += -DWHM_OPT -DWHM_SIM -DWHM_PLOT
 $(BIN_NAME_OPT): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) $(PROFILE) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) $(LDFLAGS) -o $@
 	find . -type f -name "*.cpp" -exec touch --no-create {} +
@@ -56,6 +56,7 @@ $(BIN_NAME_GEN): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) $(PROFILE) -fPIC $(OBJS) -o $@
 	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
+$(BIN_NAME_SIM): CFLAGS += -DWHM_SIM
 $(BIN_NAME_SIM): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) $(PROFILE) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) $(LDFLAGS) -o $@
 	find . -type f -name "*.cpp" -exec touch --no-create {} +

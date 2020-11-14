@@ -3,7 +3,7 @@ TARGET            = warehouse_manager_gui
 QT               += core gui widgets
 QMAKE_CXXFLAGS   += -std=c++17
 DEFINES          += QT_DEPRECATED_WARNINGS
-DEFINES          += "WHM_GUI" "WHM_SIM" "WHM_OPT"
+DEFINES          += "WHM_GUI" "WHM_SIM" "WHM_OPT" "WHM_GEN"
 LIBS             += -lsimlib -lm
 
 OBJECTS += ../tinyxml2.o
@@ -27,6 +27,7 @@ SOURCES +=  ../main.cpp \
             ../WarehouseOptimizerABC.cpp \
             ../WarehouseOptimizerPSO.cpp \
             ../WarehouseSimulator.cpp \
+            ../WarehouseDataGenerator.cpp \
             UiCursor.cpp \
             MainWindow.cpp \
             UiWarehouseSlot.cpp \
@@ -39,6 +40,7 @@ SOURCES +=  ../main.cpp \
             UiWarehouseItemLocation.cpp \
             UiWarehouseItemConveyor.cpp \
             UiWarehouseOptimizerThread.cpp \
+            UiWarehouseGeneratorThread.cpp \
             BaseGraphicItem.cpp \
             BaseShapeGraphicItem.cpp \
             Handle.cpp \
@@ -62,6 +64,7 @@ HEADERS +=  ../Utils.h \
             ../WarehouseOptimizerABC.h \
             ../WarehouseOptimizerPSO.h \
             ../WarehouseSimulator.h \
+            ../WarehouseDataGenerator.h \
             MainWindow.h \
             UiCursor.h \
             UiWarehouseSlot.h \
@@ -74,6 +77,7 @@ HEADERS +=  ../Utils.h \
             UiWarehouseItemLocation.h \
             UiWarehouseItemConveyor.h \
             UiWarehouseOptimizerThread.h \
+            UiWarehouseGeneratorThread.h \
             BaseGraphicItem.h \
             BaseShapeGraphicItem.h \
             Handle.h \

@@ -29,6 +29,7 @@ namespace whm
     {
         public:
             WarehouseDataGenerator_t(const utils::WhmArgs_t&);
+            WarehouseDataGenerator_t(const utils::WhmArgs_t&, const ConfigParser_t&);
             ~WarehouseDataGenerator_t();
 
             void generateData();

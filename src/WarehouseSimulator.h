@@ -9,7 +9,7 @@
 
 #pragma once
 
-#ifndef WHM_GEN
+#ifdef WHM_SIM
 
 // Std
 #include <map>

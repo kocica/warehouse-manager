@@ -77,7 +77,9 @@ int main(int argc, char *argv[])
             optimizer->optimize();
 
             delete optimizer;
-#    else
+#    endif
+
+#    ifdef WHM_SIM
             whm::WarehouseSimulator_t::getWhSimulator().setArguments(args);
             whm::WarehouseSimulator_t::getWhSimulator().runSimulation();
 #    endif

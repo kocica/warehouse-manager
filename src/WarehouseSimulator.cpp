@@ -7,7 +7,7 @@
  * @brief   Module responsible for simulation of the warehouse operations
  */
 
-#ifndef WHM_GEN
+#ifdef WHM_SIM
 
 // Std
 #include <chrono>

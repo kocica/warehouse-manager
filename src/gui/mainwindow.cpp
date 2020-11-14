@@ -21,6 +21,7 @@
 #include "BaseShapeGraphicItem.h"
 #include "UiWarehouseItemLocation.h"
 #include "UiWarehouseItemConveyor.h"
+#include "UiWarehouseGeneratorThread.h"
 #include "UiWarehouseOptimizerThread.h"
 
 #include "../WarehouseItem.h"
@@ -652,6 +653,19 @@ namespace whm
             cfg.dump();
 
             generationElapsedTime.start();
+
+            auto* generatorUi = new UiWarehouseGeneratorThread_t(cfg);
+
+            connect(generatorUi, SIGNAL(finished()),
+                    generatorUi, SLOT(deleteLater()));
+
+            //connect(generatorUi, SIGNAL(generatingFinished()),
+            //        this,        SLOT(generatingFinished()));
+
+            //connect(optimizerUi, SIGNAL(generatingStep()),
+            //        this,        SLOT(generatingStep()));
+
+            generatorUi->start();
         }
 
         void MainWindow::reset()
