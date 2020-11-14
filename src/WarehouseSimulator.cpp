@@ -225,6 +225,11 @@ namespace whm
         return cfg;
     }
 
+    void WarehouseSimulator_t::setConfig(const ConfigParser_t& cfg_)
+    {
+        cfg = cfg_;
+    }
+
     WarehousePathInfo_t* WarehouseSimulator_t::lookupShortestPath(int32_t currentLocID, const std::vector<int32_t>& targetLocIDs)
     {
         WarehousePathInfo_t* whPathInfo{ nullptr };

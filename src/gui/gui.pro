@@ -41,6 +41,7 @@ SOURCES +=  ../main.cpp \
             UiWarehouseItemConveyor.cpp \
             UiWarehouseOptimizerThread.cpp \
             UiWarehouseGeneratorThread.cpp \
+            UiWarehouseSimulatorThread.cpp \
             BaseGraphicItem.cpp \
             BaseShapeGraphicItem.cpp \
             Handle.cpp \
@@ -78,6 +79,7 @@ HEADERS +=  ../Utils.h \
             UiWarehouseItemConveyor.h \
             UiWarehouseOptimizerThread.h \
             UiWarehouseGeneratorThread.h \
+            UiWarehouseSimulatorThread.h \
             BaseGraphicItem.h \
             BaseShapeGraphicItem.h \
             Handle.h \

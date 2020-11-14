@@ -41,6 +41,7 @@ namespace whm
             void printStats(bool);
 
             ConfigParser_t& getConfig();
+            void setConfig(const ConfigParser_t&);
 
             utils::WhmArgs_t getArguments() const;
             void setArguments(const utils::WhmArgs_t&);

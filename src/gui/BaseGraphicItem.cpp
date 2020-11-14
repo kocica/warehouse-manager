@@ -188,7 +188,7 @@ namespace whm
 
         void BaseGraphicItem_t::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
-            if(ui->isSimulationActive())
+            if(ui->isOptimizationActive())
             {
                 QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
@@ -281,7 +281,7 @@ namespace whm
                 }
             }
 
-            if(ui->isSimulationActive())
+            if(ui->isOptimizationActive())
             {
                 QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
@@ -496,7 +496,7 @@ namespace whm
 
         void BaseGraphicItem_t::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         {
-            if(ui->isSimulationActive())
+            if(ui->isOptimizationActive())
             {
                 QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");

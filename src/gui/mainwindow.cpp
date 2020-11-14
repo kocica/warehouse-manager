@@ -21,9 +21,13 @@
 #include "BaseShapeGraphicItem.h"
 #include "UiWarehouseItemLocation.h"
 #include "UiWarehouseItemConveyor.h"
+
+// Threads
+#include "UiWarehouseSimulatorThread.h"
 #include "UiWarehouseGeneratorThread.h"
 #include "UiWarehouseOptimizerThread.h"
 
+// TUI
 #include "../WarehouseItem.h"
 #include "../WarehouseOrder.h"
 #include "../WarehouseLayout.h"
@@ -98,10 +102,10 @@ namespace whm
             QPen pen;
             pen.setColor(Qt::black);
             pen.setWidth(whX / 100);
-            scene->addLine(0,     0,    whX, 0,   pen);
-            scene->addLine(0,     0,    0,   whY, pen);
-            scene->addLine(0,     whY,  whX, whY, pen);
-            scene->addLine(whX,   0,    whX, whY, pen);
+            scene->addLine(0,   0,   whX, 0,   pen);
+            scene->addLine(0,   0,   0,   whY, pen);
+            scene->addLine(0,   whY, whX, whY, pen);
+            scene->addLine(whX, 0,   whX, whY, pen);
 
             // Enable zooming
             ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
@@ -173,7 +177,7 @@ namespace whm
 
         void MainWindow::mousePressEvent(QMouseEvent *event)
         {
-            if(isSimulationActive())
+            if(isOptimizationActive())
             {
                 QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
@@ -319,14 +323,14 @@ namespace whm
             }
         }
 
-        bool& MainWindow::isSimulationActive()
+        bool& MainWindow::isOptimizationActive()
         {
-            return this->simulationActive;
+            return this->optimizationActive;
         }
 
-        void MainWindow::simulationFinished()
+        void MainWindow::optimizationFinished()
         {
-            isSimulationActive() = false;
+            isOptimizationActive() = false;
 
             steps.clear();
             fitnesses.clear();
@@ -435,7 +439,7 @@ namespace whm
 
         void MainWindow::on_loadLayout_triggered()
         {
-            if(isSimulationActive())
+            if(isOptimizationActive())
             {
                 QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
@@ -493,7 +497,7 @@ namespace whm
 
         void MainWindow::on_clearLayout_triggered()
         {
-            if(isSimulationActive())
+            if(isOptimizationActive())
             {
                 QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
@@ -557,7 +561,7 @@ namespace whm
                 return;
             }
 
-            isSimulationActive() = true;
+            isOptimizationActive() = true;
             whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
 
             whm::ConfigParser_t cfg;
@@ -599,7 +603,7 @@ namespace whm
                     optimizerUi, SLOT(deleteLater()));
 
             connect(optimizerUi, SIGNAL(optimizationFinished()),
-                    this,        SLOT(simulationFinished()));
+                    this,        SLOT(optimizationFinished()));
 
             connect(optimizerUi, SIGNAL(optimizationStep(double)),
                     this,        SLOT(optimizationStep(double)));
@@ -764,6 +768,96 @@ namespace whm
                     this,        SLOT(newGeneratedValue(int, int)));
 
             generatorUi->start();
+        }
+
+        void MainWindow::on_ordersLoadSim_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Import orders"), "", tr("Orders (*.xml)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->ordersLineSim->setText(file);
+        }
+
+        void MainWindow::on_locationsLoadSim_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Import locations"), "", tr("Locations (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->locationsLineSim->setText(file);
+        }
+
+        void MainWindow::on_configLoadSim_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Simulator configuration"), "", tr("Simulator configuration (*.xml)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->configLineSim->setText(file);
+
+            whm::ConfigParser_t cfg(file.toUtf8().constData());
+
+            ui->toteSpeed->setValue(cfg.getAs<double>("toteSpeed"));
+            ui->workerSpeed->setValue(cfg.getAs<double>("workerSpeed"));
+            ui->totesPerMinute->setValue(cfg.getAs<int32_t>("totesPerMin"));
+            ui->customerReqInterval->setValue(cfg.getAs<int32_t>("orderRequestInterval"));
+            ui->locationCapacity->setValue(cfg.getAs<int32_t>("locationCapacity"));
+            ui->conveyorCapacity->setValue(cfg.getAs<int32_t>("conveyorCapacity"));
+            ui->simulationSpeedup->setValue(cfg.getAs<double>("simSpeedup"));
+            ui->preprocessOrders->setCheckState(cfg.getAs<bool>("preprocess") ? Qt::Checked : Qt::Unchecked);
+        }
+
+        void MainWindow::on_simulateWarehouse_clicked()
+        {
+            std::string o = ui->ordersLineSim->text().toUtf8().constData();
+            std::string l = ui->locationsLineSim->text().toUtf8().constData();
+
+            if(o.empty() || l.empty())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Load all required data first!");
+                return;
+            }
+
+            whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+
+            whm::ConfigParser_t cfg;
+
+            // Set config according to the UI input widgets
+            cfg.set("toteSpeed",              std::to_string(ui->toteSpeed->value()));
+            cfg.set("workerSpeed",            std::to_string(ui->workerSpeed->value()));
+            cfg.set("totesPerMin",            std::to_string(ui->totesPerMinute->value()));
+            cfg.set("orderRequestInterval",   std::to_string(ui->customerReqInterval->value()));
+            cfg.set("locationCapacity",       std::to_string(ui->locationCapacity->value()));
+            cfg.set("conveyorCapacity",       std::to_string(ui->conveyorCapacity->value()));
+            cfg.set("simSpeedup",             std::to_string(ui->simulationSpeedup->value()));
+            cfg.set("preprocess",             ui->preprocessOrders->checkState() == Qt::Checked ? "true" : "false");
+
+            cfg.set("locationsPath", l);
+            cfg.set("ordersPath", o);
+
+            cfg.dump();
+
+            optimizationElapsedTime.start();
+
+            auto* simulatorUi = new UiWarehouseSimulatorThread_t(cfg);
+
+            connect(simulatorUi, SIGNAL(finished()),
+                    simulatorUi, SLOT(deleteLater()));
+
+            //connect(simulatorUi, SIGNAL(simulationFinished(double)),
+            //        this,        SLOT(simulationFinished(double)));
+
+            //connect(simulatorUi, SIGNAL(orderSimulationFinished(double)),
+            //        this,        SLOT(orderSimulationFinished(double)));
+
+            simulatorUi->start();
         }
 
         void MainWindow::reset()

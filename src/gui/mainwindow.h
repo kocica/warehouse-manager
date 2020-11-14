@@ -47,10 +47,10 @@ namespace whm
 
                 QPoint getWidgetPosition(QPoint);
 
-                bool& isSimulationActive();
+                bool& isOptimizationActive();
 
             public slots:
-                void simulationFinished();
+                void optimizationFinished();
                 void optimizationStep(double);
                 void generatingFinished();
                 void newGeneratedValue(int, int);
@@ -76,17 +76,24 @@ namespace whm
                 void on_whItemEntrance_toggled(bool);
                 void on_whItemExit_toggled(bool);
 
-                // Simulator
+                // Optimizer
                 void on_ordersLoad_clicked();
                 void on_articlesLoad_clicked();
                 void on_locationsLoad_clicked();
                 void on_configLoad_clicked();
+                //void on_optimizeWarehouse_clicked();
 
                 // Generator
                 void on_ordersSaveGen_clicked();
                 void on_articlesLoadGen_clicked();
                 void on_configLoadGen_clicked();
                 void on_generateOrders_clicked();
+
+                // Simulator
+                void on_ordersLoadSim_clicked();
+                void on_locationsLoadSim_clicked();
+                void on_configLoadSim_clicked();
+                void on_simulateWarehouse_clicked();
 
             private:
                 int32_t whR{ 0 };
@@ -99,7 +106,7 @@ namespace whm
                 QElapsedTimer generationElapsedTime;
                 QElapsedTimer optimizationElapsedTime;
 
-                bool simulationActive{ false };
+                bool optimizationActive{ false };
 
                 QVector<double> xadu;
                 QVector<double> xorl;
