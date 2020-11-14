@@ -490,6 +490,8 @@ namespace whm
             cfg.set("locationsPath", l);
             cfg.set("ordersPath", o);
 
+            cfg.dump();
+
             optimizationElapsedTime.start();
 
             auto* optimizerUi = new UiWarehouseOptimizerThread_t(cfg);
@@ -551,7 +553,7 @@ namespace whm
 
         void MainWindow::on_configLoad_clicked()
         {
-            QString file = QFileDialog::getOpenFileName(this, tr("Optimalizator configuration"), "", tr("Configuration (*.xml)"));
+            QString file = QFileDialog::getOpenFileName(this, tr("Optimalizator configuration"), "", tr("Optimalizator configuration (*.xml)"));
             if (file.cbegin() == file.cend())
             {
                 return;
@@ -582,6 +584,74 @@ namespace whm
             if(cfg.getAs<std::string>("selectionFunctor") == "selectTrunc")      ui->selectionGa->setCurrentIndex(1);
             if(cfg.getAs<std::string>("selectionFunctor") == "selectRoulette")   ui->selectionGa->setCurrentIndex(2);
             if(cfg.getAs<std::string>("selectionFunctor") == "selectRank")       ui->selectionGa->setCurrentIndex(3);
+        }
+
+        void MainWindow::on_ordersSaveGen_clicked()
+        {
+            QString file = QFileDialog::getSaveFileName(this, tr("Save generated orders"), "", tr("Orders (*.xml)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->ordersLineGen->setText(file);
+        }
+
+        void MainWindow::on_articlesLoadGen_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Import articles"), "", tr("Articles (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->articlesLineGen->setText(file);
+        }
+
+        void MainWindow::on_configLoadGen_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Generator configuration"), "", tr("Generator configuration (*.xml)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->configLineGen->setText(file);
+
+            whm::ConfigParser_t cfg(file.toUtf8().constData());
+
+            ui->orderCount->setValue(cfg.getAs<int32_t>("orderCount"));
+            ui->aduMi->setValue(cfg.getAs<int32_t>("mi"));
+            ui->aduSigma->setValue(cfg.getAs<int32_t>("sigma"));
+            ui->orlCountMi->setValue(0);
+            ui->orlCountSigma->setValue(cfg.getAs<int32_t>("sigmaLines"));
+        }
+
+        void MainWindow::on_generateOrders_clicked()
+        {
+            std::string o = ui->ordersLineGen->text().toUtf8().constData();
+            std::string a = ui->articlesLineGen->text().toUtf8().constData();
+
+            if(o.empty() || a.empty())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Load all required data first!");
+                return;
+            }
+
+            whm::ConfigParser_t cfg;
+
+            // Set config according to the UI input widgets
+            cfg.set("orderCount",   std::to_string(ui->orderCount->value()));
+            cfg.set("mi",           std::to_string(ui->aduMi->value()));
+            cfg.set("sigma",        std::to_string(ui->aduSigma->value()));
+            cfg.set("sigmaLines",   std::to_string(ui->orlCountSigma->value()));
+
+            cfg.set("articlesPath", a);
+            cfg.set("ordersPath", o);
+
+            cfg.dump();
+
+            generationElapsedTime.start();
         }
 
         void MainWindow::reset()

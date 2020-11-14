@@ -28,8 +28,9 @@ namespace whm
 
             void set(const std::string&, const std::string&);
 
-        protected:
             void dump() const;
+
+        protected:
             std::string findByName(const std::string&) const;
 
         private:

@@ -362,13 +362,6 @@
                    <string>GA</string>
                   </attribute>
                   <layout class="QGridLayout" name="gridLayout_3">
-                   <item row="0" column="5">
-                    <widget class="QSpinBox" name="eliteSize">
-                     <property name="maximum">
-                      <number>100</number>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="1" column="0">
                     <widget class="QLabel" name="probCrossoverLabel">
                      <property name="text">
@@ -376,17 +369,10 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="4">
-                    <widget class="QLabel" name="eliteSizeLabel">
-                     <property name="text">
-                      <string>Elitte size:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <widget class="QLabel" name="selectionSizeLabel">
-                     <property name="text">
-                      <string>Selection size:</string>
+                   <item row="0" column="5">
+                    <widget class="QSpinBox" name="eliteSize">
+                     <property name="maximum">
+                      <number>100</number>
                      </property>
                     </widget>
                    </item>
@@ -397,6 +383,13 @@
                      </property>
                     </widget>
                    </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="selectionSizeLabel">
+                     <property name="text">
+                      <string>Selection size:</string>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="1" column="4">
                     <widget class="QLabel" name="probMutationGeneLabel">
                      <property name="text">
@@ -404,27 +397,10 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="2">
-                    <widget class="QLabel" name="probMutationIndLabel">
+                   <item row="0" column="4">
+                    <widget class="QLabel" name="eliteSizeLabel">
                      <property name="text">
-                      <string>Prob. mutation ind.:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QSpinBox" name="populationSize">
-                     <property name="maximum">
-                      <number>100000</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="probCrossover">
-                     <property name="maximum">
-                      <double>1.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.100000000000000</double>
+                      <string>Elitte size:</string>
                      </property>
                     </widget>
                    </item>
@@ -445,8 +421,22 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="5">
-                    <widget class="QDoubleSpinBox" name="probMutationGene">
+                   <item row="0" column="1">
+                    <widget class="QSpinBox" name="populationSize">
+                     <property name="maximum">
+                      <number>100000</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QLabel" name="probMutationIndLabel">
+                     <property name="text">
+                      <string>Prob. mutation ind.:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="probCrossover">
                      <property name="maximum">
                       <double>1.000000000000000</double>
                      </property>
@@ -460,15 +450,6 @@
                      <property name="text">
                       <string>Crossover:</string>
                      </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QComboBox" name="crossoverGa">
-                     <item>
-                      <property name="text">
-                       <string>Ordered</string>
-                      </property>
-                     </item>
                     </widget>
                    </item>
                    <item row="2" column="2">
@@ -485,6 +466,25 @@
                        <string>Inverse</string>
                       </property>
                      </item>
+                     <item>
+                      <property name="text">
+                       <string>Ordered</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="1" column="5">
+                    <widget class="QDoubleSpinBox" name="probMutationGene">
+                     <property name="maximum">
+                      <double>1.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="crossoverGa">
                      <item>
                       <property name="text">
                        <string>Ordered</string>
@@ -625,6 +625,261 @@
            <attribute name="title">
             <string>Generator</string>
            </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <widget class="QGroupBox" name="dataGen">
+              <property name="title">
+               <string>Data</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_5">
+               <item>
+                <layout class="QHBoxLayout" name="ordersLayoutGen">
+                 <item>
+                  <widget class="QLineEdit" name="ordersLineGen"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="ordersSaveGen">
+                   <property name="text">
+                    <string>Save orders</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="articlesLayoutGen">
+                 <item>
+                  <widget class="QLineEdit" name="articlesLineGen"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="articlesLoadGen">
+                   <property name="text">
+                    <string>Load articles</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="generatorParameters">
+              <property name="title">
+               <string>Parameters</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_7">
+               <item>
+                <layout class="QHBoxLayout" name="configLayoutGen">
+                 <property name="bottomMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QLineEdit" name="configLineGen"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="configLoadGen">
+                   <property name="text">
+                    <string>Load config</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QGridLayout" name="genParams">
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item row="1" column="3">
+                  <widget class="QSpinBox" name="aduSigma">
+                   <property name="maximum">
+                    <number>1000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>10</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="aduSigmaLine">
+                   <property name="text">
+                    <string>Average dailty units sigma</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="orlCountMi">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="maximum">
+                    <number>1000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>10</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="orlCountMiLine">
+                   <property name="text">
+                    <string>Order line count mi</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="aduMiLine">
+                   <property name="text">
+                    <string>Average dailty units mi</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="QSpinBox" name="orlCountSigma">
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="orderCount">
+                   <property name="maximum">
+                    <number>100000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>100</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QLabel" name="orlCountSigmaLine">
+                   <property name="text">
+                    <string>Order line count sigma</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="orderCountLine">
+                   <property name="text">
+                    <string>Order count</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="productCountLine">
+                   <property name="text">
+                    <string>Product count</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QSpinBox" name="productCount">
+                   <property name="maximum">
+                    <number>10000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>100</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QSpinBox" name="aduMi">
+                   <property name="maximum">
+                    <number>10000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>100</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="3">
+                  <widget class="QPushButton" name="generateOrders">
+                   <property name="text">
+                    <string>Generate</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCustomPlot" name="aduPlot" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>300</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <property name="bottomMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="elapsedTimeLabelGen">
+                <property name="text">
+                 <string>Elapsed time:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="elapsedTimeGen">
+                <property name="text">
+                 <string>0 [s]</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacerGen">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="progressBarLabelGen">
+                <property name="text">
+                 <string>Progress:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QProgressBar" name="progressBarGen">
+                <property name="value">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacerGen">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </widget>
           <widget class="QWidget" name="simulator">
            <attribute name="title">
