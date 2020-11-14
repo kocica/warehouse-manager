@@ -1127,6 +1127,37 @@
                  </item>
                 </layout>
                </item>
+               <item>
+                <widget class="QCustomPlot" name="simulationPlot" native="true">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>300</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                 <property name="bottomMargin">
+                  <number>10</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="simulationTimeLabel">
+                   <property name="text">
+                    <string>Simulation time:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="simulationTime">
+                   <property name="text">
+                    <string>0 [s]</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
               </layout>
              </widget>
             </item>

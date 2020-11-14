@@ -52,8 +52,11 @@ namespace whm
             public slots:
                 void optimizationFinished();
                 void optimizationStep(double);
+
                 void generatingFinished();
                 void newGeneratedValue(int, int);
+
+                void simulationFinished(double);
 
             private slots:
                 void mousePressEvent(QMouseEvent *);

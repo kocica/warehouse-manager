@@ -437,6 +437,11 @@ namespace whm
             ui->progressBarGen->setValue(100 * xorl.size() / static_cast<double>(ui->orderCount->value()));
         }
 
+        void MainWindow::simulationFinished(double time)
+        {
+            ui->simulationTime->setText(QString::number(time) + " [s]");
+        }
+
         void MainWindow::on_loadLayout_triggered()
         {
             if(isOptimizationActive())
@@ -851,8 +856,8 @@ namespace whm
             connect(simulatorUi, SIGNAL(finished()),
                     simulatorUi, SLOT(deleteLater()));
 
-            //connect(simulatorUi, SIGNAL(simulationFinished(double)),
-            //        this,        SLOT(simulationFinished(double)));
+            connect(simulatorUi, SIGNAL(simulationFinished(double)),
+                    this,        SLOT(simulationFinished(double)));
 
             //connect(simulatorUi, SIGNAL(orderSimulationFinished(double)),
             //        this,        SLOT(orderSimulationFinished(double)));

@@ -13,6 +13,7 @@
 
 // Std
 #include <map>
+#include <functional>
 
 // Simlib
 #include <simlib.h>
@@ -48,6 +49,11 @@ namespace whm
 
             static WarehouseSimulator_t& getWhSimulator();
 
+#           ifdef WHM_GUI
+            using UiCallback_t = std::function<void(double)>;
+            void setUiCallback(UiCallback_t);
+#           endif
+
             simlib3::Store* getWhItemFacility(int32_t);
 
             WarehouseItem_t* lookupWhLoc(int32_t);
@@ -62,6 +68,10 @@ namespace whm
 
         private:
             bool stats;
+
+#           ifdef WHM_GUI
+            UiCallback_t uiCallback;
+#           endif
 
             ConfigParser_t cfg;
             utils::WhmArgs_t args;

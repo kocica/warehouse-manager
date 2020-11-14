@@ -39,6 +39,13 @@ namespace whm
         return s;
     }
 
+#   ifdef WHM_GUI
+    void WarehouseSimulator_t::setUiCallback(UiCallback_t c)
+    {
+        this->uiCallback = c;
+    }
+#   endif
+
     simlib3::Store* WarehouseSimulator_t::getWhItemFacility(int32_t facilityID)
     {
         return whFacilities[facilityID];
@@ -161,6 +168,10 @@ namespace whm
 
         if(finished == whLayout.getWhOrders().size())
         {
+#           ifdef WHM_GUI
+            uiCallback(Time);
+#           endif
+
             if(stats)
             {
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
