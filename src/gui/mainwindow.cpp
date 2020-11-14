@@ -134,7 +134,6 @@ namespace whm
             ui->fitnessPlot->addGraph();
             ui->fitnessPlot->xAxis->setLabel("Steps");
             ui->fitnessPlot->yAxis->setLabel("Fitness");
-            ui->fitnessPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
 
             ui->generatorPlot->addGraph();
             ui->generatorPlot->xAxis->setLabel("x");
@@ -144,6 +143,7 @@ namespace whm
             ui->generatorPlot->addGraph();
             ui->generatorPlot->xAxis->setLabel("x");
             ui->generatorPlot->yAxis->setLabel("y");
+            ui->generatorPlot->graph(1)->setPen(QPen(QColor(255, 0, 0)));
             ui->generatorPlot->graph(1)->setScatterStyle(QCPScatterStyle::ssDiamond);
         }
 
@@ -341,12 +341,17 @@ namespace whm
         {
             auto stepCount = steps.size();
 
-            steps.append(++stepCount);
+            steps.append(stepCount++);
             fitnesses.append(fitness);
 
             ui->fitnessPlot->graph(0)->setData(steps, fitnesses);
             ui->fitnessPlot->replot();
-            ui->fitnessPlot->graph(0)->rescaleAxes();
+            ui->fitnessPlot->graph(0)->rescaleAxes(true);
+
+            double max = *std::max_element(fitnesses.begin(), fitnesses.end());
+
+            ui->fitnessPlot->yAxis->setRange(0, max * 1.1);
+
             ui->fitnessPlot->update();
 
             ui->elapsedTime->setText(QString::number(optimizationElapsedTime.elapsed() / 1000.0) + " [s]");
