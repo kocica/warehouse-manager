@@ -138,12 +138,15 @@ namespace whm
             ui->generatorPlot->addGraph();
             ui->generatorPlot->xAxis->setLabel("x");
             ui->generatorPlot->yAxis->setLabel("y");
+            ui->generatorPlot->graph(0)->setPen(QPen(QColor(0, 0, 255)));
+            ui->generatorPlot->graph(0)->setBrush(QBrush(QColor(0, 0, 255)));
             ui->generatorPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
 
             ui->generatorPlot->addGraph();
             ui->generatorPlot->xAxis->setLabel("x");
             ui->generatorPlot->yAxis->setLabel("y");
             ui->generatorPlot->graph(1)->setPen(QPen(QColor(255, 0, 0)));
+            ui->generatorPlot->graph(1)->setBrush(QBrush(QColor(255, 0, 0)));
             ui->generatorPlot->graph(1)->setScatterStyle(QCPScatterStyle::ssDiamond);
         }
 
@@ -332,9 +335,7 @@ namespace whm
         void MainWindow::generatingFinished()
         {
             xadu.clear();
-            yadu.clear();
             xorl.clear();
-            yorl.clear();
         }
 
         void MainWindow::optimizationStep(double fitness)
@@ -363,19 +364,59 @@ namespace whm
         {
             if(graph == 0)
             {
-                yadu.append(0);
                 xadu.append(value);
 
-                ui->generatorPlot->graph(0)->setData(xadu, yadu);
+                auto [min, max] = std::minmax_element(xadu.begin(), xadu.end());
+
+                double step = (*max - *min) / 10;
+
+                QVector<double> x_hist;
+                QVector<double> y_hist;
+
+                for(double x = *min; x < *max; x += step)
+                {
+                    double c{ 0 };
+                    for(auto v : xadu)
+                    {
+                        if(v >= x && v <= (x + step))
+                        {
+                            ++c;
+                        }
+                    }
+                    x_hist.push_back(x);
+                    y_hist.push_back(c);
+                }
+
+                ui->generatorPlot->graph(0)->setData(x_hist, y_hist);
                 ui->generatorPlot->replot();
                 ui->generatorPlot->graph(0)->rescaleAxes();
             }
             else
             {
-                yorl.append(1);
                 xorl.append(value);
 
-                ui->generatorPlot->graph(1)->setData(xorl, yorl);
+                auto [min, max] = std::minmax_element(xorl.begin(), xorl.end());
+
+                double step = (*max - *min) / 10;
+
+                QVector<double> x_hist;
+                QVector<double> y_hist;
+
+                for(double x = *min; x < *max; x += step)
+                {
+                    double c{ 0 };
+                    for(auto v : xorl)
+                    {
+                        if(v >= x && v <= (x + step))
+                        {
+                            ++c;
+                        }
+                    }
+                    x_hist.push_back(x);
+                    y_hist.push_back(c);
+                }
+
+                ui->generatorPlot->graph(1)->setData(x_hist, y_hist);
                 ui->generatorPlot->replot();
                 ui->generatorPlot->graph(1)->rescaleAxes();
             }

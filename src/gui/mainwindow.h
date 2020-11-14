@@ -101,9 +101,7 @@ namespace whm
 
                 bool simulationActive{ false };
 
-                QVector<double> yadu;
                 QVector<double> xadu;
-                QVector<double> yorl;
                 QVector<double> xorl;
                 QVector<double> steps;
                 QVector<double> fitnesses;
