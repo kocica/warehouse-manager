@@ -32,7 +32,16 @@ namespace whm
             args.articlesPath  = cfg.getAs<std::string>("articlesPath");
             args.ordersPath    = cfg.getAs<std::string>("ordersPath");
 
-            whm::WarehouseDataGenerator_t{args, cfg}.generateData();
+            whm::WarehouseDataGenerator_t datagen{args, cfg};
+
+            datagen.setUiCallback([&](int32_t val)
+                                  {
+                                      emit newGeneratedValue(val);
+                                  });
+
+            datagen.generateData();
+
+            emit generatingFinished();
         }
     }
 }

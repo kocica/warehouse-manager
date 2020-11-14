@@ -130,11 +130,16 @@ namespace whm
             ui->selectionMode->setIcon(QIcon(":/img/select.png"));
             ui->selectionMode->toggle();
 
-            // Plot
+            // Plots
             ui->fitnessPlot->addGraph();
             ui->fitnessPlot->xAxis->setLabel("Steps");
             ui->fitnessPlot->yAxis->setLabel("Fitness");
             ui->fitnessPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
+
+            ui->generatorPlot->addGraph();
+            ui->generatorPlot->xAxis->setLabel("x");
+            ui->generatorPlot->yAxis->setLabel("y");
+            ui->generatorPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
         }
 
         MainWindow::~MainWindow()
@@ -314,25 +319,47 @@ namespace whm
         void MainWindow::simulationFinished()
         {
             isSimulationActive() = false;
+
+            steps.clear();
+            fitnesses.clear();
+        }
+
+        void MainWindow::generatingFinished()
+        {
+            x.clear();
+            y.clear();
         }
 
         void MainWindow::optimizationStep(double fitness)
         {
-            static int32_t stepCounter{ 0 };
-            static QVector<double> steps;
-            static QVector<double> fitnesses;
+            auto stepCount = steps.size();
 
-            steps.append(++stepCounter);
+            steps.append(++stepCount);
             fitnesses.append(fitness);
 
             ui->fitnessPlot->graph(0)->setData(steps, fitnesses);
             ui->fitnessPlot->replot();
-            ui->fitnessPlot->graph(0)->rescaleAxes(true);
+            ui->fitnessPlot->graph(0)->rescaleAxes();
             ui->fitnessPlot->update();
 
             ui->elapsedTime->setText(QString::number(optimizationElapsedTime.elapsed() / 1000.0) + " [s]");
 
-            ui->optimizationProgressBar->setValue(100 * stepCounter / static_cast<double>(ui->iterations->value()));
+            ui->optimizationProgressBar->setValue(100 * stepCount / static_cast<double>(ui->iterations->value()));
+        }
+
+        void MainWindow::newGeneratedValue(int value)
+        {
+            y.append(0);
+            x.append(value);
+
+            ui->generatorPlot->graph(0)->setData(x, y);
+            ui->generatorPlot->replot();
+            ui->generatorPlot->graph(0)->rescaleAxes();
+            ui->generatorPlot->update();
+
+            ui->elapsedTimeGen->setText(QString::number(generationElapsedTime.elapsed() / 1000.0) + " [s]");
+
+            //ui->progressBarGen->setValue(100 * ++orderCounter / static_cast<double>(ui->orderCount->value()));
         }
 
         void MainWindow::on_loadLayout_triggered()
@@ -659,11 +686,11 @@ namespace whm
             connect(generatorUi, SIGNAL(finished()),
                     generatorUi, SLOT(deleteLater()));
 
-            //connect(generatorUi, SIGNAL(generatingFinished()),
-            //        this,        SLOT(generatingFinished()));
+            connect(generatorUi, SIGNAL(generatingFinished()),
+                    this,        SLOT(generatingFinished()));
 
-            //connect(optimizerUi, SIGNAL(generatingStep()),
-            //        this,        SLOT(generatingStep()));
+            connect(generatorUi, SIGNAL(newGeneratedValue(int)),
+                    this,        SLOT(newGeneratedValue(int)));
 
             generatorUi->start();
         }

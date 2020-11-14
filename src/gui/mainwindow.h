@@ -52,6 +52,8 @@ namespace whm
             public slots:
                 void simulationFinished();
                 void optimizationStep(double);
+                void generatingFinished();
+                void newGeneratedValue(int);
 
             private slots:
                 void mousePressEvent(QMouseEvent *);
@@ -98,6 +100,11 @@ namespace whm
                 QElapsedTimer optimizationElapsedTime;
 
                 bool simulationActive{ false };
+
+                QVector<double> y;
+                QVector<double> x;
+                QVector<double> steps;
+                QVector<double> fitnesses;
         };
     }
 }

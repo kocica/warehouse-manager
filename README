@@ -26,3 +26,5 @@ Optimizer (train on train set of orders):
  + Funkce co vrati serazene produkty podle fast/slow moveru (heat)
  + Funkce co vrati serazene sloty podle hot/cold slotu (pomoci path finderu: gate start + gate shipping; sort)
  + Funkce ktera to rozradi podle SLAPu a vyblije nejlepsi slot/article alokaci
+
+ - Disable buttons/etc. (whole control panel ???) until optimization / generating is over

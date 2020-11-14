@@ -45,6 +45,13 @@ namespace whm
 
     }
 
+#   ifdef WHM_GUI
+    void WarehouseDataGenerator_t::setUiCallback(UiCallback_t c)
+    {
+        this->uiCallback = c;
+    }
+#   endif
+
     void WarehouseDataGenerator_t::generateData()
     {
         double mi = cfg.getAs<double>("mi");
@@ -66,6 +73,9 @@ namespace whm
                       [&](const WarehouseProduct_t& whProduct)
                       {
                           whProductsAdu[whProduct] = std::round(normalDist(gen));
+#                         ifdef WHM_GUI
+                          uiCallback(whProductsAdu[whProduct]);
+#                         endif
                       });
 
         for(auto& whProdAdu : whProductsAdu)

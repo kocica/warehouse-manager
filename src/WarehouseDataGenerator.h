@@ -18,6 +18,7 @@
 // Std
 #include <map>
 #include <vector>
+#include <functional>
 
 namespace whm
 {
@@ -36,6 +37,11 @@ namespace whm
 
             void dump() const;
 
+#           ifdef WHM_GUI
+            using UiCallback_t = std::function<void(int32_t)>;
+            void setUiCallback(UiCallback_t);
+#           endif
+
         private:
             void generateOrders(double mi, double sigma);
 
@@ -47,6 +53,10 @@ namespace whm
             ConfigParser_t cfg;
             utils::WhmArgs_t args;
             std::map<WarehouseProduct_t, double> whProductsProb;
+
+#           ifdef WHM_GUI
+            UiCallback_t uiCallback;
+#           endif
     };
 }
 
