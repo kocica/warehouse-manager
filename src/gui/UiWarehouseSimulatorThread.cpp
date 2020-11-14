@@ -36,9 +36,12 @@ namespace whm
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
             whm::WarehouseSimulator_t::getWhSimulator().setUiCallback(
-                        [&](double time)
+                        [&](double time, bool sim)
                         {
-                            emit simulationFinished(time);
+                            if(sim)
+                                emit simulationFinished(time);
+                            else
+                                emit orderSimulationFinished(time);
                         });
 
             whm::WarehouseSimulator_t::getWhSimulator().setConfig(cfg);

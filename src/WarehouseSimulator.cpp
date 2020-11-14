@@ -166,10 +166,14 @@ namespace whm
         sumDurNonSim = durationNonSim + sumDurNonSim;
         sumDistance  = distance + sumDistance ;
 
+#       ifdef WHM_GUI
+        uiCallback(duration, false);
+#       endif
+
         if(finished == whLayout.getWhOrders().size())
         {
 #           ifdef WHM_GUI
-            uiCallback(Time);
+            uiCallback(Time, true);
 #           endif
 
             if(stats)

@@ -139,6 +139,12 @@ namespace whm
             ui->fitnessPlot->xAxis->setLabel("Steps");
             ui->fitnessPlot->yAxis->setLabel("Fitness");
 
+            ui->simulationPlot->addGraph();
+            ui->simulationPlot->xAxis->setLabel("Order");
+            ui->simulationPlot->yAxis->setLabel("Processing time [s]");
+            ui->simulationPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
+            ui->simulationPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssPlus);
+
             ui->generatorPlot->addGraph();
             ui->generatorPlot->xAxis->setLabel("x");
             ui->generatorPlot->yAxis->setLabel("y");
@@ -342,6 +348,14 @@ namespace whm
             xorl.clear();
         }
 
+        void MainWindow::simulationFinished(double time)
+        {
+            ui->simulationTime->setText(QString::number(time) + " [s]");
+
+            orders.clear();
+            processingDurations.clear();
+        }
+
         void MainWindow::optimizationStep(double fitness)
         {
             auto stepCount = steps.size();
@@ -437,9 +451,20 @@ namespace whm
             ui->progressBarGen->setValue(100 * xorl.size() / static_cast<double>(ui->orderCount->value()));
         }
 
-        void MainWindow::simulationFinished(double time)
+        void MainWindow::orderSimulationFinished(double duration)
         {
-            ui->simulationTime->setText(QString::number(time) + " [s]");
+            orders.append(orders.size() + 1);
+            processingDurations.append(duration);
+
+            ui->simulationPlot->graph(0)->setData(orders, processingDurations);
+            ui->simulationPlot->replot();
+            ui->simulationPlot->graph(0)->rescaleAxes(true);
+
+            double max = *std::max_element(processingDurations.begin(), processingDurations.end());
+
+            ui->simulationPlot->yAxis->setRange(0, max * 1.1);
+
+            ui->simulationPlot->update();
         }
 
         void MainWindow::on_loadLayout_triggered()
@@ -830,6 +855,7 @@ namespace whm
                 return;
             }
 
+            whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
 
             whm::ConfigParser_t cfg;
@@ -859,8 +885,8 @@ namespace whm
             connect(simulatorUi, SIGNAL(simulationFinished(double)),
                     this,        SLOT(simulationFinished(double)));
 
-            //connect(simulatorUi, SIGNAL(orderSimulationFinished(double)),
-            //        this,        SLOT(orderSimulationFinished(double)));
+            connect(simulatorUi, SIGNAL(orderSimulationFinished(double)),
+                    this,        SLOT(orderSimulationFinished(double)));
 
             simulatorUi->start();
         }

@@ -52,11 +52,10 @@ namespace whm
             public slots:
                 void optimizationFinished();
                 void optimizationStep(double);
-
                 void generatingFinished();
                 void newGeneratedValue(int, int);
-
                 void simulationFinished(double);
+                void orderSimulationFinished(double);
 
             private slots:
                 void mousePressEvent(QMouseEvent *);
@@ -113,8 +112,12 @@ namespace whm
 
                 QVector<double> xadu;
                 QVector<double> xorl;
+
                 QVector<double> steps;
                 QVector<double> fitnesses;
+
+                QVector<double> orders;
+                QVector<double> processingDurations;
         };
     }
 }

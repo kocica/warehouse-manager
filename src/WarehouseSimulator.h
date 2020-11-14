@@ -50,7 +50,7 @@ namespace whm
             static WarehouseSimulator_t& getWhSimulator();
 
 #           ifdef WHM_GUI
-            using UiCallback_t = std::function<void(double)>;
+            using UiCallback_t = std::function<void(double, bool)>;
             void setUiCallback(UiCallback_t);
 #           endif
 
