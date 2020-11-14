@@ -140,6 +140,11 @@ namespace whm
             ui->generatorPlot->xAxis->setLabel("x");
             ui->generatorPlot->yAxis->setLabel("y");
             ui->generatorPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
+
+            ui->generatorPlot->addGraph();
+            ui->generatorPlot->xAxis->setLabel("x");
+            ui->generatorPlot->yAxis->setLabel("y");
+            ui->generatorPlot->graph(1)->setScatterStyle(QCPScatterStyle::ssDiamond);
         }
 
         MainWindow::~MainWindow()
@@ -326,8 +331,10 @@ namespace whm
 
         void MainWindow::generatingFinished()
         {
-            x.clear();
-            y.clear();
+            xadu.clear();
+            yadu.clear();
+            xorl.clear();
+            yorl.clear();
         }
 
         void MainWindow::optimizationStep(double fitness)
@@ -347,19 +354,37 @@ namespace whm
             ui->optimizationProgressBar->setValue(100 * stepCount / static_cast<double>(ui->iterations->value()));
         }
 
-        void MainWindow::newGeneratedValue(int value)
+        void MainWindow::newGeneratedValue(int value, int graph)
         {
-            y.append(0);
-            x.append(value);
+            if(graph == 0)
+            {
+                yadu.append(0);
+                xadu.append(value);
 
-            ui->generatorPlot->graph(0)->setData(x, y);
-            ui->generatorPlot->replot();
-            ui->generatorPlot->graph(0)->rescaleAxes();
+                ui->generatorPlot->graph(0)->setData(xadu, yadu);
+                ui->generatorPlot->replot();
+                ui->generatorPlot->graph(0)->rescaleAxes();
+            }
+            else
+            {
+                yorl.append(1);
+                xorl.append(value);
+
+                ui->generatorPlot->graph(1)->setData(xorl, yorl);
+                ui->generatorPlot->replot();
+                ui->generatorPlot->graph(1)->rescaleAxes();
+            }
+
+            auto [minadu, maxadu] = std::minmax_element(xadu.begin(), xadu.end());
+            auto [minorl, maxorl] = std::minmax_element(xorl.begin(), xorl.end());
+
+            ui->generatorPlot->xAxis->setRange(std::min(*minadu, *minorl) - 10, std::max(*maxadu, *maxorl) + 10);
+
             ui->generatorPlot->update();
 
             ui->elapsedTimeGen->setText(QString::number(generationElapsedTime.elapsed() / 1000.0) + " [s]");
 
-            //ui->progressBarGen->setValue(100 * ++orderCounter / static_cast<double>(ui->orderCount->value()));
+            ui->progressBarGen->setValue(100 * xorl.size() / static_cast<double>(ui->orderCount->value()));
         }
 
         void MainWindow::on_loadLayout_triggered()
@@ -689,8 +714,8 @@ namespace whm
             connect(generatorUi, SIGNAL(generatingFinished()),
                     this,        SLOT(generatingFinished()));
 
-            connect(generatorUi, SIGNAL(newGeneratedValue(int)),
-                    this,        SLOT(newGeneratedValue(int)));
+            connect(generatorUi, SIGNAL(newGeneratedValue(int, int)),
+                    this,        SLOT(newGeneratedValue(int, int)));
 
             generatorUi->start();
         }

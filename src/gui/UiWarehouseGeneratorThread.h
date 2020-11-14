@@ -28,7 +28,7 @@ namespace whm
 
             signals:
                 void generatingFinished();
-                void newGeneratedValue(int);
+                void newGeneratedValue(int, int);
 
             private:
                 whm::ConfigParser_t cfg;

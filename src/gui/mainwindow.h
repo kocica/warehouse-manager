@@ -53,7 +53,7 @@ namespace whm
                 void simulationFinished();
                 void optimizationStep(double);
                 void generatingFinished();
-                void newGeneratedValue(int);
+                void newGeneratedValue(int, int);
 
             private slots:
                 void mousePressEvent(QMouseEvent *);
@@ -101,8 +101,10 @@ namespace whm
 
                 bool simulationActive{ false };
 
-                QVector<double> y;
-                QVector<double> x;
+                QVector<double> yadu;
+                QVector<double> xadu;
+                QVector<double> yorl;
+                QVector<double> xorl;
                 QVector<double> steps;
                 QVector<double> fitnesses;
         };

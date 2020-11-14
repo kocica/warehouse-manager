@@ -74,7 +74,7 @@ namespace whm
                       {
                           whProductsAdu[whProduct] = std::round(normalDist(gen));
 #                         ifdef WHM_GUI
-                          uiCallback(whProductsAdu[whProduct]);
+                          uiCallback(whProductsAdu[whProduct], 0);
 #                         endif
                       });
 
@@ -125,6 +125,10 @@ namespace whm
 
                 // TODO: Accumulate error from round
                 int32_t lineCount = std::round(normalDist(gen));
+
+#               ifdef WHM_GUI
+                uiCallback(lineCount, 1);
+#               endif
 
                 for(int32_t lineID = 0; lineID < std::max(1, lineCount); ++lineID)
                 {

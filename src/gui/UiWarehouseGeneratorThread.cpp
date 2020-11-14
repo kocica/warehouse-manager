@@ -34,9 +34,9 @@ namespace whm
 
             whm::WarehouseDataGenerator_t datagen{args, cfg};
 
-            datagen.setUiCallback([&](int32_t val)
+            datagen.setUiCallback([&](int32_t val, int32_t graph)
                                   {
-                                      emit newGeneratedValue(val);
+                                      emit newGeneratedValue(val, graph);
                                   });
 
             datagen.generateData();

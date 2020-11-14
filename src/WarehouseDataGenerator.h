@@ -38,7 +38,7 @@ namespace whm
             void dump() const;
 
 #           ifdef WHM_GUI
-            using UiCallback_t = std::function<void(int32_t)>;
+            using UiCallback_t = std::function<void(int32_t, int32_t)>;
             void setUiCallback(UiCallback_t);
 #           endif
 
