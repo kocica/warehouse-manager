@@ -41,6 +41,8 @@ namespace whm
 
             void printStats(bool);
 
+            bool& optimizationModeActive();
+
             ConfigParser_t& getConfig();
             void setConfig(const ConfigParser_t&);
 
@@ -68,7 +70,7 @@ namespace whm
 
         private:
             bool stats;
-            bool firstExperiment;
+            bool optimizationMode;
 
 #           ifdef WHM_GUI
             UiCallback_t uiCallback;

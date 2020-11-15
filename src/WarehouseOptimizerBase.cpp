@@ -34,6 +34,7 @@ namespace whm
         , args{ args_ }
     {
         whm::WarehouseSimulator_t::getWhSimulator().printStats(false);
+        whm::WarehouseSimulator_t::getWhSimulator().optimizationModeActive() = true;
 
         std::random_device rd;
         rand.seed(rd());

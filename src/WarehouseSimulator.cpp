@@ -26,7 +26,7 @@ namespace whm
 {
     WarehouseSimulator_t::WarehouseSimulator_t()
         : stats{ true }
-        , firstExperiment{ true }
+        , optimizationMode{ false }
         , cfg{ ConfigParser_t{ "cfg/simulator.xml" } }
         , whLayout{ WarehouseLayout_t::getWhLayout() }
         , whPathFinder{ new WarehousePathFinder_t() }
@@ -121,7 +121,9 @@ namespace whm
 
     double WarehouseSimulator_t::runSimulation()
     {
-        if(firstExperiment)
+        static bool multipleExperiment{ false };
+
+        if(!multipleExperiment)
         {
             whPathFinder->precalculatePaths(whLayout.getWhItems());
 
@@ -137,7 +139,10 @@ namespace whm
                 preprocessOrders();
             }
 
-            firstExperiment = !firstExperiment;
+            if(optimizationModeActive())
+            {
+                multipleExperiment = !multipleExperiment;
+            }
         }
 
         //SetCalendar("cq");
@@ -174,8 +179,6 @@ namespace whm
 
         if(finished == whLayout.getWhOrders().size())
         {
-            firstExperiment = !firstExperiment;
-
 #           ifdef WHM_GUI
             if(uiCallback)
             {
@@ -222,6 +225,11 @@ namespace whm
     void WarehouseSimulator_t::printStats(bool stats_)
     {
         stats = stats_;
+    }
+
+    bool& WarehouseSimulator_t::optimizationModeActive()
+    {
+        return optimizationMode;
     }
 
     void WarehouseSimulator_t::clearSimulation()
