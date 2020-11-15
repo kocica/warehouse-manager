@@ -11,6 +11,7 @@
 
 // Local
 #include "../Logger.h"
+#include "UiWarehouseOptimizerThread.h"
 
 // Qt
 #include <QMainWindow>
@@ -66,9 +67,6 @@ namespace whm
                 void on_clearLayout_triggered();
                 void on_importLocations_triggered();
                 void on_exportLocations_triggered();
-                void on_simulationRun_triggered();
-                void on_simulationStep_triggered();
-                void on_simulationStop_triggered();
 
                 void on_deletionMode_toggled(bool);
                 void on_selectionMode_toggled(bool);
@@ -83,19 +81,22 @@ namespace whm
                 void on_articlesLoad_clicked();
                 void on_locationsLoad_clicked();
                 void on_configLoad_clicked();
-                //void on_optimizeWarehouse_clicked();
+                void on_startOptimization_clicked();
+                void on_stopOptimization_clicked();
 
                 // Generator
                 void on_ordersSaveGen_clicked();
                 void on_articlesLoadGen_clicked();
                 void on_configLoadGen_clicked();
-                void on_generateOrders_clicked();
+                void on_startGenerating_clicked();
+                void on_stopGenerating_clicked();
 
                 // Simulator
                 void on_ordersLoadSim_clicked();
                 void on_locationsLoadSim_clicked();
                 void on_configLoadSim_clicked();
-                void on_simulateWarehouse_clicked();
+                void on_startSimulation_clicked();
+                void on_stopSimulation_clicked();
 
             private:
                 int32_t whR{ 0 };
@@ -107,6 +108,8 @@ namespace whm
 
                 QElapsedTimer generationElapsedTime;
                 QElapsedTimer optimizationElapsedTime;
+
+                UiWarehouseOptimizerThread_t* optimizerUi{ nullptr };
 
                 bool optimizationActive{ false };
 

@@ -117,12 +117,14 @@ namespace whm
 
             ui->mainToolBar->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
             ui->layoutManagement->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
-            ui->simulationManagement->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonIconOnly);
 
             // Icons
-            ui->simulationRun->setIcon(QIcon(":/img/start.png"));
-            ui->simulationStop->setIcon(QIcon(":/img/stop.png"));
-            ui->simulationStep->setIcon(QIcon(":/img/step.png"));
+            ui->startOptimization->setIcon(QIcon(":/img/start.png"));
+            ui->stopOptimization->setIcon(QIcon(":/img/stop.png"));
+            ui->startGenerating->setIcon(QIcon(":/img/start.png"));
+            ui->stopGenerating->setIcon(QIcon(":/img/stop.png"));
+            ui->startSimulation->setIcon(QIcon(":/img/start.png"));
+            ui->stopSimulation->setIcon(QIcon(":/img/stop.png"));
 
             ui->saveLayout->setIcon(QIcon(":/img/save.png"));
             ui->loadLayout->setIcon(QIcon(":/img/load.png"));
@@ -340,6 +342,9 @@ namespace whm
 
             steps.clear();
             fitnesses.clear();
+
+            ui->elapsedTime->setText("0 [s]");
+            ui->optimizationProgressBar->setValue(0);
         }
 
         void MainWindow::generatingFinished()
@@ -358,6 +363,11 @@ namespace whm
 
         void MainWindow::optimizationStep(double fitness)
         {
+            if(!optimizerUi)
+            {
+                return;
+            }
+
             auto stepCount = steps.size();
 
             steps.append(stepCount++);
@@ -579,7 +589,7 @@ namespace whm
             ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(file.toUtf8().constData());
         }
 
-        void MainWindow::on_simulationRun_triggered()
+        void MainWindow::on_startOptimization_clicked()
         {
             std::string o = ui->ordersLine->text().toUtf8().constData();
             std::string a = ui->articlesLine->text().toUtf8().constData();
@@ -627,7 +637,7 @@ namespace whm
 
             optimizationElapsedTime.start();
 
-            auto* optimizerUi = new UiWarehouseOptimizerThread_t(cfg);
+            optimizerUi = new UiWarehouseOptimizerThread_t(cfg);
 
             connect(optimizerUi, SIGNAL(finished()),
                     optimizerUi, SLOT(deleteLater()));
@@ -641,14 +651,15 @@ namespace whm
             optimizerUi->start();
         }
 
-        void MainWindow::on_simulationStep_triggered()
+        void MainWindow::on_stopOptimization_clicked()
         {
-
-        }
-
-        void MainWindow::on_simulationStop_triggered()
-        {
-
+            if(optimizerUi)
+            {
+                optimizerUi->terminate();
+                optimizerUi->wait(); // TODO: Really wait? In case of big populations main window freeze
+                optimizerUi = nullptr;
+                optimizationFinished();
+            }
         }
 
         void MainWindow::on_ordersLoad_clicked()
@@ -760,7 +771,7 @@ namespace whm
             ui->orlCountSigma->setValue(cfg.getAs<int32_t>("sigmaLines"));
         }
 
-        void MainWindow::on_generateOrders_clicked()
+        void MainWindow::on_startGenerating_clicked()
         {
             std::string o = ui->ordersLineGen->text().toUtf8().constData();
             std::string a = ui->articlesLineGen->text().toUtf8().constData();
@@ -798,6 +809,11 @@ namespace whm
                     this,        SLOT(newGeneratedValue(int, int)));
 
             generatorUi->start();
+        }
+
+        void MainWindow::on_stopGenerating_clicked()
+        {
+
         }
 
         void MainWindow::on_ordersLoadSim_clicked()
@@ -844,7 +860,7 @@ namespace whm
             ui->preprocessOrders->setCheckState(cfg.getAs<bool>("preprocess") ? Qt::Checked : Qt::Unchecked);
         }
 
-        void MainWindow::on_simulateWarehouse_clicked()
+        void MainWindow::on_startSimulation_clicked()
         {
             std::string o = ui->ordersLineSim->text().toUtf8().constData();
             std::string l = ui->locationsLineSim->text().toUtf8().constData();
@@ -889,6 +905,11 @@ namespace whm
                     this,        SLOT(orderSimulationFinished(double)));
 
             simulatorUi->start();
+        }
+
+        void MainWindow::on_stopSimulation_clicked()
+        {
+
         }
 
         void MainWindow::reset()
