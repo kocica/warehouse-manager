@@ -475,6 +475,8 @@ namespace whm
             ui->simulationPlot->yAxis->setRange(0, max * 1.1);
 
             ui->simulationPlot->update();
+
+            ui->simulationProgressBar->setValue(100 * orders.size() / 1000 /*TODO: Order count*/);
         }
 
         void MainWindow::on_loadLayout_triggered()
@@ -606,7 +608,7 @@ namespace whm
 
             whm::ConfigParser_t cfg;
 
-            // Set config according to the UI input widgets
+            // General
             cfg.set("numberDimensions",   std::to_string(ui->numberDimensions->value()));
             cfg.set("problemMin",         std::to_string(ui->problemMin->value()));
             cfg.set("problemMax",         std::to_string(ui->problemMax->value()));
@@ -614,6 +616,7 @@ namespace whm
             cfg.set("saveWeightsPeriod",  std::to_string(ui->weights->value()));
             cfg.set("maxTrialValue",      std::to_string(ui->trialValue->value()));
 
+            // GA
             cfg.set("populationSize",     std::to_string(ui->populationSize->value()));
             cfg.set("selectionSize",      std::to_string(ui->selectionSize->value()));
             cfg.set("eliteSize",          std::to_string(ui->eliteSize->value()));
@@ -629,6 +632,28 @@ namespace whm
             if(ui->selectionGa->currentIndex() == 2) cfg.set("selectionFunctor", "selectRoulette");
             if(ui->selectionGa->currentIndex() == 3) cfg.set("selectionFunctor", "selectRank");
 
+            // DE
+            cfg.set("populationSizeDE",   std::to_string(ui->populationSizeDE->value()));
+            cfg.set("scalingFactor",      std::to_string(ui->scalingFactorDE->value()));
+            cfg.set("probCrossoverDE",    std::to_string(ui->probCrossoverDE->value()));
+
+            if(ui->crossoverDE->currentIndex()  == 0) cfg.set("crossoverFunctorDE", "crossoverBinomical");
+            if(ui->crossoverDE->currentIndex()  == 1) cfg.set("crossoverFunctorDE", "crossoverOrdered");
+
+            // ABC
+            cfg.set("foodSize",           std::to_string(ui->foodSize->value()));
+            cfg.set("keepBest",           ui->keepBest->checkState() == Qt::Checked ? "true" : "false");
+
+            // PSO
+            cfg.set("numberParticles",    std::to_string(ui->numberParticles->value()));
+            cfg.set("correctionFactor1",  std::to_string(ui->correctionFactorPer->value()));
+            cfg.set("correctionFactor2",  std::to_string(ui->correctionFactorSoc->value()));
+            cfg.set("weighing",           std::to_string(ui->inertiaWeight->value()));
+
+            if(ui->crossoverPSO->currentIndex()  == 0) cfg.set("crossoverFunctorPSO", "crossoverHeuristic");
+            if(ui->crossoverPSO->currentIndex()  == 1) cfg.set("crossoverFunctorPSO", "crossoverOrdered");
+
+            // Paths
             cfg.set("articlesPath", a);
             cfg.set("locationsPath", l);
             cfg.set("ordersPath", o);
@@ -637,7 +662,7 @@ namespace whm
 
             optimizationElapsedTime.start();
 
-            optimizerUi = new UiWarehouseOptimizerThread_t(cfg);
+            optimizerUi = new UiWarehouseOptimizerThread_t(cfg, ui->optimizerSelectionBox->currentIndex());
 
             connect(optimizerUi, SIGNAL(finished()),
                     optimizerUi, SLOT(deleteLater()));
@@ -707,6 +732,7 @@ namespace whm
 
             whm::ConfigParser_t cfg(file.toUtf8().constData());
 
+            // General
             ui->numberDimensions->setValue(cfg.getAs<int32_t>("numberDimensions"));
             ui->problemMin->setValue(cfg.getAs<int32_t>("problemMin"));
             ui->problemMax->setValue(cfg.getAs<int32_t>("problemMax"));
@@ -714,6 +740,7 @@ namespace whm
             ui->weights->setValue(cfg.getAs<int32_t>("saveWeightsPeriod"));
             ui->trialValue->setValue(cfg.getAs<int32_t>("maxTrialValue"));
 
+            // GA
             ui->populationSize->setValue(cfg.getAs<int32_t>("populationSize"));
             ui->selectionSize->setValue(cfg.getAs<int32_t>("selectionSize"));
             ui->eliteSize->setValue(cfg.getAs<int32_t>("eliteSize"));
@@ -728,6 +755,27 @@ namespace whm
             if(cfg.getAs<std::string>("selectionFunctor") == "selectTrunc")      ui->selectionGa->setCurrentIndex(1);
             if(cfg.getAs<std::string>("selectionFunctor") == "selectRoulette")   ui->selectionGa->setCurrentIndex(2);
             if(cfg.getAs<std::string>("selectionFunctor") == "selectRank")       ui->selectionGa->setCurrentIndex(3);
+
+            // DE
+            ui->populationSizeDE->setValue(cfg.getAs<int32_t>("populationSizeDE"));
+            ui->scalingFactorDE->setValue(cfg.getAs<double>("scalingFactor"));
+            ui->probCrossoverDE->setValue(cfg.getAs<double>("probCrossoverDE"));
+
+            if(cfg.getAs<std::string>("crossoverFunctorDE") == "crossoverBinomical") ui->crossoverDE->setCurrentIndex(0);
+            if(cfg.getAs<std::string>("crossoverFunctorDE") == "crossoverOrdered")   ui->crossoverDE->setCurrentIndex(1);
+
+            // ABC
+            ui->foodSize->setValue(cfg.getAs<int32_t>("foodSize"));
+            ui->keepBest->setCheckState(cfg.getAs<bool>("keepBest") ? Qt::Checked : Qt::Unchecked);
+
+            // PSO
+            ui->numberParticles->setValue(cfg.getAs<int32_t>("numberParticles"));
+            ui->correctionFactorPer->setValue(cfg.getAs<double>("correctionFactor1"));
+            ui->correctionFactorSoc->setValue(cfg.getAs<double>("correctionFactor2"));
+            ui->inertiaWeight->setValue(cfg.getAs<double>("weighing"));
+
+            if(cfg.getAs<std::string>("crossoverFunctorPSO") == "crossoverHeuristic") ui->crossoverPSO->setCurrentIndex(0);
+            if(cfg.getAs<std::string>("crossoverFunctorPSO") == "crossoverOrdered")   ui->crossoverPSO->setCurrentIndex(1);
         }
 
         void MainWindow::on_ordersSaveGen_clicked()

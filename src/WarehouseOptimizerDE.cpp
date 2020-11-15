@@ -22,8 +22,20 @@
 
 namespace whm
 {
-    WarehouseOptimizerDE_t::WarehouseOptimizerDE_t(utils::WhmArgs_t args_)
+    WarehouseOptimizerDE_t::WarehouseOptimizerDE_t(const utils::WhmArgs_t& args_)
         : WarehouseOptimizerBase_t{ args_ }
+    {
+        init();
+    }
+
+    WarehouseOptimizerDE_t::WarehouseOptimizerDE_t(const utils::WhmArgs_t& args_, const ConfigParser_t& cfg_)
+        : WarehouseOptimizerBase_t{ args_ }
+    {
+        cfg = cfg_;
+        init();
+    }
+
+    void WarehouseOptimizerDE_t::init()
     {
         bestInd.fitness = std::numeric_limits<double>::max();
 
@@ -414,6 +426,14 @@ namespace whm
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[DE] [%3d] Best fitness: %f", gen, bestInd.fitness);
             histFitness.push_back(bestInd.fitness);
+
+#           ifdef WHM_GUI
+            if(uiCallback)
+            {
+                updateAllocations(bestInd.genes);
+                uiCallback(bestInd.fitness);
+            }
+#           endif
 
             if((gen % cfg.getAs<int32_t>("saveWeightsPeriod")) == 0)
             {

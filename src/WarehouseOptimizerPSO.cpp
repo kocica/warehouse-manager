@@ -23,8 +23,20 @@
 
 namespace whm
 {
-    WarehouseOptimizerPSO_t::WarehouseOptimizerPSO_t(utils::WhmArgs_t args_)
+    WarehouseOptimizerPSO_t::WarehouseOptimizerPSO_t(const utils::WhmArgs_t& args_)
         : WarehouseOptimizerBase_t{ args_ }
+    {
+        init();
+    }
+
+    WarehouseOptimizerPSO_t::WarehouseOptimizerPSO_t(const utils::WhmArgs_t& args_, const ConfigParser_t& cfg_)
+        : WarehouseOptimizerBase_t{ args_ }
+    {
+        cfg = cfg_;
+        init();
+    }
+
+    void WarehouseOptimizerPSO_t::init()
     {
         globalBest.fitness = std::numeric_limits<double>::max();
 
@@ -432,6 +444,14 @@ namespace whm
                 saveFitnessPlot();
                 saveBestSolution(globalBest.genes);
             }
+
+#           ifdef WHM_GUI
+            if(uiCallback)
+            {
+                updateAllocations(globalBest.genes);
+                uiCallback(globalBest.fitness);
+            }
+#           endif
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[PSO] [%3d] Best fitness: %f", i, globalBest.fitness);
             histFitness.push_back(globalBest.fitness);

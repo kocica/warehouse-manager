@@ -33,6 +33,8 @@ namespace whm
             void optimize() override;
 
         protected:
+            void init();
+
             // Selection
             Solution_t selectRank(const std::vector<Solution_t>&);
             Solution_t selectTrunc(const std::vector<Solution_t>&);
@@ -51,8 +53,6 @@ namespace whm
             void mutateGauss(std::vector<int32_t>&);
             void mutateOrdered(std::vector<int32_t>&);
             void mutateInverse(std::vector<int32_t>&);
-
-            void init();
 
         private:
             MutationFunctor_t mutationFunctor;

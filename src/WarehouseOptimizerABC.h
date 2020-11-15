@@ -23,13 +23,16 @@ namespace whm
     {
         public:
             WarehouseOptimizerABC_t() = delete;
-            WarehouseOptimizerABC_t(utils::WhmArgs_t);
+            WarehouseOptimizerABC_t(const utils::WhmArgs_t&);
+            WarehouseOptimizerABC_t(const utils::WhmArgs_t&, const ConfigParser_t&);
             ~WarehouseOptimizerABC_t() = default;
 
             // Entry point
             void optimize() override;
 
         protected:
+            void init();
+
             // ABC phases
             void scoutBeePhase(std::vector<Solution_t>&);
             void employedBeePhase(std::vector<Solution_t>&);

@@ -28,3 +28,7 @@ Optimizer (train on train set of orders):
  + Funkce ktera to rozradi podle SLAPu a vyblije nejlepsi slot/article alokaci
 
  - Disable buttons/etc. (whole control panel ???) until optimization / generating is over
+ - Optimization terminating dialog (wait when stopped)
+ - Order count in simulator UI
+ - Running opt UI and sim UI and vice versa
+ - ConfigParser "Field <%s> not found!" - exception - exception handling

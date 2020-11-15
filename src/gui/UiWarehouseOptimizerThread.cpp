@@ -24,8 +24,9 @@ namespace whm
 {
     namespace gui
     {
-        UiWarehouseOptimizerThread_t::UiWarehouseOptimizerThread_t(const whm::ConfigParser_t& cfg_)
-            : cfg(cfg_)
+        UiWarehouseOptimizerThread_t::UiWarehouseOptimizerThread_t(const whm::ConfigParser_t& cfg_, int32_t opt_)
+            : opt(opt_)
+            , cfg(cfg_)
         {
 
         }
@@ -62,7 +63,13 @@ namespace whm
 
             whm::WarehouseOptimizerBase_t* optimizer{ nullptr };
 
-            optimizer = new whm::WarehouseOptimizerGA_t{args, cfg};
+            switch(opt)
+            {
+                case 0: optimizer = new whm::WarehouseOptimizerGA_t {args, cfg}; break;
+                case 1: optimizer = new whm::WarehouseOptimizerDE_t {args, cfg}; break;
+                case 2: optimizer = new whm::WarehouseOptimizerABC_t{args, cfg}; break;
+                case 3: optimizer = new whm::WarehouseOptimizerPSO_t{args, cfg}; break;
+            }
 
             optimizer->setUiCallback([&](double fitness)
                                      {

@@ -23,12 +23,15 @@ namespace whm
 
         public:
             WarehouseOptimizerPSO_t() = delete;
-            WarehouseOptimizerPSO_t(utils::WhmArgs_t);
+            WarehouseOptimizerPSO_t(const utils::WhmArgs_t&);
+            WarehouseOptimizerPSO_t(const utils::WhmArgs_t&, const ConfigParser_t&);
             ~WarehouseOptimizerPSO_t() = default;
 
             void optimize() override;
 
         protected:
+            void init();
+
             void storeGlobalBest(std::vector<Solution_t>&);
             void updateVelocities(std::vector<Solution_t>&);
             double getVelocity(Solution_t&, double, double);

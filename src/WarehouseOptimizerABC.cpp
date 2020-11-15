@@ -15,8 +15,20 @@
 
 namespace whm
 {
-    WarehouseOptimizerABC_t::WarehouseOptimizerABC_t(utils::WhmArgs_t args_)
+    WarehouseOptimizerABC_t::WarehouseOptimizerABC_t(const utils::WhmArgs_t& args_)
         : WarehouseOptimizerBase_t{ args_ }
+    {
+        init();
+    }
+
+    WarehouseOptimizerABC_t::WarehouseOptimizerABC_t(const utils::WhmArgs_t& args_, const ConfigParser_t& cfg_)
+        : WarehouseOptimizerBase_t{ args_ }
+    {
+        cfg = cfg_;
+        init();
+    }
+
+    void WarehouseOptimizerABC_t::init()
     {
         // Init rule counters of each equation to one, as per paper
         for(int32_t i = 0; i < 8; ++i)
@@ -324,6 +336,14 @@ namespace whm
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[ABC] [%3d] Best fitness: %f", i, bestSolution.fitness);
             histFitness.push_back(bestSolution.fitness);
+
+#           ifdef WHM_GUI
+            if(uiCallback)
+            {
+                updateAllocations(bestSolution.genes);
+                uiCallback(bestSolution.fitness);
+            }
+#           endif
         }
 
         saveFitnessPlot();

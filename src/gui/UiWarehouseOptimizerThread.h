@@ -22,7 +22,7 @@ namespace whm
 
             public:
                 UiWarehouseOptimizerThread_t() = delete;
-                UiWarehouseOptimizerThread_t(const whm::ConfigParser_t&);
+                UiWarehouseOptimizerThread_t(const whm::ConfigParser_t&, int32_t);
 
                 void run() override;
 
@@ -31,6 +31,7 @@ namespace whm
                 void optimizationStep(double);
 
             private:
+                int32_t opt{ 0 };
                 whm::ConfigParser_t cfg;
         };
     }

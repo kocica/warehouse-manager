@@ -529,16 +529,208 @@
                   <attribute name="title">
                    <string>DE</string>
                   </attribute>
+                  <layout class="QGridLayout" name="gridLayout_2">
+                   <item row="0" column="1">
+                    <widget class="QSpinBox" name="populationSizeDE">
+                     <property name="maximum">
+                      <number>100000</number>
+                     </property>
+                     <property name="singleStep">
+                      <number>1</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <widget class="QComboBox" name="crossoverDE">
+                     <item>
+                      <property name="text">
+                       <string>Binomical</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Ordered</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="crossoverLabelDE">
+                     <property name="text">
+                      <string>Crossover:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="populationSizeLabelDE">
+                     <property name="text">
+                      <string>Population size:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="scalingFactorLabelDE">
+                     <property name="text">
+                      <string>Scaling factor:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="scalingFactorDE">
+                     <property name="maximum">
+                      <double>5.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QLabel" name="probCrossoverLabelDE">
+                     <property name="text">
+                      <string>Probability crossover:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="3">
+                    <widget class="QDoubleSpinBox" name="probCrossoverDE">
+                     <property name="maximum">
+                      <double>1.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                  <widget class="QWidget" name="abcConfig">
                   <attribute name="title">
                    <string>ABC</string>
                   </attribute>
+                  <layout class="QVBoxLayout" name="verticalLayout_8">
+                   <item>
+                    <widget class="QCheckBox" name="keepBest">
+                     <property name="text">
+                      <string>Keep best bee</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="foodSizeLayout">
+                     <property name="bottomMargin">
+                      <number>10</number>
+                     </property>
+                     <item>
+                      <widget class="QLabel" name="foodSizeLabel">
+                       <property name="text">
+                        <string>Number of bee's (food size):</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSpinBox" name="foodSize">
+                       <property name="maximum">
+                        <number>100000</number>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
                  </widget>
                  <widget class="QWidget" name="psoConfig">
                   <attribute name="title">
                    <string>PSO</string>
                   </attribute>
+                  <layout class="QGridLayout" name="gridLayout_4">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="numberParticlesLabel">
+                     <property name="text">
+                      <string>Number of particles:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="inertiaWeightLabel">
+                     <property name="text">
+                      <string>Inertia weight:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QLabel" name="correctionFactorSocLabel">
+                     <property name="text">
+                      <string>Correction factor (social infl.):</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="correctionFactorPerLabel">
+                     <property name="text">
+                      <string>Correction factor (personal infl.):</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QSpinBox" name="numberParticles">
+                     <property name="maximum">
+                      <number>100000</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="3">
+                    <widget class="QDoubleSpinBox" name="correctionFactorSoc">
+                     <property name="maximum">
+                      <double>5.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="correctionFactorPer">
+                     <property name="maximum">
+                      <double>5.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <widget class="QDoubleSpinBox" name="inertiaWeight">
+                     <property name="maximum">
+                      <double>5.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="crossoverLabelPSO">
+                     <property name="text">
+                      <string>Crossover:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="crossoverPSO">
+                     <item>
+                      <property name="text">
+                       <string>Heuristic</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Ordered</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                 </widget>
                </item>
@@ -748,21 +940,21 @@
                  <item row="1" column="2">
                   <widget class="QLabel" name="aduSigmaLine">
                    <property name="text">
-                    <string>Average dailty units sigma</string>
+                    <string>Average dailty units std. dev.:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="orlCountMiLine">
                    <property name="text">
-                    <string>Order line count mi</string>
+                    <string>Order line count mean:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="aduMiLine">
                    <property name="text">
-                    <string>Average dailty units mi</string>
+                    <string>Average dailty units mean:</string>
                    </property>
                   </widget>
                  </item>
@@ -789,14 +981,14 @@
                  <item row="0" column="2">
                   <widget class="QLabel" name="productCountLine">
                    <property name="text">
-                    <string>Product count</string>
+                    <string>Product count:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="0" column="0">
                   <widget class="QLabel" name="orderCountLine">
                    <property name="text">
-                    <string>Order count</string>
+                    <string>Order count:</string>
                    </property>
                   </widget>
                  </item>
@@ -813,7 +1005,7 @@
                  <item row="2" column="2">
                   <widget class="QLabel" name="orlCountSigmaLine">
                    <property name="text">
-                    <string>Order line count sigma</string>
+                    <string>Order line count std. dev.:</string>
                    </property>
                   </widget>
                  </item>
@@ -1066,7 +1258,7 @@
                  <item row="2" column="2">
                   <widget class="QLabel" name="conveyorCapacityLabel">
                    <property name="text">
-                    <string>Conveyor capacity</string>
+                    <string>Conveyor capacity:</string>
                    </property>
                   </widget>
                  </item>
@@ -1198,7 +1390,7 @@
                </widget>
               </item>
               <item>
-               <spacer name="horizontalSpacer_2">
+               <spacer name="simulationTimeSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -1214,14 +1406,14 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="label_2">
+               <widget class="QLabel" name="simulationProgressLabel">
                 <property name="text">
                  <string>Progress:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QProgressBar" name="progressBar">
+               <widget class="QProgressBar" name="simulationProgressBar">
                 <property name="value">
                  <number>0</number>
                 </property>

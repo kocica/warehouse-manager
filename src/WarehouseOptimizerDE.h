@@ -29,12 +29,15 @@ namespace whm
 
         public:
             WarehouseOptimizerDE_t() = delete;
-            WarehouseOptimizerDE_t(utils::WhmArgs_t);
+            WarehouseOptimizerDE_t(const utils::WhmArgs_t&);
+            WarehouseOptimizerDE_t(const utils::WhmArgs_t&, const ConfigParser_t&);
             ~WarehouseOptimizerDE_t() = default;
 
             void optimize() override;
 
         protected:
+            void init();
+
             // Operators
             ProbGenes_t operatorMul(const ProbGenes_t&, double);
             ProbGenes_t operatorAdd(const ProbGenes_t&, const ProbGenes_t&);
