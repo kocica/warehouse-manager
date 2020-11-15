@@ -11,23 +11,21 @@
 
 namespace whm
 {
-    template<typename>
     class WarehouseOrder_t;
 
-    template<typename T>
     class WarehouseOrderLine_t
     {
         public:
-            WarehouseOrderLine_t(WarehouseOrder_t<T>*);
+            WarehouseOrderLine_t(WarehouseOrder_t*);
             ~WarehouseOrderLine_t();
 
-            T getArticle() const;
-            void setArticle(const T&);
+            std::string getArticle() const;
+            void setArticle(const std::string&);
 
             int32_t getQuantity() const;
             void setQuantity(int32_t);
 
-            WarehouseOrder_t<T>& getWhOrder() const;
+            WarehouseOrder_t& getWhOrder() const;
 
             void setWhLineID(int32_t);
             int32_t getWhLineID() const;
@@ -38,9 +36,9 @@ namespace whm
             void dump() const;
 
         private:
-            T article;
+            std::string article;
             int32_t whLineID{ 0 };
             int32_t quantity{ 0 };
-            WarehouseOrder_t<T>* whOrder{ nullptr };
+            WarehouseOrder_t* whOrder{ nullptr };
     };
 }

@@ -12,44 +12,37 @@
 
 namespace whm
 {
-    template<typename T>
-    WarehouseOrder_t<T>::WarehouseOrder_t()
+    WarehouseOrder_t::WarehouseOrder_t()
     {
 
     }
 
-    template<typename T>
-    WarehouseOrder_t<T>::~WarehouseOrder_t()
+    WarehouseOrder_t::~WarehouseOrder_t()
     {
 
     }
 
-    template<typename T>
-    void WarehouseOrder_t<T>::setWhOrderID(int32_t whOrderID_)
+    void WarehouseOrder_t::setWhOrderID(int32_t whOrderID_)
     {
         this->whOrderID = whOrderID_;
     }
 
-    template<typename T>
-    int32_t WarehouseOrder_t<T>::getWhOrderID() const
+    int32_t WarehouseOrder_t::getWhOrderID() const
     {
         return this->whOrderID;
     }
 
-    template<typename T>
-    const std::vector<WarehouseOrderLine_t<T>>& WarehouseOrder_t<T>::getWhOrderLines() const
+    const std::vector<WarehouseOrderLine_t>& WarehouseOrder_t::getWhOrderLines() const
     {
         return this->whOrderLines;
     }
 
-    template<typename T>
-    void WarehouseOrder_t<T>::setWhOrderLines(std::vector<WarehouseOrderLine_t<T>> newLines)
+    void WarehouseOrder_t::setWhOrderLines(std::vector<WarehouseOrderLine_t> newLines)
     {
         this->whOrderLines = newLines;
     }
 
-    template<typename T>
-    void WarehouseOrder_t<T>::dump() const
+    void WarehouseOrder_t::dump() const
     {
         std::cout << "---------------------------------" << std::endl;
         std::cout << " OrderID <"   << this->getWhOrderID() << ">" << std::endl;
@@ -61,8 +54,7 @@ namespace whm
                       });
     }
 
-    template<typename T>
-    void WarehouseOrder_t<T>::deserializeFromXml(tinyxml2::XMLElement* elem)
+    void WarehouseOrder_t::deserializeFromXml(tinyxml2::XMLElement* elem)
     {
         this->whOrderID = elem->IntAttribute("id");
 
@@ -74,8 +66,7 @@ namespace whm
         }
     }
 
-    template<typename T>
-    void WarehouseOrder_t<T>::serializeToXml(tinyxml2::XMLDocument* doc) const
+    void WarehouseOrder_t::serializeToXml(tinyxml2::XMLDocument* doc) const
     {
         tinyxml2::XMLElement* whOrder = doc->NewElement( "WarehouseOrder" );
 
@@ -92,6 +83,4 @@ namespace whm
 
         doc->InsertEndChild(whOrder);
     }
-
-    template class WarehouseOrder_t<std::string>;
 }

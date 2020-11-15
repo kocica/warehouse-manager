@@ -118,8 +118,8 @@ namespace whm
 
             for(int32_t orderID = 0; orderID < cfg.getAs<int32_t>("orderCount"); ++orderID)
             {
-                WarehouseOrder_t<WarehouseProduct_t> order;
-                std::vector<WarehouseOrderLine_t<WarehouseProduct_t>> lines;
+                WarehouseOrder_t order;
+                std::vector<WarehouseOrderLine_t> lines;
 
                 order.setWhOrderID(orderID);
 
@@ -132,7 +132,7 @@ namespace whm
 
                 for(int32_t lineID = 0; lineID < std::max(1, lineCount); ++lineID)
                 {
-                    WarehouseOrderLine_t<WarehouseProduct_t> line(nullptr);
+                    WarehouseOrderLine_t line(nullptr);
 
                     double prob = uniformDist(gen);
 

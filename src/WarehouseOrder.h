@@ -21,10 +21,9 @@
 
 namespace whm
 {
-    template<typename T>
     class WarehouseOrder_t
     {
-        using WarehouseOrderLineContainer_t = std::vector<WarehouseOrderLine_t<T>>;
+        using WarehouseOrderLineContainer_t = std::vector<WarehouseOrderLine_t>;
 
         public:
             WarehouseOrder_t();

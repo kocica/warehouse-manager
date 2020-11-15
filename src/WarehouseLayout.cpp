@@ -137,7 +137,7 @@ namespace whm
 
         for (tinyxml2::XMLElement* whOrderXml = doc->FirstChildElement("WarehouseOrder"); whOrderXml; whOrderXml = whOrderXml->NextSiblingElement("WarehouseOrder"))
         {
-            WarehouseOrder_t<std::string> whOrder;
+            WarehouseOrder_t whOrder;
             whOrder.deserializeFromXml(whOrderXml);
             addWhOrder(std::move(whOrder));
         }
@@ -236,7 +236,7 @@ namespace whm
         whConns.push_back(c);
     }
 
-    void WarehouseLayout_t::addWhOrder(const WarehouseOrder_t<std::string>& o)
+    void WarehouseLayout_t::addWhOrder(const WarehouseOrder_t& o)
     {
         whOrders.push_back(o);
     }
@@ -336,7 +336,7 @@ namespace whm
         }
     }
 
-    void WarehouseLayout_t::eraseWhOrder(const WarehouseOrder_t<std::string>& o)
+    void WarehouseLayout_t::eraseWhOrder(const WarehouseOrder_t& o)
     {
         auto found = std::find_if(whOrders.begin(), whOrders.end(),
                         [&](const auto& whOrder) -> bool

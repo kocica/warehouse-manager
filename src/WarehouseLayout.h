@@ -26,7 +26,6 @@ namespace whm
 {
     class WarehouseItem_t;
     class WarehouseConnection_t;
-    template<typename>
     class WarehouseOrder_t;
 
     class WarehouseLayout_t
@@ -34,7 +33,7 @@ namespace whm
         using WarehouseDimensions_t = std::pair<int32_t, int32_t>;
         using WarehouseItemContainer_t = std::vector<WarehouseItem_t*>;
         using WarehouseConnContainer_t = std::vector<WarehouseConnection_t*>;
-        using WarehouseOrderContainer_t = std::vector<WarehouseOrder_t<std::string>>;
+        using WarehouseOrderContainer_t = std::vector<WarehouseOrder_t>;
 
         public:
             WarehouseLayout_t();
@@ -67,11 +66,11 @@ namespace whm
 
             void addWhItem(WarehouseItem_t*);
             void addWhConn(WarehouseConnection_t*);
-            void addWhOrder(const WarehouseOrder_t<std::string>&);
+            void addWhOrder(const WarehouseOrder_t&);
 
             void eraseWhItem(WarehouseItem_t*);
             void eraseWhConn(WarehouseConnection_t*);
-            void eraseWhOrder(const WarehouseOrder_t<std::string>&);
+            void eraseWhOrder(const WarehouseOrder_t&);
 
             void dump() const;
             void clearWhOrders();

@@ -13,63 +13,53 @@
 
 namespace whm
 {
-    template<typename T>
-    WarehouseOrderLine_t<T>::WarehouseOrderLine_t(WarehouseOrder_t<T>* whOrder_)
+    WarehouseOrderLine_t::WarehouseOrderLine_t(WarehouseOrder_t* whOrder_)
         : whOrder{ whOrder_ }
     {
 
     }
 
-    template<typename T>
-    WarehouseOrderLine_t<T>::~WarehouseOrderLine_t()
+    WarehouseOrderLine_t::~WarehouseOrderLine_t()
     {
 
     }
 
-    template<typename T>
-    T WarehouseOrderLine_t<T>::getArticle() const
+    std::string WarehouseOrderLine_t::getArticle() const
     {
         return this->article;
     }
 
-    template<typename T>
-    void WarehouseOrderLine_t<T>::setArticle(const T& a)
+    void WarehouseOrderLine_t::setArticle(const std::string& a)
     {
         this->article = a;
     }
 
-    template<typename T>
-    int32_t WarehouseOrderLine_t<T>::getQuantity() const
+    int32_t WarehouseOrderLine_t::getQuantity() const
     {
         return this->quantity;
     }
 
-    template<typename T>
-    void WarehouseOrderLine_t<T>::setQuantity(int32_t q)
+    void WarehouseOrderLine_t::setQuantity(int32_t q)
     {
         this->quantity = q;
     }
 
-    template<typename T>
-    WarehouseOrder_t<T>& WarehouseOrderLine_t<T>::getWhOrder() const
+    WarehouseOrder_t& WarehouseOrderLine_t::getWhOrder() const
     {
         return *this->whOrder;
     }
 
-    template<typename T>
-    void WarehouseOrderLine_t<T>::setWhLineID(int32_t newLineID)
+    void WarehouseOrderLine_t::setWhLineID(int32_t newLineID)
     {
         this->whLineID = newLineID; // Reordered line during optimizations
     }
 
-    template<typename T>
-    int32_t WarehouseOrderLine_t<T>::getWhLineID() const
+    int32_t WarehouseOrderLine_t::getWhLineID() const
     {
         return this->whLineID;
     }
 
-    template<typename T>
-    void WarehouseOrderLine_t<T>::dump() const
+    void WarehouseOrderLine_t::dump() const
     {
         std::cout << "    LineID <" << this->getWhLineID()
                   << "> Article <"  << this->getArticle()
@@ -77,21 +67,17 @@ namespace whm
                   << ">"            << std::endl;
     }
 
-    template<typename T>
-    void WarehouseOrderLine_t<T>::deserializeFromXml(tinyxml2::XMLElement* elem)
+    void WarehouseOrderLine_t::deserializeFromXml(tinyxml2::XMLElement* elem)
     {
         this->whLineID = elem->IntAttribute("id");
         this->article  = elem->Attribute("article_name");
         this->quantity = elem->IntAttribute("requested_quantity");
     }
 
-    template<typename T>
-    void WarehouseOrderLine_t<T>::serializeToXml(tinyxml2::XMLElement* elem) const
+    void WarehouseOrderLine_t::serializeToXml(tinyxml2::XMLElement* elem) const
     {
         elem->SetAttribute("id", getWhLineID());
         elem->SetAttribute("article_name", getArticle().c_str());
         elem->SetAttribute("requested_quantity", getQuantity());
     }
-
-    template class WarehouseOrderLine_t<std::string>;
 }

@@ -82,15 +82,15 @@ namespace whm
 
     void WarehouseSimulator_t::preprocessOrders()
     {
-        auto& orders = const_cast<std::vector<WarehouseOrder_t<std::string>>&>(whLayout.getWhOrders());
+        auto& orders = const_cast<std::vector<WarehouseOrder_t>&>(whLayout.getWhOrders());
 
         for(auto& order : orders)
         {
-            std::vector<WarehouseOrderLine_t<std::string>> newLines;
+            std::vector<WarehouseOrderLine_t> newLines;
 
             for(auto itLine = order.begin(); itLine != order.end(); ++itLine)
             {
-                static const auto& lookup = [&](const WarehouseOrderLine_t<std::string>& line) -> bool
+                static const auto& lookup = [&](const WarehouseOrderLine_t& line) -> bool
                                             {
                                                 return utils::intersects(lookupWhLocations(line.getArticle(), 0),
                                                                          lookupWhLocations(itLine->getArticle(), 0));
@@ -167,13 +167,19 @@ namespace whm
         sumDistance  = distance + sumDistance ;
 
 #       ifdef WHM_GUI
-        uiCallback(duration, false);
+        if(uiCallback)
+        {
+            uiCallback(duration, false);
+        }
 #       endif
 
         if(finished == whLayout.getWhOrders().size())
         {
 #           ifdef WHM_GUI
-            uiCallback(Time, true);
+            if(uiCallback)
+            {
+                uiCallback(Time, true);
+            }
 #           endif
 
             if(stats)
@@ -342,7 +348,7 @@ namespace whm
 
         locationID = sim.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)->getWhItemID();
 
-        for(const WarehouseOrderLine_t<std::string>& orderLine : order)
+        for(const WarehouseOrderLine_t& orderLine : order)
         {
             const std::vector<int32_t>& targetLocations = sim.lookupWhLocations(orderLine.getArticle(), orderLine.getQuantity());
             const WarehousePathInfo_t* shortestPath = sim.lookupShortestPath(locationID, targetLocations);
@@ -395,7 +401,7 @@ namespace whm
         sim.orderFinished(Time - processDuration, totalDuration, totalDistance);
     }
 
-    OrderProcessor_t::OrderProcessor_t(WarehouseOrder_t<std::string> order_)
+    OrderProcessor_t::OrderProcessor_t(WarehouseOrder_t order_)
         : order(order_)
     {
 

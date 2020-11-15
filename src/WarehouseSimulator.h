@@ -86,13 +86,13 @@ namespace whm
     class OrderProcessor_t : public simlib3::Process
     {
         public:
-            OrderProcessor_t(WarehouseOrder_t<std::string>);
+            OrderProcessor_t(WarehouseOrder_t);
 
         protected:
             void Behavior();
 
         private:
-            WarehouseOrder_t<std::string> order;
+            WarehouseOrder_t order;
     };
 
 
@@ -107,7 +107,7 @@ namespace whm
         private:
             WarehouseLayout_t& layout;
 
-            std::vector<WarehouseOrder_t<std::string>>::const_iterator it;
+            std::vector<WarehouseOrder_t>::const_iterator it;
     };
 }
 
