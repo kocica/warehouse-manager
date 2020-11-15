@@ -68,6 +68,7 @@ namespace whm
 
         private:
             bool stats;
+            bool firstExperiment;
 
 #           ifdef WHM_GUI
             UiCallback_t uiCallback;
