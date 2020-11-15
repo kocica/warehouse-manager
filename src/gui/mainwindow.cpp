@@ -390,6 +390,11 @@ namespace whm
 
         void MainWindow::newGeneratedValue(int value, int graph)
         {
+            if(!generatorUi)
+            {
+                return;
+            }
+
             if(graph == 0)
             {
                 xadu.append(value);
@@ -604,6 +609,7 @@ namespace whm
             }
 
             isOptimizationActive() = true;
+            whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
 
             whm::ConfigParser_t cfg;
@@ -845,7 +851,7 @@ namespace whm
 
             generationElapsedTime.start();
 
-            auto* generatorUi = new UiWarehouseGeneratorThread_t(cfg);
+            generatorUi = new UiWarehouseGeneratorThread_t(cfg);
 
             connect(generatorUi, SIGNAL(finished()),
                     generatorUi, SLOT(deleteLater()));
@@ -861,7 +867,13 @@ namespace whm
 
         void MainWindow::on_stopGenerating_clicked()
         {
-
+            if(generatorUi)
+            {
+                generatorUi->terminate();
+                generatorUi->wait();
+                generatorUi = nullptr;
+                generatingFinished();
+            }
         }
 
         void MainWindow::on_ordersLoadSim_clicked()
@@ -941,7 +953,7 @@ namespace whm
 
             optimizationElapsedTime.start();
 
-            auto* simulatorUi = new UiWarehouseSimulatorThread_t(cfg);
+            simulatorUi = new UiWarehouseSimulatorThread_t(cfg);
 
             connect(simulatorUi, SIGNAL(finished()),
                     simulatorUi, SLOT(deleteLater()));
@@ -957,7 +969,12 @@ namespace whm
 
         void MainWindow::on_stopSimulation_clicked()
         {
-
+            if(simulatorUi)
+            {
+                simulatorUi->terminate();
+                simulatorUi->wait();
+                simulatorUi = nullptr;
+            }
         }
 
         void MainWindow::reset()

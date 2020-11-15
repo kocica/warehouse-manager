@@ -11,6 +11,8 @@
 
 // Local
 #include "../Logger.h"
+#include "UiWarehouseGeneratorThread.h"
+#include "UiWarehouseSimulatorThread.h"
 #include "UiWarehouseOptimizerThread.h"
 
 // Qt
@@ -110,6 +112,8 @@ namespace whm
                 QElapsedTimer optimizationElapsedTime;
 
                 UiWarehouseOptimizerThread_t* optimizerUi{ nullptr };
+                UiWarehouseGeneratorThread_t* generatorUi{ nullptr };
+                UiWarehouseSimulatorThread_t* simulatorUi{ nullptr };
 
                 bool optimizationActive{ false };
 
