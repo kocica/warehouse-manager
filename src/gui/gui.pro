@@ -85,6 +85,7 @@ HEADERS +=  ../Utils.h \
             Handle.h \
             qcustomplot.h
 
-RESOURCES += resources.qrc
+RESOURCES += resources.qrc \
+             qdarkstyle/style.qrc
 
 FORMS += mainwindow.ui

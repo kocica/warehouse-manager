@@ -62,6 +62,15 @@ namespace whm
         {
             ui->setupUi(this);
 
+            QFile f(":qdarkstyle/style.qss");
+
+            if(f.exists())
+            {
+                f.open(QFile::ReadOnly | QFile::Text);
+                QTextStream ts(&f);
+                qApp->setStyleSheet(ts.readAll());
+            }
+
             // Get warehouse dimensions
             auto dialog  = new QDialog(this);
             auto form    = new QFormLayout(dialog);
