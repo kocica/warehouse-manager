@@ -402,6 +402,8 @@ namespace whm
                 return;
             }
 
+            // Stats update
+
             auto stepCount = steps.size();
 
             steps.append(stepCount++);
@@ -420,6 +422,48 @@ namespace whm
             ui->elapsedTime->setText(QString::number(optimizationElapsedTime.elapsed() / 1000.0) + " [s]");
 
             ui->optimizationProgressBar->setValue(100 * stepCount / static_cast<double>(ui->iterations->value()));
+
+            // Model update
+
+            auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
+            auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
+
+            QStringList labels = { "Location ID", "Slot x", "Slot y", "Article", "Quantity" };
+
+            locationsModel->clear();
+            locationsModel->setHorizontalHeaderLabels(labels);
+
+            int32_t row{ 0 };
+
+            for(auto* item : items)
+            {
+                if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                {
+                    auto* rack = item->getWhLocationRack();
+
+                    for(int32_t r = 0; r < rack->getSlotCountY(); r++)
+                    {
+                        for(int32_t c = 0; c < rack->getSlotCountX(); c++)
+                        {
+                            auto* locationID = new QStandardItem(QString::number(item->getWhItemID()));
+                            auto* slotx      = new QStandardItem(QString::number(c));
+                            auto* sloty      = new QStandardItem(QString::number(r));
+                            auto* article    = new QStandardItem(QString::fromStdString(rack->at(c, r).getArticle()));
+                            auto* quantity   = new QStandardItem(QString::number(rack->at(c, r).getQuantity()));
+
+                            locationsModel->setItem(row, 0, locationID);
+                            locationsModel->setItem(row, 1, slotx);
+                            locationsModel->setItem(row, 2, sloty);
+                            locationsModel->setItem(row, 3, article);
+                            locationsModel->setItem(row, 4, quantity);
+
+                            ++row;
+                        }
+                    }
+                }
+            }
+
+            ui->locationsTableView->setModel(locationsModel);
         }
 
         void MainWindow::newGeneratedValue(int value, int graph)
