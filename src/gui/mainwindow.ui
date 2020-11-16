@@ -288,20 +288,6 @@
                  </item>
                 </layout>
                </item>
-               <item>
-                <layout class="QHBoxLayout" name="locationsLayout">
-                 <item>
-                  <widget class="QLineEdit" name="locationsLine"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="locationsLoad">
-                   <property name="text">
-                    <string>Load locations</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
               </layout>
              </widget>
             </item>
@@ -1275,20 +1261,6 @@
                   <widget class="QPushButton" name="ordersLoadSim">
                    <property name="text">
                     <string>Load orders</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="locationsLayoutSim">
-                 <item>
-                  <widget class="QLineEdit" name="locationsLineSim"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="locationsLoadSim">
-                   <property name="text">
-                    <string>Load locations</string>
                    </property>
                   </widget>
                  </item>

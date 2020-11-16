@@ -80,7 +80,6 @@ namespace whm
 
                 // Optimizer
                 void on_ordersLoad_clicked();
-                void on_locationsLoad_clicked();
                 void on_configLoad_clicked();
                 void on_startOptimization_clicked();
                 void on_stopOptimization_clicked();
@@ -93,7 +92,6 @@ namespace whm
 
                 // Simulator
                 void on_ordersLoadSim_clicked();
-                void on_locationsLoadSim_clicked();
                 void on_configLoadSim_clicked();
                 void on_startSimulation_clicked();
                 void on_stopSimulation_clicked();
@@ -109,6 +107,7 @@ namespace whm
 
             protected:
                 std::string exportArticles();
+                std::string exportLocations();
                 void importLocations();
                 void stylePlot(QCustomPlot*);
 

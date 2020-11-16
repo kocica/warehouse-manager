@@ -57,6 +57,19 @@ namespace whm
         {
             const auto& uiItemLoc = static_cast<gui::UiWarehouseItemLocation_t&>(uiItem);
             whLocRack = new WarehouseLocationRack_t(this, uiItemLoc.getSlotCountX(), uiItemLoc.getSlotCountY());
+
+            for (int32_t i = 0; i < uiItemLoc.getSlotCountX(); i++)
+            {
+                for (int32_t j = 0; j < uiItemLoc.getSlotCountY(); j++)
+                {
+                    WarehouseLocationSlot_t slot;
+                    slot.setWhLocRack(whLocRack);
+                    slot.setCoords(std::make_pair(i, j));
+                    slot.setArticle(uiItemLoc.getSlots().at((i * uiItemLoc.getSlotCountY()) + j)->getArticle());
+
+                    whLocRack->setAt(i, j, slot);
+                }
+            }
         }
     }
 #endif

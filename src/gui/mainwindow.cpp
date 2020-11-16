@@ -599,7 +599,7 @@ namespace whm
         {
             std::string o = ui->ordersLine->text().toUtf8().constData();
             std::string a = exportArticles();
-            std::string l = ui->locationsLine->text().toUtf8().constData();
+            std::string l = exportLocations();
 
             if(o.empty() || a.empty() || l.empty())
             {
@@ -701,17 +701,6 @@ namespace whm
             }
 
             ui->ordersLine->setText(file);
-        }
-
-        void MainWindow::on_locationsLoad_clicked()
-        {
-            QString file = QFileDialog::getOpenFileName(this, tr("Import locations"), "", tr("Locations (*.csv)"));
-            if (file.cbegin() == file.cend())
-            {
-                return;
-            }
-
-            ui->locationsLine->setText(file);
         }
 
         void MainWindow::on_configLoad_clicked()
@@ -864,17 +853,6 @@ namespace whm
             ui->ordersLineSim->setText(file);
         }
 
-        void MainWindow::on_locationsLoadSim_clicked()
-        {
-            QString file = QFileDialog::getOpenFileName(this, tr("Import locations"), "", tr("Locations (*.csv)"));
-            if (file.cbegin() == file.cend())
-            {
-                return;
-            }
-
-            ui->locationsLineSim->setText(file);
-        }
-
         void MainWindow::on_configLoadSim_clicked()
         {
             QString file = QFileDialog::getOpenFileName(this, tr("Simulator configuration"), "", tr("Simulator configuration (*.xml)"));
@@ -900,7 +878,7 @@ namespace whm
         void MainWindow::on_startSimulation_clicked()
         {
             std::string o = ui->ordersLineSim->text().toUtf8().constData();
-            std::string l = ui->locationsLineSim->text().toUtf8().constData();
+            std::string l = exportLocations();
 
             if(o.empty() || l.empty())
             {
@@ -1084,8 +1062,8 @@ namespace whm
                         for(int32_t c = 0; c < rack->getSlotCountX(); c++)
                         {
                             auto* locationID = new QStandardItem(QString::number(item->getWhItemID()));
-                            auto* slotx      = new QStandardItem(QString::number(r));
-                            auto* sloty      = new QStandardItem(QString::number(c));
+                            auto* slotx      = new QStandardItem(QString::number(c));
+                            auto* sloty      = new QStandardItem(QString::number(r));
                             auto* article    = new QStandardItem(QString::fromStdString(rack->at(c, r).getArticle()));
                             auto* quantity   = new QStandardItem(QString::number(rack->at(c, r).getQuantity()));
 
@@ -1166,6 +1144,21 @@ namespace whm
             }
 
             WarehouseLayout_t::getWhLayout().exportArticles(f, articles);
+
+            return f;
+        }
+
+        std::string MainWindow::exportLocations()
+        {
+            std::string f = tmpnam(nullptr);
+
+            if(locationsModel->rowCount() == 0)
+            {
+                return std::string();
+            }
+
+            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+            ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(f);
 
             return f;
         }
