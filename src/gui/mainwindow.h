@@ -19,6 +19,7 @@
 #include <QMainWindow>
 #include <QElapsedTimer>
 #include <QGraphicsScene>
+#include <QStandardItemModel>
 
 namespace Ui
 {
@@ -67,8 +68,6 @@ namespace whm
                 void on_loadLayout_triggered();
                 void on_saveLayout_triggered();
                 void on_clearLayout_triggered();
-                void on_importLocations_triggered();
-                void on_exportLocations_triggered();
 
                 void on_deletionMode_toggled(bool);
                 void on_selectionMode_toggled(bool);
@@ -100,6 +99,15 @@ namespace whm
                 void on_startSimulation_clicked();
                 void on_stopSimulation_clicked();
 
+                // Data
+                void on_clearOrders_clicked();
+                void on_importOrders_clicked();
+                void on_clearArticles_clicked();
+                void on_importArticles_clicked();
+                void on_clearLocations_clicked();
+                void on_importLocations_clicked();
+                void on_exportLocations_clicked();
+
             private:
                 int32_t whR{ 0 };
                 int32_t whX{ 0 };
@@ -110,6 +118,10 @@ namespace whm
 
                 QElapsedTimer generationElapsedTime;
                 QElapsedTimer optimizationElapsedTime;
+
+                QStandardItemModel* ordersModel{ nullptr };
+                QStandardItemModel* articlesModel{ nullptr };
+                QStandardItemModel* locationsModel{ nullptr };
 
                 UiWarehouseOptimizerThread_t* optimizerUi{ nullptr };
                 UiWarehouseGeneratorThread_t* generatorUi{ nullptr };

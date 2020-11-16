@@ -32,6 +32,7 @@
 #include "../WarehouseOrder.h"
 #include "../WarehouseLayout.h"
 #include "../WarehouseOrderLine.h"
+#include "../WarehouseLocationRack.h"
 
 // Qt
 #include <QMenu>
@@ -55,6 +56,9 @@ namespace whm
         MainWindow::MainWindow(QWidget *parent)
             : QMainWindow(parent)
             , ui(new Ui::MainWindow)
+            , ordersModel(new QStandardItemModel())
+            , articlesModel(new QStandardItemModel())
+            , locationsModel(new QStandardItemModel())
         {
             ui->setupUi(this);
 
@@ -129,11 +133,19 @@ namespace whm
             ui->saveLayout->setIcon(QIcon(":/img/save.png"));
             ui->loadLayout->setIcon(QIcon(":/img/load.png"));
             ui->clearLayout->setIcon(QIcon(":/img/clear.png"));
+
+            ui->clearOrders->setIcon(QIcon(":/img/clear.png"));
+            ui->importOrders->setIcon(QIcon(":/img/import.png"));
+            ui->clearArticles->setIcon(QIcon(":/img/clear.png"));
+            ui->importArticles->setIcon(QIcon(":/img/import.png"));
+            ui->clearLocations->setIcon(QIcon(":/img/clear.png"));
             ui->importLocations->setIcon(QIcon(":/img/import.png"));
             ui->exportLocations->setIcon(QIcon(":/img/export.png"));
 
             ui->deletionMode->setIcon(QIcon(":/img/delete.png"));
             ui->selectionMode->setIcon(QIcon(":/img/select.png"));
+
+            ui->configLoad->setIcon(QIcon(":/img/config.png"));
             ui->selectionMode->toggle();
 
             // Plots
@@ -553,47 +565,10 @@ namespace whm
 
             ::whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             UiWarehouseLayout_t::getWhLayout().clearWhLayout();
-        }
 
-        void MainWindow::on_importLocations_triggered()
-        {
-            QString file = QFileDialog::getOpenFileName(this, tr("Import location slots"), "", tr("Article location allocation (*.csv)"));
-            if (file.cbegin() == file.cend())
-            {
-                return;
-            }
-
-            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
-            ::whm::WarehouseLayout_t::getWhLayout().importLocationSlots(file.toUtf8().constData());
-
-            auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
-            auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
-
-            for(auto* item : items)
-            {
-                if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
-                {
-                    for(auto* uiItem : uiItems)
-                    {
-                        if(item->getWhItemID() == uiItem->getWhItemID())
-                        {
-                            dynamic_cast<UiWarehouseItemLocation_t*>(uiItem)->importSlots(*item);
-                        }
-                    }
-                }
-            }
-        }
-
-        void MainWindow::on_exportLocations_triggered()
-        {
-            QString file = QFileDialog::getSaveFileName(this, tr("Export location slots"), "", tr("Article location allocation (*.csv)"));
-            if (file.cbegin() == file.cend())
-            {
-                return;
-            }
-
-            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
-            ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(file.toUtf8().constData());
+            ordersModel->clear();
+            articlesModel->clear();
+            locationsModel->clear();
         }
 
         void MainWindow::on_startOptimization_clicked()
@@ -983,6 +958,160 @@ namespace whm
             ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
             UiWarehouseLayout_t::getWhLayout().clearWhLayout();
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
+        }
+
+        void MainWindow::on_importOrders_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Import orders"), "", tr("Orders (*.xml)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            QStringList labels = { "Order ID", "Line ID", "Product", "Quantity" };
+
+            ordersModel->clear();
+            ordersModel->setHorizontalHeaderLabels(labels);
+
+            whm::WarehouseLayout_t::getWhLayout().clearWhOrders();
+            whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(file.toUtf8().constData());
+
+            int32_t row{ 0 };
+
+            for(auto& order : ::whm::WarehouseLayout_t::getWhLayout().getWhOrders())
+            {
+                for(auto& line : order.getWhOrderLines())
+                {
+                    auto* orderID   = new QStandardItem(QString::fromStdString(std::to_string(order.getWhOrderID())));
+                    auto* lineID    = new QStandardItem(QString::fromStdString(std::to_string(line.getWhLineID())));
+                    auto* article   = new QStandardItem(QString::fromStdString(line.getArticle()));
+                    auto* quantity  = new QStandardItem(QString::fromStdString(std::to_string(line.getQuantity())));
+
+                    ordersModel->setItem(row, 0, orderID);
+                    ordersModel->setItem(row, 1, lineID);
+                    ordersModel->setItem(row, 2, article);
+                    ordersModel->setItem(row, 3, quantity);
+
+                    ++row;
+                }
+            }
+
+            ui->ordersTableView->setModel(ordersModel);
+        }
+
+        void MainWindow::on_clearOrders_clicked()
+        {
+            ordersModel->clear();
+        }
+
+        void MainWindow::on_importArticles_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Import articles"), "", tr("Articles (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            QStringList labels = { "Article name" };
+
+            articlesModel->clear();
+            articlesModel->setHorizontalHeaderLabels(labels);
+
+            std::vector<std::string> articles;
+            WarehouseLayout_t::getWhLayout().importArticles(file.toUtf8().constData(), articles);
+
+            int32_t row{ 0 };
+
+            for(auto& article : articles)
+            {
+                auto* articleName = new QStandardItem(QString::fromStdString(article));
+
+                articlesModel->setItem(row++, 0, articleName);
+            }
+
+            ui->articlesTableView->setModel(articlesModel);
+        }
+
+        void MainWindow::on_clearArticles_clicked()
+        {
+            articlesModel->clear();
+        }
+
+        void MainWindow::on_importLocations_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Import location slots"), "", tr("Article location allocation (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+            ::whm::WarehouseLayout_t::getWhLayout().importLocationSlots(file.toUtf8().constData());
+
+            auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
+            auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
+
+            QStringList labels = { "Location ID", "Slot x", "Slot y", "Article", "Quantity" };
+
+            locationsModel->clear();
+            locationsModel->setHorizontalHeaderLabels(labels);
+
+            int32_t row{ 0 };
+
+            for(auto* item : items)
+            {
+                if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                {
+                    for(auto* uiItem : uiItems)
+                    {
+                        if(item->getWhItemID() == uiItem->getWhItemID())
+                        {
+                            dynamic_cast<UiWarehouseItemLocation_t*>(uiItem)->importSlots(*item);
+                        }
+                    }
+
+                    auto* rack = item->getWhLocationRack();
+
+                    for(int32_t r = 0; r < rack->getSlotCountY(); r++)
+                    {
+                        for(int32_t c = 0; c < rack->getSlotCountX(); c++)
+                        {
+                            auto* locationID = new QStandardItem(QString::number(item->getWhItemID()));
+                            auto* slotx      = new QStandardItem(QString::number(r));
+                            auto* sloty      = new QStandardItem(QString::number(c));
+                            auto* article    = new QStandardItem(QString::fromStdString(rack->at(c, r).getArticle()));
+                            auto* quantity   = new QStandardItem(QString::number(rack->at(c, r).getQuantity()));
+
+                            locationsModel->setItem(row, 0, locationID);
+                            locationsModel->setItem(row, 1, slotx);
+                            locationsModel->setItem(row, 2, sloty);
+                            locationsModel->setItem(row, 3, article);
+                            locationsModel->setItem(row, 4, quantity);
+
+                            ++row;
+                        }
+                    }
+                }
+            }
+
+            ui->locationsTableView->setModel(locationsModel);
+        }
+
+        void MainWindow::on_exportLocations_clicked()
+        {
+            QString file = QFileDialog::getSaveFileName(this, tr("Export location slots"), "", tr("Article location allocation (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+            ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(file.toUtf8().constData());
+        }
+
+        void MainWindow::on_clearLocations_clicked()
+        {
+            locationsModel->clear();
         }
 
         void CustomizedGraphicsScene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)

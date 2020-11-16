@@ -4,12 +4,12 @@
         <file>img/stop.png</file>
         <file>img/save.png</file>
         <file>img/load.png</file>
-        <file>img/step.png</file>
         <file>img/clear.png</file>
         <file>img/select.png</file>
         <file>img/delete.png</file>
         <file>img/conv.png</file>
         <file>img/import.png</file>
         <file>img/export.png</file>
+        <file>img/config.png</file>
     </qresource>
 </RCC>

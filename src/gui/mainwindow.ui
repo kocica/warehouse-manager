@@ -31,7 +31,7 @@
      <number>1</number>
     </property>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -64,6 +64,119 @@
         <property name="bottomMargin">
          <number>0</number>
         </property>
+        <item>
+         <widget class="QTabWidget" name="dataBrowserTab">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="orders">
+           <attribute name="title">
+            <string>Orders</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <item>
+             <widget class="QGroupBox" name="ordersControls">
+              <property name="title">
+               <string>Controls</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QPushButton" name="importOrders">
+                 <property name="text">
+                  <string>Import</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="clearOrders">
+                 <property name="text">
+                  <string>Clear</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableView" name="ordersTableView"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="articles">
+           <attribute name="title">
+            <string>Articles</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_13">
+            <item>
+             <widget class="QGroupBox" name="articlesControls">
+              <property name="title">
+               <string>Controls</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <item>
+                <widget class="QPushButton" name="importArticles">
+                 <property name="text">
+                  <string>Import</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="clearArticles">
+                 <property name="text">
+                  <string>Clear</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableView" name="articlesTableView"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="locations">
+           <attribute name="title">
+            <string>Locations</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_14">
+            <item>
+             <widget class="QGroupBox" name="locationsControls">
+              <property name="title">
+               <string>Controls</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <item>
+                <widget class="QPushButton" name="importLocations">
+                 <property name="text">
+                  <string>Import</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="exportLocations">
+                 <property name="text">
+                  <string>Export</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="clearLocations">
+                 <property name="text">
+                  <string>Clear</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableView" name="locationsTableView"/>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
         <item>
          <layout class="QVBoxLayout" name="frameLayout">
           <property name="spacing">
@@ -108,7 +221,7 @@
              <property name="spacing">
               <number>0</number>
              </property>
-             <item row="0" column="0">
+             <item row="0" column="2">
               <widget class="QGraphicsView" name="view"/>
              </item>
             </layout>
@@ -1474,28 +1587,6 @@
         </item>
        </layout>
       </item>
-      <item>
-       <widget class="QTabWidget" name="dataBrowserTab">
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <widget class="QWidget" name="orders">
-         <attribute name="title">
-          <string>Orders</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="articles">
-         <attribute name="title">
-          <string>Articles</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="locations">
-         <attribute name="title">
-          <string>Locations</string>
-         </attribute>
-        </widget>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>
@@ -1514,7 +1605,7 @@
     <bool>true</bool>
    </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
@@ -1553,8 +1644,6 @@
    <addaction name="loadLayout"/>
    <addaction name="saveLayout"/>
    <addaction name="clearLayout"/>
-   <addaction name="importLocations"/>
-   <addaction name="exportLocations"/>
   </widget>
   <action name="saveLayout">
    <property name="text">
@@ -1602,22 +1691,6 @@
    </property>
    <property name="toolTip">
     <string>Erase everything</string>
-   </property>
-  </action>
-  <action name="importLocations">
-   <property name="text">
-    <string>Import</string>
-   </property>
-   <property name="toolTip">
-    <string>Import locations</string>
-   </property>
-  </action>
-  <action name="exportLocations">
-   <property name="text">
-    <string>Export</string>
-   </property>
-   <property name="toolTip">
-    <string>Export locations</string>
    </property>
   </action>
   <action name="actionLabel">
