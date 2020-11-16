@@ -110,6 +110,7 @@ namespace whm
                 void on_exportLocations_clicked();
 
             private:
+                void importLocations();
                 void stylePlot(QCustomPlot*);
 
                 int32_t whR{ 0 };

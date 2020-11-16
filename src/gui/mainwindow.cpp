@@ -299,6 +299,13 @@ namespace whm
                 }
 
                 UiWarehouseLayout_t::getWhLayout().addWhItem(whItem);
+
+                if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
+                {
+                    ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+
+                    importLocations();
+                }
             }
         }
 
@@ -554,6 +561,8 @@ namespace whm
             ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
             ui->ratioText->setText(QString::number(((ui->view->width()/double(whX)) * (whX/whR))/5));
             // TODO: Maybe there will be incorrect start ratio
+
+            importLocations();
         }
 
         void MainWindow::on_saveLayout_triggered()
@@ -1063,6 +1072,11 @@ namespace whm
             ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
             ::whm::WarehouseLayout_t::getWhLayout().importLocationSlots(file.toUtf8().constData());
 
+            importLocations();
+        }
+
+        void MainWindow::importLocations()
+        {
             auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
             auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
 
