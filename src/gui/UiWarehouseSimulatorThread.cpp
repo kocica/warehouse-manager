@@ -35,19 +35,20 @@ namespace whm
             whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.locationsPath);
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
-            whm::WarehouseSimulator_t::getWhSimulator().setUiCallback(
-                        [&](double time, bool sim)
-                        {
-                            if(sim)
-                                emit simulationFinished(time);
-                            else
-                                emit orderSimulationFinished(time);
-                        });
+            whm::WarehouseSimulator_t sim;
 
-            whm::WarehouseSimulator_t::getWhSimulator().setConfig(cfg);
-            whm::WarehouseSimulator_t::getWhSimulator().setArguments(args);
-            whm::WarehouseSimulator_t::getWhSimulator().optimizationModeActive() = false;
-            whm::WarehouseSimulator_t::getWhSimulator().runSimulation();
+            sim.setUiCallback([&](double time, bool sim)
+                              {
+                                  if(sim)
+                                      emit simulationFinished(time);
+                                  else
+                                      emit orderSimulationFinished(time);
+                              });
+
+            sim.setConfig(cfg);
+            sim.setArguments(args);
+            sim.optimizationModeActive() = false;
+            sim.runSimulation();
         }
     }
 }

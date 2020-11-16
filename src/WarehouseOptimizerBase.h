@@ -19,6 +19,7 @@
 #include "Utils.h"
 #include "Solution.h"
 #include "ConfigParser.h"
+#include "WarehouseSimulator.h"
 #include "WarehouseLocationSlot.h"
 
 namespace whm
@@ -65,6 +66,8 @@ namespace whm
             // Generic sku/slot encoding
             std::map<int32_t, std::string> skuEnc;
             std::map<int32_t, WarehouseLocationSlot_t*> slotEnc;
+
+            WarehouseSimulator_t simulator;
 
             // Fitness history for plot
             std::vector<double> histFitness;

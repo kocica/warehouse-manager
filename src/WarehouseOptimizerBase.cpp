@@ -33,8 +33,9 @@ namespace whm
         : cfg{ ConfigParser_t{ "cfg/optimizer.xml" } }
         , args{ args_ }
     {
-        whm::WarehouseSimulator_t::getWhSimulator().printStats(false);
-        whm::WarehouseSimulator_t::getWhSimulator().optimizationModeActive() = true;
+        simulator.printStats(false);
+        simulator.setArguments(args);
+        simulator.optimizationModeActive() = true;
 
         std::random_device rd;
         rand.seed(rd());
@@ -157,8 +158,7 @@ namespace whm
         updateAllocations(ind);
 
         // Run simulation and return elapsed time
-        whm::WarehouseSimulator_t::getWhSimulator().setArguments(args);
-        return whm::WarehouseSimulator_t::getWhSimulator().runSimulation();
+        return simulator.runSimulation();
     }
 
     void WarehouseOptimizerBase_t::saveFitnessPlot() const

@@ -49,8 +49,6 @@ namespace whm
             utils::WhmArgs_t getArguments() const;
             void setArguments(const utils::WhmArgs_t&);
 
-            static WarehouseSimulator_t& getWhSimulator();
-
 #           ifdef WHM_GUI
             using UiCallback_t = std::function<void(double, bool)>;
             void setUiCallback(UiCallback_t);
@@ -71,6 +69,9 @@ namespace whm
         private:
             bool stats;
             bool optimizationMode;
+            bool multipleExperiments;
+
+            size_t ordersFinished{ 0 };
 
 #           ifdef WHM_GUI
             UiCallback_t uiCallback;
@@ -89,27 +90,28 @@ namespace whm
     class OrderProcessor_t : public simlib3::Process
     {
         public:
-            OrderProcessor_t(WarehouseOrder_t);
+            OrderProcessor_t(WarehouseOrder_t, WarehouseSimulator_t&);
 
         protected:
             void Behavior();
 
         private:
             WarehouseOrder_t order;
+            WarehouseSimulator_t& sim;
     };
 
 
     class OrderRequest_t : public simlib3::Event
     {
         public:
-            OrderRequest_t(WarehouseLayout_t&);
+            OrderRequest_t(WarehouseLayout_t&, WarehouseSimulator_t&);
 
         protected:
             void Behavior();
 
         private:
             WarehouseLayout_t& layout;
-
+            WarehouseSimulator_t& sim;
             std::vector<WarehouseOrder_t>::const_iterator it;
     };
 }

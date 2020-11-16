@@ -27,17 +27,12 @@ namespace whm
     WarehouseSimulator_t::WarehouseSimulator_t()
         : stats{ true }
         , optimizationMode{ false }
+        , multipleExperiments{ false }
         , cfg{ ConfigParser_t{ "cfg/simulator.xml" } }
         , whLayout{ WarehouseLayout_t::getWhLayout() }
         , whPathFinder{ new WarehousePathFinder_t() }
     {
 
-    }
-
-    WarehouseSimulator_t& WarehouseSimulator_t::getWhSimulator()
-    {
-        static WarehouseSimulator_t s;
-        return s;
     }
 
 #   ifdef WHM_GUI
@@ -91,13 +86,12 @@ namespace whm
 
             for(auto itLine = order.begin(); itLine != order.end(); ++itLine)
             {
-                static const auto& lookup = [&](const WarehouseOrderLine_t& line) -> bool
-                                            {
-                                                return utils::intersects(lookupWhLocations(line.getArticle(), 0),
-                                                                         lookupWhLocations(itLine->getArticle(), 0));
-                                            };
-
-                auto itTargetLine = std::find_if(newLines.begin(), newLines.end(), lookup);
+                auto itTargetLine = std::find_if(newLines.begin(), newLines.end(),
+                                                 [&](const WarehouseOrderLine_t& line) -> bool
+                                                 {
+                                                    return utils::intersects(lookupWhLocations(line.getArticle(), 0),
+                                                                             lookupWhLocations(itLine->getArticle(), 0));
+                                                 });
 
                 if(itTargetLine != newLines.end())
                 {
@@ -121,9 +115,7 @@ namespace whm
 
     double WarehouseSimulator_t::runSimulation()
     {
-        static bool multipleExperiment{ false };
-
-        if(!multipleExperiment)
+        if(!multipleExperiments)
         {
             whPathFinder->precalculatePaths(whLayout.getWhItems());
 
@@ -141,14 +133,14 @@ namespace whm
 
             if(optimizationModeActive())
             {
-                multipleExperiment = !multipleExperiment;
+                multipleExperiments = !multipleExperiments;
             }
         }
 
         //SetCalendar("cq");
         Init(0);
         clearSimulation();
-        (new OrderRequest_t(whLayout))->Activate();
+        (new OrderRequest_t(whLayout, *this))->Activate();
         Run();
 
         return Time;
@@ -156,19 +148,21 @@ namespace whm
 
     void WarehouseSimulator_t::orderFinished(double duration, double durationNonSim, int32_t distance)
     {
-        static double  minDuration  = std::numeric_limits<double>::max();
-        static double  maxDuration  = std::numeric_limits<double>::min();
-        static double  sumDuration  = 0.0;
-        static double  sumDurNonSim = 0.0;
-        static int32_t sumDistance  = 0;
-        static size_t  finished     = 0;
+        (void) distance;
+        (void) durationNonSim;
 
-        ++finished;
-        minDuration  = duration < minDuration ? duration : minDuration;
-        maxDuration  = duration > maxDuration ? duration : maxDuration;
-        sumDuration  = duration + sumDuration ;
-        sumDurNonSim = durationNonSim + sumDurNonSim;
-        sumDistance  = distance + sumDistance ;
+        //static double  minDuration  = std::numeric_limits<double>::max();
+        //static double  maxDuration  = std::numeric_limits<double>::min();
+        //static double  sumDuration  = 0.0;
+        //static double  sumDurNonSim = 0.0;
+        //static int32_t sumDistance  = 0;
+
+        ++ordersFinished;
+        //minDuration  = duration < minDuration ? duration : minDuration;
+        //maxDuration  = duration > maxDuration ? duration : maxDuration;
+        //sumDuration  = duration + sumDuration ;
+        //sumDurNonSim = durationNonSim + sumDurNonSim;
+        //sumDistance  = distance + sumDistance ;
 
 #       ifdef WHM_GUI
         if(uiCallback)
@@ -177,7 +171,7 @@ namespace whm
         }
 #       endif
 
-        if(finished == whLayout.getWhOrders().size())
+        if(ordersFinished == whLayout.getWhOrders().size())
         {
 #           ifdef WHM_GUI
             if(uiCallback)
@@ -189,12 +183,12 @@ namespace whm
             if(stats)
             {
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed orders count:   [-] <%d>", finished);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Total traveled distance:  [m] <%d>", sumDistance);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Duration non-realistic:   [s] <%f>", sumDurNonSim);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Min order process time:   [s] <%f>", minDuration);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Max order process time:   [s] <%f>", maxDuration);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Sum order process time:   [s] <%f>", sumDuration);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed orders count:   [-] <%d>", ordersFinished);
+                //Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Total traveled distance:  [m] <%d>", sumDistance);
+                //Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Duration non-realistic:   [s] <%f>", sumDurNonSim);
+                //Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Min order process time:   [s] <%f>", minDuration);
+                //Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Max order process time:   [s] <%f>", maxDuration);
+                //Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Sum order process time:   [s] <%f>", sumDuration);
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in:   [s] <%f>", Time);
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
 
@@ -211,12 +205,12 @@ namespace whm
             }
 
             // Reset
-            finished     = 0;
-            minDuration  = std::numeric_limits<double>::max();
-            maxDuration  = std::numeric_limits<double>::min();
-            sumDuration  = 0.0;
-            sumDurNonSim = 0.0;
-            sumDistance  = 0;
+            ordersFinished     = 0;
+            //minDuration  = std::numeric_limits<double>::max();
+            //maxDuration  = std::numeric_limits<double>::min();
+            //sumDuration  = 0.0;
+            //sumDurNonSim = 0.0;
+            //sumDistance  = 0;
 
             Stop(); // Abort();
         }
@@ -330,8 +324,9 @@ namespace whm
 
     // ================================================================================================================
 
-    OrderRequest_t::OrderRequest_t(WarehouseLayout_t& layout_)
+    OrderRequest_t::OrderRequest_t(WarehouseLayout_t& layout_, WarehouseSimulator_t& sim_)
         : layout(layout_)
+        , sim(sim_)
         , it(layout.getWhOrders().begin())
     {
 
@@ -344,7 +339,6 @@ namespace whm
         double  totalDuration = 0.0;
         double  waitDuration = 0.0;
         double  processDuration = Time;
-        auto&   sim = WarehouseSimulator_t::getWhSimulator();
 
         const auto& handleFacility = [&](int32_t itemID)
                                         {
@@ -410,20 +404,21 @@ namespace whm
         sim.orderFinished(Time - processDuration, totalDuration, totalDistance);
     }
 
-    OrderProcessor_t::OrderProcessor_t(WarehouseOrder_t order_)
+    OrderProcessor_t::OrderProcessor_t(WarehouseOrder_t order_, WarehouseSimulator_t& sim_)
         : order(order_)
+        , sim(sim_)
     {
 
     }
 
     void OrderRequest_t::Behavior()
     {
-        (new OrderProcessor_t(*it))->Activate();
+        (new OrderProcessor_t(*it, sim))->Activate();
 
         if(++it != layout.getWhOrders().end())
         {
             // TODO: Poisson distribution
-            Activate(Time + (WarehouseSimulator_t::getWhSimulator().getConfig().getAs<double>("orderRequestInterval")));
+            Activate(Time + (sim.getConfig().getAs<double>("orderRequestInterval")));
         }
     }
 }
