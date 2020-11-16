@@ -289,20 +289,6 @@
                 </layout>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="articlesLayout">
-                 <item>
-                  <widget class="QLineEdit" name="articlesLine"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="articlesLoad">
-                   <property name="text">
-                    <string>Load articles</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
                 <layout class="QHBoxLayout" name="locationsLayout">
                  <item>
                   <widget class="QLineEdit" name="locationsLine"/>
@@ -998,20 +984,6 @@
                   <widget class="QPushButton" name="ordersSaveGen">
                    <property name="text">
                     <string>Save orders</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="articlesLayoutGen">
-                 <item>
-                  <widget class="QLineEdit" name="articlesLineGen"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="articlesLoadGen">
-                   <property name="text">
-                    <string>Load articles</string>
                    </property>
                   </widget>
                  </item>

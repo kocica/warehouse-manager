@@ -226,6 +226,21 @@ namespace whm
         csvStream.close();
     }
 
+    void WarehouseLayout_t::exportArticles(const std::string& csvFilename, std::vector<std::string>& articles)
+    {
+        std::ofstream csvStream;
+        csvStream.open(csvFilename);
+
+        csvStream << "ArticleName" << std::endl;
+
+        for(const auto& article : articles)
+        {
+            csvStream << article << "\r\n";
+        }
+
+        csvStream.close();
+    }
+
     void WarehouseLayout_t::addWhItem(WarehouseItem_t* i)
     {
         whItems.push_back(i);

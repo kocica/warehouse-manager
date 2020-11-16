@@ -598,7 +598,7 @@ namespace whm
         void MainWindow::on_startOptimization_clicked()
         {
             std::string o = ui->ordersLine->text().toUtf8().constData();
-            std::string a = ui->articlesLine->text().toUtf8().constData();
+            std::string a = exportArticles();
             std::string l = ui->locationsLine->text().toUtf8().constData();
 
             if(o.empty() || a.empty() || l.empty())
@@ -703,17 +703,6 @@ namespace whm
             ui->ordersLine->setText(file);
         }
 
-        void MainWindow::on_articlesLoad_clicked()
-        {
-            QString file = QFileDialog::getOpenFileName(this, tr("Import articles"), "", tr("Articles (*.csv)"));
-            if (file.cbegin() == file.cend())
-            {
-                return;
-            }
-
-            ui->articlesLine->setText(file);
-        }
-
         void MainWindow::on_locationsLoad_clicked()
         {
             QString file = QFileDialog::getOpenFileName(this, tr("Import locations"), "", tr("Locations (*.csv)"));
@@ -794,17 +783,6 @@ namespace whm
             ui->ordersLineGen->setText(file);
         }
 
-        void MainWindow::on_articlesLoadGen_clicked()
-        {
-            QString file = QFileDialog::getOpenFileName(this, tr("Import articles"), "", tr("Articles (*.csv)"));
-            if (file.cbegin() == file.cend())
-            {
-                return;
-            }
-
-            ui->articlesLineGen->setText(file);
-        }
-
         void MainWindow::on_configLoadGen_clicked()
         {
             QString file = QFileDialog::getOpenFileName(this, tr("Generator configuration"), "", tr("Generator configuration (*.xml)"));
@@ -827,7 +805,7 @@ namespace whm
         void MainWindow::on_startGenerating_clicked()
         {
             std::string o = ui->ordersLineGen->text().toUtf8().constData();
-            std::string a = ui->articlesLineGen->text().toUtf8().constData();
+            std::string a = exportArticles();
 
             if(o.empty() || a.empty())
             {
@@ -1168,6 +1146,28 @@ namespace whm
 
             p->setBackground(QColor(25, 35, 45));
             p->axisRect()->setBackground(QColor(25, 35, 45));
+        }
+
+        std::string MainWindow::exportArticles()
+        {
+            std::string f = tmpnam(nullptr);
+            std::vector<std::string> articles;
+
+            if(articlesModel->rowCount() == 0)
+            {
+                return std::string();
+            }
+
+            for(int32_t r = 0; r < articlesModel->rowCount(); ++r)
+            {
+                QModelIndex index = articlesModel->index(r, 0);
+                std::string article = articlesModel->data(index).toString().toUtf8().constData();
+                articles.push_back(std::move(article));
+            }
+
+            WarehouseLayout_t::getWhLayout().exportArticles(f, articles);
+
+            return f;
         }
 
         void CustomizedGraphicsScene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)

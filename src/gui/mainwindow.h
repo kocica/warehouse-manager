@@ -80,7 +80,6 @@ namespace whm
 
                 // Optimizer
                 void on_ordersLoad_clicked();
-                void on_articlesLoad_clicked();
                 void on_locationsLoad_clicked();
                 void on_configLoad_clicked();
                 void on_startOptimization_clicked();
@@ -88,7 +87,6 @@ namespace whm
 
                 // Generator
                 void on_ordersSaveGen_clicked();
-                void on_articlesLoadGen_clicked();
                 void on_configLoadGen_clicked();
                 void on_startGenerating_clicked();
                 void on_stopGenerating_clicked();
@@ -109,10 +107,12 @@ namespace whm
                 void on_importLocations_clicked();
                 void on_exportLocations_clicked();
 
-            private:
+            protected:
+                std::string exportArticles();
                 void importLocations();
                 void stylePlot(QCustomPlot*);
 
+            private:
                 int32_t whR{ 0 };
                 int32_t whX{ 0 };
                 int32_t whY{ 0 };
