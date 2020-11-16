@@ -17,6 +17,7 @@
 
 // Qt
 #include <QMainWindow>
+#include "qcustomplot.h"
 #include <QElapsedTimer>
 #include <QGraphicsScene>
 #include <QStandardItemModel>
@@ -109,6 +110,8 @@ namespace whm
                 void on_exportLocations_clicked();
 
             private:
+                void stylePlot(QCustomPlot*);
+
                 int32_t whR{ 0 };
                 int32_t whX{ 0 };
                 int32_t whY{ 0 };

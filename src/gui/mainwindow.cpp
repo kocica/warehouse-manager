@@ -161,18 +161,20 @@ namespace whm
             ui->fitnessPlot->addGraph();
             ui->fitnessPlot->xAxis->setLabel("Steps");
             ui->fitnessPlot->yAxis->setLabel("Fitness");
+            ui->fitnessPlot->graph(0)->setPen(QPen(QColor(255, 255, 0)));
 
             ui->simulationPlot->addGraph();
             ui->simulationPlot->xAxis->setLabel("Order");
             ui->simulationPlot->yAxis->setLabel("Processing time [s]");
+            ui->simulationPlot->graph(0)->setPen(QPen(QColor(255, 255, 0)));
             ui->simulationPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
             ui->simulationPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssPlus);
 
             ui->generatorPlot->addGraph();
             ui->generatorPlot->xAxis->setLabel("x");
             ui->generatorPlot->yAxis->setLabel("y");
-            ui->generatorPlot->graph(0)->setPen(QPen(QColor(0, 0, 255)));
-            ui->generatorPlot->graph(0)->setBrush(QBrush(QColor(0, 0, 255)));
+            ui->generatorPlot->graph(0)->setPen(QPen(QColor(255, 255, 0)));
+            ui->generatorPlot->graph(0)->setBrush(QBrush(QColor(255, 255, 0)));
             ui->generatorPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
 
             ui->generatorPlot->addGraph();
@@ -181,6 +183,10 @@ namespace whm
             ui->generatorPlot->graph(1)->setPen(QPen(QColor(255, 0, 0)));
             ui->generatorPlot->graph(1)->setBrush(QBrush(QColor(255, 0, 0)));
             ui->generatorPlot->graph(1)->setScatterStyle(QCPScatterStyle::ssDiamond);
+
+            stylePlot(ui->fitnessPlot);
+            stylePlot(ui->generatorPlot);
+            stylePlot(ui->simulationPlot);
         }
 
         MainWindow::~MainWindow()
@@ -1123,18 +1129,48 @@ namespace whm
             locationsModel->clear();
         }
 
+        void MainWindow::stylePlot(QCustomPlot* p)
+        {
+            p->xAxis->setBasePen(QPen(Qt::white, 1));
+            p->yAxis->setBasePen(QPen(Qt::white, 1));
+            p->xAxis->setLabelColor(Qt::white);
+            p->yAxis->setLabelColor(Qt::white);
+            p->xAxis->setTickPen(QPen(Qt::white, 1));
+            p->yAxis->setTickPen(QPen(Qt::white, 1));
+            p->xAxis->setSubTickPen(QPen(Qt::white, 1));
+            p->yAxis->setSubTickPen(QPen(Qt::white, 1));
+            p->xAxis->setTickLabelColor(Qt::white);
+            p->yAxis->setTickLabelColor(Qt::white);
+            p->xAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
+            p->yAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
+            p->xAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
+            p->yAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
+            p->xAxis->grid()->setSubGridVisible(true);
+            p->yAxis->grid()->setSubGridVisible(true);
+            p->xAxis->grid()->setZeroLinePen(Qt::NoPen);
+            p->yAxis->grid()->setZeroLinePen(Qt::NoPen);
+            p->xAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
+            p->yAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
+
+            p->setBackground(QColor(25, 35, 45));
+            p->axisRect()->setBackground(QColor(25, 35, 45));
+        }
+
         void CustomizedGraphicsScene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         {
             auto* item = itemAt(event->scenePos().toPoint(), QTransform());
 
+            UiWarehouseItem_t* whItem{ nullptr };
+
             if(!item)
             {
+                QGraphicsScene::contextMenuEvent(event);
                 return;
             }
 
             auto* menu = new QMenu(event->widget());
 
-            if(auto* whItem = dynamic_cast<UiWarehouseItem_t*>(item))
+            if((whItem = dynamic_cast<UiWarehouseItem_t*>(item)))
             {
                 if(whItem->isConnected())
                 {
@@ -1143,8 +1179,26 @@ namespace whm
                     menu->addAction(disconnect);
                 }
             }
+            else if(auto* whSlot = dynamic_cast<UiWarehouseSlot_t*>(item))
+            {
+                whItem = dynamic_cast<UiWarehouseItem_t*>(whSlot->getParent());
+
+                if(whItem->isConnected())
+                {
+                    QAction* disconnect = new QAction("Disconnect", this);
+                    connect(disconnect, &QAction::triggered, [&whItem](){ whItem->disconnect(); });
+                    menu->addAction(disconnect);
+                }
+            }
+            else
+            {
+                QGraphicsScene::contextMenuEvent(event);
+                return;
+            }
 
             menu->exec(event->screenPos());
+
+            QGraphicsScene::contextMenuEvent(event);
         }
     }
 }
