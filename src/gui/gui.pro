@@ -4,7 +4,7 @@ QT               += core gui widgets
 QMAKE_CXXFLAGS   += -std=c++17
 DEFINES          += QT_DEPRECATED_WARNINGS
 DEFINES          += "WHM_GUI" "WHM_SIM" "WHM_OPT" "WHM_GEN"
-LIBS             += -lsimlib -lm
+LIBS             += -lsimlib -lm -lstdc++fs
 
 OBJECTS += ../tinyxml2.o
 

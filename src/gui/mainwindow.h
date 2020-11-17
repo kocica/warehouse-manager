@@ -160,6 +160,11 @@ namespace whm
 
                 QVector<double> orders;
                 QVector<double> processingDurations;
+
+                const std::string tmpDir       = ".tmp";
+                const std::string tmpOrders    = ".tmp/orders.xml";
+                const std::string tmpArticles  = ".tmp/articles.csv";
+                const std::string tmpLocations = ".tmp/locations.csv";
         };
     }
 }

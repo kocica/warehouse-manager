@@ -10,6 +10,7 @@
 // Standard
 #include <iostream>
 #include <algorithm>
+#include <experimental/filesystem> // TODO: Why <filesystem> does not work?
 
 // Local
 #include "UiCursor.h"
@@ -53,6 +54,8 @@ namespace whm
 {
     namespace gui
     {
+        namespace fs = std::experimental::filesystem;
+
         MainWindow::MainWindow(QWidget *parent)
             : QMainWindow(parent)
             , ui(new Ui::MainWindow)
@@ -73,6 +76,8 @@ namespace whm
             }
 
             qRegisterMetaType<std::string>();
+
+            fs::create_directory(tmpDir);
 
             // Get warehouse dimensions
             auto dialog  = new QDialog(this);
@@ -201,6 +206,11 @@ namespace whm
         MainWindow::~MainWindow()
         {
             UiWarehouseLayout_t::getWhLayout().clearWhLayout();
+
+            if(fs::exists(tmpDir))
+            {
+                fs::remove_all(tmpDir);
+            }
 
             delete ui;
         }
@@ -837,7 +847,7 @@ namespace whm
 
         void MainWindow::on_startGenerating_clicked()
         {
-            std::string o = tmpnam(nullptr);
+            std::string o = tmpOrders;
             std::string a = exportArticles();
 
             if(a.empty())
@@ -855,7 +865,7 @@ namespace whm
             cfg.set("sigmaLines",   std::to_string(ui->orlCountSigma->value()));
 
             cfg.set("articlesPath", a);
-            cfg.set("ordersPath", o + ".xml");
+            cfg.set("ordersPath", o);
 
             cfg.dump();
 
@@ -1208,7 +1218,7 @@ namespace whm
 
         std::string MainWindow::exportArticles()
         {
-            std::string f = tmpnam(nullptr);
+            std::string f = tmpArticles;
             std::vector<std::string> articles;
 
             if(articlesModel->rowCount() == 0)
@@ -1230,7 +1240,7 @@ namespace whm
 
         std::string MainWindow::exportLocations()
         {
-            std::string f = tmpnam(nullptr);
+            std::string f = tmpLocations;
 
             if(locationsModel->rowCount() == 0)
             {
@@ -1257,7 +1267,7 @@ namespace whm
 
             if(f.empty())
             {
-                f = tmpnam(nullptr);
+                f = tmpOrders;
             }
 
             WarehouseLayout_t::getWhLayout().clearWhOrders();
