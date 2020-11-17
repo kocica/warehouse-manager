@@ -457,6 +457,7 @@ namespace whm
             // Model update
 
             auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
+            auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
 
             QStringList labels = { "Location ID", "Slot x", "Slot y", "Article", "Quantity" };
 
@@ -488,6 +489,36 @@ namespace whm
                             locationsModel->setItem(row, 4, quantity);
 
                             ++row;
+                        }
+                    }
+                }
+            }
+
+            for(auto* item : items)
+            {
+                if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                {
+                    for(auto* uiItem : uiItems)
+                    {
+                        if(item->getWhItemID() == uiItem->getWhItemID())
+                        {
+                            dynamic_cast<UiWarehouseItemLocation_t*>(uiItem)->importSlots(*item);
+                        }
+                    }
+                }
+            }
+
+            for(auto* item : uiItems)
+            {
+                if(item->getWhItemType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                {
+                    for(auto* slot : dynamic_cast<UiWarehouseItemLocation_t*>(item)->getSlots())
+                    {
+                        std::string article = slot->getArticle();
+
+                        if(!article.empty())
+                        {
+                            slot->setSlotHeat(heatMax, heatMin, heatMap[article]);
                         }
                     }
                 }

@@ -24,6 +24,10 @@ namespace whm
 {
     namespace gui
     {
+        int32_t heatMax;
+        int32_t heatMin;
+        std::map<std::string, int32_t> heatMap;
+
         UiWarehouseOptimizerThread_t::UiWarehouseOptimizerThread_t(const whm::ConfigParser_t& cfg_, int32_t opt_)
             : opt(opt_)
             , cfg(cfg_)
@@ -42,7 +46,9 @@ namespace whm
             whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.locationsPath);
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
-            std::map<std::string, int32_t> heatMap;
+            heatMap.clear();
+            heatMax = std::numeric_limits<int32_t>::min();
+            heatMin = std::numeric_limits<int32_t>::max();
 
             for(auto& order : ::whm::WarehouseLayout_t::getWhLayout().getWhOrders())
             {
@@ -52,13 +58,10 @@ namespace whm
                 }
             }
 
-            int32_t max{ std::numeric_limits<int32_t>::min() };
-            int32_t min{ std::numeric_limits<int32_t>::max() };
-
             for(auto& m : heatMap)
             {
-                max = m.second > max ? m.second : max;
-                min = m.second < min ? m.second : min;
+                heatMax = m.second > heatMax ? m.second : heatMax;
+                heatMin = m.second < heatMin ? m.second : heatMin;
             }
 
             whm::WarehouseOptimizerBase_t* optimizer{ nullptr };
@@ -74,40 +77,8 @@ namespace whm
             optimizer->setUiCallback([&](double fitness)
                                      {
                                         emit optimizationStep(fitness);
-
-                                        auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
-                                        auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
-
-                                        for(auto* item : items)
-                                        {
-                                            if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
-                                            {
-                                                for(auto* uiItem : uiItems)
-                                                {
-                                                    if(item->getWhItemID() == uiItem->getWhItemID())
-                                                    {
-                                                        dynamic_cast<UiWarehouseItemLocation_t*>(uiItem)->importSlots(*item);
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        for(auto* item : UiWarehouseLayout_t::getWhLayout().getWhItems())
-                                        {
-                                            if(item->getWhItemType() == WarehouseItemType_t::E_LOCATION_SHELF)
-                                            {
-                                                for(auto* slot : dynamic_cast<UiWarehouseItemLocation_t*>(item)->getSlots())
-                                                {
-                                                    std::string article = slot->getArticle();
-
-                                                    if(!article.empty())
-                                                    {
-                                                        slot->setSlotHeat(max, min, heatMap[article]);
-                                                    }
-                                                }
-                                            }
-                                        }
                                      });
+
             optimizer->optimize();
 
             emit optimizationFinished();
