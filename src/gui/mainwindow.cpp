@@ -442,7 +442,7 @@ namespace whm
 
             ui->fitnessPlot->graph(0)->setData(steps, fitnesses);
             ui->fitnessPlot->replot();
-            ui->fitnessPlot->graph(0)->rescaleAxes(true);
+            ui->fitnessPlot->graph(0)->rescaleAxes();
 
             double max = *std::max_element(fitnesses.begin(), fitnesses.end());
 
@@ -457,7 +457,6 @@ namespace whm
             // Model update
 
             auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
-            auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
 
             QStringList labels = { "Location ID", "Slot x", "Slot y", "Article", "Quantity" };
 
@@ -582,7 +581,7 @@ namespace whm
 
             ui->simulationPlot->graph(0)->setData(orders, processingDurations);
             ui->simulationPlot->replot();
-            ui->simulationPlot->graph(0)->rescaleAxes(true);
+            ui->simulationPlot->graph(0)->rescaleAxes();
 
             double max = *std::max_element(processingDurations.begin(), processingDurations.end());
 
