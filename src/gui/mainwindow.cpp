@@ -72,6 +72,8 @@ namespace whm
                 qApp->setStyleSheet(ts.readAll());
             }
 
+            qRegisterMetaType<std::string>();
+
             // Get warehouse dimensions
             auto dialog  = new QDialog(this);
             auto form    = new QFormLayout(dialog);
@@ -388,10 +390,22 @@ namespace whm
             ui->optimizationProgressBar->setValue(0);
         }
 
-        void MainWindow::generatingFinished()
+        void MainWindow::generatingFinished(std::string f)
         {
             xadu.clear();
             xorl.clear();
+
+            if(!f.empty())
+            {
+                std::string test = f;
+                test.replace(test.find_last_of("."), 0, "_test");
+
+                std::string train = f;
+                train.replace(train.find_last_of("."), 0, "_train");
+
+                importOrders(false, test);
+                importOrders(true, train);
+            }
         }
 
         void MainWindow::simulationFinished(double time)
@@ -823,10 +837,10 @@ namespace whm
 
         void MainWindow::on_startGenerating_clicked()
         {
-            std::string o = ""; // TODO: Temporary file
+            std::string o = tmpnam(nullptr);
             std::string a = exportArticles();
 
-            if(o.empty() || a.empty())
+            if(a.empty())
             {
                 QMessageBox::warning(nullptr, "Warning", "Load all required data first!");
                 return;
@@ -841,7 +855,7 @@ namespace whm
             cfg.set("sigmaLines",   std::to_string(ui->orlCountSigma->value()));
 
             cfg.set("articlesPath", a);
-            cfg.set("ordersPath", o);
+            cfg.set("ordersPath", o + ".xml");
 
             cfg.dump();
 
@@ -852,8 +866,8 @@ namespace whm
             connect(generatorUi, SIGNAL(finished()),
                     generatorUi, SLOT(deleteLater()));
 
-            connect(generatorUi, SIGNAL(generatingFinished()),
-                    this,        SLOT(generatingFinished()));
+            connect(generatorUi, SIGNAL(generatingFinished(std::string)),
+                    this,        SLOT(generatingFinished(std::string)));
 
             connect(generatorUi, SIGNAL(newGeneratedValue(int, int)),
                     this,        SLOT(newGeneratedValue(int, int)));
@@ -868,7 +882,7 @@ namespace whm
                 generatorUi->terminate();
                 generatorUi->wait();
                 generatorUi = nullptr;
-                generatingFinished();
+                generatingFinished(std::string());
             }
         }
 
@@ -969,12 +983,17 @@ namespace whm
             importOrders(true);
         }
 
-        void MainWindow::importOrders(bool train)
+        void MainWindow::importOrders(bool train, std::string f)
         {
-            QString file = QFileDialog::getOpenFileName(this, tr("Import orders"), "", tr("Orders (*.xml)"));
-            if (file.cbegin() == file.cend())
+            if(f.empty())
             {
-                return;
+                QString file = QFileDialog::getOpenFileName(this, tr("Import orders"), "", tr("Orders (*.xml)"));
+                if (file.cbegin() == file.cend())
+                {
+                    return;
+                }
+
+                f = file.toUtf8().constData();
             }
 
             QStringList labels = { "Order ID", "Line ID", "Product", "Quantity" };
@@ -985,7 +1004,7 @@ namespace whm
             m->setHorizontalHeaderLabels(labels);
 
             whm::WarehouseLayout_t::getWhLayout().clearWhOrders();
-            whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(file.toUtf8().constData());
+            whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(f);
 
             int32_t row{ 0 };
 

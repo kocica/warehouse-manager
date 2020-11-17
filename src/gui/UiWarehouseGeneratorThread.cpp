@@ -41,7 +41,7 @@ namespace whm
 
             datagen.generateData();
 
-            emit generatingFinished();
+            emit generatingFinished(args.ordersPath);
         }
     }
 }

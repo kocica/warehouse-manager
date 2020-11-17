@@ -27,6 +27,8 @@ namespace Ui
     class MainWindow;
 }
 
+Q_DECLARE_METATYPE(std::string);
+
 namespace whm
 {
     namespace gui
@@ -55,10 +57,15 @@ namespace whm
                 bool& isOptimizationActive();
 
             public slots:
+                // Optimizer slots
                 void optimizationFinished();
                 void optimizationStep(double);
-                void generatingFinished();
+
+                // Generator slots
+                void generatingFinished(std::string);
                 void newGeneratedValue(int, int);
+
+                // Simulator slots
                 void simulationFinished(double);
                 void orderSimulationFinished(double);
 
@@ -118,8 +125,8 @@ namespace whm
                 std::string exportLocations();
                 std::string exportOrders(bool, std::string f = "");
 
-                void importOrders(bool);
                 void importLocations();
+                void importOrders(bool, std::string f = "");
 
                 void stylePlot(QCustomPlot*);
 

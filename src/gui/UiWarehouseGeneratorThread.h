@@ -27,8 +27,8 @@ namespace whm
                 void run() override;
 
             signals:
-                void generatingFinished();
                 void newGeneratedValue(int, int);
+                void generatingFinished(std::string);
 
             private:
                 whm::ConfigParser_t cfg;

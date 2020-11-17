@@ -28,7 +28,11 @@ Optimizer (train on train set of orders):
  + Funkce ktera to rozradi podle SLAPu a vyblije nejlepsi slot/article alokaci
 
  - Disable buttons/etc. (whole control panel ???) until optimization / generating is over
- - Optimization terminating dialog (wait when stopped)
  - Order count in simulator UI
- - Running opt UI and sim UI and vice versa
  - ConfigParser "Field <%s> not found!" - exception - exception handling
+
+
+ - When opt/gen/sim running, disable buttons
+ - When going into thread "wait", show some waiting dialog
+ - Resize of object - Cannot select due to incorrect mRect (has to move the item to recalculate)
+ - Segfault when resizing objects and using ports/deleting
