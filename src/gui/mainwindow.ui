@@ -69,26 +69,33 @@
           <property name="currentIndex">
            <number>0</number>
           </property>
-          <widget class="QWidget" name="orders">
+          <widget class="QWidget" name="trainOrders">
            <attribute name="title">
-            <string>Orders</string>
+            <string>Train orders</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_12">
             <item>
-             <widget class="QGroupBox" name="ordersControls">
+             <widget class="QGroupBox" name="trainOrderControls">
               <property name="title">
                <string>Controls</string>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_2">
                <item>
-                <widget class="QPushButton" name="importOrders">
+                <widget class="QPushButton" name="importTrainOrders">
                  <property name="text">
                   <string>Import</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="clearOrders">
+                <widget class="QPushButton" name="exportTrainOrders">
+                 <property name="text">
+                  <string>Export</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="clearTrainOrders">
                  <property name="text">
                   <string>Clear</string>
                  </property>
@@ -98,7 +105,47 @@
              </widget>
             </item>
             <item>
-             <widget class="QTableView" name="ordersTableView"/>
+             <widget class="QTableView" name="trainOrdersTableView"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="testOrders">
+           <attribute name="title">
+            <string>Test Orders</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_21">
+            <item>
+             <widget class="QGroupBox" name="testOrderControls">
+              <property name="title">
+               <string>Controls</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <widget class="QPushButton" name="importTestOrders">
+                 <property name="text">
+                  <string>Import</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="exportTestOrders">
+                 <property name="text">
+                  <string>Export</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="clearTestOrders">
+                 <property name="text">
+                  <string>Clear</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableView" name="testOrdersTableView"/>
             </item>
            </layout>
           </widget>
@@ -269,41 +316,18 @@
            </attribute>
            <layout class="QVBoxLayout" name="optimizerSettings">
             <item>
-             <widget class="QGroupBox" name="data">
-              <property name="title">
-               <string>Data</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_3">
-               <item>
-                <layout class="QHBoxLayout" name="ordersLayout">
-                 <item>
-                  <widget class="QLineEdit" name="ordersLine"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="ordersLoad">
-                   <property name="text">
-                    <string>Load orders</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
              <widget class="QGroupBox" name="parameters">
               <property name="title">
                <string>Parameters</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
-                <layout class="QHBoxLayout" name="configLoadLayout">
+                <layout class="QHBoxLayout" name="configLayoutOpt">
                  <item>
-                  <widget class="QLineEdit" name="configLoadLine"/>
+                  <widget class="QLineEdit" name="configLineOpt"/>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="configLoad">
+                  <widget class="QPushButton" name="configLoadOpt">
                    <property name="text">
                     <string>Load config</string>
                    </property>
@@ -956,29 +980,6 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <widget class="QGroupBox" name="dataGen">
-              <property name="title">
-               <string>Data</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_5">
-               <item>
-                <layout class="QHBoxLayout" name="ordersLayoutGen">
-                 <item>
-                  <widget class="QLineEdit" name="ordersLineGen"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="ordersSaveGen">
-                   <property name="text">
-                    <string>Save orders</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
              <widget class="QGroupBox" name="generatorParameters">
               <property name="title">
                <string>Parameters</string>
@@ -1246,29 +1247,6 @@
             <string>Simulator</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_11">
-            <item>
-             <widget class="QGroupBox" name="dataGroupSim">
-              <property name="title">
-               <string>Data</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_9">
-               <item>
-                <layout class="QHBoxLayout" name="ordersLayoutSim">
-                 <item>
-                  <widget class="QLineEdit" name="ordersLineSim"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="ordersLoadSim">
-                   <property name="text">
-                    <string>Load orders</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
             <item>
              <widget class="QGroupBox" name="simulatorParameters">
               <property name="title">

@@ -65,11 +65,12 @@ namespace whm
             private slots:
                 void mousePressEvent(QMouseEvent *);
 
-                // Toolbar
+                // Toolbar - layout control
                 void on_loadLayout_triggered();
                 void on_saveLayout_triggered();
                 void on_clearLayout_triggered();
 
+                // Toolbar - workspace control
                 void on_deletionMode_toggled(bool);
                 void on_selectionMode_toggled(bool);
                 void on_whItemLocation_toggled(bool);
@@ -79,28 +80,35 @@ namespace whm
                 void on_whItemExit_toggled(bool);
 
                 // Optimizer
-                void on_ordersLoad_clicked();
-                void on_configLoad_clicked();
+                void on_configLoadOpt_clicked();
                 void on_startOptimization_clicked();
                 void on_stopOptimization_clicked();
 
                 // Generator
-                void on_ordersSaveGen_clicked();
                 void on_configLoadGen_clicked();
                 void on_startGenerating_clicked();
                 void on_stopGenerating_clicked();
 
                 // Simulator
-                void on_ordersLoadSim_clicked();
                 void on_configLoadSim_clicked();
                 void on_startSimulation_clicked();
                 void on_stopSimulation_clicked();
 
-                // Data
-                void on_clearOrders_clicked();
-                void on_importOrders_clicked();
+                // Data - test orders
+                void on_clearTestOrders_clicked();
+                void on_clearTrainOrders_clicked();
+                void on_importTestOrders_clicked();
+
+                // Data - train orders
+                void on_importTrainOrders_clicked();
+                void on_exportTestOrders_clicked();
+                void on_exportTrainOrders_clicked();
+
+                // Data - articles
                 void on_clearArticles_clicked();
                 void on_importArticles_clicked();
+
+                // Data - locations
                 void on_clearLocations_clicked();
                 void on_importLocations_clicked();
                 void on_exportLocations_clicked();
@@ -108,7 +116,11 @@ namespace whm
             protected:
                 std::string exportArticles();
                 std::string exportLocations();
+                std::string exportOrders(bool, std::string f = "");
+
+                void importOrders(bool);
                 void importLocations();
+
                 void stylePlot(QCustomPlot*);
 
             private:
@@ -122,9 +134,10 @@ namespace whm
                 QElapsedTimer generationElapsedTime;
                 QElapsedTimer optimizationElapsedTime;
 
-                QStandardItemModel* ordersModel{ nullptr };
                 QStandardItemModel* articlesModel{ nullptr };
                 QStandardItemModel* locationsModel{ nullptr };
+                QStandardItemModel* ordersTestModel{ nullptr };
+                QStandardItemModel* ordersTrainModel{ nullptr };
 
                 UiWarehouseOptimizerThread_t* optimizerUi{ nullptr };
                 UiWarehouseGeneratorThread_t* generatorUi{ nullptr };

@@ -56,9 +56,10 @@ namespace whm
         MainWindow::MainWindow(QWidget *parent)
             : QMainWindow(parent)
             , ui(new Ui::MainWindow)
-            , ordersModel(new QStandardItemModel())
             , articlesModel(new QStandardItemModel())
             , locationsModel(new QStandardItemModel())
+            , ordersTestModel(new QStandardItemModel())
+            , ordersTrainModel(new QStandardItemModel())
         {
             ui->setupUi(this);
 
@@ -143,8 +144,12 @@ namespace whm
             ui->loadLayout->setIcon(QIcon(":/img/load.png"));
             ui->clearLayout->setIcon(QIcon(":/img/clear.png"));
 
-            ui->clearOrders->setIcon(QIcon(":/img/clear.png"));
-            ui->importOrders->setIcon(QIcon(":/img/import.png"));
+            ui->clearTestOrders->setIcon(QIcon(":/img/clear.png"));
+            ui->importTestOrders->setIcon(QIcon(":/img/import.png"));
+            ui->exportTestOrders->setIcon(QIcon(":/img/export.png"));
+            ui->clearTrainOrders->setIcon(QIcon(":/img/clear.png"));
+            ui->importTrainOrders->setIcon(QIcon(":/img/import.png"));
+            ui->exportTrainOrders->setIcon(QIcon(":/img/export.png"));
             ui->clearArticles->setIcon(QIcon(":/img/clear.png"));
             ui->importArticles->setIcon(QIcon(":/img/import.png"));
             ui->clearLocations->setIcon(QIcon(":/img/clear.png"));
@@ -154,7 +159,9 @@ namespace whm
             ui->deletionMode->setIcon(QIcon(":/img/delete.png"));
             ui->selectionMode->setIcon(QIcon(":/img/select.png"));
 
-            ui->configLoad->setIcon(QIcon(":/img/config.png"));
+            ui->configLoadOpt->setIcon(QIcon(":/img/config.png"));
+            ui->configLoadGen->setIcon(QIcon(":/img/config.png"));
+            ui->configLoadSim->setIcon(QIcon(":/img/config.png"));
             ui->selectionMode->toggle();
 
             // Plots
@@ -634,16 +641,17 @@ namespace whm
             ::whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             UiWarehouseLayout_t::getWhLayout().clearWhLayout();
 
-            ordersModel->clear();
             articlesModel->clear();
             locationsModel->clear();
+            ordersTestModel->clear();
+            ordersTrainModel->clear();
         }
 
         void MainWindow::on_startOptimization_clicked()
         {
-            std::string o = ui->ordersLine->text().toUtf8().constData();
             std::string a = exportArticles();
             std::string l = exportLocations();
+            std::string o = exportOrders(true);
 
             if(o.empty() || a.empty() || l.empty())
             {
@@ -736,18 +744,7 @@ namespace whm
             }
         }
 
-        void MainWindow::on_ordersLoad_clicked()
-        {
-            QString file = QFileDialog::getOpenFileName(this, tr("Import orders"), "", tr("Orders (*.xml)"));
-            if (file.cbegin() == file.cend())
-            {
-                return;
-            }
-
-            ui->ordersLine->setText(file);
-        }
-
-        void MainWindow::on_configLoad_clicked()
+        void MainWindow::on_configLoadOpt_clicked()
         {
             QString file = QFileDialog::getOpenFileName(this, tr("Optimalizator configuration"), "", tr("Optimalizator configuration (*.xml)"));
             if (file.cbegin() == file.cend())
@@ -755,7 +752,7 @@ namespace whm
                 return;
             }
 
-            ui->configLoadLine->setText(file);
+            ui->configLineOpt->setText(file);
 
             whm::ConfigParser_t cfg(file.toUtf8().constData());
 
@@ -805,17 +802,6 @@ namespace whm
             if(cfg.getAs<std::string>("crossoverFunctorPSO") == "crossoverOrdered")   ui->crossoverPSO->setCurrentIndex(1);
         }
 
-        void MainWindow::on_ordersSaveGen_clicked()
-        {
-            QString file = QFileDialog::getSaveFileName(this, tr("Save generated orders"), "", tr("Orders (*.xml)"));
-            if (file.cbegin() == file.cend())
-            {
-                return;
-            }
-
-            ui->ordersLineGen->setText(file);
-        }
-
         void MainWindow::on_configLoadGen_clicked()
         {
             QString file = QFileDialog::getOpenFileName(this, tr("Generator configuration"), "", tr("Generator configuration (*.xml)"));
@@ -837,7 +823,7 @@ namespace whm
 
         void MainWindow::on_startGenerating_clicked()
         {
-            std::string o = ui->ordersLineGen->text().toUtf8().constData();
+            std::string o = ""; // TODO: Temporary file
             std::string a = exportArticles();
 
             if(o.empty() || a.empty())
@@ -886,17 +872,6 @@ namespace whm
             }
         }
 
-        void MainWindow::on_ordersLoadSim_clicked()
-        {
-            QString file = QFileDialog::getOpenFileName(this, tr("Import orders"), "", tr("Orders (*.xml)"));
-            if (file.cbegin() == file.cend())
-            {
-                return;
-            }
-
-            ui->ordersLineSim->setText(file);
-        }
-
         void MainWindow::on_configLoadSim_clicked()
         {
             QString file = QFileDialog::getOpenFileName(this, tr("Simulator configuration"), "", tr("Simulator configuration (*.xml)"));
@@ -921,8 +896,8 @@ namespace whm
 
         void MainWindow::on_startSimulation_clicked()
         {
-            std::string o = ui->ordersLineSim->text().toUtf8().constData();
             std::string l = exportLocations();
+            std::string o = exportOrders(false);
 
             if(o.empty() || l.empty())
             {
@@ -984,7 +959,17 @@ namespace whm
             UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
         }
 
-        void MainWindow::on_importOrders_clicked()
+        void MainWindow::on_importTestOrders_clicked()
+        {
+            importOrders(false);
+        }
+
+        void MainWindow::on_importTrainOrders_clicked()
+        {
+            importOrders(true);
+        }
+
+        void MainWindow::importOrders(bool train)
         {
             QString file = QFileDialog::getOpenFileName(this, tr("Import orders"), "", tr("Orders (*.xml)"));
             if (file.cbegin() == file.cend())
@@ -994,8 +979,10 @@ namespace whm
 
             QStringList labels = { "Order ID", "Line ID", "Product", "Quantity" };
 
-            ordersModel->clear();
-            ordersModel->setHorizontalHeaderLabels(labels);
+            QStandardItemModel* m = train ? ordersTrainModel : ordersTestModel;
+
+            m->clear();
+            m->setHorizontalHeaderLabels(labels);
 
             whm::WarehouseLayout_t::getWhLayout().clearWhOrders();
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(file.toUtf8().constData());
@@ -1011,21 +998,51 @@ namespace whm
                     auto* article   = new QStandardItem(QString::fromStdString(line.getArticle()));
                     auto* quantity  = new QStandardItem(QString::fromStdString(std::to_string(line.getQuantity())));
 
-                    ordersModel->setItem(row, 0, orderID);
-                    ordersModel->setItem(row, 1, lineID);
-                    ordersModel->setItem(row, 2, article);
-                    ordersModel->setItem(row, 3, quantity);
+                    m->setItem(row, 0, orderID);
+                    m->setItem(row, 1, lineID);
+                    m->setItem(row, 2, article);
+                    m->setItem(row, 3, quantity);
 
                     ++row;
                 }
             }
 
-            ui->ordersTableView->setModel(ordersModel);
+            if(train)
+                ui->trainOrdersTableView->setModel(m);
+            else
+                ui->testOrdersTableView->setModel(m);
         }
 
-        void MainWindow::on_clearOrders_clicked()
+        void MainWindow::on_exportTestOrders_clicked()
         {
-            ordersModel->clear();
+            QString file = QFileDialog::getSaveFileName(this, tr("Export test orders"), "", tr("Orders (*.xml)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            exportOrders(false, file.toUtf8().constData());
+        }
+
+        void MainWindow::on_exportTrainOrders_clicked()
+        {
+            QString file = QFileDialog::getSaveFileName(this, tr("Export train orders"), "", tr("Orders (*.xml)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            exportOrders(true, file.toUtf8().constData());
+        }
+
+        void MainWindow::on_clearTestOrders_clicked()
+        {
+            ordersTestModel->clear();
+        }
+
+        void MainWindow::on_clearTrainOrders_clicked()
+        {
+            ordersTrainModel->clear();
         }
 
         void MainWindow::on_importArticles_clicked()
@@ -1203,6 +1220,62 @@ namespace whm
 
             ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
             ::whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(f);
+
+            return f;
+        }
+
+        std::string MainWindow::exportOrders(bool train, std::string f)
+        {
+            int32_t orderID{ -1 };
+            std::vector<WarehouseOrderLine_t> lines;
+
+            auto m = train ? ordersTrainModel : ordersTestModel;
+
+            if(m->rowCount() == 0)
+            {
+                return std::string();
+            }
+
+            if(f.empty())
+            {
+                f = tmpnam(nullptr);
+            }
+
+            WarehouseLayout_t::getWhLayout().clearWhOrders();
+
+            for(int32_t r = 0; r < m->rowCount(); ++r)
+            {
+                WarehouseOrderLine_t line(nullptr);
+
+                auto actID = m->data(m->index(r, 0)).toInt();
+
+                line.setWhLineID(m->data(m->index(r, 1)).toInt());
+                line.setArticle(m->data(m->index(r, 2)).toString().toUtf8().constData());
+                line.setQuantity(m->data(m->index(r, 3)).toInt());
+
+                if(orderID != -1 && orderID != actID)
+                {
+                    WarehouseOrder_t order;
+
+                    order.setWhOrderID(orderID);
+                    order.setWhOrderLines(lines);
+
+                    WarehouseLayout_t::getWhLayout().addWhOrder(std::move(order));
+
+                    lines.clear();
+                }
+
+                lines.push_back(std::move(line));
+                orderID = actID;
+            }
+
+            WarehouseOrder_t order;
+
+            order.setWhOrderID(orderID);
+            order.setWhOrderLines(lines);
+
+            WarehouseLayout_t::getWhLayout().addWhOrder(std::move(order));
+            WarehouseLayout_t::getWhLayout().exportCustomerOrders(f);
 
             return f;
         }
