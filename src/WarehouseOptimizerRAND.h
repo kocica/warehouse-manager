@@ -27,6 +27,9 @@ namespace whm
 
         protected:
             void init();
+
+        private:
+            Solution_t bestSolution;
     };
 }
 

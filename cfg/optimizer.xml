@@ -42,6 +42,12 @@
         probCrossoverDE .................. Crossover probability for differential evolution alg
         crossoverFunctorDE ............... Crossover function (crossoverOrdered; crossoverBinomical)
 
+        ===================================== Storage loc. assignment problem =======================
+
+        ===================================== Random distribution ===================================
+
+        populationSizeRand ............... Population size for random distribution of articles
+
         =============================================================================================
   -->
 
@@ -81,4 +87,7 @@
                scalingFactor="0.6"
                probCrossoverDE="0.7"
                crossoverFunctorDE="crossoverOrdered"
+
+
+               populationSizeRand="10"
 />

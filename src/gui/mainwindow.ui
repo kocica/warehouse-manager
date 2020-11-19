@@ -851,6 +851,32 @@
                    </item>
                   </layout>
                  </widget>
+                 <widget class="QWidget" name="slapConfig">
+                  <attribute name="title">
+                   <string>SLAP</string>
+                  </attribute>
+                 </widget>
+                 <widget class="QWidget" name="randConfig">
+                  <attribute name="title">
+                   <string>RAND</string>
+                  </attribute>
+                  <layout class="QGridLayout" name="gridLayout_5">
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="populationSizeLabelRand">
+                     <property name="text">
+                      <string>Population size</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QSpinBox" name="populationSizeRand">
+                     <property name="maximum">
+                      <number>100000</number>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
                 </widget>
                </item>
               </layout>

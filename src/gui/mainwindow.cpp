@@ -764,6 +764,11 @@ namespace whm
             if(ui->crossoverPSO->currentIndex()  == 0) cfg.set("crossoverFunctorPSO", "crossoverHeuristic");
             if(ui->crossoverPSO->currentIndex()  == 1) cfg.set("crossoverFunctorPSO", "crossoverOrdered");
 
+            // SLAP
+
+            // RAND
+            cfg.set("populationSizeRand", std::to_string(ui->populationSizeRand->value()));
+
             // Paths
             cfg.set("articlesPath", a);
             cfg.set("locationsPath", l);
@@ -854,6 +859,11 @@ namespace whm
 
             if(cfg.getAs<std::string>("crossoverFunctorPSO") == "crossoverHeuristic") ui->crossoverPSO->setCurrentIndex(0);
             if(cfg.getAs<std::string>("crossoverFunctorPSO") == "crossoverOrdered")   ui->crossoverPSO->setCurrentIndex(1);
+
+            // SLAP
+
+            // RAND
+            ui->populationSizeRand->setValue(cfg.getAs<int32_t>("populationSizeRand"));
         }
 
         void MainWindow::on_configLoadGen_clicked()
