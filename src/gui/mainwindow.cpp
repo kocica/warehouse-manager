@@ -261,7 +261,7 @@ namespace whm
                 auto cursorMode = UiCursor_t::getCursor().getMode();
 
                 QPointF loc = QCursor::pos();
-                loc = ui->view->mapToScene(loc.x() - ui->mainToolBar->size().width() - ui->frame->window()->pos().x(),
+                loc = ui->view->mapToScene(loc.x() - ui->dataBrowserTab->size().width() - ui->frame->window()->pos().x(),
                                            loc.y() - ui->layoutManagement->size().height() - ui->frame->window()->pos().y());
 
                 if (loc.x() < 0 || loc.x() > whX ||
