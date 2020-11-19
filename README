@@ -1,3 +1,12 @@
+# Requirements
+
+ - g++8 (c++17, structured bindings, filesystem, ...)
+ - qt5
+ - tinyxml2 (included in the sources)
+ - matplotlibcpp (included in the sources)
+ - simlib
+
+
 # Usage
 
 Configurator:
@@ -10,7 +19,7 @@ Simulator (evaluate on test set of orders):
   ./warehouse_manager_sim -o data/orders_test.xml -i data/locations.csv -l data/layout.xml
 
 Optimizer (train on train set of orders):
-  ./warehouse_manager_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv
+  ./warehouse_manager_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv -O 1-6 (see help)
 
 
 
@@ -37,3 +46,4 @@ Optimizer (train on train set of orders):
  - Resize of object - Cannot select due to incorrect mRect (has to move the item to recalculate)
  - Segfault when resizing objects and using ports/deleting
  - UI Optimizer selection: Random, SLAP (+ tabs for these)
+ - Secure there are no "minus" generated ADUs

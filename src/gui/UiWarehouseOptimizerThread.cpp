@@ -19,6 +19,8 @@
 #include "../WarehouseOptimizerDE.h"
 #include "../WarehouseOptimizerABC.h"
 #include "../WarehouseOptimizerPSO.h"
+#include "../WarehouseOptimizerSLAP.h"
+#include "../WarehouseOptimizerRAND.h"
 
 namespace whm
 {
@@ -68,10 +70,12 @@ namespace whm
 
             switch(opt)
             {
-                case 0: optimizer = new whm::WarehouseOptimizerGA_t {args, cfg}; break;
-                case 1: optimizer = new whm::WarehouseOptimizerDE_t {args, cfg}; break;
-                case 2: optimizer = new whm::WarehouseOptimizerABC_t{args, cfg}; break;
-                case 3: optimizer = new whm::WarehouseOptimizerPSO_t{args, cfg}; break;
+                case 0: optimizer = new whm::WarehouseOptimizerGA_t  {args, cfg}; break;
+                case 1: optimizer = new whm::WarehouseOptimizerDE_t  {args, cfg}; break;
+                case 2: optimizer = new whm::WarehouseOptimizerABC_t {args, cfg}; break;
+                case 3: optimizer = new whm::WarehouseOptimizerPSO_t {args, cfg}; break;
+                case 4: optimizer = new whm::WarehouseOptimizerSLAP_t{args, cfg}; break;
+                case 5: optimizer = new whm::WarehouseOptimizerRAND_t{args, cfg}; break;
             }
 
             optimizer->setUiCallback([&](double fitness)

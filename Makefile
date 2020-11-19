@@ -17,7 +17,7 @@ README     = README
 QMAKE      = qmake
 QFLAGS     = -qt=qt5
 
-CC         = g++
+CC         = g++-8
 CFLAGS     = -std=c++17 -pedantic -Wall -Wextra -O3
 
 PROFILE    = #-pg
@@ -61,7 +61,7 @@ $(BIN_NAME_SIM): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) $(PROFILE) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) $(LDFLAGS) -o $@
 	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
-$(BIN_NAME_GUI): $(HEADERS) $(SOURCES) $(OBJS) $(GUI_SOURCES) $(GUI_HEADERS)
+$(BIN_NAME_GUI): $(SOURCES) $(HEADERS) $(GUI_SOURCES) $(GUI_HEADERS)
 	@cd $(GUI) && $(QMAKE) $(QFLAGS) && make
 	@mv $(shell pwd)/$(GUI)/$(BIN_NAME_GUI) .
 #	find . -type f -name "*.cpp" -exec touch --no-create {} +

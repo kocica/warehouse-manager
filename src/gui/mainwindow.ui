@@ -366,6 +366,16 @@
                      <string>Particle swarm optimization</string>
                     </property>
                    </item>
+                   <item>
+                    <property name="text">
+                     <string>Classical storage location assignment problem</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Random distribution</string>
+                    </property>
+                   </item>
                   </widget>
                  </item>
                 </layout>

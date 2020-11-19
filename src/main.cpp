@@ -23,12 +23,13 @@
 #    include "WarehouseOptimizerDE.h"
 #    include "WarehouseOptimizerABC.h"
 #    include "WarehouseOptimizerPSO.h"
+#    include "WarehouseOptimizerSLAP.h"
+#    include "WarehouseOptimizerRAND.h"
 #  endif
 #endif
 
 // Qt
 #ifdef WHM_GUI
-#  include <QStyle>
 #  include <QApplication>
 #  include <QDesktopWidget>
 #  include "gui/mainwindow.h"
@@ -43,13 +44,7 @@ int main(int argc, char *argv[])
 
         whm::gui::MainWindow window;
 
-        window.setGeometry(
-            QStyle::alignedRect(
-                Qt::LeftToRight, Qt::AlignLeft,
-                qApp->desktop()->availableGeometry().size(),
-                qApp->desktop()->availableGeometry()
-            )
-        );
+        window.setWindowState(Qt::WindowFullScreen);
 
         window.show();
 #else
@@ -67,10 +62,12 @@ int main(int argc, char *argv[])
 
             switch(args.optimizer)
             {
-                case 1: optimizer = new whm::WarehouseOptimizerGA_t{args};  break;
-                case 2: optimizer = new whm::WarehouseOptimizerDE_t{args};  break;
-                case 3: optimizer = new whm::WarehouseOptimizerABC_t{args}; break;
-                case 4: optimizer = new whm::WarehouseOptimizerPSO_t{args}; break;
+                case 1: optimizer = new whm::WarehouseOptimizerGA_t{args};   break;
+                case 2: optimizer = new whm::WarehouseOptimizerDE_t{args};   break;
+                case 3: optimizer = new whm::WarehouseOptimizerABC_t{args};  break;
+                case 4: optimizer = new whm::WarehouseOptimizerPSO_t{args};  break;
+                case 5: optimizer = new whm::WarehouseOptimizerSLAP_t{args}; break;
+                case 6: optimizer = new whm::WarehouseOptimizerRAND_t{args}; break;
                 default: whm::Logger_t::getLogger().print(LOG_LOC, whm::LogLevel_t::E_ERROR, "Unknown optimizer"); return 1;
             }
 

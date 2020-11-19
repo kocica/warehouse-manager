@@ -148,6 +148,9 @@ namespace whm
 
     void WarehouseSimulator_t::orderFinished(double duration, double durationNonSim, int32_t distance)
     {
+#       ifndef WHM_GUI
+        (void) duration;
+#       endif
         (void) distance;
         (void) durationNonSim;
 

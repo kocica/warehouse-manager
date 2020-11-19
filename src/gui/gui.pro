@@ -1,5 +1,6 @@
 TEMPLATE          = app
 TARGET            = warehouse_manager_gui
+QMAKE_CXX         = g++-8
 QT               += core gui widgets
 QMAKE_CXXFLAGS   += -std=c++17
 DEFINES          += QT_DEPRECATED_WARNINGS
@@ -26,6 +27,8 @@ SOURCES +=  ../main.cpp \
             ../WarehouseOptimizerDE.cpp \
             ../WarehouseOptimizerABC.cpp \
             ../WarehouseOptimizerPSO.cpp \
+            ../WarehouseOptimizerSLAP.cpp \
+            ../WarehouseOptimizerRAND.cpp \
             ../WarehouseSimulator.cpp \
             ../WarehouseDataGenerator.cpp \
             UiCursor.cpp \
@@ -64,6 +67,8 @@ HEADERS +=  ../Utils.h \
             ../WarehouseOptimizerDE.h \
             ../WarehouseOptimizerABC.h \
             ../WarehouseOptimizerPSO.h \
+            ../WarehouseOptimizerSLAP.h \
+            ../WarehouseOptimizerRAND.h \
             ../WarehouseSimulator.h \
             ../WarehouseDataGenerator.h \
             MainWindow.h \
