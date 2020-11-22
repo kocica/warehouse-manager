@@ -620,7 +620,7 @@ namespace whm
 
             ui->simulationPlot->update();
 
-            ui->simulationProgressBar->setValue(100 * orders.size() / 1000 /*TODO: Order count*/);
+            ui->simulationProgressBar->setValue(100 * orders.size() / orderCount);
         }
 
         void MainWindow::on_loadLayout_triggered()
@@ -1326,6 +1326,7 @@ namespace whm
             int32_t orderID{ -1 };
             std::vector<WarehouseOrderLine_t> lines;
 
+            orderCount = 0;
             auto m = train ? ordersTrainModel : ordersTestModel;
 
             if(m->rowCount() == 0)
@@ -1357,6 +1358,7 @@ namespace whm
                     order.setWhOrderID(orderID);
                     order.setWhOrderLines(lines);
 
+                    ++orderCount;
                     WarehouseLayout_t::getWhLayout().addWhOrder(std::move(order));
 
                     lines.clear();
@@ -1371,6 +1373,7 @@ namespace whm
             order.setWhOrderID(orderID);
             order.setWhOrderLines(lines);
 
+            ++orderCount;
             WarehouseLayout_t::getWhLayout().addWhOrder(std::move(order));
             WarehouseLayout_t::getWhLayout().exportCustomerOrders(f);
 

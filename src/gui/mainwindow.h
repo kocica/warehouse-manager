@@ -134,6 +134,7 @@ namespace whm
                 int32_t whR{ 0 };
                 int32_t whX{ 0 };
                 int32_t whY{ 0 };
+                int32_t orderCount{ 0 };
 
                 Ui::MainWindow* ui;
                 CustomizedGraphicsScene_t* scene;

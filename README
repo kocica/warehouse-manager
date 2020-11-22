@@ -33,7 +33,6 @@ Optimizer (train on train set of orders):
  - Doxygen
 
  - Disable buttons/etc. (whole control panel ???) until optimization / generating is over
- - Order count in simulator UI
 
 
  - When opt/gen/sim running, disable buttons
