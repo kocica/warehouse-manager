@@ -32,10 +32,6 @@ Optimizer (train on train set of orders):
  - NN (pokud nebude fungovat paralelizace)
  - Doxygen
 
- - Disable buttons/etc. (whole control panel ???) until optimization / generating is over
-
-
- - When opt/gen/sim running, disable buttons
  - When going into thread "wait", show some waiting dialog
  - Resize of object - Cannot select due to incorrect mRect (has to move the item to recalculate)
  - Segfault when resizing objects and using ports/deleting

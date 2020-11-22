@@ -130,6 +130,9 @@ namespace whm
 
                 void stylePlot(QCustomPlot*);
 
+                void enableManager();
+                void disableManager();
+
             private:
                 int32_t whR{ 0 };
                 int32_t whX{ 0 };

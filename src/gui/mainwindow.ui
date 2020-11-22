@@ -985,6 +985,9 @@
                  </item>
                  <item>
                   <widget class="QPushButton" name="stopOptimization">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="text">
                     <string>Stop</string>
                    </property>
@@ -1253,6 +1256,9 @@
                  </item>
                  <item>
                   <widget class="QPushButton" name="stopGenerating">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="text">
                     <string>Stop</string>
                    </property>
@@ -1570,6 +1576,9 @@
                  </item>
                  <item>
                   <widget class="QPushButton" name="stopSimulation">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="text">
                     <string>Stop</string>
                    </property>

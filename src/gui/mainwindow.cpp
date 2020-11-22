@@ -391,6 +391,7 @@ namespace whm
 
         void MainWindow::optimizationFinished()
         {
+            enableManager();
             isOptimizationActive() = false;
 
             steps.clear();
@@ -402,6 +403,8 @@ namespace whm
 
         void MainWindow::generatingFinished(std::string f)
         {
+            enableManager();
+
             xadu.clear();
             xorl.clear();
 
@@ -420,6 +423,8 @@ namespace whm
 
         void MainWindow::simulationFinished(double time)
         {
+            enableManager();
+
             ui->simulationTime->setText(QString::number(time) + " [s]");
 
             orders.clear();
@@ -720,6 +725,7 @@ namespace whm
                 return;
             }
 
+            disableManager();
             isOptimizationActive() = true;
             whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
@@ -917,6 +923,8 @@ namespace whm
                 return;
             }
 
+            disableManager();
+
             whm::ConfigParser_t cfg;
 
             // Set config according to the UI input widgets
@@ -997,6 +1005,7 @@ namespace whm
                 return;
             }
 
+            disableManager();
             whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
 
@@ -1040,6 +1049,7 @@ namespace whm
                 simulatorUi->terminate();
                 simulatorUi->wait();
                 simulatorUi = nullptr;
+                simulationFinished(0.0);
             }
         }
 
@@ -1282,6 +1292,60 @@ namespace whm
 
             p->setBackground(QColor(25, 35, 45));
             p->axisRect()->setBackground(QColor(25, 35, 45));
+        }
+
+        void MainWindow::enableManager()
+        {
+            ui->loadLayout->setEnabled(true);
+            ui->saveLayout->setEnabled(true);
+            ui->clearLayout->setEnabled(true);
+            ui->importTrainOrders->setEnabled(true);
+            ui->exportTrainOrders->setEnabled(true);
+            ui->clearTrainOrders->setEnabled(true);
+            ui->importTestOrders->setEnabled(true);
+            ui->exportTestOrders->setEnabled(true);
+            ui->clearTestOrders->setEnabled(true);
+            ui->importArticles->setEnabled(true);
+            ui->clearArticles->setEnabled(true);
+            ui->importLocations->setEnabled(true);
+            ui->exportLocations->setEnabled(true);
+            ui->clearLocations->setEnabled(true);
+            ui->configLoadOpt->setEnabled(true);
+            ui->configLoadGen->setEnabled(true);
+            ui->configLoadSim->setEnabled(true);
+            ui->startGenerating->setEnabled(true);
+            ui->startSimulation->setEnabled(true);
+            ui->startOptimization->setEnabled(true);
+            ui->stopGenerating->setEnabled(false);
+            ui->stopSimulation->setEnabled(false);
+            ui->stopOptimization->setEnabled(false);
+        }
+
+        void MainWindow::disableManager()
+        {
+            ui->loadLayout->setEnabled(false);
+            ui->saveLayout->setEnabled(false);
+            ui->clearLayout->setEnabled(false);
+            ui->importTrainOrders->setEnabled(false);
+            ui->exportTrainOrders->setEnabled(false);
+            ui->clearTrainOrders->setEnabled(false);
+            ui->importTestOrders->setEnabled(false);
+            ui->exportTestOrders->setEnabled(false);
+            ui->clearTestOrders->setEnabled(false);
+            ui->importArticles->setEnabled(false);
+            ui->clearArticles->setEnabled(false);
+            ui->importLocations->setEnabled(false);
+            ui->exportLocations->setEnabled(false);
+            ui->clearLocations->setEnabled(false);
+            ui->configLoadOpt->setEnabled(false);
+            ui->configLoadGen->setEnabled(false);
+            ui->configLoadSim->setEnabled(false);
+            ui->startGenerating->setEnabled(false);
+            ui->startSimulation->setEnabled(false);
+            ui->startOptimization->setEnabled(false);
+            ui->stopGenerating->setEnabled(true);
+            ui->stopSimulation->setEnabled(true);
+            ui->stopOptimization->setEnabled(true);
         }
 
         std::string MainWindow::exportArticles()
