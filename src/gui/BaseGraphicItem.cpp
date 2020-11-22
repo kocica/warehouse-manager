@@ -69,7 +69,7 @@ namespace whm
 
         QRectF BaseGraphicItem_t::boundingRect() const
         {
-            int size = (mRect.width() + mRect.height())/2 / 10;
+            int size = std::min(mRect.width(), mRect.height()) / 8;
 
             return this->mRect.adjusted(-size/2,-size/2 - (5*size),size/2,size/2);
         }
@@ -426,11 +426,13 @@ namespace whm
             QPointF right(mRect.right(),mRect.top() + mRect.height()/2);
             QPointF top(mRect.left()+mRect.width()/2,mRect.top());
             QPointF bottom(mRect.left()+mRect.width()/2,mRect.bottom());
-            int size = (mRect.width() + mRect.height())/2 / 10;
+            int size = std::min(mRect.width(), mRect.height()) / 8;
             QPointF rotate(top.x(),top.y()-(5*size));
 
             foreach (Handle *handle, mHandles)
             {
+                handle->setSize(size);
+
                 switch (handle->type())
                 {
                     case Handle::HANDLE_TYPE_LEFT:
@@ -542,7 +544,7 @@ namespace whm
 
         void BaseGraphicItem_t::createHandles()
         {
-            int size = (mRect.width() + mRect.height())/2 / 10;
+            int size = std::min(mRect.width(), mRect.height()) / 8;
 
             mOrigin = this->mRect.center();
             QPointF left(mRect.left(),mRect.top() + mRect.height()/2);

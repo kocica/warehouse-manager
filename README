@@ -35,5 +35,4 @@ Optimizer (train on train set of orders):
  - When going into thread "wait", show some waiting dialog
  - Resize of object - Cannot select due to incorrect mRect (has to move the item to recalculate)
  - Segfault when resizing objects and using ports/deleting
- - UI Optimizer selection: Random, SLAP (+ tabs for these)
  - Secure there are no "minus" generated ADUs

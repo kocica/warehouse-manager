@@ -809,10 +809,19 @@ namespace whm
         {
             if(optimizerUi)
             {
+                auto dialog = new QProgressDialog();
+                dialog->setWindowTitle("Wait");
+                dialog->setLabelText("Aborting optimization");
+
+                dialog->resize(100, 30);
+                dialog->exec();
+
                 optimizerUi->terminate();
-                optimizerUi->wait(); // TODO: Really wait? In case of big populations main window freeze
+                optimizerUi->wait();
                 optimizerUi = nullptr;
                 optimizationFinished();
+
+                dialog->hide();
             }
         }
 

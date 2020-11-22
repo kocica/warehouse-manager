@@ -17,7 +17,11 @@ namespace whm
 {
     namespace gui
     {
-        Handle::Handle(QPointF pos,int size ,HandleShape shape ,HandleType type) : mPos(pos),mType(type) ,mShape(shape),mSize(size)
+        Handle::Handle(QPointF pos, int size, HandleShape shape, HandleType type)
+            : mPos(pos)
+            , mType(type)
+            , mShape(shape)
+            , mSize(size)
         {
             this->mRect.setRect(pos.x()-size/2, pos.y()-size/2, size, size);
         }

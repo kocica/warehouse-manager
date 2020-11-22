@@ -41,7 +41,7 @@ namespace whm
                     HANDLE_TYPE_CTRL
                 };
 
-                Handle(QPointF pos,int size ,HandleShape shape ,HandleType type);
+                Handle(QPointF pos, int size, HandleShape shape, HandleType type);
 
                 void setShape(HandleShape shape);
                 void setType(HandleType type);
