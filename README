@@ -32,13 +32,8 @@ Optimizer (train on train set of orders):
  - NN (pokud nebude fungovat paralelizace)
  - Doxygen
 
- + Funkce co vrati serazene produkty podle fast/slow moveru (heat)
- + Funkce co vrati serazene sloty podle hot/cold slotu (pomoci path finderu: gate start + gate shipping; sort)
- + Funkce ktera to rozradi podle SLAPu a vyblije nejlepsi slot/article alokaci
-
  - Disable buttons/etc. (whole control panel ???) until optimization / generating is over
  - Order count in simulator UI
- - ConfigParser "Field <%s> not found!" - exception - exception handling
 
 
  - When opt/gen/sim running, disable buttons

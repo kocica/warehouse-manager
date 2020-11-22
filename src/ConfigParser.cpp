@@ -22,17 +22,41 @@
 namespace whm
 {
     ConfigParser_t::ConfigParser_t()
+        : exc{ false }
     {
 
     }
 
-    ConfigParser_t::ConfigParser_t(const std::string& xmlFilename)
+    ConfigParser_t::ConfigParser_t(const std::string& xmlFilename, bool exc)
+        : exc{ exc }
     {
         tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
 
-        doc->LoadFile(xmlFilename.c_str());
+        if(doc->LoadFile(xmlFilename.c_str()) != tinyxml2::XML_SUCCESS)
+        {
+            if(exc)
+            {
+                throw std::runtime_error("Failed to parse config XML!");
+            }
+            else
+            {
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Failed to parse config XML!");
+            }
+        }
 
         tinyxml2::XMLElement* cfg = doc->FirstChildElement("configuration");
+
+        if(!cfg)
+        {
+            if(exc)
+            {
+                throw std::runtime_error("Failed to parse config XML!");
+            }
+            else
+            {
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Failed to parse config XML!");
+            }
+        }
 
         const tinyxml2::XMLAttribute* attribute = cfg->FirstAttribute();
 
@@ -54,6 +78,11 @@ namespace whm
 
         if(it == parsedValues.end())
         {
+            if(exc)
+            {
+                throw std::runtime_error(std::string("Field ") + name + std::string(" not found!"));
+            }
+
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Field <%s> not found!", name.c_str());
             return std::string();
         }

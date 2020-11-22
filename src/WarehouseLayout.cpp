@@ -102,17 +102,37 @@ namespace whm
 
         tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
 
-        doc->LoadFile(xmlFilename.c_str());
+        if(doc->LoadFile(xmlFilename.c_str()) != tinyxml2::XML_SUCCESS)
+        {
+            throw std::runtime_error("Failed to parse layout XML!");
+        }
 
         // Layout info
         tinyxml2::XMLElement* whLayoutXml = doc->FirstChildElement("WarehouseLayout");
+
+        if(!whLayoutXml)
+        {
+            throw std::runtime_error("Failed to parse layout XML!");
+        }
+
         tinyxml2::XMLElement* whLayoutAttribsXml = whLayoutXml->FirstChildElement( "Attributes" );
+
+        if(!whLayoutAttribsXml)
+        {
+            throw std::runtime_error("Failed to parse layout XML!");
+        }
+
         this->whRatio = whLayoutAttribsXml->IntAttribute("ratio");
         this->whDims = std::make_pair(whLayoutAttribsXml->IntAttribute("dim_x"), whLayoutAttribsXml->IntAttribute("dim_y"));
 
         // Items
         for (tinyxml2::XMLElement* whItemXml = doc->FirstChildElement("WarehouseItem"); whItemXml; whItemXml = whItemXml->NextSiblingElement("WarehouseItem"))
         {
+            if(!whItemXml)
+            {
+                throw std::runtime_error("Failed to parse layout XML!");
+            }
+
             WarehouseItem_t* whItem = new WarehouseItem_t();
             whItem->deserializeFromXml(whItemXml);
             addWhItem(whItem);
@@ -121,6 +141,11 @@ namespace whm
         // Connections
         for (tinyxml2::XMLElement* whConnXml = doc->FirstChildElement("WarehouseConnection"); whConnXml; whConnXml = whConnXml->NextSiblingElement("WarehouseConnection"))
         {
+            if(!whConnXml)
+            {
+                throw std::runtime_error("Failed to parse layout XML!");
+            }
+
             WarehouseConnection_t* whConn = new WarehouseConnection_t();
             whConn->deserializeFromXml(whConnXml);
             addWhConn(whConn);
@@ -133,7 +158,10 @@ namespace whm
     {
         tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
 
-        doc->LoadFile(xmlFilename.c_str());
+        if(doc->LoadFile(xmlFilename.c_str()) != tinyxml2::XML_SUCCESS)
+        {
+            throw std::runtime_error("Failed to parse orders XML!");
+        }
 
         for (tinyxml2::XMLElement* whOrderXml = doc->FirstChildElement("WarehouseOrder"); whOrderXml; whOrderXml = whOrderXml->NextSiblingElement("WarehouseOrder"))
         {

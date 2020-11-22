@@ -127,6 +127,11 @@ namespace whm
     {
         tinyxml2::XMLElement* attribs = elem->FirstChildElement( "Attributes" );
 
+        if(!attribs)
+        {
+            throw std::runtime_error("Failed to parse XML!");
+        }
+
         this->setWhItemID(attribs->IntAttribute("id"));
 
         WarehouseItemType_t whItemType = static_cast<WarehouseItemType_t>(attribs->IntAttribute("type"));
@@ -141,6 +146,11 @@ namespace whm
         if (whItemType == WarehouseItemType_t::E_LOCATION_SHELF)
         {
             tinyxml2::XMLElement* locationRack = elem->FirstChildElement( "LocationRackDimensions" );
+
+            if(!locationRack)
+            {
+                throw std::runtime_error("Failed to parse XML!");
+            }
 
             int32_t slotsX = locationRack->IntAttribute("slots_x");
             int32_t slotsY = locationRack->IntAttribute("slots_y");

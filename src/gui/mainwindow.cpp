@@ -643,10 +643,17 @@ namespace whm
             ui->view->scene()->clear();
             ui->view->scene()->update();
 
-            ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(file.toUtf8().constData());
-            ::whm::WarehouseLayout_t::getWhLayout().dump();
-            UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
-            UiWarehouseLayout_t::getWhLayout().dump();
+            try
+            {
+                ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(file.toUtf8().constData());
+                ::whm::WarehouseLayout_t::getWhLayout().dump();
+                UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
+                UiWarehouseLayout_t::getWhLayout().dump();
+            }
+            catch(std::runtime_error& e)
+            {
+                QMessageBox::critical(nullptr, "Error", e.what());
+            }
 
             int32_t whR = UiWarehouseLayout_t::getWhLayout().getRatio();
             int32_t whX = UiWarehouseLayout_t::getWhLayout().getDimensions().first * whR;
@@ -813,57 +820,64 @@ namespace whm
 
             ui->configLineOpt->setText(file);
 
-            whm::ConfigParser_t cfg(file.toUtf8().constData());
+            whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
 
-            // General
-            ui->numberDimensions->setValue(cfg.getAs<int32_t>("numberDimensions"));
-            ui->problemMin->setValue(cfg.getAs<int32_t>("problemMin"));
-            ui->problemMax->setValue(cfg.getAs<int32_t>("problemMax"));
-            ui->iterations->setValue(cfg.getAs<int32_t>("maxIterations"));
-            ui->weights->setValue(cfg.getAs<int32_t>("saveWeightsPeriod"));
-            ui->trialValue->setValue(cfg.getAs<int32_t>("maxTrialValue"));
+            try
+            {
+                // General
+                ui->numberDimensions->setValue(cfg.getAs<int32_t>("numberDimensions"));
+                ui->problemMin->setValue(cfg.getAs<int32_t>("problemMin"));
+                ui->problemMax->setValue(cfg.getAs<int32_t>("problemMax"));
+                ui->iterations->setValue(cfg.getAs<int32_t>("maxIterations"));
+                ui->weights->setValue(cfg.getAs<int32_t>("saveWeightsPeriod"));
+                ui->trialValue->setValue(cfg.getAs<int32_t>("maxTrialValue"));
 
-            // GA
-            ui->populationSize->setValue(cfg.getAs<int32_t>("populationSize"));
-            ui->selectionSize->setValue(cfg.getAs<int32_t>("selectionSize"));
-            ui->eliteSize->setValue(cfg.getAs<int32_t>("eliteSize"));
-            ui->probCrossover->setValue(cfg.getAs<double>("probCrossover"));
-            ui->probMutationInd->setValue(cfg.getAs<double>("probMutationInd"));
-            ui->probMutationGene->setValue(cfg.getAs<double>("probMutationGene"));
+                // GA
+                ui->populationSize->setValue(cfg.getAs<int32_t>("populationSize"));
+                ui->selectionSize->setValue(cfg.getAs<int32_t>("selectionSize"));
+                ui->eliteSize->setValue(cfg.getAs<int32_t>("eliteSize"));
+                ui->probCrossover->setValue(cfg.getAs<double>("probCrossover"));
+                ui->probMutationInd->setValue(cfg.getAs<double>("probMutationInd"));
+                ui->probMutationGene->setValue(cfg.getAs<double>("probMutationGene"));
 
-            if(cfg.getAs<std::string>("crossoverFunctor") == "crossoverOrdered") ui->crossoverGa->setCurrentIndex(0);
-            if(cfg.getAs<std::string>("mutationFunctor")  == "mutateInverse")    ui->mutationGa->setCurrentIndex(0);
-            if(cfg.getAs<std::string>("mutationFunctor")  == "mutateOrdered")    ui->mutationGa->setCurrentIndex(1);
-            if(cfg.getAs<std::string>("selectionFunctor") == "selectTournam")    ui->selectionGa->setCurrentIndex(0);
-            if(cfg.getAs<std::string>("selectionFunctor") == "selectTrunc")      ui->selectionGa->setCurrentIndex(1);
-            if(cfg.getAs<std::string>("selectionFunctor") == "selectRoulette")   ui->selectionGa->setCurrentIndex(2);
-            if(cfg.getAs<std::string>("selectionFunctor") == "selectRank")       ui->selectionGa->setCurrentIndex(3);
+                if(cfg.getAs<std::string>("crossoverFunctor") == "crossoverOrdered") ui->crossoverGa->setCurrentIndex(0);
+                if(cfg.getAs<std::string>("mutationFunctor")  == "mutateInverse")    ui->mutationGa->setCurrentIndex(0);
+                if(cfg.getAs<std::string>("mutationFunctor")  == "mutateOrdered")    ui->mutationGa->setCurrentIndex(1);
+                if(cfg.getAs<std::string>("selectionFunctor") == "selectTournam")    ui->selectionGa->setCurrentIndex(0);
+                if(cfg.getAs<std::string>("selectionFunctor") == "selectTrunc")      ui->selectionGa->setCurrentIndex(1);
+                if(cfg.getAs<std::string>("selectionFunctor") == "selectRoulette")   ui->selectionGa->setCurrentIndex(2);
+                if(cfg.getAs<std::string>("selectionFunctor") == "selectRank")       ui->selectionGa->setCurrentIndex(3);
 
-            // DE
-            ui->populationSizeDE->setValue(cfg.getAs<int32_t>("populationSizeDE"));
-            ui->scalingFactorDE->setValue(cfg.getAs<double>("scalingFactor"));
-            ui->probCrossoverDE->setValue(cfg.getAs<double>("probCrossoverDE"));
+                // DE
+                ui->populationSizeDE->setValue(cfg.getAs<int32_t>("populationSizeDE"));
+                ui->scalingFactorDE->setValue(cfg.getAs<double>("scalingFactor"));
+                ui->probCrossoverDE->setValue(cfg.getAs<double>("probCrossoverDE"));
 
-            if(cfg.getAs<std::string>("crossoverFunctorDE") == "crossoverBinomical") ui->crossoverDE->setCurrentIndex(0);
-            if(cfg.getAs<std::string>("crossoverFunctorDE") == "crossoverOrdered")   ui->crossoverDE->setCurrentIndex(1);
+                if(cfg.getAs<std::string>("crossoverFunctorDE") == "crossoverBinomical") ui->crossoverDE->setCurrentIndex(0);
+                if(cfg.getAs<std::string>("crossoverFunctorDE") == "crossoverOrdered")   ui->crossoverDE->setCurrentIndex(1);
 
-            // ABC
-            ui->foodSize->setValue(cfg.getAs<int32_t>("foodSize"));
-            ui->keepBest->setCheckState(cfg.getAs<bool>("keepBest") ? Qt::Checked : Qt::Unchecked);
+                // ABC
+                ui->foodSize->setValue(cfg.getAs<int32_t>("foodSize"));
+                ui->keepBest->setCheckState(cfg.getAs<bool>("keepBest") ? Qt::Checked : Qt::Unchecked);
 
-            // PSO
-            ui->numberParticles->setValue(cfg.getAs<int32_t>("numberParticles"));
-            ui->correctionFactorPer->setValue(cfg.getAs<double>("correctionFactor1"));
-            ui->correctionFactorSoc->setValue(cfg.getAs<double>("correctionFactor2"));
-            ui->inertiaWeight->setValue(cfg.getAs<double>("weighing"));
+                // PSO
+                ui->numberParticles->setValue(cfg.getAs<int32_t>("numberParticles"));
+                ui->correctionFactorPer->setValue(cfg.getAs<double>("correctionFactor1"));
+                ui->correctionFactorSoc->setValue(cfg.getAs<double>("correctionFactor2"));
+                ui->inertiaWeight->setValue(cfg.getAs<double>("weighing"));
 
-            if(cfg.getAs<std::string>("crossoverFunctorPSO") == "crossoverHeuristic") ui->crossoverPSO->setCurrentIndex(0);
-            if(cfg.getAs<std::string>("crossoverFunctorPSO") == "crossoverOrdered")   ui->crossoverPSO->setCurrentIndex(1);
+                if(cfg.getAs<std::string>("crossoverFunctorPSO") == "crossoverHeuristic") ui->crossoverPSO->setCurrentIndex(0);
+                if(cfg.getAs<std::string>("crossoverFunctorPSO") == "crossoverOrdered")   ui->crossoverPSO->setCurrentIndex(1);
 
-            // SLAP
+                // SLAP
 
-            // RAND
-            ui->populationSizeRand->setValue(cfg.getAs<int32_t>("populationSizeRand"));
+                // RAND
+                ui->populationSizeRand->setValue(cfg.getAs<int32_t>("populationSizeRand"));
+            }
+            catch(std::runtime_error&)
+            {
+                QMessageBox::critical(nullptr, "Error", "Invalid configuration selected.");
+            }
         }
 
         void MainWindow::on_configLoadGen_clicked()
@@ -876,13 +890,20 @@ namespace whm
 
             ui->configLineGen->setText(file);
 
-            whm::ConfigParser_t cfg(file.toUtf8().constData());
+            whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
 
-            ui->orderCount->setValue(cfg.getAs<int32_t>("orderCount"));
-            ui->aduMi->setValue(cfg.getAs<int32_t>("mi"));
-            ui->aduSigma->setValue(cfg.getAs<int32_t>("sigma"));
-            ui->orlCountMi->setValue(0);
-            ui->orlCountSigma->setValue(cfg.getAs<int32_t>("sigmaLines"));
+            try
+            {
+                ui->orderCount->setValue(cfg.getAs<int32_t>("orderCount"));
+                ui->aduMi->setValue(cfg.getAs<int32_t>("mi"));
+                ui->aduSigma->setValue(cfg.getAs<int32_t>("sigma"));
+                ui->orlCountMi->setValue(0);
+                ui->orlCountSigma->setValue(cfg.getAs<int32_t>("sigmaLines"));
+            }
+            catch(std::runtime_error&)
+            {
+                QMessageBox::critical(nullptr, "Error", "Invalid configuration selected.");
+            }
         }
 
         void MainWindow::on_startGenerating_clicked()
@@ -946,16 +967,23 @@ namespace whm
 
             ui->configLineSim->setText(file);
 
-            whm::ConfigParser_t cfg(file.toUtf8().constData());
+            whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
 
-            ui->toteSpeed->setValue(cfg.getAs<double>("toteSpeed"));
-            ui->workerSpeed->setValue(cfg.getAs<double>("workerSpeed"));
-            ui->totesPerMinute->setValue(cfg.getAs<int32_t>("totesPerMin"));
-            ui->customerReqInterval->setValue(cfg.getAs<int32_t>("orderRequestInterval"));
-            ui->locationCapacity->setValue(cfg.getAs<int32_t>("locationCapacity"));
-            ui->conveyorCapacity->setValue(cfg.getAs<int32_t>("conveyorCapacity"));
-            ui->simulationSpeedup->setValue(cfg.getAs<double>("simSpeedup"));
-            ui->preprocessOrders->setCheckState(cfg.getAs<bool>("preprocess") ? Qt::Checked : Qt::Unchecked);
+            try
+            {
+                ui->toteSpeed->setValue(cfg.getAs<double>("toteSpeed"));
+                ui->workerSpeed->setValue(cfg.getAs<double>("workerSpeed"));
+                ui->totesPerMinute->setValue(cfg.getAs<int32_t>("totesPerMin"));
+                ui->customerReqInterval->setValue(cfg.getAs<int32_t>("orderRequestInterval"));
+                ui->locationCapacity->setValue(cfg.getAs<int32_t>("locationCapacity"));
+                ui->conveyorCapacity->setValue(cfg.getAs<int32_t>("conveyorCapacity"));
+                ui->simulationSpeedup->setValue(cfg.getAs<double>("simSpeedup"));
+                ui->preprocessOrders->setCheckState(cfg.getAs<bool>("preprocess") ? Qt::Checked : Qt::Unchecked);
+            }
+            catch(std::runtime_error&)
+            {
+                QMessageBox::critical(nullptr, "Error", "Invalid configuration selected.");
+            }
         }
 
         void MainWindow::on_startSimulation_clicked()

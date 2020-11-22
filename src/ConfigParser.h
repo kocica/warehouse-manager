@@ -18,7 +18,7 @@ namespace whm
     {
         public:
             ConfigParser_t();
-            ConfigParser_t(const std::string&);
+            ConfigParser_t(const std::string&, bool exc = false);
             ~ConfigParser_t() = default;
 
             template<typename U>
@@ -34,6 +34,7 @@ namespace whm
             std::string findByName(const std::string&) const;
 
         private:
+            bool exc;
             std::map<std::string, std::string> parsedValues;
     };
 }

@@ -66,8 +66,7 @@ namespace whm
                 }
             }
 
-            std::cerr << "Failed to lookup port!" << std::endl;
-            return nullptr;
+            throw std::runtime_error("Failed to lookup port!");
         }
 
         int32_t UiWarehouseConnection_t::getWhConnID() const

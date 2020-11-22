@@ -80,14 +80,29 @@ namespace whm
     {
         tinyxml2::XMLElement* attribs = elem->FirstChildElement( "Attributes" );
 
+        if(!attribs)
+        {
+            throw std::runtime_error("Failed to parse XML!");
+        }
+
         whConnID = attribs->IntAttribute("id");
 
         tinyxml2::XMLElement* whPortFrom = elem->FirstChildElement( "WarehousePortFrom" );
+
+        if(!whPortFrom)
+        {
+            throw std::runtime_error("Failed to parse XML!");
+        }
 
         int32_t whPortFromItemID = whPortFrom->IntAttribute("item_id");
         int32_t whPortFromPortID = whPortFrom->IntAttribute("port_id");
 
         tinyxml2::XMLElement* whPortTo = elem->FirstChildElement( "WarehousePortTo" );
+
+        if(!whPortTo)
+        {
+            throw std::runtime_error("Failed to parse XML!");
+        }
 
         int32_t whPortToItemID = whPortTo->IntAttribute("item_id");
         int32_t whPortToPortID = whPortTo->IntAttribute("port_id");
@@ -147,7 +162,6 @@ namespace whm
             }
         }
 
-        std::cerr << "Failed to lookup port!" << std::endl;
-        return nullptr;
+        throw std::runtime_error("Failed to lookup port!");
     }
 }
