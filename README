@@ -32,7 +32,5 @@ Optimizer (train on train set of orders):
  - NN (pokud nebude fungovat paralelizace)
  - Doxygen
 
- - When going into thread "wait", show some waiting dialog
- - Resize of object - Cannot select due to incorrect mRect (has to move the item to recalculate)
- - Segfault when resizing objects and using ports/deleting
- - Secure there are no "minus" generated ADUs
+
+ - Resizing of object - Cannot select due to incorrect mRect (has to move the item to recalculate)

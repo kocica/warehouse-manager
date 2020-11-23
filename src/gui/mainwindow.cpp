@@ -405,6 +405,15 @@ namespace whm
         {
             enableManager();
 
+            auto itadu = std::find_if(xadu.begin(), xadu.end(), [](auto v) { return v < 0; });
+            auto itorl = std::find_if(xorl.begin(), xorl.end(), [](auto v) { return v < 0; });
+
+            if(itadu != xadu.end() || itorl != xorl.end())
+            {
+                QMessageBox::warning(nullptr, "Warning", "There have been some negative values generated, you can either proceed"
+                                                         " (but the results might be biased/misleading), or tune parameters and run again.");
+            }
+
             xadu.clear();
             xorl.clear();
 
