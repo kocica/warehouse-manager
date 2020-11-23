@@ -121,12 +121,23 @@ namespace whm
 
             // Create scene borders
             QPen pen;
-            pen.setColor(Qt::black);
+            pen.setColor(Qt::white);
             pen.setWidth(whX / 100);
             scene->addLine(0,   0,   whX, 0,   pen);
             scene->addLine(0,   0,   0,   whY, pen);
             scene->addLine(0,   whY, whX, whY, pen);
             scene->addLine(whX, 0,   whX, whY, pen);
+
+            pen.setWidth(1);
+            for(int32_t x = 0; x < whX; x += whR)
+            {
+                scene->addLine(x, 0, x, whY, pen);
+            }
+
+            for(int32_t y = 0; y < whY; y += whR)
+            {
+                scene->addLine(0, y, whX, y, pen);
+            }
 
             // Enable zooming
             ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
@@ -304,17 +315,23 @@ namespace whm
                     return;
                 }
 
+                int32_t x = loc.x();
+                int32_t y = loc.y();
+
+                x -= x % whR;
+                y -= y % whR;
+
                 if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
                 {
-                    whItem = new UiWarehouseItemLocation_t(scene, this, loc.x(), loc.y(), w, h, WarehouseItemType_t::E_LOCATION_SHELF);
+                    whItem = new UiWarehouseItemLocation_t(scene, this, x, y, w, h, WarehouseItemType_t::E_LOCATION_SHELF);
                 }
                 else if (gateMap.find(cursorMode) != gateMap.end())
                 {
-                    whItem = new UiWarehouseItemGate_t(scene, this, loc.x(), loc.y(), w, h, gateMap[cursorMode]);
+                    whItem = new UiWarehouseItemGate_t(scene, this, x, y, w, h, gateMap[cursorMode]);
                 }
                 else if (convMap.find(cursorMode) != convMap.end())
                 {
-                    whItem = new UiWarehouseItemConveyor_t(scene, this, loc.x(), loc.y(), w, h, convMap[cursorMode]);
+                    whItem = new UiWarehouseItemConveyor_t(scene, this, x, y, w, h, convMap[cursorMode]);
                 }
 
                 UiWarehouseLayout_t::getWhLayout().addWhItem(whItem);
@@ -675,13 +692,25 @@ namespace whm
 
             ui->view->scene()->setSceneRect(0, 0, whX, whY);
 
+            // Create scene borders
             QPen pen;
-            pen.setColor(Qt::black);
+            pen.setColor(Qt::white);
             pen.setWidth(whX / 100);
-            ui->view->scene()->addLine(0,     0,    whX, 0,   pen);
-            ui->view->scene()->addLine(0,     0,    0,   whY, pen);
-            ui->view->scene()->addLine(0,     whY,  whX, whY, pen);
-            ui->view->scene()->addLine(whX,   0,    whX, whY, pen);
+            scene->addLine(0,   0,   whX, 0,   pen);
+            scene->addLine(0,   0,   0,   whY, pen);
+            scene->addLine(0,   whY, whX, whY, pen);
+            scene->addLine(whX, 0,   whX, whY, pen);
+
+            pen.setWidth(1);
+            for(int32_t x = 0; x < whX; x += whR)
+            {
+                scene->addLine(x, 0, x, whY, pen);
+            }
+
+            for(int32_t y = 0; y < whY; y += whR)
+            {
+                scene->addLine(0, y, whX, y, pen);
+            }
 
             // Enable zooming
             ui->ratioIndicator->setFixedWidth(ui->view->width()/5);

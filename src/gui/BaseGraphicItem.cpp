@@ -298,6 +298,23 @@ namespace whm
                 return;
             }
 
+            int gridSize = 50;
+
+            QPointF newPos = event->pos();
+
+            if((int)newPos.x() % gridSize != 0)
+            {
+                int x = (int)newPos.x() - (int)newPos.x() % gridSize;
+                newPos.setX(x);
+            }
+            if((int)newPos.y() % gridSize != 0)
+            {
+                int y = (int)newPos.y() - (int)newPos.y() % gridSize;
+                newPos.setY(y);
+            }
+
+            event->setPos(newPos);
+
             if(event->buttons() == Qt::LeftButton && mCurrentHandle)
             {
                 int32_t rotation{ 0 };
@@ -521,23 +538,21 @@ namespace whm
         {
             if (change == ItemPositionChange && scene())
             {
-                int gridSize = 100;
-                bool gridEnabled = false;
+                int gridSize = 50;
 
                 QPointF newPos = value.toPointF();
-                if (gridEnabled)
+
+                if((int)newPos.x() % gridSize != 0)
                 {
-                    if((int)newPos.x()%gridSize != 0)
-                    {
-                        int x = (int)newPos.x() - (int)newPos.x()%gridSize;
-                        newPos.setX(x);
-                    }
-                    if((int)newPos.y()%gridSize != 0)
-                    {
-                        int y = (int)newPos.y() - (int)newPos.y()%gridSize;
-                        newPos.setY(y);
-                    }
+                    int x = (int)newPos.x() - (int)newPos.x() % gridSize;
+                    newPos.setX(x);
                 }
+                if((int)newPos.y() % gridSize != 0)
+                {
+                    int y = (int)newPos.y() - (int)newPos.y() % gridSize;
+                    newPos.setY(y);
+                }
+
                 return newPos;
             }
 
