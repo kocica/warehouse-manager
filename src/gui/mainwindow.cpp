@@ -811,13 +811,18 @@ namespace whm
             {
                 auto dialog = new QProgressDialog();
                 dialog->setWindowTitle("Wait");
+                dialog->setRange(0, 0);
                 dialog->setLabelText("Aborting optimization");
+                dialog->setCancelButton(nullptr);
 
                 dialog->resize(100, 30);
-                dialog->exec();
+                dialog->show();
 
                 optimizerUi->terminate();
-                optimizerUi->wait();
+                while (!optimizerUi->wait(100))
+                {
+                    QApplication::processEvents();
+                }
                 optimizerUi = nullptr;
                 optimizationFinished();
 
@@ -967,10 +972,24 @@ namespace whm
         {
             if(generatorUi)
             {
+                auto dialog = new QProgressDialog();
+                dialog->setWindowTitle("Wait");
+                dialog->setRange(0, 0);
+                dialog->setLabelText("Aborting generating");
+                dialog->setCancelButton(nullptr);
+
+                dialog->resize(100, 30);
+                dialog->show();
+
                 generatorUi->terminate();
-                generatorUi->wait();
+                while (!generatorUi->wait(100))
+                {
+                    QApplication::processEvents();
+                }
                 generatorUi = nullptr;
                 generatingFinished(std::string());
+
+                dialog->hide();
             }
         }
 
@@ -1055,10 +1074,24 @@ namespace whm
         {
             if(simulatorUi)
             {
+                auto dialog = new QProgressDialog();
+                dialog->setWindowTitle("Wait");
+                dialog->setRange(0, 0);
+                dialog->setLabelText("Aborting simulation");
+                dialog->setCancelButton(nullptr);
+
+                dialog->resize(100, 30);
+                dialog->show();
+
                 simulatorUi->terminate();
-                simulatorUi->wait();
+                while (!simulatorUi->wait(100))
+                {
+                    QApplication::processEvents();
+                }
                 simulatorUi = nullptr;
                 simulationFinished(0.0);
+
+                dialog->hide();
             }
         }
 
