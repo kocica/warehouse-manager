@@ -413,6 +413,8 @@ namespace whm
                 }
 
                 updateHandles();
+
+                this->update(this->mRect);
             }
             else
             {

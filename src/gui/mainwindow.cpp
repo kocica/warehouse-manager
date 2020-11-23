@@ -849,10 +849,10 @@ namespace whm
 
             ui->configLineOpt->setText(file);
 
-            whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
-
             try
             {
+                whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
+
                 // General
                 ui->numberDimensions->setValue(cfg.getAs<int32_t>("numberDimensions"));
                 ui->problemMin->setValue(cfg.getAs<int32_t>("problemMin"));
@@ -919,10 +919,10 @@ namespace whm
 
             ui->configLineGen->setText(file);
 
-            whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
-
             try
             {
+                whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
+
                 ui->orderCount->setValue(cfg.getAs<int32_t>("orderCount"));
                 ui->aduMi->setValue(cfg.getAs<int32_t>("mi"));
                 ui->aduSigma->setValue(cfg.getAs<int32_t>("sigma"));
@@ -1012,10 +1012,10 @@ namespace whm
 
             ui->configLineSim->setText(file);
 
-            whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
-
             try
             {
+                whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
+
                 ui->toteSpeed->setValue(cfg.getAs<double>("toteSpeed"));
                 ui->workerSpeed->setValue(cfg.getAs<double>("workerSpeed"));
                 ui->totesPerMinute->setValue(cfg.getAs<int32_t>("totesPerMin"));

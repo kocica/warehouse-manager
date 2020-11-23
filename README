@@ -31,6 +31,3 @@ Optimizer (train on train set of orders):
  - Dukaz TSP <-> SLAP
  - NN (pokud nebude fungovat paralelizace)
  - Doxygen
-
-
- - Resizing of object - Cannot select due to incorrect mRect (has to move the item to recalculate)
