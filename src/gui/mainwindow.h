@@ -72,6 +72,8 @@ namespace whm
             private slots:
                 void mousePressEvent(QMouseEvent *);
 
+                void on_simulationSpeedup_valueChanged();
+
                 // Toolbar - layout control
                 void on_loadLayout_triggered();
                 void on_saveLayout_triggered();

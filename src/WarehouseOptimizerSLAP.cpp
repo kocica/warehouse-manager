@@ -178,7 +178,9 @@ namespace whm
 
         fitness = simulateWarehouse(genes);
 
-        updateAllocations(genes);
+#       ifdef WHM_GUI
+        int32_t uiCallbackInt = cfg.getAs<int32_t>("maxIterations") / 10;
+#       endif
 
         for(int32_t gen = 0; gen < cfg.getAs<int32_t>("maxIterations"); ++gen)
         {
@@ -186,8 +188,9 @@ namespace whm
             histFitness.push_back(fitness);
 
 #           ifdef WHM_GUI
-            if(uiCallback)
+            if(uiCallback && ((gen % uiCallbackInt) == 0))
             {
+                updateAllocations(genes);
                 uiCallback(fitness);
             }
 #           endif

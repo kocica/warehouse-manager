@@ -1453,18 +1453,35 @@
                   </spacer>
                  </item>
                  <item>
+                  <widget class="QLabel" name="simultaionSpeedupLabel">
+                   <property name="text">
+                    <string>Simulation speedup:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <widget class="QSlider" name="simulationSpeedup">
                    <property name="minimum">
-                    <number>0</number>
+                    <number>1</number>
                    </property>
                    <property name="maximum">
-                    <number>10</number>
+                    <number>100</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>1</number>
                    </property>
                    <property name="value">
-                    <number>1</number>
+                    <number>10</number>
                    </property>
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="simulationSpeedupValue">
+                   <property name="text">
+                    <string>1.0</string>
                    </property>
                   </widget>
                  </item>

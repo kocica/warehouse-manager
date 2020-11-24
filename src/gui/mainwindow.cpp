@@ -1051,7 +1051,7 @@ namespace whm
                 ui->customerReqInterval->setValue(cfg.getAs<int32_t>("orderRequestInterval"));
                 ui->locationCapacity->setValue(cfg.getAs<int32_t>("locationCapacity"));
                 ui->conveyorCapacity->setValue(cfg.getAs<int32_t>("conveyorCapacity"));
-                ui->simulationSpeedup->setValue(cfg.getAs<double>("simSpeedup"));
+                ui->simulationSpeedup->setValue(cfg.getAs<double>("simSpeedup") * 10);
                 ui->preprocessOrders->setCheckState(cfg.getAs<bool>("preprocess") ? Qt::Checked : Qt::Unchecked);
             }
             catch(std::runtime_error&)
@@ -1084,7 +1084,7 @@ namespace whm
             cfg.set("orderRequestInterval",   std::to_string(ui->customerReqInterval->value()));
             cfg.set("locationCapacity",       std::to_string(ui->locationCapacity->value()));
             cfg.set("conveyorCapacity",       std::to_string(ui->conveyorCapacity->value()));
-            cfg.set("simSpeedup",             std::to_string(ui->simulationSpeedup->value()));
+            cfg.set("simSpeedup",             std::to_string(ui->simulationSpeedup->value() / 10.0));
             cfg.set("preprocess",             ui->preprocessOrders->checkState() == Qt::Checked ? "true" : "false");
 
             cfg.set("locationsPath", l);
@@ -1522,6 +1522,11 @@ namespace whm
             WarehouseLayout_t::getWhLayout().exportCustomerOrders(f);
 
             return f;
+        }
+
+        void MainWindow::on_simulationSpeedup_valueChanged()
+        {
+            ui->simulationSpeedupValue->setText(QString::number(ui->simulationSpeedup->value() / 10.0));
         }
 
         void CustomizedGraphicsScene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
