@@ -852,7 +852,7 @@ namespace whm
                 dialog->setRange(0, 0);
                 dialog->setLabelText("Aborting optimization");
                 dialog->setCancelButton(nullptr);
-
+                dialog->setModal(true);
                 dialog->resize(100, 30);
                 dialog->show();
 
@@ -860,6 +860,11 @@ namespace whm
                 while (!optimizerUi->wait(100))
                 {
                     QApplication::processEvents();
+
+                    if(dialog)
+                    {
+                        dialog->setVisible(true);
+                    }
                 }
                 optimizerUi = nullptr;
                 optimizationFinished();
@@ -1015,7 +1020,7 @@ namespace whm
                 dialog->setRange(0, 0);
                 dialog->setLabelText("Aborting generating");
                 dialog->setCancelButton(nullptr);
-
+                dialog->setModal(true);
                 dialog->resize(100, 30);
                 dialog->show();
 
@@ -1023,6 +1028,11 @@ namespace whm
                 while (!generatorUi->wait(100))
                 {
                     QApplication::processEvents();
+
+                    if(dialog)
+                    {
+                        dialog->setVisible(true);
+                    }
                 }
                 generatorUi = nullptr;
                 generatingFinished(std::string());
@@ -1117,7 +1127,7 @@ namespace whm
                 dialog->setRange(0, 0);
                 dialog->setLabelText("Aborting simulation");
                 dialog->setCancelButton(nullptr);
-
+                dialog->setModal(true);
                 dialog->resize(100, 30);
                 dialog->show();
 
@@ -1125,6 +1135,11 @@ namespace whm
                 while (!simulatorUi->wait(100))
                 {
                     QApplication::processEvents();
+
+                    if(dialog)
+                    {
+                        dialog->setVisible(true);
+                    }
                 }
                 simulatorUi = nullptr;
                 simulationFinished(0.0);
