@@ -20,10 +20,10 @@
 #include "Logger.h"
 #include "WarehouseItem.h"
 #include "WarehouseLayout.h"
-#include "WarehouseSimulator.h"
 #include "WarehousePathFinder.h"
 #include "WarehouseLocationRack.h"
 #include "WarehouseOptimizerSLAP.h"
+#include "WarehouseSimulatorSIMLIB.h"
 
 namespace whm
 {

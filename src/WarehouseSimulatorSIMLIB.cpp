@@ -1,10 +1,10 @@
 /**
  * Warehouse manager
  *
- * @file    WarehouseSimulator.cpp
+ * @file    WarehouseSimulatorSIMLIB.cpp
  * @date    10/11/2020
  * @author  Filip Kocica
- * @brief   Module responsible for simulation of the warehouse operations
+ * @brief   Module responsible for simulation of the warehouse operations (using SIMLIB/C++)
  */
 
 #ifdef WHM_SIM
@@ -20,11 +20,11 @@
 // Local
 #include "Logger.h"
 #include "WarehouseItem.h"
-#include "WarehouseSimulator.h"
+#include "WarehouseSimulatorSIMLIB.h"
 
 namespace whm
 {
-    WarehouseSimulator_t::WarehouseSimulator_t()
+    WarehouseSimulatorSIMLIB_t::WarehouseSimulatorSIMLIB_t()
         : stats{ true }
         , optimizationMode{ false }
         , multipleExperiments{ false }
@@ -36,18 +36,18 @@ namespace whm
     }
 
 #   ifdef WHM_GUI
-    void WarehouseSimulator_t::setUiCallback(UiCallback_t c)
+    void WarehouseSimulatorSIMLIB_t::setUiCallback(UiCallback_t c)
     {
         this->uiCallback = c;
     }
 #   endif
 
-    simlib3::Store* WarehouseSimulator_t::getWhItemFacility(int32_t facilityID)
+    simlib3::Store* WarehouseSimulatorSIMLIB_t::getWhItemFacility(int32_t facilityID)
     {
         return whFacilities[facilityID];
     }
 
-    WarehouseSimulator_t::~WarehouseSimulator_t()
+    WarehouseSimulatorSIMLIB_t::~WarehouseSimulatorSIMLIB_t()
     {
         delete whPathFinder;
 
@@ -59,7 +59,7 @@ namespace whm
         whFacilities.clear();
     }
 
-    void WarehouseSimulator_t::prepareWhSimulation()
+    void WarehouseSimulatorSIMLIB_t::prepareWhSimulation()
     {
         for(const auto* whItem : whLayout.getWhItems())
         {
@@ -76,7 +76,7 @@ namespace whm
         }
     }
 
-    void WarehouseSimulator_t::preprocessOrders()
+    void WarehouseSimulatorSIMLIB_t::preprocessOrders()
     {
         auto& orders = const_cast<std::vector<WarehouseOrder_t>&>(whLayout.getWhOrders());
 
@@ -113,7 +113,7 @@ namespace whm
         }
     }
 
-    double WarehouseSimulator_t::runSimulation()
+    double WarehouseSimulatorSIMLIB_t::runSimulation()
     {
         if(!multipleExperiments)
         {
@@ -146,7 +146,7 @@ namespace whm
         return Time;
     }
 
-    void WarehouseSimulator_t::orderFinished(double duration, double durationNonSim, int32_t distance)
+    void WarehouseSimulatorSIMLIB_t::orderFinished(double duration, double durationNonSim, int32_t distance)
     {
 #       ifndef WHM_GUI
         (void) duration;
@@ -219,17 +219,17 @@ namespace whm
         }
     }
 
-    void WarehouseSimulator_t::printStats(bool stats_)
+    void WarehouseSimulatorSIMLIB_t::printStats(bool stats_)
     {
         stats = stats_;
     }
 
-    bool& WarehouseSimulator_t::optimizationModeActive()
+    bool& WarehouseSimulatorSIMLIB_t::optimizationModeActive()
     {
         return optimizationMode;
     }
 
-    void WarehouseSimulator_t::clearSimulation()
+    void WarehouseSimulatorSIMLIB_t::clearSimulation()
     {
         for(auto& whFacility : whFacilities)
         {
@@ -237,27 +237,27 @@ namespace whm
         }
     }
 
-    void WarehouseSimulator_t::setArguments(const utils::WhmArgs_t& args_)
+    void WarehouseSimulatorSIMLIB_t::setArguments(const utils::WhmArgs_t& args_)
     {
         args = args_;
     }
 
-    utils::WhmArgs_t WarehouseSimulator_t::getArguments() const
+    utils::WhmArgs_t WarehouseSimulatorSIMLIB_t::getArguments() const
     {
         return args;
     }
 
-    ConfigParser_t& WarehouseSimulator_t::getConfig()
+    ConfigParser_t& WarehouseSimulatorSIMLIB_t::getConfig()
     {
         return cfg;
     }
 
-    void WarehouseSimulator_t::setConfig(const ConfigParser_t& cfg_)
+    void WarehouseSimulatorSIMLIB_t::setConfig(const ConfigParser_t& cfg_)
     {
         cfg = cfg_;
     }
 
-    WarehousePathInfo_t* WarehouseSimulator_t::lookupShortestPath(int32_t currentLocID, const std::vector<int32_t>& targetLocIDs)
+    WarehousePathInfo_t* WarehouseSimulatorSIMLIB_t::lookupShortestPath(int32_t currentLocID, const std::vector<int32_t>& targetLocIDs)
     {
         WarehousePathInfo_t* whPathInfo{ nullptr };
 
@@ -281,7 +281,7 @@ namespace whm
         return whPathInfo;
     }
 
-    std::vector<int32_t> WarehouseSimulator_t::lookupWhLocations(const std::string& article, int32_t quantity)
+    std::vector<int32_t> WarehouseSimulatorSIMLIB_t::lookupWhLocations(const std::string& article, int32_t quantity)
     {
         std::vector<int32_t> whLocIDs;
 
@@ -297,7 +297,7 @@ namespace whm
         return whLocIDs;
     }
 
-    WarehouseItem_t* WarehouseSimulator_t::lookupWhGate(const WarehouseItemType_t& whGateType)
+    WarehouseItem_t* WarehouseSimulatorSIMLIB_t::lookupWhGate(const WarehouseItemType_t& whGateType)
     {
         for(WarehouseItem_t* i : whLayout.getWhItems())
         {
@@ -311,7 +311,7 @@ namespace whm
         return nullptr;
     }
 
-    WarehouseItem_t* WarehouseSimulator_t::lookupWhLoc(int32_t locID)
+    WarehouseItem_t* WarehouseSimulatorSIMLIB_t::lookupWhLoc(int32_t locID)
     {
         for(WarehouseItem_t* i : whLayout.getWhItems())
         {
@@ -327,7 +327,7 @@ namespace whm
 
     // ================================================================================================================
 
-    OrderRequest_t::OrderRequest_t(WarehouseLayout_t& layout_, WarehouseSimulator_t& sim_)
+    OrderRequest_t::OrderRequest_t(WarehouseLayout_t& layout_, WarehouseSimulatorSIMLIB_t& sim_)
         : layout(layout_)
         , sim(sim_)
         , it(layout.getWhOrders().begin())
@@ -345,11 +345,11 @@ namespace whm
 
         const auto& handleFacility = [&](int32_t itemID)
                                         {
-                                        simlib3::Store* whFacility = sim.getWhItemFacility(itemID);
+                                            simlib3::Store* whFacility = sim.getWhItemFacility(itemID);
 
-                                        Enter(*whFacility, 1);
-                                        Wait(waitDuration / sim.getConfig().getAs<double>("simSpeedup"));
-                                        Leave(*whFacility, 1);
+                                            Enter(*whFacility, 1);
+                                            Wait(waitDuration / sim.getConfig().getAs<double>("simSpeedup"));
+                                            Leave(*whFacility, 1);
                                         };
 
         locationID = sim.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)->getWhItemID();
@@ -407,7 +407,7 @@ namespace whm
         sim.orderFinished(Time - processDuration, totalDuration, totalDistance);
     }
 
-    OrderProcessor_t::OrderProcessor_t(WarehouseOrder_t order_, WarehouseSimulator_t& sim_)
+    OrderProcessor_t::OrderProcessor_t(WarehouseOrder_t order_, WarehouseSimulatorSIMLIB_t& sim_)
         : order(order_)
         , sim(sim_)
     {

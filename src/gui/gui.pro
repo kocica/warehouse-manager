@@ -29,7 +29,8 @@ SOURCES +=  ../main.cpp \
             ../WarehouseOptimizerPSO.cpp \
             ../WarehouseOptimizerSLAP.cpp \
             ../WarehouseOptimizerRAND.cpp \
-            ../WarehouseSimulator.cpp \
+            ../WarehouseSimulatorSIMLIB.cpp \
+            ../WarehouseSimulatorCPPSIM.cpp \
             ../WarehouseDataGenerator.cpp \
             UiCursor.cpp \
             MainWindow.cpp \
@@ -69,7 +70,8 @@ HEADERS +=  ../Utils.h \
             ../WarehouseOptimizerPSO.h \
             ../WarehouseOptimizerSLAP.h \
             ../WarehouseOptimizerRAND.h \
-            ../WarehouseSimulator.h \
+            ../WarehouseSimulatorSIMLIB.h \
+            ../WarehouseSimulatorCPPSIM.h \
             ../WarehouseDataGenerator.h \
             MainWindow.h \
             UiCursor.h \

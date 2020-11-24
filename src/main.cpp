@@ -14,18 +14,23 @@
 #include "Utils.h"
 #include "Logger.h"
 #include "WarehouseLayout.h"
+
 #ifdef WHM_GEN
 #  include "WarehouseDataGenerator.h"
-#else
-#  include "WarehouseSimulator.h"
-#  ifdef WHM_OPT
-#    include "WarehouseOptimizerGA.h"
-#    include "WarehouseOptimizerDE.h"
-#    include "WarehouseOptimizerABC.h"
-#    include "WarehouseOptimizerPSO.h"
-#    include "WarehouseOptimizerSLAP.h"
-#    include "WarehouseOptimizerRAND.h"
-#  endif
+#endif
+
+#ifdef WHM_SIM
+#  include "WarehouseSimulatorSIMLIB.h"
+#  include "WarehouseSimulatorCPPSIM.h"
+#endif
+
+#ifdef WHM_OPT
+#  include "WarehouseOptimizerGA.h"
+#  include "WarehouseOptimizerDE.h"
+#  include "WarehouseOptimizerABC.h"
+#  include "WarehouseOptimizerPSO.h"
+#  include "WarehouseOptimizerSLAP.h"
+#  include "WarehouseOptimizerRAND.h"
 #endif
 
 // Qt
@@ -33,11 +38,6 @@
 #  include <QApplication>
 #  include <QDesktopWidget>
 #  include "gui/mainwindow.h"
-#endif
-
-#ifndef PROCESS_H_
-#  define Process CppLibProcess
-#  include <ClassLib/Process.h>
 #endif
 
 int main(int argc, char *argv[])
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 #    endif
 
 #    ifdef WHM_SIM
-            whm::WarehouseSimulator_t simulator;
+            whm::WarehouseSimulatorSIMLIB_t simulator;
             simulator.setArguments(args);
             simulator.runSimulation();
 #    endif

@@ -19,9 +19,9 @@
 #include "Logger.h"
 #include "WarehouseItem.h"
 #include "WarehouseLayout.h"
-#include "WarehouseSimulator.h"
 #include "WarehouseLocationRack.h"
 #include "WarehouseOptimizerRAND.h"
+#include "WarehouseSimulatorSIMLIB.h"
 
 namespace whm
 {

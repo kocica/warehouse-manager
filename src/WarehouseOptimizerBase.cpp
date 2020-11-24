@@ -19,9 +19,9 @@
 #include "Logger.h"
 #include "WarehouseItem.h"
 #include "WarehouseLayout.h"
-#include "WarehouseSimulator.h"
 #include "WarehouseLocationRack.h"
 #include "WarehouseOptimizerBase.h"
+#include "WarehouseSimulatorSIMLIB.h"
 
 #ifdef WHM_PLOT
 #include "matplotlibcpp.h"

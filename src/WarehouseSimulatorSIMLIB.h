@@ -1,10 +1,10 @@
 /**
  * Warehouse manager
  *
- * @file    WarehouseSimulator.h
+ * @file    WarehouseSimulatorSIMLIB.h
  * @date    10/11/2020
  * @author  Filip Kocica
- * @brief   Module responsible for simulation of the warehouse operations
+ * @brief   Module responsible for simulation of the warehouse operations (using SIMLIB/C++)
  */
 
 #pragma once
@@ -15,7 +15,7 @@
 #include <map>
 #include <functional>
 
-// Simlib
+// SIMLIB/C++
 #include <simlib.h>
 
 // Local
@@ -30,11 +30,11 @@
 
 namespace whm
 {
-    class WarehouseSimulator_t
+    class WarehouseSimulatorSIMLIB_t
     {
         public:
-            WarehouseSimulator_t();
-            ~WarehouseSimulator_t();
+            WarehouseSimulatorSIMLIB_t();
+            ~WarehouseSimulatorSIMLIB_t();
 
             double runSimulation();
             void orderFinished(double, double, int32_t);
@@ -90,28 +90,28 @@ namespace whm
     class OrderProcessor_t : public simlib3::Process
     {
         public:
-            OrderProcessor_t(WarehouseOrder_t, WarehouseSimulator_t&);
+            OrderProcessor_t(WarehouseOrder_t, WarehouseSimulatorSIMLIB_t&);
 
         protected:
             void Behavior();
 
         private:
             WarehouseOrder_t order;
-            WarehouseSimulator_t& sim;
+            WarehouseSimulatorSIMLIB_t& sim;
     };
 
 
     class OrderRequest_t : public simlib3::Event
     {
         public:
-            OrderRequest_t(WarehouseLayout_t&, WarehouseSimulator_t&);
+            OrderRequest_t(WarehouseLayout_t&, WarehouseSimulatorSIMLIB_t&);
 
         protected:
             void Behavior();
 
         private:
             WarehouseLayout_t& layout;
-            WarehouseSimulator_t& sim;
+            WarehouseSimulatorSIMLIB_t& sim;
             std::vector<WarehouseOrder_t>::const_iterator it;
     };
 }

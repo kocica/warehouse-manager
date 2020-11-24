@@ -1,10 +1,11 @@
 # Requirements
 
  - g++8 (c++17, structured bindings, filesystem, ...)
- - qt5
+ - Qt5
  - tinyxml2 (included in the sources)
  - matplotlibcpp (included in the sources)
- - simlib
+ - SIMLIB/C++ (http://www.fit.vutbr.cz/~peringer/SIMLIB/)
+ - C++SIM (https://github.com/nmcl/C--SIM)
 
 
 # Usage

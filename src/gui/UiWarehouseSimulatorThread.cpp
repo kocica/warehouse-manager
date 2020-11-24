@@ -13,7 +13,7 @@
 #include "../WarehouseOrder.h"
 #include "../WarehouseLayout.h"
 #include "../WarehouseOrderLine.h"
-#include "../WarehouseSimulator.h"
+#include "../WarehouseSimulatorSIMLIB.h"
 
 namespace whm
 {
@@ -35,7 +35,7 @@ namespace whm
             whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.locationsPath);
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
-            whm::WarehouseSimulator_t sim;
+            whm::WarehouseSimulatorSIMLIB_t sim;
 
             sim.setUiCallback([&](double time, bool sim)
                               {
