@@ -73,6 +73,8 @@ namespace whm
                 void mousePressEvent(QMouseEvent *);
 
                 void on_simulationSpeedup_valueChanged();
+                void on_optimizersConfigsTab_currentChanged();
+                void on_optimizerSelectionBox_currentIndexChanged();
 
                 // Toolbar - layout control
                 void on_loadLayout_triggered();

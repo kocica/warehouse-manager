@@ -1544,6 +1544,16 @@ namespace whm
             ui->simulationSpeedupValue->setText(QString::number(ui->simulationSpeedup->value() / 10.0));
         }
 
+        void MainWindow::on_optimizersConfigsTab_currentChanged()
+        {
+            ui->optimizerSelectionBox->setCurrentIndex(ui->optimizersConfigsTab->currentIndex());
+        }
+
+        void MainWindow::on_optimizerSelectionBox_currentIndexChanged()
+        {
+            ui->optimizersConfigsTab->setCurrentIndex(ui->optimizerSelectionBox->currentIndex());
+        }
+
         void CustomizedGraphicsScene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         {
             auto* item = itemAt(event->scenePos().toPoint(), QTransform());
