@@ -35,6 +35,11 @@
 #  include "gui/mainwindow.h"
 #endif
 
+#ifndef PROCESS_H_
+#  define Process CppLibProcess
+#  include <ClassLib/Process.h>
+#endif
+
 int main(int argc, char *argv[])
 {
     try
