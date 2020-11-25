@@ -14,6 +14,8 @@
 #include <map>
 #include <vector>
 #include <random>
+#include <unistd.h>
+#include <stdlib.h>
 #include <functional>
 
 #include "Utils.h"
@@ -24,6 +26,13 @@
 
 namespace whm
 {
+    struct SimProcess_t
+    {
+        pid_t pid;
+        int32_t infd;
+        int32_t outfd;
+    };
+
     class WarehouseOptimizerBase_t
     {
         public:
@@ -52,6 +61,7 @@ namespace whm
 
             // Simulation
             double simulateWarehouse(std::vector<int32_t>&);
+            void simulationService(int32_t, int32_t);
 
             // Store results
             void saveFitnessPlot() const;
@@ -68,6 +78,8 @@ namespace whm
             std::map<int32_t, WarehouseLocationSlot_t*> slotEnc;
 
             WarehouseSimulatorSIMLIB_t simulator;
+
+            std::vector<SimProcess_t> simProcesses;
 
             // Fitness history for plot
             std::vector<double> histFitness;

@@ -61,6 +61,41 @@ namespace whm
                 }
             }
         }
+
+        for(int32_t i = 0; i < cfg.getAs<int32_t>("procCount"); ++i)
+        {
+            int fd1[2];
+            int fd2[2];
+
+            if(pipe(fd1) || pipe(fd2))
+            {
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Pipe failed");
+                throw std::runtime_error("Pipe failed");
+            }
+
+            pid_t pid = fork();
+
+            if(pid != 0)
+            {
+                close(fd1[0]);
+                close(fd2[1]);
+
+                SimProcess_t simProcess;
+
+                simProcess.pid = pid;
+                simProcess.infd = fd2[0];
+                simProcess.outfd = fd1[1];
+
+                simProcesses.push_back(simProcess);
+            }
+            else
+            {
+                close(fd1[1]);
+                close(fd2[0]);
+
+                simulationService(fd1[0], fd2[1]);
+            }
+        }
     }
 
 #   ifdef WHM_GUI
@@ -185,6 +220,40 @@ namespace whm
 
         // Export allocation to a csv file
         whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(args.locationsPath);
+    }
+
+    void WarehouseOptimizerBase_t::simulationService(int32_t infd, int32_t outfd)
+    {
+        std::vector<int32_t> ind(skuEnc.size());
+
+        for(;;)
+        {
+            for(size_t i = 0; i < skuEnc.size(); ++i)
+            {
+                auto s = read(infd, &ind.at(i), sizeof(int32_t));
+
+                if(s < 0)
+                {
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed");
+                    throw std::runtime_error("Read failed");
+                }
+                else if(s == 0)
+                {
+                    close(infd);
+                    exit(0);
+                }
+            }
+
+            double fitness = simulateWarehouse(ind);
+
+            auto s = write(outfd, &fitness, sizeof(double));
+
+            if(s < 0)
+            {
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed");
+                throw std::runtime_error("Write failed");
+            }
+        }
     }
 }
 
