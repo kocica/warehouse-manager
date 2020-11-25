@@ -32,3 +32,4 @@ Optimizer (train on train set of orders):
  - Dukaz TSP <-> SLAP
  - NN (pokud nebude fungovat paralelizace)
  - Doxygen
+ - Free optimizer memory

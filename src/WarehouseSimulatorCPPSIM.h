@@ -9,18 +9,21 @@
 
 #pragma once
 
-#ifdef WHM_SIM
+#ifdef WHM_SIM_2
 
 // Std
 #include <map>
 #include <functional>
 
 // C++SIM
+#define HAVE_BOOLEAN_TYPE
 #ifndef PROCESS_H_
-#  define Process CPPSIMProcess
+//#  define Process CPPSIMProcess
 #  include <ClassLib/Process.h>
-#  undef Process
+//#  undef Process
 #endif
+
+#include <Event/Entity.h>
 
 // Local
 #include "Utils.h"
@@ -32,6 +35,28 @@
 #include "WarehousePathFinder.h"
 #include "WarehouseLocationRack.h"
 
+namespace whm
+{
+    class WarehouseSimulatorCPPSIM_t : public Entity
+    {
+        public:
+            void Body() override;
+    };
 
+    class OrderRequestCPPSIM_t : public Process
+    {
+        public:
+            OrderRequestCPPSIM_t(WarehouseLayout_t&, WarehouseSimulatorCPPSIM_t&);
+
+        protected:
+            void Body() override;
+
+        private:
+            WarehouseLayout_t& layout;
+            WarehouseSimulatorCPPSIM_t& sim;
+            std::vector<WarehouseOrder_t>::const_iterator it;
+            int c;
+    };
+}
 
 #endif

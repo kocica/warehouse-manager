@@ -18,7 +18,7 @@ QMAKE      = qmake
 QFLAGS     = -qt=qt5
 
 CC         = g++-8
-CFLAGS     = -std=c++17 -pedantic -Wall -Wextra -O3
+CFLAGS     = -std=c++17 -pedantic -Wall -Wextra -O3 #-fopenmp
 
 PROFILE    = #-pg
 
