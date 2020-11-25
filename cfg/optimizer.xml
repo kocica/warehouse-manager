@@ -59,6 +59,7 @@
                saveWeightsPeriod="10"
                maxTrialValue="10"
                plotPath=""
+               procCount="4"
 
 
                populationSize="2000"
