@@ -441,7 +441,7 @@ namespace whm
 
             population = std::move(newPopulation);
 
-            for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSize"); ++p)
+            for(int32_t p = cfg.getAs<int32_t>("eliteSize"); p < cfg.getAs<int32_t>("populationSize"); ++p)
             {
                 for(size_t i = 0; i < population.at(p).genes.size(); ++i)
                 {
@@ -455,7 +455,7 @@ namespace whm
                 }
             }
 
-            for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSize"); ++p)
+            for(int32_t p = cfg.getAs<int32_t>("eliteSize"); p < cfg.getAs<int32_t>("populationSize"); ++p)
             {
                 double newFitness;
                 auto s = read(simProcesses.at(p % n).infd, &newFitness, sizeof(double));
