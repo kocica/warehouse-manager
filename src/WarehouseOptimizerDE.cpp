@@ -412,9 +412,13 @@ namespace whm
                 trailVector.push_back(ProbGenes_t(remainers.begin(), remainers.begin() + cfg.getAs<int32_t>("numberDimensions")));
             }
 
+            std::vector<std::vector<int32_t>> x_new_vec;
+
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
             {
                 auto x_new = crossoverFunctor(probGenesToGenes(trailVector[p]), population[p].genes, p);
+
+                x_new_vec.push_back(x_new);
 
                 for(size_t i = 0; i < x_new.size(); ++i)
                 {
@@ -441,7 +445,7 @@ namespace whm
 
                 if(newFitness <= population[p].fitness)
                 {
-                    population[p].genes   = crossoverFunctor(probGenesToGenes(trailVector[p]), population[p].genes, p);
+                    population[p].genes   = x_new_vec.at(p);
                     population[p].fitness = newFitness;
                 }
                 else
