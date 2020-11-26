@@ -366,9 +366,31 @@ namespace whm
             initPopulationRand(population);
         }
 
+        auto n = cfg.getAs<int32_t>("procCount");
+
         for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
         {
-            population[p].fitness = simulateWarehouse(population[p].genes);
+            for(size_t i = 0; i < population.at(p).genes.size(); ++i)
+            {
+                auto s = write(simProcesses.at(p % n).outfd, &population[p].genes.at(i), sizeof(int32_t));
+
+                if(s < 0)
+                {
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed");
+                    throw std::runtime_error("Write failed");
+                }
+            }
+        }
+
+        for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
+        {
+            auto s = read(simProcesses.at(p % n).infd, &population.at(p).fitness, sizeof(double));
+
+            if(s <= 0)
+            {
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed");
+                throw std::runtime_error("Read failed");
+            }
         }
 
         for(int32_t gen = 0; gen < cfg.getAs<int32_t>("maxIterations"); ++gen)
@@ -392,13 +414,35 @@ namespace whm
 
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
             {
-                auto x_new  = crossoverFunctor(probGenesToGenes(trailVector[p]), population[p].genes, p);
-                auto fx_new = simulateWarehouse(x_new);
+                auto x_new = crossoverFunctor(probGenesToGenes(trailVector[p]), population[p].genes, p);
 
-                if(fx_new <= population[p].fitness)
+                for(size_t i = 0; i < x_new.size(); ++i)
                 {
-                    population[p].genes   = x_new;
-                    population[p].fitness = fx_new;
+                    auto s = write(simProcesses.at(p % n).outfd, &x_new.at(i), sizeof(int32_t));
+
+                    if(s < 0)
+                    {
+                        whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed");
+                        throw std::runtime_error("Write failed");
+                    }
+                }
+            }
+
+            for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
+            {
+                double newFitness;
+                auto s = read(simProcesses.at(p % n).infd, &newFitness, sizeof(double));
+
+                if(s <= 0)
+                {
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed");
+                    throw std::runtime_error("Read failed");
+                }
+
+                if(newFitness <= population[p].fitness)
+                {
+                    population[p].genes   = crossoverFunctor(probGenesToGenes(trailVector[p]), population[p].genes, p);
+                    population[p].fitness = newFitness;
                 }
                 else
                 {

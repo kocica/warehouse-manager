@@ -39,9 +39,50 @@ namespace whm
 
     void WarehouseOptimizerABC_t::employedBeePhase(std::vector<Solution_t>& pop)
     {
+        auto n = cfg.getAs<int32_t>("procCount");
+
+        std::vector<std::vector<int32_t>> genes;
+
         for(int p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
         {
-            updateBee(pop, p);
+            auto g = updateBee(pop, p);
+
+            for(size_t i = 0; i < g.size(); ++i)
+            {
+                auto s = write(simProcesses.at(p % n).outfd, &g.at(i), sizeof(int32_t));
+
+                if(s < 0)
+                {
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed");
+                    throw std::runtime_error("Write failed");
+                }
+            }
+
+            genes.push_back(std::move(g));
+        }
+
+        for(int p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
+        {
+            double fitness;
+            auto s = read(simProcesses.at(p % n).infd, &fitness, sizeof(double));
+
+            if(s <= 0)
+            {
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed");
+                throw std::runtime_error("Read failed");
+            }
+
+            // In case its better solution, update food
+            if(fitness < pop[p].fitness)
+            {
+                pop[p].fitness = fitness;
+                pop[p].trialValue = 0;
+                pop[p].genes = genes.at(p);
+            }
+            else
+            {
+                pop[p].trialValue++;
+            }
         }
     }
 
@@ -76,7 +117,7 @@ namespace whm
         while(updateCounter < cfg.getAs<int32_t>("foodSize"));
     }
 
-    void WarehouseOptimizerABC_t::updateBee(std::vector<Solution_t>& pop, int32_t p)
+    std::vector<int32_t> WarehouseOptimizerABC_t::updateBee(std::vector<Solution_t>& pop, int32_t p)
     {
         // Select random partner (/= actual one)
         int32_t partner_j{ 0 };
@@ -138,20 +179,7 @@ namespace whm
                 break;
         }
 
-        // Calculate fitness for new location
-        double fitness = simulateWarehouse(y_i);
-
-        // In case its better solution, update food
-        if(fitness < pop[p].fitness)
-        {
-            pop[p].fitness = fitness;
-            pop[p].trialValue = 0;
-            pop[p].genes = y_i;
-        }
-        else
-        {
-            pop[p].trialValue++;
-        }
+        return y_i;
     }
 
     std::vector<int32_t> WarehouseOptimizerABC_t::applySwap(std::vector<int32_t>& sol, std::vector<SwapOperator_t>& sos)
@@ -311,9 +339,31 @@ namespace whm
             initPopulationRand(population);
         }
 
+        auto n = cfg.getAs<int32_t>("procCount");
+
         for(int32_t p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
         {
-            population[p].fitness = simulateWarehouse(population[p].genes);
+            for(size_t i = 0; i < population.at(p).genes.size(); ++i)
+            {
+                auto s = write(simProcesses.at(p % n).outfd, &population[p].genes.at(i), sizeof(int32_t));
+
+                if(s < 0)
+                {
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed");
+                    throw std::runtime_error("Write failed");
+                }
+            }
+        }
+
+        for(int32_t p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
+        {
+            auto s = read(simProcesses.at(p % n).infd, &population.at(p).fitness, sizeof(double));
+
+            if(s <= 0)
+            {
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed");
+                throw std::runtime_error("Read failed");
+            }
         }
 
         memorizeBestSolution(population);

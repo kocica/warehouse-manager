@@ -41,7 +41,7 @@ namespace whm
             // Helpers
             int32_t selectTechnique();
             bool isBestSolution(const Solution_t&);
-            void updateBee(std::vector<Solution_t>&, int32_t);
+            std::vector<int32_t> updateBee(std::vector<Solution_t>&, int32_t);
             void memorizeBestSolution(std::vector<Solution_t>&);
 
             // Swap operators

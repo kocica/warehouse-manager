@@ -13,6 +13,7 @@
 #include <map>
 #include <utility>
 #include <iostream>
+#include <signal.h>
 #include <algorithm>
 
 // Local
@@ -95,6 +96,15 @@ namespace whm
 
                 simulationService(fd1[0], fd2[1]);
             }
+        }
+    }
+
+    WarehouseOptimizerBase_t::~WarehouseOptimizerBase_t()
+    {
+        // Kill all simulation services
+        for(auto& simProcess : simProcesses)
+        {
+            (void) kill(simProcess.pid, SIGINT);
         }
     }
 

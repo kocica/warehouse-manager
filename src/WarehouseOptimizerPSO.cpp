@@ -383,9 +383,31 @@ namespace whm
             initPopulationRand(population);
         }
 
+        auto n = cfg.getAs<int32_t>("procCount");
+
         for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
         {
-            population[p].fitness = simulateWarehouse(population[p].genes);
+            for(size_t i = 0; i < population.at(p).genes.size(); ++i)
+            {
+                auto s = write(simProcesses.at(p % n).outfd, &population[p].genes.at(i), sizeof(int32_t));
+
+                if(s < 0)
+                {
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed");
+                    throw std::runtime_error("Write failed");
+                }
+            }
+        }
+
+        for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
+        {
+            auto s = read(simProcesses.at(p % n).infd, &population.at(p).fitness, sizeof(double));
+
+            if(s <= 0)
+            {
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed");
+                throw std::runtime_error("Read failed");
+            }
         }
 
         for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
@@ -412,7 +434,28 @@ namespace whm
 
                 population[p].genes = crossoverFunctor(population[p].genes, v);
 
-                double newFitness = simulateWarehouse(population[p].genes);
+                for(size_t i = 0; i < population[p].genes.size(); ++i)
+                {
+                    auto s = write(simProcesses.at(p % n).outfd, &population[p].genes.at(i), sizeof(int32_t));
+
+                    if(s < 0)
+                    {
+                        whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed");
+                        throw std::runtime_error("Write failed");
+                    }
+                }
+            }
+
+            for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
+            {
+                double newFitness;
+                auto s = read(simProcesses.at(p % n).infd, &newFitness, sizeof(double));
+
+                if(s <= 0)
+                {
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed");
+                    throw std::runtime_error("Read failed");
+                }
 
                 population[p].trialValue = newFitness <= population[p].fitness ? population[p].trialValue + 1 : 0;
 
@@ -422,10 +465,7 @@ namespace whm
                 {
                     personalBest[p] = population[p];
                 }
-            }
 
-            for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
-            {
                 if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
                 {
                     population[p].trialValue = 0;

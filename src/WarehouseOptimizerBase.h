@@ -38,7 +38,7 @@ namespace whm
         public:
             WarehouseOptimizerBase_t() = delete;
             WarehouseOptimizerBase_t(utils::WhmArgs_t);
-            virtual ~WarehouseOptimizerBase_t() = default;
+            virtual ~WarehouseOptimizerBase_t();
 
             // Entry point
             virtual void optimize() = 0;
