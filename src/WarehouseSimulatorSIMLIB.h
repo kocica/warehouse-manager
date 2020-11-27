@@ -82,6 +82,7 @@ namespace whm
 
             WarehouseLayout_t& whLayout;
             WarehousePathFinder_t* whPathFinder;
+            std::vector<WarehouseOrder_t> whOrders;
 
             std::map<int32_t, simlib3::Store*> whFacilities;
     };

@@ -78,9 +78,7 @@ namespace whm
 
     void WarehouseSimulatorSIMLIB_t::preprocessOrders()
     {
-        auto& orders = const_cast<std::vector<WarehouseOrder_t>&>(whLayout.getWhOrders());
-
-        for(auto& order : orders)
+        for(auto& order : whOrders)
         {
             std::vector<WarehouseOrderLine_t> newLines;
 
@@ -125,6 +123,8 @@ namespace whm
             }
 
             prepareWhSimulation();
+
+            whOrders = whLayout.getWhOrders();
 
             if(cfg.getAs<bool>("preprocess"))
             {

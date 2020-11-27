@@ -441,7 +441,7 @@ namespace whm
 
             population = std::move(newPopulation);
 
-            for(int32_t p = cfg.getAs<int32_t>("eliteSize"); p < cfg.getAs<int32_t>("populationSize"); ++p)
+            for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSize"); ++p)
             {
                 for(size_t i = 0; i < population.at(p).genes.size(); ++i)
                 {
@@ -455,7 +455,7 @@ namespace whm
                 }
             }
 
-            for(int32_t p = cfg.getAs<int32_t>("eliteSize"); p < cfg.getAs<int32_t>("populationSize"); ++p)
+            for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSize"); ++p)
             {
                 double newFitness;
                 auto s = read(simProcesses.at(p % n).infd, &newFitness, sizeof(double));
@@ -471,6 +471,13 @@ namespace whm
                 population[p].fitness = newFitness;
             }
 
+            std::sort(population.begin(), population.end(),
+                      [](Solution_t& lhs, Solution_t& rhs)
+                      -> bool
+                      {
+                          return lhs.fitness < rhs.fitness;
+                      });
+
             // Discard chromosomes with trialValue > N and generate brand new offsprings (ignore elite part)
             for(int32_t p = cfg.getAs<int32_t>("eliteSize"); p < cfg.getAs<int32_t>("populationSize"); ++p)
             {
@@ -484,13 +491,6 @@ namespace whm
                     population[p].fitness = simulateWarehouse(population[p].genes);
                 }
             }
-
-            std::sort(population.begin(), population.end(),
-                    [](Solution_t& lhs, Solution_t& rhs)
-                    -> bool
-                    {
-                        return lhs.fitness < rhs.fitness;
-                    });
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[GA] [%3d] Best fitness: %f", gen, population.at(0).fitness);
             histFitness.push_back(population.at(0).fitness);
