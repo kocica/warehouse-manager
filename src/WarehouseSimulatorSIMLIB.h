@@ -41,6 +41,8 @@ namespace whm
 
             void printStats(bool);
 
+            void preprocessOrders();
+
             bool& optimizationModeActive();
 
             ConfigParser_t& getConfig();
@@ -63,7 +65,6 @@ namespace whm
 
         protected:
             void clearSimulation();
-            void preprocessOrders();
             void prepareWhSimulation();
 
         private:
@@ -82,7 +83,6 @@ namespace whm
 
             WarehouseLayout_t& whLayout;
             WarehousePathFinder_t* whPathFinder;
-            std::vector<WarehouseOrder_t> whOrders;
 
             std::map<int32_t, simlib3::Store*> whFacilities;
     };
