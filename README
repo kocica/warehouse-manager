@@ -33,3 +33,4 @@ Optimizer (train on train set of orders):
  - NN (pokud nebude fungovat paralelizace)
  - Doxygen
  - Free optimizer memory
+ - Handle read/write failed (pipe)
