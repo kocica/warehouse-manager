@@ -35,6 +35,7 @@ namespace whm
             , mConnected(false)
             , mDrawHandles(true)
             , mLocationSlot(false)
+            , mAllowChange(false)
             , mParentItem(parent)
             , ui(ui)
             , mCurrentHandle(0)
@@ -437,6 +438,7 @@ namespace whm
             }
             else
             {
+                mAllowChange = true;
                 QGraphicsItem::mouseMoveEvent(event);
             }
         }
@@ -558,27 +560,26 @@ namespace whm
             this->mCurrentHandle = 0;
         }
 
-        QVariant BaseGraphicItem_t::itemChange(GraphicsItemChange change, const QVariant &value)
+        QVariant BaseGraphicItem_t::itemChange(GraphicsItemChange change, const QVariant& value)
         {
-            if (change == ItemPositionChange && scene())
+            if (change == ItemPositionChange && scene() && mAllowChange)
             {
-                auto gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
-                auto newPos = value.toPointF();
-                auto diffx = (int)newPos.x() % gridSize;
-                auto diffy = (int)newPos.y() % gridSize;
+                int gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
 
-                if(std::abs(diffx) == 1 || std::abs(std::abs(diffx) - gridSize) == 1)
+                QPointF newPos = value.toPointF();
+
+                if((int)newPos.x() % gridSize != 0)
                 {
-                    diffx = 0;
+                    int x = (int)newPos.x() - (int)newPos.x() % gridSize;
+                    newPos.setX(x);
+                }
+                if((int)newPos.y() % gridSize != 0)
+                {
+                    int y = (int)newPos.y() - (int)newPos.y() % gridSize;
+                    newPos.setY(y);
                 }
 
-                if(std::abs(diffy) == 1 || std::abs(std::abs(diffy) - gridSize) == 1)
-                {
-                    diffy = 0;
-                }
-
-                newPos.setX((int)newPos.x() - diffx);
-                newPos.setY((int)newPos.y() - diffy);
+                mAllowChange = !mAllowChange;
 
                 return newPos;
             }

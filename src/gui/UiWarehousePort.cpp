@@ -493,6 +493,15 @@ namespace whm
                                 }
                             }
 
+                            auto newRect = srcItem->getRect();
+                            auto xdiff = int(newRect.topLeft().x()) % 10;
+                            auto ydiff = int(newRect.topLeft().y()) % 10;
+                            auto xshift = xdiff > 5 ? 10 - xdiff : -xdiff;
+                            auto yshift = ydiff > 5 ? 10 - ydiff : -ydiff;
+                            srcItem->moveBy(xshift, yshift);
+
+                            std::cout << xdiff << " | " << ydiff << " | " << xshift << " | " << yshift << std::endl;
+
                             this->whConn = new UiWarehouseConnection_t(selectedPort, this);
                             selectedPort->setWhConn(this->whConn);
                             selectedPort->connect();

@@ -71,6 +71,7 @@ namespace whm
                 bool mConnected;
                 bool mDrawHandles;
                 bool mLocationSlot;
+                bool mAllowChange;
 
                 int32_t mOrientation{ 0 };
                 int32_t mLineWidth{ 2 };
