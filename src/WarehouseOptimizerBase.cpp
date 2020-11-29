@@ -243,15 +243,15 @@ namespace whm
             {
                 auto s = read(infd, &ind.at(i), sizeof(int32_t));
 
-                if(s < 0)
-                {
-                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed");
-                    throw std::runtime_error("Read failed");
-                }
-                else if(s == 0)
+                if(s == 0)
                 {
                     close(infd);
                     exit(0);
+                }
+                else if(s < (ssize_t)sizeof(int32_t))
+                {
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed <%d>", errno);
+                    throw std::runtime_error("Read failed");
                 }
             }
 
@@ -259,9 +259,9 @@ namespace whm
 
             auto s = write(outfd, &fitness, sizeof(double));
 
-            if(s < 0)
+            if(s < (ssize_t)sizeof(double))
             {
-                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed");
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed <%d>", errno);
                 throw std::runtime_error("Write failed");
             }
         }

@@ -22,7 +22,7 @@ CFLAGS     = -std=c++17 -pedantic -Wall -Wextra -O3 #-fopenmp
 
 PROFILE    = #-pg
 
-LDFLAGS    = -lsimlib -lm -lpython2.7 -l:libC++SIM.a -l:libCommon.a -l:libEvent.a -l:libSimSet.a -l:libStat.a -pthread
+LDFLAGS    = -lsimlib -lm -lpython2.7# -l:libC++SIM.a -l:libCommon.a -l:libEvent.a -l:libSimSet.a -l:libStat.a -pthread
 LDLIBS     = 
 INCLUDE    = -I/usr/include/python2.7
 

@@ -51,9 +51,9 @@ namespace whm
             {
                 auto s = write(simProcesses.at(p % n).outfd, &g.at(i), sizeof(int32_t));
 
-                if(s < 0)
+                if(s < (ssize_t)sizeof(int32_t))
                 {
-                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed");
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed <%d>", errno);
                     throw std::runtime_error("Write failed");
                 }
             }
@@ -66,9 +66,9 @@ namespace whm
             double fitness;
             auto s = read(simProcesses.at(p % n).infd, &fitness, sizeof(double));
 
-            if(s <= 0)
+            if(s < (ssize_t)sizeof(double))
             {
-                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed");
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed <%d>", errno);
                 throw std::runtime_error("Read failed");
             }
 
@@ -347,9 +347,9 @@ namespace whm
             {
                 auto s = write(simProcesses.at(p % n).outfd, &population[p].genes.at(i), sizeof(int32_t));
 
-                if(s < 0)
+                if(s < (ssize_t)sizeof(int32_t))
                 {
-                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed");
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed <%d>", errno);
                     throw std::runtime_error("Write failed");
                 }
             }
@@ -359,9 +359,9 @@ namespace whm
         {
             auto s = read(simProcesses.at(p % n).infd, &population.at(p).fitness, sizeof(double));
 
-            if(s <= 0)
+            if(s < (ssize_t)sizeof(double))
             {
-                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed");
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed <%d>", errno);
                 throw std::runtime_error("Read failed");
             }
         }
