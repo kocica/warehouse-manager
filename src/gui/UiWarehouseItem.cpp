@@ -101,20 +101,6 @@ namespace whm
             auto t = QTransform().translate(mOrigin.x(), mOrigin.y()).rotate(mOrientation).translate(-mOrigin.x(), -mOrigin.y());
             auto p = t.mapToPolygon(mRect.toRect());
             auto r = p.boundingRect();
-
-            if(this->mOrientation == -90 || this->mOrientation == 270)
-            {
-
-            }
-            else if(this->mOrientation == -180 || this->mOrientation == 180)
-            {
-
-            }
-            else if(this->mOrientation == 90 || this->mOrientation == -270)
-            {
-
-            }
-
             auto o = this->getO();
             this->setO(0);
             r.setTopLeft(QPoint(this->scenePos().x() + r.topLeft().x(), this->scenePos().y() + r.topLeft().y()));

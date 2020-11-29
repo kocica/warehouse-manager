@@ -413,13 +413,33 @@ namespace whm
                         mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
                     case Handle::HANDLE_TYPE_ROTATE:
+                    {
                         rotation = (int(-QLineF(event->scenePos(),     mapToScene(mOrigin)).angle() / 90) * 90)+
                                    (int( QLineF(event->lastScenePos(), mapToScene(mOrigin)).angle() / 90) * 90);
                         this->mOrientation = (this->mOrientation + rotation) % 360;
                         this->setTransform(QTransform().translate(mOrigin.x(), mOrigin.y())
                                                        .rotate(rotation)
                                                        .translate(-mOrigin.x(), -mOrigin.y()), true);
+
+                        auto t = QTransform().translate(mOrigin.x(), mOrigin.y()).rotate(mOrientation).translate(-mOrigin.x(), -mOrigin.y());
+                        auto p = t.mapToPolygon(mRect.toRect());
+                        auto r = p.boundingRect();
+
+                        auto o = this->mOrientation;
+                        this->setGraphicItemOrientation(0);
+                        r.setTopLeft(QPoint(this->scenePos().x() + r.topLeft().x(), this->scenePos().y() + r.topLeft().y()));
+                        r.setBottomRight(QPoint(this->scenePos().x() + r.bottomRight().x(), this->scenePos().y() + r.bottomRight().y()));
+                        this->setGraphicItemOrientation(o);
+
+                        auto diffx = (int)r.topLeft().x() % gridSize;
+                        auto diffy = (int)r.topLeft().y() % gridSize;
+                        mRect.setTopLeft(QPointF(mRect.topLeft().x() - diffx, mRect.topLeft().y() - diffy));
+                        mRect.setBottomRight(QPointF(mRect.bottomRight().x() - diffx, mRect.bottomRight().y() - diffy));
+                        updateChildren(diffx, diffy);
+                        mOrigin.setX((dx * mRect.width()) + mRect.center().x());
+                        mOrigin.setY((dy * mRect.height()) + mRect.center().y());
                         break;
+                    }
                     case Handle::HANDLE_TYPE_ORIGIN:
                         mCurrentHandle->setPos(event->pos());
                         this->mOrigin = mCurrentHandle->pos();
