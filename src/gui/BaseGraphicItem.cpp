@@ -11,6 +11,7 @@
 #include "Handle.h"
 #include "BaseGraphicItem.h"
 #include "UiWarehouseItem.h"
+#include "UiWarehouseLayout.h"
 #include "UiWarehouseItemGate.h"
 #include "UiWarehouseItemConveyor.h"
 #include "UiWarehouseItemLocation.h"
@@ -50,6 +51,8 @@ namespace whm
 
             minWidth = w / 2;
             minHeight = h / 2;
+
+            this->setZValue(1);
         }
 
         void BaseGraphicItem_t::setId(QString id)
@@ -298,7 +301,7 @@ namespace whm
                 return;
             }
 
-            int gridSize = 50;
+            int gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
 
             QPointF newPos = event->pos();
 
@@ -538,18 +541,22 @@ namespace whm
         {
             if (change == ItemPositionChange && scene())
             {
-                int gridSize = 50;
+                int gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
 
                 QPointF newPos = value.toPointF();
 
-                if((int)newPos.x() % gridSize != 0)
+                auto diffx = (int)newPos.x() % gridSize;
+                auto diffy = (int)newPos.y() % gridSize;
+
+                if(!(diffx == 0 || diffx == 1 || diffx == -1 || diffx == (gridSize-1) || diffx == (1-gridSize)))
                 {
-                    int x = (int)newPos.x() - (int)newPos.x() % gridSize;
+                    int x = (int)newPos.x() - diffx;
                     newPos.setX(x);
                 }
-                if((int)newPos.y() % gridSize != 0)
+
+                if(!(diffy == 0 || diffy == 1 || diffy == -1 || diffy == (gridSize-1) || diffy == (1-gridSize)))
                 {
-                    int y = (int)newPos.y() - (int)newPos.y() % gridSize;
+                    int y = (int)newPos.y() - diffy;
                     newPos.setY(y);
                 }
 
