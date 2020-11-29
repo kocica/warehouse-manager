@@ -50,6 +50,7 @@ namespace whm
                 void setLineWidth(int32_t w);
                 void setBrush(QBrush b);
                 void setLocationSlot(bool s);
+                void setOrientationAligned(int o);
                 QGraphicsItem* getParent() const;
 
             protected:

@@ -103,7 +103,7 @@ namespace whm
                             if(dstPort->getType() == WarehousePortType_t::E_PORT_RIGHT &&
                                srcPort->getType() == WarehousePortType_t::E_PORT_LEFT)
                             {
-                                srcItem->setO(dstItem->getO());
+                                srcItem->setOrientationAligned(dstItem->getO());
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -131,7 +131,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_LEFT &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_RIGHT)
                             {
-                                srcItem->setO(dstItem->getO());
+                                srcItem->setOrientationAligned(dstItem->getO());
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -159,7 +159,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_LEFT &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_TOP)
                             {
-                                srcItem->setO(dstItem->getO() + 90);
+                                srcItem->setOrientationAligned(dstItem->getO() + 90);
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -187,7 +187,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_TOP &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_LEFT)
                             {
-                                srcItem->setO(dstItem->getO() - 90);
+                                srcItem->setOrientationAligned(dstItem->getO() - 90);
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -215,7 +215,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_RIGHT &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_TOP)
                             {
-                                srcItem->setO(dstItem->getO() - 90);
+                                srcItem->setOrientationAligned(dstItem->getO() - 90);
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -243,7 +243,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_TOP &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_RIGHT)
                             {
-                                srcItem->setO(dstItem->getO() + 90);
+                                srcItem->setOrientationAligned(dstItem->getO() + 90);
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -271,7 +271,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_LEFT &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_BOTTOM)
                             {
-                                srcItem->setO(dstItem->getO() - 90);
+                                srcItem->setOrientationAligned(dstItem->getO() - 90);
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -299,7 +299,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_BOTTOM &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_LEFT)
                             {
-                                srcItem->setO(dstItem->getO() + 90);
+                                srcItem->setOrientationAligned(dstItem->getO() + 90);
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -327,7 +327,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_RIGHT &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_BOTTOM)
                             {
-                                srcItem->setO(dstItem->getO() + 90);
+                                srcItem->setOrientationAligned(dstItem->getO() + 90);
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -355,7 +355,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_BOTTOM &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_RIGHT)
                             {
-                                srcItem->setO(dstItem->getO() - 90);
+                                srcItem->setOrientationAligned(dstItem->getO() - 90);
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -383,7 +383,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_LEFT &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_MID)
                             {
-                                srcItem->setO(dstItem->getO());
+                                srcItem->setOrientationAligned(dstItem->getO());
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -411,7 +411,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_MID &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_LEFT)
                             {
-                                srcItem->setO(dstItem->getO());
+                                srcItem->setOrientationAligned(dstItem->getO());
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -439,7 +439,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_RIGHT &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_MID)
                             {
-                                srcItem->setO(dstItem->getO());
+                                srcItem->setOrientationAligned(dstItem->getO());
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 
@@ -467,7 +467,7 @@ namespace whm
                             else if(dstPort->getType() == WarehousePortType_t::E_PORT_MID &&
                                     srcPort->getType() == WarehousePortType_t::E_PORT_RIGHT)
                             {
-                                srcItem->setO(dstItem->getO());
+                                srcItem->setOrientationAligned(dstItem->getO());
                                 auto dstRect = dstItem->getRect();
                                 auto srcRect = srcItem->getRect();
 

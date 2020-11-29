@@ -414,30 +414,9 @@ namespace whm
                         break;
                     case Handle::HANDLE_TYPE_ROTATE:
                     {
-                        rotation = (int(-QLineF(event->scenePos(),     mapToScene(mOrigin)).angle() / 90) * 90)+
-                                   (int( QLineF(event->lastScenePos(), mapToScene(mOrigin)).angle() / 90) * 90);
-                        this->mOrientation = (this->mOrientation + rotation) % 360;
-                        this->setTransform(QTransform().translate(mOrigin.x(), mOrigin.y())
-                                                       .rotate(rotation)
-                                                       .translate(-mOrigin.x(), -mOrigin.y()), true);
-
-                        auto t = QTransform().translate(mOrigin.x(), mOrigin.y()).rotate(mOrientation).translate(-mOrigin.x(), -mOrigin.y());
-                        auto p = t.mapToPolygon(mRect.toRect());
-                        auto r = p.boundingRect();
-
-                        auto o = this->mOrientation;
-                        this->setGraphicItemOrientation(0);
-                        r.setTopLeft(QPoint(this->scenePos().x() + r.topLeft().x(), this->scenePos().y() + r.topLeft().y()));
-                        r.setBottomRight(QPoint(this->scenePos().x() + r.bottomRight().x(), this->scenePos().y() + r.bottomRight().y()));
-                        this->setGraphicItemOrientation(o);
-
-                        auto diffx = (int)r.topLeft().x() % gridSize;
-                        auto diffy = (int)r.topLeft().y() % gridSize;
-                        mRect.setTopLeft(QPointF(mRect.topLeft().x() - diffx, mRect.topLeft().y() - diffy));
-                        mRect.setBottomRight(QPointF(mRect.bottomRight().x() - diffx, mRect.bottomRight().y() - diffy));
-                        updateChildren(diffx, diffy);
-                        mOrigin.setX((dx * mRect.width()) + mRect.center().x());
-                        mOrigin.setY((dy * mRect.height()) + mRect.center().y());
+                        rotation = (int(-QLineF(event->scenePos(),     mapToScene(mOrigin)).angle() / 90) * 90) +
+                                   (int( QLineF(event->lastScenePos(), mapToScene(mOrigin)).angle() / 90) * 90) ;
+                        setOrientationAligned((this->mOrientation + rotation) % 360);
                         break;
                     }
                     case Handle::HANDLE_TYPE_ORIGIN:
@@ -523,6 +502,28 @@ namespace whm
                                            .translate(-mOrigin.x(), -mOrigin.y()), true);
         }
 
+        void BaseGraphicItem_t::setOrientationAligned(int o)
+        {
+            auto gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
+
+            auto t = QTransform().translate(mOrigin.x(), mOrigin.y()).rotate(o).translate(-mOrigin.x(), -mOrigin.y());
+            auto p = t.mapToPolygon(mRect.toRect());
+            auto r = p.boundingRect();
+
+            this->setGraphicItemOrientation(0);
+            r.setTopLeft(QPoint(this->scenePos().x() + r.topLeft().x(), this->scenePos().y() + r.topLeft().y()));
+            r.setBottomRight(QPoint(this->scenePos().x() + r.bottomRight().x(), this->scenePos().y() + r.bottomRight().y()));
+            this->setGraphicItemOrientation(o);
+
+            auto diffx = (int)r.topLeft().x() % gridSize;
+            auto diffy = (int)r.topLeft().y() % gridSize;
+            mRect.setTopLeft(QPointF(mRect.topLeft().x() - diffx, mRect.topLeft().y() - diffy));
+            mRect.setBottomRight(QPointF(mRect.bottomRight().x() - diffx, mRect.bottomRight().y() - diffy));
+            updateChildren(diffx, diffy);
+            mOrigin.setX(mRect.center().x());
+            mOrigin.setY(mRect.center().y());
+        }
+
         void BaseGraphicItem_t::setLineWidth(int32_t w)
         {
             this->mLineWidth = w;
@@ -561,24 +562,23 @@ namespace whm
         {
             if (change == ItemPositionChange && scene())
             {
-                int gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
-
-                QPointF newPos = value.toPointF();
-
+                auto gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
+                auto newPos = value.toPointF();
                 auto diffx = (int)newPos.x() % gridSize;
                 auto diffy = (int)newPos.y() % gridSize;
 
-                if(!(diffx == 0 || diffx == 1 || diffx == -1 || diffx == (gridSize-1) || diffx == (1-gridSize)))
+                if(std::abs(diffx) == 1 || std::abs(std::abs(diffx) - gridSize) == 1)
                 {
-                    int x = (int)newPos.x() - diffx;
-                    newPos.setX(x);
+                    diffx = 0;
                 }
 
-                if(!(diffy == 0 || diffy == 1 || diffy == -1 || diffy == (gridSize-1) || diffy == (1-gridSize)))
+                if(std::abs(diffy) == 1 || std::abs(std::abs(diffy) - gridSize) == 1)
                 {
-                    int y = (int)newPos.y() - diffy;
-                    newPos.setY(y);
+                    diffy = 0;
                 }
+
+                newPos.setX((int)newPos.x() - diffx);
+                newPos.setY((int)newPos.y() - diffy);
 
                 return newPos;
             }
