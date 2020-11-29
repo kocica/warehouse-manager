@@ -14,7 +14,7 @@
 #include <QTimer>
 #include <QPainter>
 #include <QMessageBox>
-#include <QGraphicsItem>
+#include <QGraphicsRectItem>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsSceneMouseEvent>
 
@@ -27,7 +27,7 @@ namespace whm
 {
     namespace gui
     {
-        class BaseGraphicItem_t : public QGraphicsItem
+        class BaseGraphicItem_t : public QGraphicsRectItem
         {
             public:
                 BaseGraphicItem_t(qreal w, qreal h, MainWindow* ui, QGraphicsScene *scene = 0, QGraphicsItem *parent = 0);

@@ -500,14 +500,12 @@ namespace whm
                             auto yshift = ydiff > 5 ? 10 - ydiff : -ydiff;
                             srcItem->moveBy(xshift, yshift);
 
-                            std::cout << xdiff << " | " << ydiff << " | " << xshift << " | " << yshift << std::endl;
-
                             this->whConn = new UiWarehouseConnection_t(selectedPort, this);
                             selectedPort->setWhConn(this->whConn);
                             selectedPort->connect();
                             connect();
                             UiWarehouseLayout_t::getWhLayout().addWhConn(this->whConn);
-                            ui->reset();
+                            //ui->reset();
                         }
                         else
                         {

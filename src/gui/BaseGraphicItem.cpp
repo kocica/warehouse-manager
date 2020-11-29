@@ -30,7 +30,7 @@ namespace whm
     namespace gui
     {
         BaseGraphicItem_t::BaseGraphicItem_t(qreal w, qreal h, MainWindow* ui, QGraphicsScene *scene, QGraphicsItem *parent)
-            : QGraphicsItem(parent)
+            : QGraphicsRectItem(parent)
             , mSelected(false)
             , mConnected(false)
             , mDrawHandles(true)
@@ -205,7 +205,7 @@ namespace whm
                 return;
             }
 
-            QGraphicsItem::mousePressEvent(event);
+            QGraphicsRectItem::mousePressEvent(event);
 
             if(event->buttons() == Qt::LeftButton)
             {
@@ -428,18 +428,18 @@ namespace whm
                         mCurrentHandle->setPos(event->pos());
                         break;
                     default:
-                        QGraphicsItem::mouseMoveEvent(event);
+                        QGraphicsRectItem::mouseMoveEvent(event);
                         break;
                 }
 
                 updateHandles();
 
-                this->update(this->mRect);
+                this->setRect(this->mRect);
             }
             else
             {
                 mAllowChange = true;
-                QGraphicsItem::mouseMoveEvent(event);
+                QGraphicsRectItem::mouseMoveEvent(event);
             }
         }
 
@@ -556,7 +556,7 @@ namespace whm
                 return;
             }
 
-            QGraphicsItem::mouseReleaseEvent(event);
+            QGraphicsRectItem::mouseReleaseEvent(event);
             this->mCurrentHandle = 0;
         }
 
@@ -584,7 +584,7 @@ namespace whm
                 return newPos;
             }
 
-            return QGraphicsItem::itemChange(change, value);
+            return QGraphicsRectItem::itemChange(change, value);
         }
 
         void BaseGraphicItem_t::createHandles()
