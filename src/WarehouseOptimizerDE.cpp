@@ -416,7 +416,19 @@ namespace whm
 
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
             {
-                auto x_new = crossoverFunctor(probGenesToGenes(trailVector[p]), population[p].genes, p);
+                std::vector<int32_t> x_new;
+
+                if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
+                {
+                    population[p].trialValue = 0;
+                    population[p].fitness = std::numeric_limits<double>::max();
+
+                    initIndividualRand(x_new);
+                }
+                else
+                {
+                    x_new = crossoverFunctor(probGenesToGenes(trailVector[p]), population[p].genes, p);
+                }
 
                 x_new_vec.push_back(x_new);
 
@@ -445,22 +457,12 @@ namespace whm
 
                 if(newFitness <= population[p].fitness)
                 {
-                    population[p].genes   = x_new_vec.at(p);
+                    population[p].genes = x_new_vec.at(p);
                     population[p].fitness = newFitness;
                 }
                 else
                 {
                     population[p].trialValue++;
-
-                    if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
-                    {
-                        population[p].trialValue = 0;
-                        population[p].genes = std::vector<int32_t>();
-
-                        initIndividualRand(population[p].genes);
-
-                        population[p].fitness = simulateWarehouse(population[p].genes);
-                    }
                 }
             }
 

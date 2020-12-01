@@ -267,6 +267,10 @@ namespace whm
 
     void WarehouseOptimizerABC_t::scoutBeePhase(std::vector<Solution_t>& pop)
     {
+        std::vector<int32_t> scoutIndexes;
+
+        auto n = cfg.getAs<int32_t>("procCount");
+
         for(int32_t p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
         {
             if(!isBestSolution(pop[p]) && pop[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
@@ -276,7 +280,29 @@ namespace whm
 
                 initIndividualRand(pop[p].genes);
 
-                pop[p].fitness = simulateWarehouse(pop[p].genes);
+                for(size_t i = 0; i < pop.at(p).genes.size(); ++i)
+                {
+                    auto s = write(simProcesses.at(p % n).outfd, &pop[p].genes.at(i), sizeof(int32_t));
+
+                    if(s < (ssize_t)sizeof(int32_t))
+                    {
+                        whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed <%d>", errno);
+                        throw std::runtime_error("Write failed");
+                    }
+                }
+
+                scoutIndexes.push_back(p);
+            }
+        }
+
+        for(int32_t p : scoutIndexes)
+        {
+            auto s = read(simProcesses.at(p % n).infd, &pop[p].fitness, sizeof(double));
+
+            if(s < (ssize_t)sizeof(double))
+            {
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed <%d>", errno);
+                throw std::runtime_error("Read failed");
             }
         }
     }

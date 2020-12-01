@@ -185,26 +185,24 @@ namespace whm
             // Plots
             ui->fitnessPlot->addGraph();
             ui->fitnessPlot->xAxis->setLabel("Steps");
-            ui->fitnessPlot->yAxis->setLabel("Fitness");
+            ui->fitnessPlot->yAxis->setLabel("Orders processing duration [s]");
             ui->fitnessPlot->graph(0)->setPen(QPen(QColor(255, 102, 0)));
 
             ui->simulationPlot->addGraph();
-            ui->simulationPlot->xAxis->setLabel("Order");
+            ui->simulationPlot->xAxis->setLabel("Order number");
             ui->simulationPlot->yAxis->setLabel("Processing time [s]");
             ui->simulationPlot->graph(0)->setPen(QPen(QColor(255, 102, 0)));
             ui->simulationPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
             ui->simulationPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssPlus);
 
             ui->generatorPlot->addGraph();
-            ui->generatorPlot->xAxis->setLabel("x");
-            ui->generatorPlot->yAxis->setLabel("y");
+            ui->generatorPlot->xAxis->setLabel("ADU");
+            ui->generatorPlot->yAxis->setLabel("Count");
             ui->generatorPlot->graph(0)->setPen(QPen(QColor(255, 102, 0)));
             ui->generatorPlot->graph(0)->setBrush(QBrush(QColor(255, 102, 0)));
             ui->generatorPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
 
             ui->generatorPlot->addGraph();
-            ui->generatorPlot->xAxis->setLabel("x");
-            ui->generatorPlot->yAxis->setLabel("y");
             ui->generatorPlot->graph(1)->setPen(QPen(QColor(255, 102, 0)));
             ui->generatorPlot->graph(1)->setBrush(QBrush(QColor(255, 102, 0)));
             ui->generatorPlot->graph(1)->setScatterStyle(QCPScatterStyle::ssDiamond);

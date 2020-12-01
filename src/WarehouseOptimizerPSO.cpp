@@ -421,18 +421,28 @@ namespace whm
         {
             for(int32_t p = 0; p < cfg.getAs<int32_t>("numberParticles"); ++p)
             {
-                std::vector<int32_t> v;
-
-                if(flipCoin(0.5))
+                if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
                 {
-                    v = personalBest[p].genes;
+                    population[p].genes = std::vector<int32_t>();
+                    population[p].fitness = std::numeric_limits<double>::max();
+
+                    initIndividualRand(population[p].genes);
                 }
                 else
                 {
-                    v = globalBest.genes;
-                }
+                    std::vector<int32_t> v;
 
-                population[p].genes = crossoverFunctor(population[p].genes, v);
+                    if(flipCoin(0.5))
+                    {
+                        v = personalBest[p].genes;
+                    }
+                    else
+                    {
+                        v = globalBest.genes;
+                    }
+
+                    population[p].genes = crossoverFunctor(population[p].genes, v);
+                }
 
                 for(size_t i = 0; i < population[p].genes.size(); ++i)
                 {
@@ -457,23 +467,13 @@ namespace whm
                     throw std::runtime_error("Read failed");
                 }
 
-                population[p].trialValue = newFitness <= population[p].fitness ? population[p].trialValue + 1 : 0;
+                population[p].trialValue = newFitness <= population[p].fitness ? 0 : population[p].trialValue + 1;
 
                 population[p].fitness = newFitness;
 
                 if(population[p].fitness <= personalBest[p].fitness)
                 {
                     personalBest[p] = population[p];
-                }
-
-                if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
-                {
-                    population[p].trialValue = 0;
-                    population[p].genes = std::vector<int32_t>();
-
-                    initIndividualRand(population[p].genes);
-
-                    population[p].fitness = simulateWarehouse(population[p].genes);
                 }
             }
 

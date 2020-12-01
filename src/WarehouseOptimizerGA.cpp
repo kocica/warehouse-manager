@@ -474,7 +474,7 @@ namespace whm
                     throw std::runtime_error("Read failed");
                 }
 
-                population[p].trialValue = newFitness <= population[p].fitness ? population[p].trialValue + 1 : 0;
+                population[p].trialValue = newFitness <= population[p].fitness ? 0 : population[p].trialValue + 1;
 
                 population[p].fitness = newFitness;
             }

@@ -43,7 +43,6 @@ namespace whm
     void WarehouseOptimizerSLAP_t::init()
     {
         pathFinder.precalculatePaths(whm::WarehouseLayout_t::getWhLayout().getWhItems());
-        pathFinder.dump();
     }
 
     std::vector<int32_t> WarehouseOptimizerSLAP_t::precalculateSlotHeats()
