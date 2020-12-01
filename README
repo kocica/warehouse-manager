@@ -36,4 +36,5 @@ Optimizer (train on train set of orders):
  - Handle read/write failed (pipe)
  - Zmena dimenzi runtime (zobraz dialog; clear layout; load layout)
  - SEGFAULT (zmena velikosti itemu)
- - Po natoceni itemu nesedi do mrizky
+ - SLAP parametr pro vyvazeni zateze mezi lokacema
+ - Paralelizovat trialValue vyhozene (apod. v dalsich algs)

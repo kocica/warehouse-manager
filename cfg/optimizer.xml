@@ -51,15 +51,15 @@
         =============================================================================================
   -->
 
-<configuration numberDimensions="30"
+<configuration numberDimensions="150"
                problemMin="0"
-               problemMax="60"
+               problemMax="200"
                maxIterations="1000"
                initialWeights=""
-               saveWeightsPeriod="10"
+               saveWeightsPeriod="1"
                maxTrialValue="10"
                plotPath=""
-               procCount="4"
+               procCount="50"
 
 
                populationSize="2000"
@@ -90,5 +90,5 @@
                crossoverFunctorDE="crossoverOrdered"
 
 
-               populationSizeRand="10"
+               populationSizeRand="2000"
 />

@@ -275,16 +275,6 @@ namespace whm
 
         void BaseGraphicItem_t::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         {
-            if(auto* whItem = dynamic_cast<UiWarehouseItem_t*>(this))
-            {
-                if(whItem && whItem->isConnected())
-                {
-                    QMessageBox::warning(nullptr, "Warning", "Cannot move/resize connected items!");
-                    Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot move/resize connected items!");
-                    return;
-                }
-            }
-
             if(ui->isOptimizationActive())
             {
                 QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
@@ -439,6 +429,17 @@ namespace whm
             else
             {
                 mAllowChange = true;
+
+                if(auto* whItem = dynamic_cast<UiWarehouseItem_t*>(this))
+                {
+                    if(whItem && whItem->isConnected())
+                    {
+                        QMessageBox::warning(nullptr, "Warning", "Cannot move connected items!");
+                        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot move connected items!");
+                        return;
+                    }
+                }
+
                 QGraphicsRectItem::mouseMoveEvent(event);
             }
         }

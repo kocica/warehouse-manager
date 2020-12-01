@@ -6,6 +6,6 @@
   -->
 
 <configuration orderCount="1000"
-               mi="200"
-               sigma="100"
+               mi="100"
+               sigma="40"
                sigmaLines="10" />
