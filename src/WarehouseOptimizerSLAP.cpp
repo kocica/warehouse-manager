@@ -190,7 +190,8 @@ namespace whm
 #           ifdef WHM_GUI
             if(uiCallback && ((gen % uiCallbackInt) == 0))
             {
-                updateAllocations(genes);
+                simulateWarehouse(genes);
+                //updateAllocations(genes);
                 uiCallback(fitness);
             }
 #           endif

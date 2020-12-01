@@ -98,7 +98,8 @@ namespace whm
 #           ifdef WHM_GUI
             if(uiCallback)
             {
-                updateAllocations(bestSolution.genes);
+                simulateWarehouse(bestSolution.genes);
+                //updateAllocations(bestSolution.genes);
                 uiCallback(bestSolution.fitness);
             }
 #           endif

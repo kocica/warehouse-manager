@@ -453,6 +453,8 @@ namespace whm
 
             ui->simulationTime->setText(QString::number(time) + " [s]");
 
+            showWhItemsWorkload();
+
             orders.clear();
             processingDurations.clear();
         }
@@ -554,6 +556,8 @@ namespace whm
                     }
                 }
             }
+
+            showWhItemsWorkload();
 
             ui->locationsTableView->setModel(locationsModel);
         }
@@ -1554,6 +1558,23 @@ namespace whm
         void MainWindow::on_optimizerSelectionBox_currentIndexChanged()
         {
             ui->optimizersConfigsTab->setCurrentIndex(ui->optimizerSelectionBox->currentIndex());
+        }
+
+        void MainWindow::showWhItemsWorkload()
+        {
+            auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
+            auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
+
+            for(auto* item : items)
+            {
+                for(auto* uiItem : uiItems)
+                {
+                    if(item->getWhItemID() == uiItem->getWhItemID())
+                    {
+                        uiItem->setItemHeat(item->getWorkload());
+                    }
+                }
+            }
         }
 
         void CustomizedGraphicsScene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)

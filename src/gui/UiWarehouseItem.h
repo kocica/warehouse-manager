@@ -42,6 +42,7 @@ namespace whm
                 void disconnect();
                 void removeWhItem();
                 bool isConnected() const;
+                void setItemHeat(double);
 
                 int32_t getWhItemID() const { return whItemID; }
                 int32_t getX() const { return this->scenePos().x() + this->mRect.topLeft().x(); }
@@ -71,6 +72,7 @@ namespace whm
             protected:
                 MainWindow* ui{ nullptr };
                 QGraphicsScene* scene{ nullptr };
+                QGraphicsRectItem* heatRect{ nullptr };
 
                 int32_t portSizeX{ 0 };
                 int32_t portSizeY{ 0 };

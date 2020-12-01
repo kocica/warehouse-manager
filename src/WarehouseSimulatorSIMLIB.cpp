@@ -161,18 +161,7 @@ namespace whm
         (void) distance;
         (void) durationNonSim;
 
-        //static double  minDuration  = std::numeric_limits<double>::max();
-        //static double  maxDuration  = std::numeric_limits<double>::min();
-        //static double  sumDuration  = 0.0;
-        //static double  sumDurNonSim = 0.0;
-        //static int32_t sumDistance  = 0;
-
-        ++ordersFinished;
-        //minDuration  = duration < minDuration ? duration : minDuration;
-        //maxDuration  = duration > maxDuration ? duration : maxDuration;
-        //sumDuration  = duration + sumDuration ;
-        //sumDurNonSim = durationNonSim + sumDurNonSim;
-        //sumDistance  = distance + sumDistance ;
+        ++ ordersFinished;
 
 #       ifdef WHM_GUI
         if(uiCallback)
@@ -183,6 +172,11 @@ namespace whm
 
         if(ordersFinished == whLayout.getWhOrders().size())
         {
+            for(auto& whFacility : whFacilities)
+            {
+                lookupWhLoc(whFacility.first)->setWorkload(whFacility.second->tstat.MeanValue() / whFacility.second->Capacity());
+            }
+
 #           ifdef WHM_GUI
             if(uiCallback)
             {
@@ -192,37 +186,29 @@ namespace whm
 
             if(stats)
             {
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed orders count:   [-] <%d>", ordersFinished);
-                //Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Total traveled distance:  [m] <%d>", sumDistance);
-                //Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Duration non-realistic:   [s] <%f>", sumDurNonSim);
-                //Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Min order process time:   [s] <%f>", minDuration);
-                //Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Max order process time:   [s] <%f>", maxDuration);
-                //Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Sum order process time:   [s] <%f>", sumDuration);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in:   [s] <%f>", Time);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
-
-                // Facility load statistics
-                for(auto& whFacility : whFacilities)
+                // Facility workload statistics dump
+                for(auto& whItem : whLayout.getWhItems())
                 {
-                    // TODO: Print only Total facility load: <x> %
+                    Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "Workload <%d>: <%f>", whItem->getWhItemID(), whItem->getWorkload());
+                }
+
+                /*for(auto& whFacility : whFacilities)
+                {
                     if(lookupWhLoc(whFacility.first)->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
                     {
                         whFacility.second->SetName(std::to_string(lookupWhLoc(whFacility.first)->getWhItemID()).c_str());
                         whFacility.second->Output();
                     }
-                }
+                }*/
+
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed orders count:   [-] <%d>", ordersFinished);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in:   [s] <%f>", Time);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
             }
 
-            // Reset
-            ordersFinished     = 0;
-            //minDuration  = std::numeric_limits<double>::max();
-            //maxDuration  = std::numeric_limits<double>::min();
-            //sumDuration  = 0.0;
-            //sumDurNonSim = 0.0;
-            //sumDistance  = 0;
-
-            Stop(); // Abort();
+            ordersFinished = 0;
+            Stop();
         }
     }
 

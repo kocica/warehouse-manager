@@ -54,6 +54,8 @@ namespace whm
 
                 QPoint getWidgetPosition(QPoint);
 
+                void showWhItemsWorkload();
+
                 bool& isOptimizationActive();
 
             public slots:

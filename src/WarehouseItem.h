@@ -51,6 +51,7 @@ namespace whm
             void setW(int32_t w_)                  { w = w_; }
             void setH(int32_t h_)                  { h = h_; }
             void setO(int32_t o_)                  { o = o_; }
+            void setWorkload(double w)             { workload = w; }
 
             int32_t getWhItemID() const         { return whItemID; }
             WarehouseItemType_t getType() const { return whItemType; }
@@ -59,6 +60,7 @@ namespace whm
             int32_t getW() const                { return w; }
             int32_t getH() const                { return h; }
             int32_t getO() const                { return o; }
+            double getWorkload() const          { return workload; }
 
             WarehousePortContainer_t getWhPorts() const;
             WarehouseLocationRack_t* getWhLocationRack() const;
@@ -78,6 +80,7 @@ namespace whm
             int32_t w{ 0 };
             int32_t h{ 0 };
             int32_t o{ 0 };
+            double workload{ 0.0 };
 
             int32_t whItemID{ 0 };
             WarehouseItemType_t whItemType;

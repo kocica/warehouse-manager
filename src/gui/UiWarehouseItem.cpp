@@ -45,11 +45,14 @@ namespace whm
             : BaseShapeGraphicItem_t(x, y, w, h, BaseShapeGraphicItem_t::ITEM_RECTANGLE, ui, s)
             , ui(ui)
             , scene(s)
+            , heatRect(new QGraphicsRectItem())
             , portSizeX{ w / 5 }
             , portSizeY{ h / 5 }
             , whItemID(UiWarehouseLayout_t::getWhLayout().getNextWhItemID())
             , whItemType(type)
         {
+            scene->addItem(heatRect);
+
             info = scene->addText(QString("ID: ") + QString::number(whItemID) +
                                   QString("\nType: ") + QString::number(to_underlying(whItemType)));
 
@@ -173,6 +176,22 @@ namespace whm
             infoTimeout.start(1000);
 
             QGraphicsItem::hoverEnterEvent(event);
+        }
+
+        void UiWarehouseItem_t::setItemHeat(double h)
+        {
+            double ratio = 2 * double(h - 0.0) / double(1.0 - h);
+
+            int32_t b = std::max(0.0, 255 * (1 - ratio));
+            int32_t r = std::max(0.0, 255 * (ratio - 1));
+            int32_t g = 255 - b - r;
+
+            auto boundingRect = getRect();
+            boundingRect.setTopLeft(QPointF(boundingRect.topLeft().x() - 10, boundingRect.topLeft().y() - 10));
+            boundingRect.setBottomRight(QPointF(boundingRect.bottomRight().x() + 10, boundingRect.bottomRight().y() + 10));
+
+            heatRect->setRect(boundingRect);
+            heatRect->setBrush(QColor::fromRgb(r, g, b));
         }
 
         void UiWarehouseItem_t::dump() const
