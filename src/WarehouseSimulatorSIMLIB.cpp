@@ -31,6 +31,7 @@ namespace whm
         , cfg{ ConfigParser_t{ "cfg/simulator.xml" } }
         , whLayout{ WarehouseLayout_t::getWhLayout() }
         , whPathFinder{ new WarehousePathFinder_t() }
+        , whOrders{ whLayout.getWhOrders() }
     {
 
     }
@@ -45,6 +46,11 @@ namespace whm
     simlib3::Store* WarehouseSimulatorSIMLIB_t::getWhItemFacility(int32_t facilityID)
     {
         return whFacilities[facilityID];
+    }
+
+    const std::vector<WarehouseOrder_t>& WarehouseSimulatorSIMLIB_t::getWhOrders() const
+    {
+        return whOrders;
     }
 
     WarehouseSimulatorSIMLIB_t::~WarehouseSimulatorSIMLIB_t()
@@ -78,9 +84,10 @@ namespace whm
 
     void WarehouseSimulatorSIMLIB_t::preprocessOrders()
     {
-        auto& orders = const_cast<std::vector<WarehouseOrder_t>&>(whLayout.getWhOrders());
+        whOrders.clear();
+        whOrders = whLayout.getWhOrders();
 
-        for(auto& order : orders)
+        for(auto& order : whOrders)
         {
             std::vector<WarehouseOrderLine_t> newLines;
 
@@ -140,7 +147,7 @@ namespace whm
         //SetCalendar("cq");
         Init(0);
         clearSimulation();
-        (new OrderRequest_t(whLayout, *this))->Activate();
+        (new OrderRequest_t(*this))->Activate();
         Run();
 
         return Time;
@@ -327,10 +334,9 @@ namespace whm
 
     // ================================================================================================================
 
-    OrderRequest_t::OrderRequest_t(WarehouseLayout_t& layout_, WarehouseSimulatorSIMLIB_t& sim_)
-        : layout(layout_)
-        , sim(sim_)
-        , it(layout.getWhOrders().begin())
+    OrderRequest_t::OrderRequest_t(WarehouseSimulatorSIMLIB_t& sim_)
+        : sim(sim_)
+        , it(sim.getWhOrders().begin())
     {
 
     }
@@ -418,7 +424,7 @@ namespace whm
     {
         (new OrderProcessor_t(*it, sim))->Activate();
 
-        if(++it != layout.getWhOrders().end())
+        if(++it != sim.getWhOrders().end())
         {
             // TODO: Poisson distribution
             Activate(Time + (sim.getConfig().getAs<double>("orderRequestInterval")));

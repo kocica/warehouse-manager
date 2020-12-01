@@ -55,6 +55,7 @@ namespace whm
 #           endif
 
             simlib3::Store* getWhItemFacility(int32_t);
+            const std::vector<WarehouseOrder_t>& getWhOrders() const;
 
             WarehouseItem_t* lookupWhLoc(int32_t);
             WarehouseItem_t* lookupWhGate(const WarehouseItemType_t&);
@@ -82,7 +83,7 @@ namespace whm
 
             WarehouseLayout_t& whLayout;
             WarehousePathFinder_t* whPathFinder;
-
+            std::vector<WarehouseOrder_t> whOrders;
             std::map<int32_t, simlib3::Store*> whFacilities;
     };
 
@@ -104,13 +105,12 @@ namespace whm
     class OrderRequest_t : public simlib3::Event
     {
         public:
-            OrderRequest_t(WarehouseLayout_t&, WarehouseSimulatorSIMLIB_t&);
+            OrderRequest_t(WarehouseSimulatorSIMLIB_t&);
 
         protected:
             void Behavior();
 
         private:
-            WarehouseLayout_t& layout;
             WarehouseSimulatorSIMLIB_t& sim;
             std::vector<WarehouseOrder_t>::const_iterator it;
     };
