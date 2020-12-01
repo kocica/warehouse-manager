@@ -75,8 +75,8 @@ namespace whm
             // In case its better solution, update food
             if(fitness < pop[p].fitness)
             {
-                pop[p].fitness = fitness;
                 pop[p].trialValue = 0;
+                pop[p].fitness = fitness;
                 pop[p].genes = genes.at(p);
             }
             else

@@ -445,8 +445,8 @@ namespace whm
             {
                 if(p >= cfg.getAs<int32_t>("eliteSize") && population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
                 {
-                    population[p].trialValue = 0;
                     population[p].genes = std::vector<int32_t>();
+                    population[p].fitness = std::numeric_limits<double>::max();
 
                     initIndividualRand(population[p].genes);
                 }
@@ -474,7 +474,7 @@ namespace whm
                     throw std::runtime_error("Read failed");
                 }
 
-                population[p].trialValue = newFitness <= population[p].fitness ? 0 : population[p].trialValue + 1;
+                population[p].trialValue = newFitness < population[p].fitness ? 0 : population[p].trialValue + 1;
 
                 population[p].fitness = newFitness;
             }
