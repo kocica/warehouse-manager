@@ -443,6 +443,14 @@ namespace whm
 
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSize"); ++p)
             {
+                if(p >= cfg.getAs<int32_t>("eliteSize") && population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
+                {
+                    population[p].trialValue = 0;
+                    population[p].genes = std::vector<int32_t>();
+
+                    initIndividualRand(population[p].genes);
+                }
+
                 for(size_t i = 0; i < population.at(p).genes.size(); ++i)
                 {
                     auto s = write(simProcesses.at(p % n).outfd, &population[p].genes.at(i), sizeof(int32_t));
@@ -477,20 +485,6 @@ namespace whm
                       {
                           return lhs.fitness < rhs.fitness;
                       });
-
-            // Discard chromosomes with trialValue > N and generate brand new offsprings (ignore elite part)
-            for(int32_t p = cfg.getAs<int32_t>("eliteSize"); p < cfg.getAs<int32_t>("populationSize"); ++p)
-            {
-                if(population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
-                {
-                    population[p].trialValue = 0;
-                    population[p].genes = std::vector<int32_t>();
-
-                    initIndividualRand(population[p].genes);
-
-                    population[p].fitness = simulateWarehouse(population[p].genes);
-                }
-            }
 
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[GA] [%3d] Best fitness: %f", gen, population.at(0).fitness);
             histFitness.push_back(population.at(0).fitness);

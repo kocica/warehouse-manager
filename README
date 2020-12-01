@@ -38,3 +38,4 @@ Optimizer (train on train set of orders):
  - SEGFAULT (zmena velikosti itemu)
  - SLAP parametr pro vyvazeni zateze mezi lokacema
  - Paralelizovat trialValue vyhozene (apod. v dalsich algs)
+ - Vytahovat si zatizeni loc/conv a barevne zaznacit v UI optimalizaci
