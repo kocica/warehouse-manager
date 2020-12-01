@@ -13,7 +13,7 @@
                workerSpeed="1.0"
                totesPerMin="120"
                simSpeedup="1.0"
-               preprocess="true"
+               preprocess="false"
                locationCapacity="1"
                conveyorCapacity="5"
                orderRequestInterval="1" />

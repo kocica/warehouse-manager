@@ -36,7 +36,6 @@ namespace whm
     {
         simulator.printStats(false);
         simulator.setArguments(args);
-        simulator.preprocessOrders();
         simulator.optimizationModeActive() = true;
 
         std::random_device rd;

@@ -78,11 +78,6 @@ namespace whm
 
     void WarehouseSimulatorSIMLIB_t::preprocessOrders()
     {
-        if(!cfg.getAs<bool>("preprocess"))
-        {
-            return;
-        }
-
         auto& orders = const_cast<std::vector<WarehouseOrder_t>&>(whLayout.getWhOrders());
 
         for(auto& order : orders)
@@ -135,13 +130,11 @@ namespace whm
             {
                 multipleExperiments = !multipleExperiments;
             }
-            else
-            {
-                if(cfg.getAs<bool>("preprocess"))
-                {
-                    preprocessOrders();
-                }
-            }
+        }
+
+        if(cfg.getAs<bool>("preprocess"))
+        {
+            preprocessOrders();
         }
 
         //SetCalendar("cq");

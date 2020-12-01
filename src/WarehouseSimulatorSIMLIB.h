@@ -41,8 +41,6 @@ namespace whm
 
             void printStats(bool);
 
-            void preprocessOrders();
-
             bool& optimizationModeActive();
 
             ConfigParser_t& getConfig();
@@ -65,6 +63,7 @@ namespace whm
 
         protected:
             void clearSimulation();
+            void preprocessOrders();
             void prepareWhSimulation();
 
         private:
