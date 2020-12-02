@@ -35,6 +35,6 @@ Optimizer (train on train set of orders):
  - Free optimizer memory
  - Handle read/write failed (pipe)
  - Zmena dimenzi runtime (zobraz dialog; clear layout; load layout)
- - SEGFAULT (zmena velikosti itemu)
  - SLAP parametr pro vyvazeni zateze mezi lokacema
- - Paralelizovat trialValue vyhozene (apod. v dalsich algs)
+ - RGB outta range
+ - Zvysit vahu rozmisteni produktu do slotu (*2) napr, at to sklada vic k pocatku
