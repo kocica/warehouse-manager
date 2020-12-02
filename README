@@ -36,5 +36,6 @@ Optimizer (train on train set of orders):
  - Handle read/write failed (pipe)
  - Zmena dimenzi runtime (zobraz dialog; clear layout; load layout)
  - SLAP parametr pro vyvazeni zateze mezi lokacema
- - RGB outta range
+ - Podle orientace posunout lokaci o pulku
+ - Porty z venku itemu
  - Zvysit vahu rozmisteni produktu do slotu (*2) napr, at to sklada vic k pocatku

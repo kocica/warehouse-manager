@@ -507,7 +507,9 @@ namespace whm
 
         void BaseGraphicItem_t::setOrientationAligned(int o)
         {
-            auto gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
+            setGraphicItemOrientation(o);
+
+            /*auto gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
 
             auto t = QTransform().translate(mOrigin.x(), mOrigin.y()).rotate(o).translate(-mOrigin.x(), -mOrigin.y());
             auto p = t.mapToPolygon(mRect.toRect());
@@ -524,7 +526,7 @@ namespace whm
             mRect.setBottomRight(QPointF(mRect.bottomRight().x() - diffx, mRect.bottomRight().y() - diffy));
             updateChildren(diffx, diffy);
             mOrigin.setX(mRect.center().x());
-            mOrigin.setY(mRect.center().y());
+            mOrigin.setY(mRect.center().y());*/
         }
 
         void BaseGraphicItem_t::setLineWidth(int32_t w)

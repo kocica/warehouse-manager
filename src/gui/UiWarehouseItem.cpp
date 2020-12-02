@@ -181,7 +181,7 @@ namespace whm
 
         void UiWarehouseItem_t::setItemHeat(double h)
         {
-            double ratio = 2 * double(h - 0.0) / double(1.0 - h);
+            double ratio = 2 * h;
 
             int32_t b = std::max(0.0, 255 * (1 - ratio));
             int32_t r = std::max(0.0, 255 * (ratio - 1));
