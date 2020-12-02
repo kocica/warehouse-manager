@@ -332,6 +332,8 @@ namespace whm
                     whItem = new UiWarehouseItemConveyor_t(scene, this, x, y, w, h, convMap[cursorMode]);
                 }
 
+                resetCursor();
+
                 UiWarehouseLayout_t::getWhLayout().addWhItem(whItem);
 
                 if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
@@ -397,6 +399,13 @@ namespace whm
             {
                 UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_LOC);
             }
+        }
+
+        void MainWindow::resetCursor()
+        {
+            UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_SELECT);
+
+            ui->selectionMode->toggle();
         }
 
         bool& MainWindow::isOptimizationActive()

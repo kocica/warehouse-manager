@@ -54,6 +54,7 @@ namespace whm
 
                 QPoint getWidgetPosition(QPoint);
 
+                void resetCursor();
                 void showWhItemsWorkload();
 
                 bool& isOptimizationActive();

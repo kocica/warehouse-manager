@@ -149,7 +149,7 @@ namespace whm
                 }
                 else if(UiCursor_t::getCursor().isItemSelected())
                 {
-                    // TODO: Select CURSOR
+                    ui->resetCursor();
                 }
             }
 
