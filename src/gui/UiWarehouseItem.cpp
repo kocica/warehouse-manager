@@ -131,7 +131,8 @@ namespace whm
         void UiWarehouseItem_t::removeWhItem()
         {
             eraseFromLayout();
-            scene->removeItem(this);
+            qApp->processEvents();
+            //scene->removeItem(this);
             delete this;
         }
 
