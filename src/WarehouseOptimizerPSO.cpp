@@ -417,7 +417,7 @@ namespace whm
 
         storeGlobalBest(personalBest);
 
-        std::map<std::string, double> chromosomeMap;
+        std::unordered_map<std::string, double> chromosomeMap;
 
         for(int32_t i = 0; i < cfg.getAs<int32_t>("maxIterations"); ++i)
         {

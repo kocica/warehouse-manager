@@ -412,8 +412,8 @@ namespace whm
                 trailVector.push_back(ProbGenes_t(remainers.begin(), remainers.begin() + cfg.getAs<int32_t>("numberDimensions")));
             }
 
-            std::map<std::string, double> chromosomeMap;
             std::vector<std::vector<int32_t>> x_new_vec;
+            std::unordered_map<std::string, double> chromosomeMap;
 
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
             {

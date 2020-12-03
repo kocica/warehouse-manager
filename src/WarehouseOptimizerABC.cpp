@@ -42,7 +42,7 @@ namespace whm
         auto n = cfg.getAs<int32_t>("procCount");
 
         std::vector<std::vector<int32_t>> genes;
-        std::map<std::string, double> chromosomeMap;
+        std::unordered_map<std::string, double> chromosomeMap;
 
         for(int p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
         {

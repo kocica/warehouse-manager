@@ -441,7 +441,7 @@ namespace whm
 
             population = std::move(newPopulation);
 
-            std::map<std::string, double> chromosomeMap;
+            std::unordered_map<std::string, double> chromosomeMap;
 
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSize"); ++p)
             {
