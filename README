@@ -39,3 +39,4 @@ Optimizer (train on train set of orders):
  - Podle orientace posunout lokaci o pulku
  - Porty z venku itemu
  - Zvysit vahu rozmisteni produktu do slotu (*2) napr, at to sklada vic k pocatku
+ - Vydelit dobu zpracovani objednavky poctem lajn
