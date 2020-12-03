@@ -18,6 +18,7 @@ namespace whm
         double fitness{ 0.0 };           //< How good solution is (objective function)
         int32_t trialValue{ 0 };         //< Counter of iterations fitness did not improve
         std::vector<int32_t> genes;      //< Solution dimensions
+        std::string stringGenes;         //< Solution dimensions (interpreted as string for lookup etc.)
 
         bool operator==(const Solution_t& rhs) const
         {

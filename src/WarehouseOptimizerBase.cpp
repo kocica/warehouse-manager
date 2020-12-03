@@ -63,6 +63,11 @@ namespace whm
             }
         }
 
+        for(auto i = cfg.getAs<int32_t>("problemMin"); i < cfg.getAs<int32_t>("problemMax"); ++i)
+        {
+            randChromosome.push_back(i);
+        }
+
         for(int32_t i = 0; i < cfg.getAs<int32_t>("procCount"); ++i)
         {
             int fd1[2];
@@ -134,7 +139,7 @@ namespace whm
 
     void WarehouseOptimizerBase_t::initIndividualRand(std::vector<int32_t>& ind)
     {
-        for(int32_t d = 0; d < cfg.getAs<int32_t>("numberDimensions"); ++d)
+        /*for(int32_t d = 0; d < cfg.getAs<int32_t>("numberDimensions"); ++d)
         {
             int32_t r{ 0 };
 
@@ -145,7 +150,12 @@ namespace whm
             while(std::find(ind.begin(), ind.end(), r) != ind.end());
 
             ind.push_back(r);
-        }
+        }*/
+
+        std::shuffle(randChromosome.begin(), randChromosome.end(), rand);
+
+        ind = std::vector<int32_t>(randChromosome.begin(),
+                                   randChromosome.begin() + cfg.getAs<int32_t>("numberDimensions"));
     }
 
     void WarehouseOptimizerBase_t::initPopulationRand(std::vector<Solution_t>& pop)

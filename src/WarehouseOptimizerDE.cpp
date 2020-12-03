@@ -412,6 +412,7 @@ namespace whm
                 trailVector.push_back(ProbGenes_t(remainers.begin(), remainers.begin() + cfg.getAs<int32_t>("numberDimensions")));
             }
 
+            std::map<std::string, double> chromosomeMap;
             std::vector<std::vector<int32_t>> x_new_vec;
 
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
@@ -431,27 +432,40 @@ namespace whm
 
                 x_new_vec.push_back(x_new);
 
-                for(size_t i = 0; i < x_new.size(); ++i)
-                {
-                    auto s = write(simProcesses.at(p % n).outfd, &x_new.at(i), sizeof(int32_t));
+                population[p].stringGenes = utils::toString(x_new);
 
-                    if(s < (ssize_t)sizeof(int32_t))
+                if(chromosomeMap.find(population[p].stringGenes) == chromosomeMap.end())
+                {
+                    chromosomeMap.insert(std::make_pair(population[p].stringGenes, -1));
+
+                    for(size_t i = 0; i < x_new.size(); ++i)
                     {
-                        whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed <%d>", errno);
-                        throw std::runtime_error("Write failed");
+                        auto s = write(simProcesses.at(p % n).outfd, &x_new.at(i), sizeof(int32_t));
+
+                        if(s < (ssize_t)sizeof(int32_t))
+                        {
+                            whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed <%d>", errno);
+                            throw std::runtime_error("Write failed");
+                        }
                     }
                 }
             }
 
             for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSizeDE"); ++p)
             {
-                double newFitness;
-                auto s = read(simProcesses.at(p % n).infd, &newFitness, sizeof(double));
+                double newFitness = chromosomeMap[population[p].stringGenes];
 
-                if(s < (ssize_t)sizeof(double))
+                if(newFitness < 0)
                 {
-                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed <%d>", errno);
-                    throw std::runtime_error("Read failed");
+                    auto s = read(simProcesses.at(p % n).infd, &newFitness, sizeof(double));
+
+                    if(s < (ssize_t)sizeof(double))
+                    {
+                        whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed <%d>", errno);
+                        throw std::runtime_error("Read failed");
+                    }
+
+                    chromosomeMap[population[p].stringGenes] = newFitness;
                 }
 
                 if(newFitness < population[p].fitness)

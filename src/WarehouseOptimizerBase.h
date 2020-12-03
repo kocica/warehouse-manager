@@ -73,12 +73,16 @@ namespace whm
             ConfigParser_t cfg;
             utils::WhmArgs_t args;
 
+            std::vector<int32_t> randChromosome;
+
             // Generic sku/slot encoding
             std::map<int32_t, std::string> skuEnc;
             std::map<int32_t, WarehouseLocationSlot_t*> slotEnc;
 
+            // Simulation handler
             WarehouseSimulatorSIMLIB_t simulator;
 
+            // Simulation services
             std::vector<SimProcess_t> simProcesses;
 
             // Fitness history for plot

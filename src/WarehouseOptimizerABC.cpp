@@ -42,19 +42,27 @@ namespace whm
         auto n = cfg.getAs<int32_t>("procCount");
 
         std::vector<std::vector<int32_t>> genes;
+        std::map<std::string, double> chromosomeMap;
 
         for(int p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
         {
             auto g = updateBee(pop, p);
 
-            for(size_t i = 0; i < g.size(); ++i)
-            {
-                auto s = write(simProcesses.at(p % n).outfd, &g.at(i), sizeof(int32_t));
+            pop[p].stringGenes = utils::toString(g);
 
-                if(s < (ssize_t)sizeof(int32_t))
+            if(chromosomeMap.find(pop[p].stringGenes) == chromosomeMap.end())
+            {
+                chromosomeMap.insert(std::make_pair(pop[p].stringGenes, -1));
+
+                for(size_t i = 0; i < g.size(); ++i)
                 {
-                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed <%d>", errno);
-                    throw std::runtime_error("Write failed");
+                    auto s = write(simProcesses.at(p % n).outfd, &g.at(i), sizeof(int32_t));
+
+                    if(s < (ssize_t)sizeof(int32_t))
+                    {
+                        whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed <%d>", errno);
+                        throw std::runtime_error("Write failed");
+                    }
                 }
             }
 
@@ -63,21 +71,27 @@ namespace whm
 
         for(int p = 0; p < cfg.getAs<int32_t>("foodSize"); ++p)
         {
-            double fitness;
-            auto s = read(simProcesses.at(p % n).infd, &fitness, sizeof(double));
+            double newFitness = chromosomeMap[pop[p].stringGenes];
 
-            if(s < (ssize_t)sizeof(double))
+            if(newFitness < 0)
             {
-                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed <%d>", errno);
-                throw std::runtime_error("Read failed");
+                auto s = read(simProcesses.at(p % n).infd, &newFitness, sizeof(double));
+
+                if(s < (ssize_t)sizeof(double))
+                {
+                    whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Read failed <%d>", errno);
+                    throw std::runtime_error("Read failed");
+                }
+
+                chromosomeMap[pop[p].stringGenes] = newFitness;
             }
 
             // In case its better solution, update food
-            if(fitness < pop[p].fitness)
+            if(newFitness < pop[p].fitness)
             {
                 pop[p].trialValue = 0;
-                pop[p].fitness = fitness;
                 pop[p].genes = genes.at(p);
+                pop[p].fitness = newFitness;
             }
             else
             {

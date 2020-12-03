@@ -13,6 +13,7 @@
 #include <vector>
 #include <cctype>
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <iterator>
 #include <stdlib.h>
@@ -66,6 +67,22 @@ namespace whm
             }
 
             return out;
+        }
+
+        /**
+         * @brief Create string from standard vector
+         */
+        template <typename T>
+        std::string toString(std::vector<T>& vec)
+        {
+            std::stringstream ss;
+
+            for(auto v : vec)
+            {
+                ss << v;
+            }
+
+            return ss.str();
         }
 
         /**
