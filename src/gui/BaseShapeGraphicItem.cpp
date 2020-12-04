@@ -74,7 +74,11 @@ namespace whm
                     painter->drawLine(this->mRect.topLeft(),this->mRect.bottomRight());
                     break;
                 case ITEM_PIXMAP:
-                    painter->drawPixmap(this->mRect.toRect(),this->mPixmap);
+                    // painter->drawPixmap(this->mRect.toRect(),this->mPixmap);
+                    painter->setPen(Qt::NoPen);
+                    painter->setBrush(mPixmap.scaled(mRect.size().toSize()));
+                    painter->setBrushOrigin(this->mRect.topLeft().x(), this->mRect.topLeft().y());
+                    painter->drawRect(this->mRect);
                     break;
                 default:
                     break;
