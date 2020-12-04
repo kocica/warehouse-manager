@@ -55,11 +55,6 @@ namespace whm
             {
                 return;
             }
-            else if(this->mSelected)
-            {
-                pen.setColor(Qt::red);
-                painter->setPen(pen);
-            }
 
             switch (mType)
             {
@@ -84,6 +79,7 @@ namespace whm
                 default:
                     break;
             }
+
             BaseGraphicItem_t::paint(painter, option, widget);
             scene()->update();
         }
@@ -92,6 +88,11 @@ namespace whm
         {
             this->mPixmap = p;
             this->mDrawPixmap = true;
+        }
+
+        void BaseShapeGraphicItem_t::setPixmapRotation(int angle)
+        {
+            this->mPixmap = this->mPixmap.transformed(QTransform().rotate(angle));
         }
 
         QRectF BaseShapeGraphicItem_t::boundingRect() const

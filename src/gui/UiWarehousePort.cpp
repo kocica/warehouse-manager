@@ -35,7 +35,7 @@ namespace whm
         UiWarehousePort_t *UiWarehousePort_t::selectedPort = nullptr;
 
         UiWarehousePort_t::UiWarehousePort_t(QGraphicsScene *s, QGraphicsItem* parent, MainWindow *ui, int32_t id, int32_t x, int32_t y, int32_t w, int32_t h, WarehousePortType_t t)
-            : BaseShapeGraphicItem_t(x, y, w, h, BaseShapeGraphicItem_t::ITEM_RECTANGLE, ui, s, parent)
+            : BaseShapeGraphicItem_t(x, y, w, h, BaseShapeGraphicItem_t::ITEM_PIXMAP, ui, s, parent)
             , ui(ui)
             , whItem(dynamic_cast<UiWarehouseItem_t*>(parent))
             , whPortID(id)
@@ -43,7 +43,7 @@ namespace whm
         {
             this->showHandles(false);
 
-            // TODO: Show direction indicators
+            this->setRotatedPixmap(":/img/plug.png");
         }
 
         UiWarehousePort_t::~UiWarehousePort_t()
@@ -544,13 +544,13 @@ namespace whm
         void UiWarehousePort_t::select()
         {
             selectedPort = this;
-            mSelected = true;
+            this->setRotatedPixmap(":/img/plug_sel.png");
         }
 
         void UiWarehousePort_t::unselect()
         {
             selectedPort = nullptr;
-            mSelected = false;
+            this->setRotatedPixmap(":/img/plug.png");
         }
 
         void UiWarehousePort_t::connect()
@@ -599,6 +599,28 @@ namespace whm
             {
                 mConnected = false;
                 whConn = nullptr;
+            }
+        }
+
+        void UiWarehousePort_t::setRotatedPixmap(const QString& p)
+        {
+            this->setPixmap(QPixmap(p));
+
+            switch(whPortType)
+            {
+                case WarehousePortType_t::E_PORT_LEFT:
+                    setPixmapRotation(270);
+                    break;
+                case WarehousePortType_t::E_PORT_RIGHT:
+                    setPixmapRotation(90);
+                    break;
+                case WarehousePortType_t::E_PORT_BOTTOM:
+                    setPixmapRotation(180);
+                    break;
+                case WarehousePortType_t::E_PORT_TOP:
+                case WarehousePortType_t::E_PORT_MID:
+                    setPixmapRotation(0);
+                    break;
             }
         }
     }

@@ -46,12 +46,12 @@ namespace whm
             , ui(ui)
             , scene(s)
             , heatRect(new QGraphicsRectItem())
-            , portSizeX{ w / 5 }
-            , portSizeY{ h / 5 }
             , whItemID(UiWarehouseLayout_t::getWhLayout().getNextWhItemID())
             , whItemType(type)
         {
             scene->addItem(heatRect);
+
+            portSizeX = portSizeY = std::min(h, w) / 3;
 
             info = scene->addText(QString("ID: ") + QString::number(whItemID) +
                                   QString("\nType: ") + QString::number(to_underlying(whItemType)));

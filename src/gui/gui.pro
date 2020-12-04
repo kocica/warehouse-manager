@@ -1,5 +1,5 @@
 TEMPLATE          = app
-TARGET            = warehouse_manager_gui
+TARGET            = whm_gui
 QMAKE_CXX         = g++-8
 QT               += core gui widgets
 QMAKE_CXXFLAGS   += -std=c++17

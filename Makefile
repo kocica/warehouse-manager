@@ -7,10 +7,10 @@
 ###############################################################
 
 ################## Build constants ##############
-BIN_NAME_SIM = warehouse_manager_sim
-BIN_NAME_GEN = warehouse_manager_gen
-BIN_NAME_GUI = warehouse_manager_gui
-BIN_NAME_OPT = warehouse_manager_opt
+BIN_NAME_SIM = whm_sim
+BIN_NAME_GEN = whm_gen
+BIN_NAME_GUI = whm_gui
+BIN_NAME_OPT = whm_opt
 
 README     = README
 
@@ -39,10 +39,10 @@ GUI_HEADERS = $(wildcard $(GUI)/*.h)
 GUI_OBJS    = $(patsubst %.cpp, %.o, $(GUI_SOURCES))
 
 all:
-	make warehouse_manager_gen
-	make warehouse_manager_sim
-	make warehouse_manager_opt
-	make warehouse_manager_gui
+	make whm_gen
+	make whm_sim
+	make whm_opt
+	make whm_gui
 
 .PHONY: clean
 

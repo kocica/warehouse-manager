@@ -31,7 +31,6 @@ namespace whm
     {
         BaseGraphicItem_t::BaseGraphicItem_t(qreal w, qreal h, MainWindow* ui, QGraphicsScene *scene, QGraphicsItem *parent)
             : QGraphicsRectItem(parent)
-            , mSelected(false)
             , mConnected(false)
             , mDrawHandles(true)
             , mLocationSlot(false)
@@ -126,13 +125,7 @@ namespace whm
 
             if(this->isSelected())
             {
-                if(this->mSelected)
-                {
-                    pen.setColor(Qt::red);
-                    painter->setPen(pen);
-                    painter->drawRect(this->mRect);
-                }
-                else if(this->mConnected)
+                if(this->mConnected)
                 {
                     return;
                 }

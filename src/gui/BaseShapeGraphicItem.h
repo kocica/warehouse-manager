@@ -36,6 +36,8 @@ namespace whm
 
                 QRectF boundingRect() const;
 
+                void setPixmapRotation(int);
+
                 void setType();
                 void setPixmap(QPixmap p);
 

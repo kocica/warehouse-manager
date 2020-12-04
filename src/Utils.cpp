@@ -16,7 +16,7 @@ namespace whm
     {
         void printHelp()
         {
-            std::cout << "\nUsage: ./warehouse_manager\n\n"
+            std::cout << "\nUsage:\n\n"
                          "\t-h\tPrints this usage\n"
                          "\t-v\tTriggers verbose mode\n"
                          "\t-o\tPath to a file with customer orders\n"

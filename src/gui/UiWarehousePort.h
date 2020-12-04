@@ -33,6 +33,7 @@ namespace whm
                 void connect();
                 void disconnect();
 
+                void setRotatedPixmap(const QString&);
                 void updatePort(double, double, int32_t, int32_t);
 
                 bool isConnected() const;

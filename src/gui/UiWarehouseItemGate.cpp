@@ -51,8 +51,7 @@ namespace whm
 
         void UiWarehouseItemGate_t::updateChildrenPositions(double dx, double dy)
         {
-            portSizeX = getW() / 5;
-            portSizeY = getH() / 5;
+            portSizeX = portSizeY = std::min(getH(), getW()) / 3;
 
             (void) dx;
             (void) dy;

@@ -14,7 +14,7 @@ cd $SCRATCHDIR/warehouse-manager
 
 # TODO: make, config, ...
 
-./warehouse_manager_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv -O2 > res_opt_de.txt
+./whm_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv -O2 > res_opt_de.txt
 
 cp res_opt_de.txt $DATADIR/res/de/ || { echo >&2 "Result file(s) copying failed (with a code $?) !!"; exit 3; }
 cp data/locations.csv $DATADIR/res/de/

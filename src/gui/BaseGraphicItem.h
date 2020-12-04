@@ -67,7 +67,6 @@ namespace whm
                 QBrush mBrush;
 
                 bool mDrawBoundingRect;
-                bool mSelected;
                 bool mConnected;
                 bool mDrawHandles;
                 bool mLocationSlot;

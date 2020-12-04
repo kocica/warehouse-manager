@@ -1,8 +1,8 @@
 # Bin name(s)
-warehouse_manager_sim
-warehouse_manager_gen
-warehouse_manager_gui
-warehouse_manager_opt
+whm_sim
+whm_gen
+whm_gui
+whm_opt
 
 # Qt
 qrc*

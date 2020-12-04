@@ -11,5 +11,7 @@
         <file>img/import.png</file>
         <file>img/export.png</file>
         <file>img/config.png</file>
+        <file>img/plug.png</file>
+        <file>img/plug_sel.png</file>
     </qresource>
 </RCC>
