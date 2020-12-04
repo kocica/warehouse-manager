@@ -667,9 +667,9 @@ namespace whm
                 QMessageBox::critical(nullptr, "Error", e.what());
             }
 
-            int32_t whR = UiWarehouseLayout_t::getWhLayout().getRatio();
-            int32_t whX = UiWarehouseLayout_t::getWhLayout().getDimensions().first * whR;
-            int32_t whY = UiWarehouseLayout_t::getWhLayout().getDimensions().second * whR;
+            whR = UiWarehouseLayout_t::getWhLayout().getRatio();
+            whX = UiWarehouseLayout_t::getWhLayout().getDimensions().first * whR;
+            whY = UiWarehouseLayout_t::getWhLayout().getDimensions().second * whR;
 
             ui->view->scene()->setSceneRect(0, 0, whX, whY);
 
