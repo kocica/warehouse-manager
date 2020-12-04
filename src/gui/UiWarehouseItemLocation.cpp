@@ -45,8 +45,8 @@ namespace whm
             }
 
             // Ports
-            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, i.getX() - portSizeX, i.getY() + i.getH()/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_LEFT));
-            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, i.getX() + i.getW(),  i.getY() + i.getH()/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_RIGHT));
+            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, i.getX(),                        i.getY() + i.getH()/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_LEFT));
+            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, i.getX() + i.getW() - portSizeX, i.getY() + i.getH()/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_RIGHT));
 
             this->setGraphicItemOrientation(i.getO()); // We have to rotate the object after its constructed
 
@@ -120,8 +120,8 @@ namespace whm
             }
 
             // Ports
-            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x - portSizeX, y + h/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_LEFT));
-            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + w,         y + h/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_RIGHT));
+            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x,                 y + h/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_LEFT));
+            whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 1, x + w - portSizeX, y + h/2 - portSizeY/2, portSizeX, portSizeY, WarehousePortType_t::E_PORT_RIGHT));
         }
 
         void UiWarehouseItemLocation_t::updateChildrenPositions(double dx, double dy)
@@ -132,8 +132,8 @@ namespace whm
             (void) dy;
             //std::for_each(whPorts.begin(), whPorts.end(), [=](auto* p) { p->updatePort(dx/2.0, dy/2.0, portSizeX, portSizeY); });
 
-            whPorts.at(0)->updatePort(mRect.topLeft().x() - portSizeX, mRect.topLeft().y() + getH()/2 - portSizeY/2, portSizeX, portSizeY);
-            whPorts.at(1)->updatePort(mRect.topLeft().x() + getW(),    mRect.topLeft().y() + getH()/2 - portSizeY/2, portSizeX, portSizeY);
+            whPorts.at(0)->updatePort(mRect.topLeft().x(),                      mRect.topLeft().y() + getH()/2 - portSizeY/2, portSizeX, portSizeY);
+            whPorts.at(1)->updatePort(mRect.topLeft().x() + getW() - portSizeX, mRect.topLeft().y() + getH()/2 - portSizeY/2, portSizeX, portSizeY);
 
             int32_t slotW = getW() / getSlotCountX();
             int32_t slotH = getH() / getSlotCountY();
