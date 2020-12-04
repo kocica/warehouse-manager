@@ -79,69 +79,18 @@ namespace whm
 
             fs::create_directory(tmpDir);
 
-            // Get warehouse dimensions
-            auto dialog  = new QDialog(this);
-            auto form    = new QFormLayout(dialog);
-            auto whDimX  = new QLineEdit(dialog);
-            auto whDimY  = new QLineEdit(dialog);
-            auto whRatio = new QLineEdit(dialog);
-
-            form->addRow(new QLabel("Enter warehouse dimensions and ratio"));
-            form->addRow(QString("Enter X dimenstion [m]: "), whDimX);
-            form->addRow(QString("Enter Y dimenstion [m]: "), whDimY);
-            form->addRow(QString("Enter ratio 1 [m] = ? [points]: "), whRatio);
-
-            QDialogButtonBox buttons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dialog);
-            QObject::connect(&buttons, SIGNAL(accepted()), dialog, SLOT(accept()));
-            QObject::connect(&buttons, SIGNAL(rejected()), dialog, SLOT(reject()));
-            form->addRow(&buttons);
-
-            // Create scene
-            scene = new CustomizedGraphicsScene_t();
-
-            if (dialog->exec() == QDialog::Accepted)
-            {
-                whR = whRatio->text().toInt();
-                whX = whDimX->text().toInt() * whR;
-                whY = whDimY->text().toInt() * whR;
-            }
-            else
-            {
-                // Defaults for dev, otherwise show error
-                whR = 50;
-                whX = 1000 * whR;
-                whY = 500  * whR;
-            }
+            updateWarehouseDimensions();
 
             UiWarehouseLayout_t::getWhLayout().setRatio(whR);
             UiWarehouseLayout_t::getWhLayout().setDimensions(std::make_pair(whX/whR, whY/whR));
 
+            // Create scene
+            scene = new CustomizedGraphicsScene_t();
             scene->setSceneRect(0, 0, whX, whY);
             ui->view->setScene(scene);
-
-            // Create scene borders
-            QPen pen;
-            pen.setColor(Qt::white);
-            pen.setWidth(whX / 100);
-            scene->addLine(0,   0,   whX, 0,   pen);
-            scene->addLine(0,   0,   0,   whY, pen);
-            scene->addLine(0,   whY, whX, whY, pen);
-            scene->addLine(whX, 0,   whX, whY, pen);
-
-            pen.setWidth(1);
-            for(int32_t x = 0; x < whX; x += whR)
-            {
-                scene->addLine(x, 0, x, whY, pen);
-            }
-
-            for(int32_t y = 0; y < whY; y += whR)
-            {
-                scene->addLine(0, y, whX, y, pen);
-            }
+            createSceneBorders();
 
             // Enable zooming
-            ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
-            ui->ratioText->setText(QString::number(((ui->view->width()/double(whX)) * (whX/whR))/5));
             auto zoom = new UiGraphicsViewZoom_t(ui->view, ui->ratioText);
             zoom->setModifiers(Qt::NoModifier);
 
@@ -158,6 +107,7 @@ namespace whm
             ui->startSimulation->setIcon(QIcon(":/img/start.png"));
             ui->stopSimulation->setIcon(QIcon(":/img/stop.png"));
 
+            ui->newLayout->setIcon(QIcon(":/img/new.png"));
             ui->saveLayout->setIcon(QIcon(":/img/save.png"));
             ui->loadLayout->setIcon(QIcon(":/img/load.png"));
             ui->clearLayout->setIcon(QIcon(":/img/clear.png"));
@@ -665,6 +615,29 @@ namespace whm
             ui->simulationProgressBar->setValue(100 * orders.size() / orderCount);
         }
 
+        void MainWindow::on_newLayout_triggered()
+        {
+            if(isOptimizationActive())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
+                return;
+            }
+
+            // Clear previous scene
+            UiWarehouseLayout_t::getWhLayout().clearWhLayout();
+            ui->view->scene()->clear();
+            ui->view->scene()->update();
+
+            updateWarehouseDimensions();
+
+            ui->view->scene()->setSceneRect(0, 0, whX, whY);
+
+            createSceneBorders(); // TODO: Maybe there will be incorrect start ratio
+
+            importLocations();
+        }
+
         void MainWindow::on_loadLayout_triggered()
         {
             if(isOptimizationActive())
@@ -703,30 +676,7 @@ namespace whm
 
             ui->view->scene()->setSceneRect(0, 0, whX, whY);
 
-            // Create scene borders
-            QPen pen;
-            pen.setColor(Qt::white);
-            pen.setWidth(whX / 100);
-            scene->addLine(0,   0,   whX, 0,   pen);
-            scene->addLine(0,   0,   0,   whY, pen);
-            scene->addLine(0,   whY, whX, whY, pen);
-            scene->addLine(whX, 0,   whX, whY, pen);
-
-            pen.setWidth(1);
-            for(int32_t x = 0; x < whX; x += whR)
-            {
-                scene->addLine(x, 0, x, whY, pen);
-            }
-
-            for(int32_t y = 0; y < whY; y += whR)
-            {
-                scene->addLine(0, y, whX, y, pen);
-            }
-
-            // Enable zooming
-            ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
-            ui->ratioText->setText(QString::number(((ui->view->width()/double(whX)) * (whX/whR))/5));
-            // TODO: Maybe there will be incorrect start ratio
+            createSceneBorders(); // TODO: Maybe there will be incorrect start ratio
 
             importLocations();
         }
@@ -1404,6 +1354,7 @@ namespace whm
 
         void MainWindow::enableManager()
         {
+            ui->newLayout->setEnabled(true);
             ui->loadLayout->setEnabled(true);
             ui->saveLayout->setEnabled(true);
             ui->clearLayout->setEnabled(true);
@@ -1431,6 +1382,7 @@ namespace whm
 
         void MainWindow::disableManager()
         {
+            ui->newLayout->setEnabled(false);
             ui->loadLayout->setEnabled(false);
             ui->saveLayout->setEnabled(false);
             ui->clearLayout->setEnabled(false);
@@ -1550,6 +1502,67 @@ namespace whm
             WarehouseLayout_t::getWhLayout().exportCustomerOrders(f);
 
             return f;
+        }
+
+        void MainWindow::createSceneBorders()
+        {
+            QPen pen;
+
+            pen.setColor(Qt::white);
+            pen.setWidth(whX / 100);
+
+            scene->addLine(0,   0,   whX, 0,   pen);
+            scene->addLine(0,   0,   0,   whY, pen);
+            scene->addLine(0,   whY, whX, whY, pen);
+            scene->addLine(whX, 0,   whX, whY, pen);
+
+            pen.setWidth(1);
+
+            for(int32_t x = 0; x < whX; x += whR)
+            {
+                scene->addLine(x, 0, x, whY, pen);
+            }
+
+            for(int32_t y = 0; y < whY; y += whR)
+            {
+                scene->addLine(0, y, whX, y, pen);
+            }
+
+            ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
+            ui->ratioText->setText(QString::number(((ui->view->width()/double(whX)) * (whX/whR))/5));
+        }
+
+        void MainWindow::updateWarehouseDimensions()
+        {
+            auto dialog  = new QDialog(this);
+            auto form    = new QFormLayout(dialog);
+            auto whDimX  = new QLineEdit(dialog);
+            auto whDimY  = new QLineEdit(dialog);
+            auto whRatio = new QLineEdit(dialog);
+
+            form->addRow(new QLabel("Enter warehouse dimensions and ratio"));
+            form->addRow(QString("Enter X dimenstion [m]: "), whDimX);
+            form->addRow(QString("Enter Y dimenstion [m]: "), whDimY);
+            form->addRow(QString("Enter ratio 1 [m] = ? [points]: "), whRatio);
+
+            QDialogButtonBox buttons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dialog);
+            QObject::connect(&buttons, SIGNAL(accepted()), dialog, SLOT(accept()));
+            QObject::connect(&buttons, SIGNAL(rejected()), dialog, SLOT(reject()));
+            form->addRow(&buttons);
+
+            if (dialog->exec() == QDialog::Accepted)
+            {
+                whR = whRatio->text().toInt();
+                whX = whDimX->text().toInt() * whR;
+                whY = whDimY->text().toInt() * whR;
+            }
+            else
+            {
+                // Defaults for dev, otherwise show error
+                whR = 50;
+                whX = 1000 * whR;
+                whY = 500  * whR;
+            }
         }
 
         void MainWindow::on_simulationSpeedup_valueChanged()

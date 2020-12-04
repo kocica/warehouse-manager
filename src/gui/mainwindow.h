@@ -80,6 +80,7 @@ namespace whm
                 void on_optimizerSelectionBox_currentIndexChanged();
 
                 // Toolbar - layout control
+                void on_newLayout_triggered();
                 void on_loadLayout_triggered();
                 void on_saveLayout_triggered();
                 void on_clearLayout_triggered();
@@ -139,6 +140,9 @@ namespace whm
 
                 void enableManager();
                 void disableManager();
+
+                void createSceneBorders();
+                void updateWarehouseDimensions();
 
             private:
                 int32_t whR{ 0 };

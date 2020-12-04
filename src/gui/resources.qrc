@@ -13,5 +13,6 @@
         <file>img/config.png</file>
         <file>img/plug.png</file>
         <file>img/plug_sel.png</file>
+        <file>img/new.png</file>
     </qresource>
 </RCC>

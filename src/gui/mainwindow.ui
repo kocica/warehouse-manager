@@ -1665,6 +1665,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="newLayout"/>
    <addaction name="loadLayout"/>
    <addaction name="saveLayout"/>
    <addaction name="clearLayout"/>
@@ -1700,6 +1701,14 @@
    <addaction name="whItemExit"/>
    <addaction name="separator"/>
   </widget>
+  <action name="newLayout">
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="toolTip">
+    <string>Create new layout</string>
+   </property>
+  </action>
   <action name="saveLayout">
    <property name="text">
     <string>Save</string>

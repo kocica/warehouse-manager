@@ -30,6 +30,6 @@ Optimizer (train on train set of orders):
  - Limity - cas, velikost
  - Dukaz TSP <-> SLAP
  - NN (pokud nebude fungovat paralelizace)
- - Zmena dimenzi runtime (zobraz dialog; clear layout; load layout)
+ - CGP - Optimalizace layoutu (posuv lokaci apod.)
  - SLAP parametr pro vyvazeni zateze mezi lokacema
  - Zvysit vahu rozmisteni produktu do slotu (*2) napr, at to sklada vic k pocatku
