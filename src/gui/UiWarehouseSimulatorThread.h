@@ -16,6 +16,10 @@ namespace whm
 {
     namespace gui
     {
+        extern int32_t heatMax;
+        extern int32_t heatMin;
+        extern std::map<std::string, int32_t> heatMap;
+
         class UiWarehouseSimulatorThread_t : public QThread
         {
             Q_OBJECT

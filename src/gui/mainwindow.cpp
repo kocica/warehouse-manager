@@ -411,6 +411,41 @@ namespace whm
 
             orders.clear();
             processingDurations.clear();
+
+            auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();
+            auto uiItems = UiWarehouseLayout_t::getWhLayout().getWhItems();
+
+            for(auto* item : items)
+            {
+                if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                {
+                    for(auto* uiItem : uiItems)
+                    {
+                        if(item->getWhItemID() == uiItem->getWhItemID())
+                        {
+                            dynamic_cast<UiWarehouseItemLocation_t*>(uiItem)->importSlots(*item);
+                        }
+                    }
+                }
+            }
+
+            for(auto* item : uiItems)
+            {
+                if(item->getWhItemType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                {
+                    for(auto* slot : dynamic_cast<UiWarehouseItemLocation_t*>(item)->getSlots())
+                    {
+                        std::string article = slot->getArticle();
+
+                        if(!article.empty())
+                        {
+                            slot->setSlotHeat(heatMax, heatMin, heatMap[article]);
+                        }
+                    }
+                }
+            }
+
+            showWhItemsWorkload();
         }
 
         void MainWindow::optimizationStep(double fitness)
@@ -480,6 +515,8 @@ namespace whm
                     }
                 }
             }
+
+            // Layout update
 
             for(auto* item : items)
             {
