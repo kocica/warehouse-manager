@@ -81,9 +81,6 @@ namespace whm
 
             updateWarehouseDimensions();
 
-            UiWarehouseLayout_t::getWhLayout().setRatio(whR);
-            UiWarehouseLayout_t::getWhLayout().setDimensions(std::make_pair(whX/whR, whY/whR));
-
             // Create scene
             scene = new CustomizedGraphicsScene_t();
             scene->setSceneRect(0, 0, whX, whY);
@@ -1563,6 +1560,9 @@ namespace whm
                 whX = 1000 * whR;
                 whY = 500  * whR;
             }
+
+            UiWarehouseLayout_t::getWhLayout().setRatio(whR);
+            UiWarehouseLayout_t::getWhLayout().setDimensions(std::make_pair(whX/whR, whY/whR));
         }
 
         void MainWindow::on_simulationSpeedup_valueChanged()
