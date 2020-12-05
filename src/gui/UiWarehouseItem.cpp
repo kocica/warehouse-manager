@@ -58,6 +58,8 @@ namespace whm
 
             setAcceptHoverEvents(true);
 
+            infoTimeout.setSingleShot(true);
+
             QObject::connect(&infoTimeout, &QTimer::timeout, [&](){ info->hide(); });
         }
 
@@ -177,14 +179,29 @@ namespace whm
 
             text += QString("<tr><td><b>Item ID: </b></td><td>") + QString::number(whItemID) + QString("</td></tr>");
 
+            int32_t r = UiWarehouseLayout_t::getWhLayout().getRatio();
+
             switch(whItemType)
             {
                 case WarehouseItemType_t::E_LOCATION_SHELF:
+                {
                         text += QString("<tr><td><b>Item Type:</b></td><td> Location rack</td></tr>");
                         text += QString("<tr><td><b>Location slots:</b></td><td>(")
                              + QString::number(dynamic_cast<UiWarehouseItemLocation_t*>(this)->getSlotCountX()) + QString(",")
                              + QString::number(dynamic_cast<UiWarehouseItemLocation_t*>(this)->getSlotCountY()) + QString(")</td></tr>");
+
+                        const auto& s = dynamic_cast<UiWarehouseItemLocation_t*>(this)->getSlots();
+                        int32_t occupied{ 0 };
+                        for(auto* slot : s)
+                        {
+                            if(!slot->getArticle().empty())
+                            {
+                                ++ occupied;
+                            }
+                        }
+                        text += QString("<tr><td><b>Occupation level:</b></td><td>") + QString::number(occupied) + QString("/") + QString::number(s.size()) + QString("</td></tr>");
                         break;
+                }
                 case WarehouseItemType_t::E_CONVEYOR:
                         text += QString("<tr><td><b>Item Type:</b></td><td> Conveyor</td></tr>");
                         break;
@@ -199,8 +216,8 @@ namespace whm
                         break;
             }
 
-            text += QString("<tr><td><b>Coordinates: </b></td><td>(") + QString::number(getX()) + QString(",") + QString::number(getY()) + QString(")</td></tr>");
-            text += QString("<tr><td><b>Dimensions: </b></td><td>") + QString::number(getW()) + QString("×") + QString::number(getH()) + QString("</td></tr>");
+            text += QString("<tr><td><b>Coordinates: </b></td><td>(") + QString::number(getX()/r) + QString(",") + QString::number(getY()/r) + QString(")</td></tr>");
+            text += QString("<tr><td><b>Dimensions: </b></td><td>") + QString::number(getW()/r) + QString("×") + QString::number(getH()/r) + QString("</td></tr>");
             text += QString("<tr><td><b>Orientation: </b></td><td>") + QString::number(getO()) + QString("°</td></tr>");
             text += QString("<tr><td><b>Workload: </b></td><td>") + QString::number(workload) + QString("%</td></tr>");
 
@@ -232,7 +249,7 @@ namespace whm
 
         void UiWarehouseItem_t::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
         {
-            infoTimeout.start(3000);
+            infoTimeout.start(500);
 
             QGraphicsItem::hoverLeaveEvent(event);
         }
