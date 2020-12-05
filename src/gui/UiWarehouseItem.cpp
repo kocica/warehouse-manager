@@ -15,6 +15,7 @@
 #include "UiWarehouseItem.h"
 #include "UiWarehousePort.h"
 #include "UiWarehouseLayout.h"
+#include "UiWarehouseItemLocation.h"
 
 namespace whm
 {
@@ -53,8 +54,7 @@ namespace whm
 
             portSizeX = portSizeY = std::min(h, w) / 3;
 
-            info = scene->addText(QString("ID: ") + QString::number(whItemID) +
-                                  QString("\nType: ") + QString::number(to_underlying(whItemType)));
+            info = scene->addText(QString());
 
             setAcceptHoverEvents(true);
 
@@ -169,19 +169,78 @@ namespace whm
             }
         }
 
-        void UiWarehouseItem_t::hoverEnterEvent(QGraphicsSceneHoverEvent * event)
+        void UiWarehouseItem_t::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
         {
-            info->setPos(mRect.topLeft().x(), mRect.topLeft().y());
-            info->setFont(QFont("Helvetica", (getW() + getH())/30));
+            QString text;
+
+            text += QString("<table style='background-color:#BD1E51;color:#F1B814'>");
+
+            text += QString("<tr><td><b>Item ID: </b></td><td>") + QString::number(whItemID) + QString("</td></tr>");
+
+            switch(whItemType)
+            {
+                case WarehouseItemType_t::E_LOCATION_SHELF:
+                        text += QString("<tr><td><b>Item Type:</b></td><td> Location rack</td></tr>");
+                        text += QString("<tr><td><b>Location slots:</b></td><td>(")
+                             + QString::number(dynamic_cast<UiWarehouseItemLocation_t*>(this)->getSlotCountX()) + QString(",")
+                             + QString::number(dynamic_cast<UiWarehouseItemLocation_t*>(this)->getSlotCountY()) + QString(")</td></tr>");
+                        break;
+                case WarehouseItemType_t::E_CONVEYOR:
+                        text += QString("<tr><td><b>Item Type:</b></td><td> Conveyor</td></tr>");
+                        break;
+                case WarehouseItemType_t::E_CONVEYOR_HUB:
+                        text += QString("<tr><td><b>Item Type:</b></td><td> Conveyor hub</td></tr>");
+                        break;
+                case WarehouseItemType_t::E_WAREHOUSE_ENTRANCE:
+                        text += QString("<tr><td><b>Item Type:</b></td><td> Entrance</td></tr>");
+                        break;
+                case WarehouseItemType_t::E_WAREHOUSE_DISPATCH:
+                        text += QString("<tr><td><b>Item Type:</b></td><td> Dispatch</td></tr>");
+                        break;
+            }
+
+            text += QString("<tr><td><b>Coordinates: </b></td><td>(") + QString::number(getX()) + QString(",") + QString::number(getY()) + QString(")</td></tr>");
+            text += QString("<tr><td><b>Dimensions: </b></td><td>") + QString::number(getW()) + QString("×") + QString::number(getH()) + QString("</td></tr>");
+            text += QString("<tr><td><b>Orientation: </b></td><td>") + QString::number(getO()) + QString("°</td></tr>");
+            text += QString("<tr><td><b>Workload: </b></td><td>") + QString::number(workload) + QString("%</td></tr>");
+
+            for(auto* whPort : whPorts)
+            {
+                if(whPort->isConnected())
+                {
+                    auto* whConn = whPort->getWhConn();
+                    auto itemToID = whConn->getTo()->getWhItem()->getWhItemID();
+                    auto itemFromID = whConn->getFrom()->getWhItem()->getWhItemID();
+
+                    if(itemToID != whItemID)
+                        text += QString("<tr><td><b>Connected to item: </b></td><td>") + QString::number(itemToID) + QString("</td></tr>");
+                    if(itemFromID != whItemID)
+                        text += QString("<tr><td><b>Connected to item: </b></td><td>") + QString::number(itemFromID) + QString("</td></tr>");
+                }
+            }
+
+            text += QString("</table>");
+
+            info->setPos(event->scenePos());
+            info->setZValue(10);
+            info->setFont(QFont("Helvetica", 20));
+            info->setHtml(text);
             info->show();
-            infoTimeout.start(1000);
 
             QGraphicsItem::hoverEnterEvent(event);
+        }
+
+        void UiWarehouseItem_t::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+        {
+            infoTimeout.start(3000);
+
+            QGraphicsItem::hoverLeaveEvent(event);
         }
 
         void UiWarehouseItem_t::setItemHeat(double h)
         {
             double ratio = 2 * h;
+            workload = h;
 
             int32_t b = std::max(0.0, 255 * (1 - ratio));
             int32_t r = std::max(0.0, 255 * (ratio - 1));

@@ -68,6 +68,7 @@ namespace whm
                 void eraseFromLayout();
                 void mousePressEvent(QGraphicsSceneMouseEvent*);
                 void hoverEnterEvent(QGraphicsSceneHoverEvent*);
+                void hoverLeaveEvent(QGraphicsSceneHoverEvent*);
 
             protected:
                 MainWindow* ui{ nullptr };
@@ -76,6 +77,8 @@ namespace whm
 
                 int32_t portSizeX{ 0 };
                 int32_t portSizeY{ 0 };
+
+                double workload{ 0.0 };
 
                 int32_t whItemID{ 0 };
                 WarehouseItemType_t whItemType;
