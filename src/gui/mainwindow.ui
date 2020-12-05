@@ -896,6 +896,15 @@
                   <attribute name="title">
                    <string>SLAP</string>
                   </attribute>
+                  <layout class="QVBoxLayout" name="verticalLayout_3">
+                   <item>
+                    <widget class="QCheckBox" name="balanceTheLoad">
+                     <property name="text">
+                      <string>Balance the load between locations</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                  <widget class="QWidget" name="randConfig">
                   <attribute name="title">

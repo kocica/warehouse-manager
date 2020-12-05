@@ -32,6 +32,8 @@ namespace whm
             std::vector<int32_t> precalculateArticleWeights();
 
             int32_t calculateDistanceToExits(int32_t);
+            int32_t lookupOptimalSlot(const std::vector<int32_t>&);
+
             WarehouseItem_t* lookupExit(WarehouseItemType_t);
 
         private:

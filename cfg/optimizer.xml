@@ -45,6 +45,8 @@
 
         ===================================== Storage loc. assignment problem =======================
 
+        balanceTheLoad ................... Balance the load between locations
+
         ===================================== Random distribution ===================================
 
         populationSizeRand ............... Population size for random distribution of articles
@@ -90,6 +92,9 @@
                scalingFactor="0.6"
                probCrossoverDE="0.7"
                crossoverFunctorDE="crossoverOrdered"
+
+
+               balanceTheLoad="true"
 
 
                populationSizeRand="2000"

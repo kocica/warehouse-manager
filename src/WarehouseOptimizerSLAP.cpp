@@ -159,6 +159,49 @@ namespace whm
         return totalDistance;
     }
 
+    int32_t WarehouseOptimizerSLAP_t::lookupOptimalSlot(const std::vector<int32_t>& genes)
+    {
+        std::vector<WarehouseItem_t*> locations;
+
+        updateAllocations(genes);
+
+        for(auto* item : whm::WarehouseLayout_t::getWhLayout().getWhItems())
+        {
+            if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+            {
+                locations.push_back(item);
+            }
+        }
+
+        std::sort(locations.begin(), locations.end(),
+                  [](auto* lhs, auto* rhs) -> bool
+                  {
+                      auto lhsSlots = lhs->getWhLocationRack()->getSlotCountX() * lhs->getWhLocationRack()->getSlotCountY();
+                      auto rhsSlots = rhs->getWhLocationRack()->getSlotCountX() * rhs->getWhLocationRack()->getSlotCountY();
+
+                      return (lhs->getWhLocationRack()->getOccupationLevel()/double(lhsSlots) <
+                              rhs->getWhLocationRack()->getOccupationLevel()/double(rhsSlots));
+                  });
+
+        for(auto const& loc : locations)
+        {
+            auto slot = loc->getWhLocationRack()->getFirstFreeSlot();
+
+            if(slot)
+            {
+                for(auto e : slotEnc)
+                {
+                    if(slot == e.second)
+                    {
+                        return e.first;
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+
     void WarehouseOptimizerSLAP_t::optimize()
     {
         std::vector<Solution_t> population(1);
@@ -172,13 +215,20 @@ namespace whm
 
         for(int32_t i = 0; i < cfg.getAs<int32_t>("numberDimensions"); ++i)
         {
-            genes.at(sortedArticleEnc.at(i)) = sortedLocationEnc.at(i);
+            if(cfg.getAs<bool>("balanceTheLoad"))
+            {
+                genes.at(sortedArticleEnc.at(i)) = i == 0 ? sortedLocationEnc.at(i) : lookupOptimalSlot(genes);
+            }
+            else
+            {
+                genes.at(sortedArticleEnc.at(i)) = sortedLocationEnc.at(i);
+            }
         }
 
         fitness = simulateWarehouse(genes);
 
 #       ifdef WHM_GUI
-        int32_t uiCallbackInt = cfg.getAs<int32_t>("maxIterations") / 10;
+        int32_t uiCallbackInt = cfg.getAs<int32_t>("maxIterations");
 #       endif
 
         for(int32_t gen = 0; gen < cfg.getAs<int32_t>("maxIterations"); ++gen)
@@ -190,7 +240,6 @@ namespace whm
             if(uiCallback && ((gen % uiCallbackInt) == 0))
             {
                 simulateWarehouse(genes);
-                //updateAllocations(genes);
                 uiCallback(fitness);
             }
 #           endif

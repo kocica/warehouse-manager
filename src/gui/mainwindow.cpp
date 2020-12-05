@@ -815,6 +815,7 @@ namespace whm
             if(ui->crossoverPSO->currentIndex()  == 1) cfg.set("crossoverFunctorPSO", "crossoverOrdered");
 
             // SLAP
+            cfg.set("balanceTheLoad",     ui->balanceTheLoad->checkState() == Qt::Checked ? "true" : "false");
 
             // RAND
             cfg.set("populationSizeRand", std::to_string(ui->populationSizeRand->value()));
@@ -946,6 +947,7 @@ namespace whm
                 if(cfg.getAs<std::string>("crossoverFunctorPSO") == "crossoverOrdered")   ui->crossoverPSO->setCurrentIndex(1);
 
                 // SLAP
+                ui->balanceTheLoad->setCheckState(cfg.getAs<bool>("balanceTheLoad") ? Qt::Checked : Qt::Unchecked);
 
                 // RAND
                 ui->populationSizeRand->setValue(cfg.getAs<int32_t>("populationSizeRand"));
@@ -1579,7 +1581,9 @@ namespace whm
             }
 
             ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
+            ui->ratioIndicator->setStyleSheet("QFrame { background-color: #FF6600; }");
             ui->ratioText->setText(QString::number(((ui->view->width()/double(whX)) * (whX/whR))/5));
+            ui->ratioText->setStyleSheet("QLabel { color: #FF6600; }");
         }
 
         void MainWindow::updateWarehouseDimensions()
