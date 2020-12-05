@@ -366,7 +366,7 @@ namespace whm
             WarehouseItem_t* whLoc = sim.lookupWhLoc(locationID);
             std::pair<size_t, size_t> slotPos;
             whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), 0, slotPos);
-            static const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
+            const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
             waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
                             (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getConfig().getAs<double>("workerSpeed");
 

@@ -385,17 +385,55 @@
                  <property name="bottomMargin">
                   <number>0</number>
                  </property>
-                 <item row="0" column="5">
-                  <widget class="QSpinBox" name="problemMax">
+                 <item row="1" column="4">
+                  <widget class="QLabel" name="trialValueLabel">
+                   <property name="text">
+                    <string>Trial value:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="5">
+                  <widget class="QSpinBox" name="trialValue">
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="weightsLabel">
+                   <property name="text">
+                    <string>Weights save:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="procCountLabel">
+                   <property name="text">
+                    <string>Process count:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="3">
+                  <widget class="QSpinBox" name="weights">
                    <property name="maximum">
                     <number>10000</number>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="numberDimensions">
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="procCount">
+                   <property name="minimum">
+                    <number>1</number>
+                   </property>
                    <property name="maximum">
                     <number>1000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QSpinBox" name="problemMin">
+                   <property name="maximum">
+                    <number>10000</number>
                    </property>
                   </widget>
                  </item>
@@ -406,6 +444,13 @@
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="numberDimensions">
+                   <property name="maximum">
+                    <number>1000</number>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="0" column="4">
                   <widget class="QLabel" name="problemMaxLabel">
                    <property name="text">
@@ -413,8 +458,8 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="3">
-                  <widget class="QSpinBox" name="problemMin">
+                 <item row="0" column="5">
+                  <widget class="QSpinBox" name="problemMax">
                    <property name="maximum">
                     <number>10000</number>
                    </property>
@@ -441,48 +486,10 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="weightsLabel">
+                 <item row="2" column="5">
+                  <widget class="QCheckBox" name="sortSlotsHeat">
                    <property name="text">
-                    <string>Weights save:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="4">
-                  <widget class="QLabel" name="trialValueLabel">
-                   <property name="text">
-                    <string>Trial value:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="3">
-                  <widget class="QSpinBox" name="weights">
-                   <property name="maximum">
-                    <number>10000</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="5">
-                  <widget class="QSpinBox" name="trialValue">
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="procCountLabel">
-                   <property name="text">
-                    <string>Process count:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QSpinBox" name="procCount">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>1000</number>
+                    <string>Sort slots heat</string>
                    </property>
                   </widget>
                  </item>

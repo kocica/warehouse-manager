@@ -68,6 +68,11 @@ namespace whm
             void saveBestSolution(std::vector<int32_t>&) const;
             void updateAllocations(const std::vector<int32_t>&) const;
 
+            // Pre/post processing
+            int32_t calculateDistanceToExits(int32_t);
+            std::vector<int32_t> precalculateArticleWeights();
+            std::vector<int32_t> sortLocationArticles(std::vector<int32_t>&);
+
         protected:
             std::mt19937 rand;
             ConfigParser_t cfg;
@@ -87,6 +92,8 @@ namespace whm
 
             // Fitness history for plot
             std::vector<double> histFitness;
+
+            WarehousePathFinder_t pathFinder;
 
 #           ifdef WHM_GUI
             UiCallback_t uiCallback;

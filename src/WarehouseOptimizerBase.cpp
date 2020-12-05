@@ -11,6 +11,7 @@
 
 // Std
 #include <map>
+#include <set>
 #include <utility>
 #include <iostream>
 #include <signal.h>
@@ -240,6 +241,151 @@ namespace whm
 
         // Export allocation to a csv file
         whm::WarehouseLayout_t::getWhLayout().exportLocationSlots(args.locationsPath);
+    }
+
+    std::vector<int32_t> WarehouseOptimizerBase_t::precalculateArticleWeights()
+    {
+        std::vector<int32_t> sortedArticleEncs;
+        std::map<std::string, int32_t> articleWeightsMap;
+
+        for(auto& order : whm::WarehouseLayout_t::getWhLayout().getWhOrders())
+        {
+            for(auto& line : order.getWhOrderLines())
+            {
+                articleWeightsMap[line.getArticle()]++;
+            }
+        }
+
+        using Comparator_t = std::function<bool(std::pair<std::string, int32_t>, std::pair<std::string, int32_t>)>;
+
+        Comparator_t compFunctor = [](std::pair<std::string, int32_t> lhs, std::pair<std::string, int32_t> rhs) -> bool
+                                   {
+                                       return lhs.second >= rhs.second;
+                                   };
+
+        std::set<std::pair<std::string, int32_t>, Comparator_t> articleWeightsSet(articleWeightsMap.begin(), articleWeightsMap.end(), compFunctor);
+
+        for(const auto& [a1, _] : articleWeightsSet)
+        {
+            for(const auto& [enc, a2] : skuEnc)
+            {
+                if(a1 == a2)
+                {
+                    sortedArticleEncs.push_back(enc);
+                }
+            }
+        }
+
+        return sortedArticleEncs;
+    }
+
+    int32_t WarehouseOptimizerBase_t::calculateDistanceToExits(int32_t locID)
+    {
+        int32_t totalDistance{ 0 };
+        int32_t entranceID = simulator.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)->getWhItemID();
+        int32_t dispatchID = simulator.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_DISPATCH)->getWhItemID();
+
+        const WarehousePathInfo_t* shortestPathEntrance = pathFinder.getShortestPath(locID, entranceID);
+        const WarehousePathInfo_t* shortestPathDispatch = pathFinder.getShortestPath(locID, dispatchID);
+
+        for(const auto& [_, distance] : shortestPathEntrance->pathToTarget)
+        {
+            totalDistance += distance;
+        }
+
+        for(const auto& [_, distance] : shortestPathDispatch->pathToTarget)
+        {
+            totalDistance += distance;
+        }
+
+        return totalDistance;
+    }
+
+    std::vector<int32_t> WarehouseOptimizerBase_t::sortLocationArticles(std::vector<int32_t>& ind)
+    {
+        updateAllocations(ind);
+
+        auto genes = std::vector<int32_t>(cfg.getAs<int32_t>("numberDimensions"));
+
+        pathFinder.clearPrecalculatedPaths();
+        pathFinder.precalculatePaths(whm::WarehouseLayout_t::getWhLayout().getWhItems());
+
+        auto articleWeights = precalculateArticleWeights();
+
+        for(auto* whItem : WarehouseLayout_t::getWhLayout().getWhItems())
+        {
+            if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+            {
+                std::vector<int32_t> sortedLocationEncs;
+
+                std::vector<std::pair<WarehouseLocationSlot_t*, int32_t>> locationHeatsMap;
+
+                int32_t distance = calculateDistanceToExits(whItem->getWhItemID());
+
+                auto* whRack = whItem->getWhLocationRack();
+
+                for(int32_t y = 0; y < whRack->getSlotCountY(); y++)
+                {
+                    for(int32_t x = 0; x < whRack->getSlotCountX(); x++)
+                    {
+                        locationHeatsMap.push_back(std::make_pair(&whRack->at(x, y), distance + x + y));
+                    }
+                }
+
+                std::sort(locationHeatsMap.begin(), locationHeatsMap.end(), [](auto& lhs, auto& rhs) -> bool
+                                                                    {
+                                                                        return lhs.second < rhs.second;
+                                                                    });
+
+                for(const auto& [s1, _] : locationHeatsMap)
+                {
+                    for(const auto& [enc, s2] : slotEnc)
+                    {
+                        if(s1 == s2)
+                        {
+                            sortedLocationEncs.push_back(enc);
+                        }
+                    }
+                }
+
+                std::vector<int32_t> articleEncs;
+
+                for(int32_t locEnc : sortedLocationEncs)
+                {
+                    auto* slot = slotEnc[locEnc];
+
+                    std::string article = slot->getArticle();
+
+                    for(auto& sku : skuEnc)
+                    {
+                        if(sku.second == article)
+                        {
+                            articleEncs.push_back(sku.first);
+                        }
+                    }
+                }
+
+                std::vector<int32_t> sortedArticleEncs;
+
+                for(int32_t aw : articleWeights)
+                {
+                    if(std::find(articleEncs.begin(), articleEncs.end(), aw) != articleEncs.end())
+                    {
+                        sortedArticleEncs.push_back(aw);
+                    }
+                }
+
+                auto it = sortedLocationEncs.begin();
+
+                for(int32_t e : sortedArticleEncs)
+                {
+                    genes.at(e) = *it;
+                    ++ it;
+                }
+            }
+        }
+
+        return genes;
     }
 
     void WarehouseOptimizerBase_t::simulationService(int32_t infd, int32_t outfd)

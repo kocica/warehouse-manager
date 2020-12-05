@@ -44,6 +44,11 @@ namespace whm
 
     }
 
+    void WarehousePathFinder_t::clearPrecalculatedPaths()
+    {
+        whPaths.clear();
+    }
+
     void WarehousePathFinder_t::precalculatePaths(const std::vector<WarehouseItem_t*>& whItems)
     {
         std::for_each(whItems.begin(), whItems.end(),

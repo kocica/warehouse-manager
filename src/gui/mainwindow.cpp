@@ -773,6 +773,7 @@ namespace whm
             cfg.set("saveWeightsPeriod",  std::to_string(ui->weights->value()));
             cfg.set("maxTrialValue",      std::to_string(ui->trialValue->value()));
             cfg.set("procCount",          std::to_string(ui->procCount->value()));
+            cfg.set("slotHeatReorder",    ui->sortSlotsHeat->checkState() ==  Qt::Checked ? "true" : "false");
 
             // GA
             cfg.set("populationSize",     std::to_string(ui->populationSize->value()));
@@ -891,6 +892,7 @@ namespace whm
                 ui->weights->setValue(cfg.getAs<int32_t>("saveWeightsPeriod"));
                 ui->trialValue->setValue(cfg.getAs<int32_t>("maxTrialValue"));
                 ui->procCount->setValue(cfg.getAs<int32_t>("procCount"));
+                ui->sortSlotsHeat->setCheckState(cfg.getAs<bool>("slotHeatReorder") ? Qt::Checked : Qt::Unchecked);
 
                 // GA
                 ui->populationSize->setValue(cfg.getAs<int32_t>("populationSize"));

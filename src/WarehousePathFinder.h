@@ -32,6 +32,7 @@ namespace whm
             WarehousePathFinder_t();
             ~WarehousePathFinder_t();
 
+            void clearPrecalculatedPaths();
             void precalculatePaths(const std::vector<WarehouseItem_t*>&);
             WarehousePathInfo_t* getShortestPath(int32_t, int32_t) const;
 

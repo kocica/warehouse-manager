@@ -453,6 +453,11 @@ namespace whm
                     initIndividualRand(population[p].genes);
                 }
 
+                if(cfg.getAs<bool>("slotHeatReorder"))
+                {
+                    population[p].genes = sortLocationArticles(population[p].genes);
+                }
+
                 population[p].stringGenes = utils::toString(population[p].genes);
 
                 if(chromosomeMap.find(population[p].stringGenes) == chromosomeMap.end())
