@@ -336,6 +336,23 @@
                 </layout>
                </item>
                <item>
+                <layout class="QHBoxLayout" name="weightsLayout">
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QLineEdit" name="weightsLine"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="weightsLoad">
+                   <property name="text">
+                    <string>Load weights</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
                 <layout class="QHBoxLayout" name="optimizerSelectionLayout">
                  <item>
                   <widget class="QLabel" name="optimizerSelectionLabel">

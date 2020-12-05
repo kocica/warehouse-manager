@@ -95,6 +95,7 @@ namespace whm
                 void on_whItemExit_toggled(bool);
 
                 // Optimizer
+                void on_weightsLoad_clicked();
                 void on_configLoadOpt_clicked();
                 void on_startOptimization_clicked();
                 void on_stopOptimization_clicked();

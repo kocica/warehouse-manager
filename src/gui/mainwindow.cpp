@@ -124,6 +124,7 @@ namespace whm
             ui->deletionMode->setIcon(QIcon(":/img/delete.png"));
             ui->selectionMode->setIcon(QIcon(":/img/select.png"));
 
+            ui->weightsLoad->setIcon(QIcon(":/img/weights.png"));
             ui->configLoadOpt->setIcon(QIcon(":/img/config.png"));
             ui->configLoadGen->setIcon(QIcon(":/img/config.png"));
             ui->configLoadSim->setIcon(QIcon(":/img/config.png"));
@@ -774,6 +775,7 @@ namespace whm
             cfg.set("maxTrialValue",      std::to_string(ui->trialValue->value()));
             cfg.set("procCount",          std::to_string(ui->procCount->value()));
             cfg.set("slotHeatReorder",    ui->sortSlotsHeat->checkState() ==  Qt::Checked ? "true" : "false");
+            cfg.set("initialWeights",     ui->weightsLine->text().toUtf8().constData());
 
             // GA
             cfg.set("populationSize",     std::to_string(ui->populationSize->value()));
@@ -870,6 +872,17 @@ namespace whm
             }
         }
 
+        void MainWindow::on_weightsLoad_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Initial weights"), "", tr("Initial weights (*.csv)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->weightsLine->setText(file);
+        }
+
         void MainWindow::on_configLoadOpt_clicked()
         {
             QString file = QFileDialog::getOpenFileName(this, tr("Optimalizator configuration"), "", tr("Optimalizator configuration (*.xml)"));
@@ -893,6 +906,7 @@ namespace whm
                 ui->trialValue->setValue(cfg.getAs<int32_t>("maxTrialValue"));
                 ui->procCount->setValue(cfg.getAs<int32_t>("procCount"));
                 ui->sortSlotsHeat->setCheckState(cfg.getAs<bool>("slotHeatReorder") ? Qt::Checked : Qt::Unchecked);
+                ui->weightsLine->setText(QString::fromUtf8(cfg.getAs<std::string>("initialWeights").c_str()));
 
                 // GA
                 ui->populationSize->setValue(cfg.getAs<int32_t>("populationSize"));
