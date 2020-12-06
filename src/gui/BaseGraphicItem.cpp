@@ -569,7 +569,7 @@ namespace whm
                     {
                         if(auto* scenePort = dynamic_cast<UiWarehousePort_t*>(i))
                         {
-                            if(whPort != scenePort)
+                            if(whPort != scenePort && !whPort->isConnected() && !scenePort->isConnected())
                             {
                                 bool overlap{ true };
                                 auto r1 = whPort->getRect();
@@ -609,7 +609,28 @@ namespace whm
 
         QVariant BaseGraphicItem_t::itemChange(GraphicsItemChange change, const QVariant& value)
         {
-            if (change == ItemPositionChange && scene() && mAllowChange)
+            if(change == ItemPositionChange && scene() && mAllowChange)
+            {
+                int gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
+
+                QPointF newPos = value.toPointF();
+
+                if((int)newPos.x() % gridSize != 0)
+                {
+                    int x = (int)newPos.x() - (int)newPos.x() % gridSize;
+                    newPos.setX(x);
+                }
+                if((int)newPos.y() % gridSize != 0)
+                {
+                    int y = (int)newPos.y() - (int)newPos.y() % gridSize;
+                    newPos.setY(y);
+                }
+
+                mAllowChange = !mAllowChange;
+
+                return newPos;
+            }
+            else if(change == ItemPositionHasChanged && scene())
             {
                 if(auto* whItem = dynamic_cast<UiWarehouseItem_t*>(this))
                 {
@@ -621,7 +642,7 @@ namespace whm
                         {
                             if(auto* scenePort = dynamic_cast<UiWarehousePort_t*>(i))
                             {
-                                if(whPort != scenePort)
+                                if(whPort != scenePort && !whPort->isConnected() && !scenePort->isConnected())
                                 {
                                     bool overlap{ true };
                                     auto r1 = whPort->getRect();
@@ -649,35 +670,16 @@ namespace whm
                                     }
                                     else
                                     {
-                                        whPort->unselect();
-                                        scenePort->unselect();
+                                        whPort->unmark();
+                                        scenePort->unmark();
                                     }
                                 }
                             }
                         }
                     }
 
-                    std::for_each(selectedPorts.begin(), selectedPorts.end(), [](auto* p){ p->select(); });
+                    std::for_each(selectedPorts.begin(), selectedPorts.end(), [](auto* p){ p->mark(); });
                 }
-
-                int gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
-
-                QPointF newPos = value.toPointF();
-
-                if((int)newPos.x() % gridSize != 0)
-                {
-                    int x = (int)newPos.x() - (int)newPos.x() % gridSize;
-                    newPos.setX(x);
-                }
-                if((int)newPos.y() % gridSize != 0)
-                {
-                    int y = (int)newPos.y() - (int)newPos.y() % gridSize;
-                    newPos.setY(y);
-                }
-
-                mAllowChange = !mAllowChange;
-
-                return newPos;
             }
 
             return QGraphicsRectItem::itemChange(change, value);

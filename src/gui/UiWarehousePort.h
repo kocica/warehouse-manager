@@ -29,6 +29,8 @@ namespace whm
                 UiWarehousePort_t(QGraphicsScene*, QGraphicsItem*, MainWindow*, int32_t, int32_t, int32_t, int32_t, int32_t, WarehousePortType_t);
                 virtual ~UiWarehousePort_t();
 
+                void mark();
+                void unmark();
                 void select();
                 void connect();
                 void disconnect();

@@ -43,7 +43,7 @@ namespace whm
         {
             this->showHandles(false);
 
-            this->setRotatedPixmap(":/img/plug.png");
+            unmark();
         }
 
         UiWarehousePort_t::~UiWarehousePort_t()
@@ -541,23 +541,33 @@ namespace whm
             return this->whPortType;
         }
 
+        void UiWarehousePort_t::mark()
+        {
+            this->setRotatedPixmap(":/img/plug_sel.png");
+        }
+
+        void UiWarehousePort_t::unmark()
+        {
+            this->setRotatedPixmap(":/img/plug.png");
+        }
+
         void UiWarehousePort_t::select()
         {
             selectedPort = this;
-            this->setRotatedPixmap(":/img/plug_sel.png");
+            mark();
         }
 
         void UiWarehousePort_t::unselect()
         {
             selectedPort = nullptr;
-            this->setRotatedPixmap(":/img/plug.png");
+            unmark();
         }
 
         void UiWarehousePort_t::connect()
         {
             selectedPort = nullptr;
             mConnected = true;
-            this->setRotatedPixmap(":/img/plug.png");
+            unmark();
         }
 
         bool UiWarehousePort_t::isConnected() const

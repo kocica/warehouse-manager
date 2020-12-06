@@ -74,7 +74,7 @@ namespace whm
                 int32_t mOrientation{ 0 };
                 int32_t mLineWidth{ 2 };
 
-                QList<Handle *> mHandles;
+                QList<Handle*> mHandles;
                 QGraphicsItem* mParentItem{ nullptr };
 
                 int32_t minWidth{ 0 };
@@ -85,7 +85,7 @@ namespace whm
 
             private:
                 MainWindow* ui{ nullptr };
-                Handle *mCurrentHandle;
+                Handle* mCurrentHandle;
                 QString mId;
         };
     }
