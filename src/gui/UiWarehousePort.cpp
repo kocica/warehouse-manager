@@ -557,6 +557,7 @@ namespace whm
         {
             selectedPort = nullptr;
             mConnected = true;
+            this->setRotatedPixmap(":/img/plug.png");
         }
 
         bool UiWarehousePort_t::isConnected() const

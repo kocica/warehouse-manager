@@ -39,8 +39,7 @@ namespace whm
 
                 void setId(QString id);
                 QString id();
-
-                QRectF getRect() const;
+                QRectF getRect();
 
                 virtual void updateChildrenPositions(double, double);
                 void showHandles(bool enabled);

@@ -101,20 +101,6 @@ namespace whm
             delete info;
         }
 
-        QRectF UiWarehouseItem_t::getRect()
-        {
-            auto t = QTransform().translate(mOrigin.x(), mOrigin.y()).rotate(mOrientation).translate(-mOrigin.x(), -mOrigin.y());
-            auto p = t.mapToPolygon(mRect.toRect());
-            auto r = p.boundingRect();
-            auto o = this->getO();
-            this->setO(0);
-            r.setTopLeft(QPoint(this->scenePos().x() + r.topLeft().x(), this->scenePos().y() + r.topLeft().y()));
-            r.setBottomRight(QPoint(this->scenePos().x() + r.bottomRight().x(), this->scenePos().y() + r.bottomRight().y()));
-            this->setO(o);
-
-            return r;
-        }
-
         WarehouseItemType_t UiWarehouseItem_t::getWhItemType() const
         {
             return whItemType;

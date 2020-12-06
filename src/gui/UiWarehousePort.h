@@ -48,8 +48,6 @@ namespace whm
 
             public slots:
                 void mousePressEvent(QGraphicsSceneMouseEvent*);
-
-            private slots:
                 void unselect();
 
             private:

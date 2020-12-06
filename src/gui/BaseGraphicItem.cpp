@@ -109,9 +109,18 @@ namespace whm
             mDrawHandles = enabled;
         }
 
-        QRectF BaseGraphicItem_t::getRect() const
+        QRectF BaseGraphicItem_t::getRect()
         {
-            return mRect;
+            auto t = QTransform().translate(mOrigin.x(), mOrigin.y()).rotate(mOrientation).translate(-mOrigin.x(), -mOrigin.y());
+            auto p = t.mapToPolygon(mRect.toRect());
+            auto r = p.boundingRect();
+            auto o = this->mOrientation;
+            this->setGraphicItemOrientation(0);
+            r.setTopLeft(QPoint(this->scenePos().x() + r.topLeft().x(), this->scenePos().y() + r.topLeft().y()));
+            r.setBottomRight(QPoint(this->scenePos().x() + r.bottomRight().x(), this->scenePos().y() + r.bottomRight().y()));
+            this->setGraphicItemOrientation(o);
+
+            return r;
         }
 
         void BaseGraphicItem_t::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -176,10 +185,10 @@ namespace whm
                             }
                         }
                     }
-                }
 
-                painter->drawLine(p1,p2);
-                painter->drawPoint(this->mOrigin);
+                    painter->drawLine(p1,p2);
+                    painter->drawPoint(this->mOrigin);
+                }
             }
         }
 
@@ -552,6 +561,48 @@ namespace whm
                 return;
             }
 
+            if(auto* whItem = dynamic_cast<UiWarehouseItem_t*>(this))
+            {
+                for(auto* whPort : whItem->getWhPorts())
+                {
+                    foreach(QGraphicsItem* i, scene()->items())
+                    {
+                        if(auto* scenePort = dynamic_cast<UiWarehousePort_t*>(i))
+                        {
+                            if(whPort != scenePort)
+                            {
+                                bool overlap{ true };
+                                auto r1 = whPort->getRect();
+                                auto r2 = scenePort->getRect();
+
+                                r1.setTopLeft(QPointF(r1.topLeft().x() - 10, r1.topLeft().y() - 10));
+                                r1.setBottomRight(QPointF(r1.bottomRight().x() + 10, r1.bottomRight().y() + 10));
+
+                                if(r1.topLeft().x() >= r2.bottomRight().x() ||
+                                   r2.topLeft().x() >= r1.bottomRight().x())
+                                {
+                                    overlap = false;
+                                }
+
+                                if(r1.topLeft().y() >= r2.bottomRight().y() ||
+                                   r2.topLeft().y() >= r1.bottomRight().y())
+                                {
+                                    overlap = false;
+                                }
+
+                                if(overlap)
+                                {
+                                    whPort->select();
+                                    auto* e = new QGraphicsSceneMouseEvent();
+                                    e->setButton(Qt::LeftButton);
+                                    scenePort->mousePressEvent(e);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             QGraphicsRectItem::mouseReleaseEvent(event);
             this->mCurrentHandle = 0;
         }
@@ -560,6 +611,55 @@ namespace whm
         {
             if (change == ItemPositionChange && scene() && mAllowChange)
             {
+                if(auto* whItem = dynamic_cast<UiWarehouseItem_t*>(this))
+                {
+                    std::vector<UiWarehousePort_t*> selectedPorts;
+
+                    for(auto* whPort : whItem->getWhPorts())
+                    {
+                        foreach(QGraphicsItem* i, scene()->items())
+                        {
+                            if(auto* scenePort = dynamic_cast<UiWarehousePort_t*>(i))
+                            {
+                                if(whPort != scenePort)
+                                {
+                                    bool overlap{ true };
+                                    auto r1 = whPort->getRect();
+                                    auto r2 = scenePort->getRect();
+
+                                    r1.setTopLeft(QPointF(r1.topLeft().x() - 10, r1.topLeft().y() - 10));
+                                    r1.setBottomRight(QPointF(r1.bottomRight().x() + 10, r1.bottomRight().y() + 10));
+
+                                    if(r1.topLeft().x() >= r2.bottomRight().x() ||
+                                       r2.topLeft().x() >= r1.bottomRight().x())
+                                    {
+                                        overlap = false;
+                                    }
+
+                                    if(r1.topLeft().y() >= r2.bottomRight().y() ||
+                                       r2.topLeft().y() >= r1.bottomRight().y())
+                                    {
+                                        overlap = false;
+                                    }
+
+                                    if(overlap)
+                                    {
+                                        selectedPorts.push_back(whPort);
+                                        selectedPorts.push_back(scenePort);
+                                    }
+                                    else
+                                    {
+                                        whPort->unselect();
+                                        scenePort->unselect();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    std::for_each(selectedPorts.begin(), selectedPorts.end(), [](auto* p){ p->select(); });
+                }
+
                 int gridSize = UiWarehouseLayout_t::getWhLayout().getRatio();
 
                 QPointF newPos = value.toPointF();
