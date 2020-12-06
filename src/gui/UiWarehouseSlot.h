@@ -29,6 +29,10 @@ namespace whm
                 void setSlotHeat(int32_t, int32_t, int32_t);
                 void updateSlot(double, double, int32_t, int32_t);
 
+            protected:
+                void hoverEnterEvent(QGraphicsSceneHoverEvent*);
+                void hoverLeaveEvent(QGraphicsSceneHoverEvent*);
+
             private:
                 std::string article;
                 int32_t quantity{ 0 };

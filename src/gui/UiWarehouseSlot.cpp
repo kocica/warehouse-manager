@@ -59,5 +59,32 @@ namespace whm
             this->mOrigin.setX(mRect.center().x());
             this->mOrigin.setY(mRect.center().y());
         }
+
+        void UiWarehouseSlot_t::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+        {
+            QString text;
+
+            text += QString("<table style='background-color:#BD1E51;color:#F1B814'>");
+
+            text += QString("<tr><td><b>Article: </b></td><td>") + QString::fromStdString(article) + QString("</td></tr>");
+            text += QString("<tr><td><b>Quantity: </b></td><td>") + QString::number(quantity) + QString("</td></tr>");
+
+            text += QString("</table>");
+
+            info->setPos(event->scenePos());
+            info->setZValue(10);
+            info->setFont(QFont("Helvetica", 20));
+            info->setHtml(text);
+            info->show();
+
+            QGraphicsItem::hoverEnterEvent(event);
+        }
+
+        void UiWarehouseSlot_t::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+        {
+            info->hide();
+
+            QGraphicsItem::hoverLeaveEvent(event);
+        }
     }
 }
