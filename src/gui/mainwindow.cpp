@@ -133,6 +133,8 @@ namespace whm
             ui->configSaveSim->setIcon(QIcon(":/img/config.png"));
             ui->selectionMode->toggle();
 
+            ui->mainToolBar->setStyleSheet("QToolButton { color: #FF6600; font-weight: bold; }");
+
             // Plots
             ui->fitnessPlot->addGraph();
             ui->fitnessPlot->xAxis->setLabel("Steps");

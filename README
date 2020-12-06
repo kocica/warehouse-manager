@@ -26,10 +26,9 @@ Optimizer (train on train set of orders):
 
 # TODO
 
- - Doplnit plot (nahodne razeni, slap)
  - Limity - cas, velikost
  - Dukaz TSP <-> SLAP
- - NN (pokud nebude fungovat paralelizace)
+ - NN
  - CGP - Optimalizace layoutu (posuv lokaci apod.)
- - SLAP parametr pro vyvazeni zateze mezi lokacema
  - Zvysit vahu rozmisteni produktu do slotu (*2) napr, at to sklada vic k pocatku
+ - Obrazek - UI Okno / Opt vlakno / N procesu
