@@ -126,8 +126,11 @@ namespace whm
 
             ui->weightsLoad->setIcon(QIcon(":/img/weights.png"));
             ui->configLoadOpt->setIcon(QIcon(":/img/config.png"));
+            ui->configSaveOpt->setIcon(QIcon(":/img/config.png"));
             ui->configLoadGen->setIcon(QIcon(":/img/config.png"));
+            ui->configSaveGen->setIcon(QIcon(":/img/config.png"));
             ui->configLoadSim->setIcon(QIcon(":/img/config.png"));
+            ui->configSaveSim->setIcon(QIcon(":/img/config.png"));
             ui->selectionMode->toggle();
 
             // Plots
@@ -765,7 +768,63 @@ namespace whm
             whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
 
             whm::ConfigParser_t cfg;
+            exportOptimizerConfig(cfg);
 
+            // Paths
+            cfg.set("articlesPath", a);
+            cfg.set("locationsPath", l);
+            cfg.set("ordersPath", o);
+
+            cfg.dump();
+
+            optimizationElapsedTime.start();
+
+            optimizerUi = new UiWarehouseOptimizerThread_t(cfg, ui->optimizerSelectionBox->currentIndex());
+
+            connect(optimizerUi, SIGNAL(finished()),
+                    optimizerUi, SLOT(deleteLater()));
+
+            connect(optimizerUi, SIGNAL(optimizationFinished()),
+                    this,        SLOT(optimizationFinished()));
+
+            connect(optimizerUi, SIGNAL(optimizationStep(double)),
+                    this,        SLOT(optimizationStep(double)));
+
+            optimizerUi->start();
+        }
+
+        void MainWindow::on_stopOptimization_clicked()
+        {
+            if(optimizerUi)
+            {
+                auto dialog = new QProgressDialog();
+                dialog->setWindowTitle("Wait");
+                dialog->setRange(0, 0);
+                dialog->setLabelText("Aborting optimization");
+                dialog->setCancelButton(nullptr);
+                dialog->setModal(true);
+                dialog->resize(100, 30);
+                dialog->show();
+
+                optimizerUi->terminate();
+                while (!optimizerUi->wait(100))
+                {
+                    QApplication::processEvents();
+
+                    if(dialog)
+                    {
+                        dialog->setVisible(true);
+                    }
+                }
+                optimizerUi = nullptr;
+                optimizationFinished();
+
+                dialog->hide();
+            }
+        }
+
+        void MainWindow::exportOptimizerConfig(ConfigParser_t& cfg)
+        {
             // General
             cfg.set("numberDimensions",   std::to_string(ui->numberDimensions->value()));
             cfg.set("problemMin",         std::to_string(ui->problemMin->value()));
@@ -819,58 +878,6 @@ namespace whm
 
             // RAND
             cfg.set("populationSizeRand", std::to_string(ui->populationSizeRand->value()));
-
-            // Paths
-            cfg.set("articlesPath", a);
-            cfg.set("locationsPath", l);
-            cfg.set("ordersPath", o);
-
-            cfg.dump();
-
-            optimizationElapsedTime.start();
-
-            optimizerUi = new UiWarehouseOptimizerThread_t(cfg, ui->optimizerSelectionBox->currentIndex());
-
-            connect(optimizerUi, SIGNAL(finished()),
-                    optimizerUi, SLOT(deleteLater()));
-
-            connect(optimizerUi, SIGNAL(optimizationFinished()),
-                    this,        SLOT(optimizationFinished()));
-
-            connect(optimizerUi, SIGNAL(optimizationStep(double)),
-                    this,        SLOT(optimizationStep(double)));
-
-            optimizerUi->start();
-        }
-
-        void MainWindow::on_stopOptimization_clicked()
-        {
-            if(optimizerUi)
-            {
-                auto dialog = new QProgressDialog();
-                dialog->setWindowTitle("Wait");
-                dialog->setRange(0, 0);
-                dialog->setLabelText("Aborting optimization");
-                dialog->setCancelButton(nullptr);
-                dialog->setModal(true);
-                dialog->resize(100, 30);
-                dialog->show();
-
-                optimizerUi->terminate();
-                while (!optimizerUi->wait(100))
-                {
-                    QApplication::processEvents();
-
-                    if(dialog)
-                    {
-                        dialog->setVisible(true);
-                    }
-                }
-                optimizerUi = nullptr;
-                optimizationFinished();
-
-                dialog->hide();
-            }
         }
 
         void MainWindow::on_weightsLoad_clicked()
@@ -998,12 +1005,7 @@ namespace whm
             disableManager();
 
             whm::ConfigParser_t cfg;
-
-            // Set config according to the UI input widgets
-            cfg.set("orderCount",   std::to_string(ui->orderCount->value()));
-            cfg.set("mi",           std::to_string(ui->aduMi->value()));
-            cfg.set("sigma",        std::to_string(ui->aduSigma->value()));
-            cfg.set("sigmaLines",   std::to_string(ui->orlCountSigma->value()));
+            exportGeneratorConfig(cfg);
 
             cfg.set("articlesPath", a);
             cfg.set("ordersPath", o);
@@ -1056,6 +1058,14 @@ namespace whm
             }
         }
 
+        void MainWindow::exportGeneratorConfig(ConfigParser_t& cfg)
+        {
+            cfg.set("orderCount",   std::to_string(ui->orderCount->value()));
+            cfg.set("mi",           std::to_string(ui->aduMi->value()));
+            cfg.set("sigma",        std::to_string(ui->aduSigma->value()));
+            cfg.set("sigmaLines",   std::to_string(ui->orlCountSigma->value()));
+        }
+
         void MainWindow::on_configLoadSim_clicked()
         {
             QString file = QFileDialog::getOpenFileName(this, tr("Simulator configuration"), "", tr("Simulator configuration (*.xml)"));
@@ -1101,16 +1111,7 @@ namespace whm
             whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
 
             whm::ConfigParser_t cfg;
-
-            // Set config according to the UI input widgets
-            cfg.set("toteSpeed",              std::to_string(ui->toteSpeed->value()));
-            cfg.set("workerSpeed",            std::to_string(ui->workerSpeed->value()));
-            cfg.set("totesPerMin",            std::to_string(ui->totesPerMinute->value()));
-            cfg.set("orderRequestInterval",   std::to_string(ui->customerReqInterval->value()));
-            cfg.set("locationCapacity",       std::to_string(ui->locationCapacity->value()));
-            cfg.set("conveyorCapacity",       std::to_string(ui->conveyorCapacity->value()));
-            cfg.set("simSpeedup",             std::to_string(ui->simulationSpeedup->value() / 10.0));
-            cfg.set("preprocess",             ui->preprocessOrders->checkState() == Qt::Checked ? "true" : "false");
+            exportSimulatorConfig(cfg);
 
             cfg.set("locationsPath", l);
             cfg.set("ordersPath", o);
@@ -1161,6 +1162,18 @@ namespace whm
 
                 dialog->hide();
             }
+        }
+
+        void MainWindow::exportSimulatorConfig(ConfigParser_t& cfg)
+        {
+            cfg.set("toteSpeed",              std::to_string(ui->toteSpeed->value()));
+            cfg.set("workerSpeed",            std::to_string(ui->workerSpeed->value()));
+            cfg.set("totesPerMin",            std::to_string(ui->totesPerMinute->value()));
+            cfg.set("orderRequestInterval",   std::to_string(ui->customerReqInterval->value()));
+            cfg.set("locationCapacity",       std::to_string(ui->locationCapacity->value()));
+            cfg.set("conveyorCapacity",       std::to_string(ui->conveyorCapacity->value()));
+            cfg.set("simSpeedup",             std::to_string(ui->simulationSpeedup->value() / 10.0));
+            cfg.set("preprocess",             ui->preprocessOrders->checkState() == Qt::Checked ? "true" : "false");
         }
 
         void MainWindow::reset()
@@ -1410,6 +1423,7 @@ namespace whm
             ui->loadLayout->setEnabled(true);
             ui->saveLayout->setEnabled(true);
             ui->clearLayout->setEnabled(true);
+            ui->weightsLoad->setEnabled(true);
             ui->importTrainOrders->setEnabled(true);
             ui->exportTrainOrders->setEnabled(true);
             ui->clearTrainOrders->setEnabled(true);
@@ -1438,6 +1452,7 @@ namespace whm
             ui->loadLayout->setEnabled(false);
             ui->saveLayout->setEnabled(false);
             ui->clearLayout->setEnabled(false);
+            ui->weightsLoad->setEnabled(false);
             ui->importTrainOrders->setEnabled(false);
             ui->exportTrainOrders->setEnabled(false);
             ui->clearTrainOrders->setEnabled(false);
@@ -1635,6 +1650,37 @@ namespace whm
         void MainWindow::on_optimizerSelectionBox_currentIndexChanged()
         {
             ui->optimizersConfigsTab->setCurrentIndex(ui->optimizerSelectionBox->currentIndex());
+        }
+
+        void MainWindow::on_configSaveOpt_clicked()
+        {
+            exportConfig(std::bind(&MainWindow::exportOptimizerConfig, this, std::placeholders::_1));
+        }
+
+        void MainWindow::on_configSaveGen_clicked()
+        {
+            exportConfig(std::bind(&MainWindow::exportGeneratorConfig, this, std::placeholders::_1));
+        }
+
+        void MainWindow::on_configSaveSim_clicked()
+        {
+            exportConfig(std::bind(&MainWindow::exportSimulatorConfig, this, std::placeholders::_1));
+        }
+
+        void MainWindow::exportConfig(std::function<void(ConfigParser_t&)> exportFunctor)
+        {
+            QString file = QFileDialog::getSaveFileName(this, tr("Save configuration"), "", tr("Configuration file (*.xml)"));
+
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            whm::ConfigParser_t cfg;
+
+            exportFunctor(cfg);
+
+            cfg.exportToFile(file.toUtf8().constData());
         }
 
         void MainWindow::showWhItemsWorkload()

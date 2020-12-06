@@ -133,4 +133,21 @@ namespace whm
             whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "Name <%s> = Value <%s>", val.first.c_str(), val.second.c_str());
         }
     }
+
+    void ConfigParser_t::exportToFile(const std::string& xmlFilename)
+    {
+        tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
+        tinyxml2::XMLElement* config = doc->NewElement( "configuration" );
+
+        std::for_each(parsedValues.begin(), parsedValues.end(),
+                      [&config](const auto& parsedValue) -> void
+                      {
+                          config->SetAttribute( parsedValue.first.c_str(),
+                                                parsedValue.second.c_str() );
+                      });
+
+        doc->InsertEndChild(config);
+        doc->SaveFile(xmlFilename.c_str());
+        delete doc;
+    }
 }

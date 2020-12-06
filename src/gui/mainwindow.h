@@ -31,6 +31,8 @@ Q_DECLARE_METATYPE(std::string);
 
 namespace whm
 {
+    class ConfigParser_t;
+
     namespace gui
     {
         class CustomizedGraphicsScene_t : public QGraphicsScene
@@ -97,16 +99,19 @@ namespace whm
                 // Optimizer
                 void on_weightsLoad_clicked();
                 void on_configLoadOpt_clicked();
+                void on_configSaveOpt_clicked();
                 void on_startOptimization_clicked();
                 void on_stopOptimization_clicked();
 
                 // Generator
                 void on_configLoadGen_clicked();
+                void on_configSaveGen_clicked();
                 void on_startGenerating_clicked();
                 void on_stopGenerating_clicked();
 
                 // Simulator
                 void on_configLoadSim_clicked();
+                void on_configSaveSim_clicked();
                 void on_startSimulation_clicked();
                 void on_stopSimulation_clicked();
 
@@ -144,6 +149,11 @@ namespace whm
 
                 void createSceneBorders();
                 void updateWarehouseDimensions();
+
+                void exportConfig(std::function<void(ConfigParser_t&)>);
+                void exportOptimizerConfig(ConfigParser_t&);
+                void exportGeneratorConfig(ConfigParser_t&);
+                void exportSimulatorConfig(ConfigParser_t&);
 
             private:
                 int32_t whR{ 0 };

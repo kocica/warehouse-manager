@@ -30,6 +30,8 @@ namespace whm
 
             void dump() const;
 
+            void exportToFile(const std::string&);
+
         protected:
             std::string findByName(const std::string&) const;
 

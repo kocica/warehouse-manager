@@ -333,6 +333,13 @@
                    </property>
                   </widget>
                  </item>
+                 <item>
+                  <widget class="QPushButton" name="configSaveOpt">
+                   <property name="text">
+                    <string>Save config</string>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </item>
                <item>
@@ -416,20 +423,6 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="weightsLabel">
-                   <property name="text">
-                    <string>Weights save:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="procCountLabel">
-                   <property name="text">
-                    <string>Process count:</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="1" column="3">
                   <widget class="QSpinBox" name="weights">
                    <property name="maximum">
@@ -447,10 +440,17 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="3">
-                  <widget class="QSpinBox" name="problemMin">
-                   <property name="maximum">
-                    <number>10000</number>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="procCountLabel">
+                   <property name="text">
+                    <string>Process count:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="weightsLabel">
+                   <property name="text">
+                    <string>Weights save:</string>
                    </property>
                   </widget>
                  </item>
@@ -477,6 +477,13 @@
                  </item>
                  <item row="0" column="5">
                   <widget class="QSpinBox" name="problemMax">
+                   <property name="maximum">
+                    <number>10000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QSpinBox" name="problemMin">
                    <property name="maximum">
                     <number>10000</number>
                    </property>
@@ -1089,6 +1096,13 @@
                    </property>
                   </widget>
                  </item>
+                 <item>
+                  <widget class="QPushButton" name="configSaveGen">
+                   <property name="text">
+                    <string>Save config</string>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </item>
                <item>
@@ -1096,44 +1110,10 @@
                  <property name="bottomMargin">
                   <number>10</number>
                  </property>
-                 <item row="2" column="3">
-                  <widget class="QSpinBox" name="orlCountSigma">
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QSpinBox" name="orlCountMi">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="maximum">
-                    <number>1000</number>
-                   </property>
-                   <property name="singleStep">
-                    <number>10</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="aduSigmaLine">
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="productCountLine">
                    <property name="text">
-                    <string>Average dailty units std. dev.:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="orlCountMiLine">
-                   <property name="text">
-                    <string>Order line count mean:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="aduMiLine">
-                   <property name="text">
-                    <string>Average dailty units mean:</string>
+                    <string>Product count:</string>
                    </property>
                   </widget>
                  </item>
@@ -1157,17 +1137,17 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="2">
-                  <widget class="QLabel" name="productCountLine">
-                   <property name="text">
-                    <string>Product count:</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="0" column="0">
                   <widget class="QLabel" name="orderCountLine">
                    <property name="text">
                     <string>Order count:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="aduMiLine">
+                   <property name="text">
+                    <string>Average dailty units mean:</string>
                    </property>
                   </widget>
                  </item>
@@ -1181,13 +1161,6 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="2">
-                  <widget class="QLabel" name="orlCountSigmaLine">
-                   <property name="text">
-                    <string>Order line count std. dev.:</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="1" column="1">
                   <widget class="QSpinBox" name="aduMi">
                    <property name="maximum">
@@ -1195,6 +1168,47 @@
                    </property>
                    <property name="singleStep">
                     <number>100</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QLabel" name="orlCountSigmaLine">
+                   <property name="text">
+                    <string>Order line count std. dev.:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="QSpinBox" name="orlCountSigma">
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="orlCountMi">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="maximum">
+                    <number>1000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>10</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="orlCountMiLine">
+                   <property name="text">
+                    <string>Order line count mean:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="aduSigmaLine">
+                   <property name="text">
+                    <string>Average dailty units std. dev.:</string>
                    </property>
                   </widget>
                  </item>
@@ -1357,6 +1371,13 @@
                   <widget class="QPushButton" name="configLoadSim">
                    <property name="text">
                     <string>Load config</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="configSaveSim">
+                   <property name="text">
+                    <string>Save config</string>
                    </property>
                   </widget>
                  </item>
