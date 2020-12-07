@@ -571,26 +571,7 @@ namespace whm
                         {
                             if(whPort != scenePort && !whPort->isConnected() && !scenePort->isConnected())
                             {
-                                bool overlap{ true };
-                                auto r1 = whPort->getRect();
-                                auto r2 = scenePort->getRect();
-
-                                r1.setTopLeft(QPointF(r1.topLeft().x() - 10, r1.topLeft().y() - 10));
-                                r1.setBottomRight(QPointF(r1.bottomRight().x() + 10, r1.bottomRight().y() + 10));
-
-                                if(r1.topLeft().x() >= r2.bottomRight().x() ||
-                                   r2.topLeft().x() >= r1.bottomRight().x())
-                                {
-                                    overlap = false;
-                                }
-
-                                if(r1.topLeft().y() >= r2.bottomRight().y() ||
-                                   r2.topLeft().y() >= r1.bottomRight().y())
-                                {
-                                    overlap = false;
-                                }
-
-                                if(overlap)
+                                if(whPort->collidesWithItem(scenePort))
                                 {
                                     whPort->select();
                                     auto* e = new QGraphicsSceneMouseEvent();
@@ -644,26 +625,7 @@ namespace whm
                             {
                                 if(whPort != scenePort && !whPort->isConnected() && !scenePort->isConnected())
                                 {
-                                    bool overlap{ true };
-                                    auto r1 = whPort->getRect();
-                                    auto r2 = scenePort->getRect();
-
-                                    r1.setTopLeft(QPointF(r1.topLeft().x() - 10, r1.topLeft().y() - 10));
-                                    r1.setBottomRight(QPointF(r1.bottomRight().x() + 10, r1.bottomRight().y() + 10));
-
-                                    if(r1.topLeft().x() >= r2.bottomRight().x() ||
-                                       r2.topLeft().x() >= r1.bottomRight().x())
-                                    {
-                                        overlap = false;
-                                    }
-
-                                    if(r1.topLeft().y() >= r2.bottomRight().y() ||
-                                       r2.topLeft().y() >= r1.bottomRight().y())
-                                    {
-                                        overlap = false;
-                                    }
-
-                                    if(overlap)
+                                    if(whPort->collidesWithItem(scenePort))
                                     {
                                         selectedPorts.push_back(whPort);
                                         selectedPorts.push_back(scenePort);
