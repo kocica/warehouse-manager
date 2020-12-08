@@ -404,17 +404,7 @@ namespace whm
             std::pair<size_t, size_t> slotPos;
             bool containsProduct = whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), orderLine.getQuantity(), slotPos);
 
-            // Pick article(s) or wait for replenishment
-            if(!sim.getConfig().getAs<bool>("replenishment") || containsProduct)
-            {
-                const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
-                waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
-                                (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getConfig().getAs<double>("workerSpeed");
-
-                totalDuration += waitDuration;
-                handleFacility(locationID, waitDuration);
-            }
-            else
+            if(sim.getConfig().getAs<bool>("replenishment") && !containsProduct)
             {
                 // Create replenishment order and push to buffer / wait for reple to be processed
                 WarehouseOrder_t replenishment;
@@ -439,6 +429,14 @@ namespace whm
                     containsProduct = whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), orderLine.getQuantity(), slotPos);
                 }
             }
+
+            // Pick article(s)
+            const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
+            waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
+                            (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getConfig().getAs<double>("workerSpeed");
+
+            totalDuration += waitDuration;
+            handleFacility(locationID, waitDuration);
         }
 
         // Move the order/carton to shipping
