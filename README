@@ -34,5 +34,4 @@ Optimizer (train on train set of orders):
  - Obrazek - UI Okno / Opt vlakno / N procesu
  - Vypsat do DP vsechny moduly a jejich ucel/funkcionalitu (pripadne se inspirovat dalsim z BP)
  - Pridat kazdemu conv rychlost / kapacitu pri vytvareni
- - Replenishment
  - Komplexnejsi staty - kolik najely metru krabice, nachodili pickeri, apod.
