@@ -67,8 +67,6 @@ namespace whm
         WarehouseLayout_t::getWhLayout().importArticles(args.articlesPath, whProducts);
 
         // Generate ADU (average daily units) for each product
-        std::map<WarehouseProduct_t, int32_t> whProductsAdu;
-
         std::for_each(whProducts.begin(), whProducts.end(),
                       [&](const WarehouseProduct_t& whProduct)
                       {
@@ -110,6 +108,7 @@ namespace whm
         std::normal_distribution<> normalDist{mi, sigma};
         std::uniform_real_distribution<> uniformDist{0, 1};
         std::vector<std::string> suffixes = { "_train", "_test" };
+        std::map<WarehouseProduct_t, int32_t> whProductOccurances;
 
         // Generate set of orders for each suffix
         for(auto& suffix : suffixes)
@@ -122,6 +121,7 @@ namespace whm
                 std::vector<WarehouseOrderLine_t> lines;
 
                 order.setWhOrderID(orderID);
+                order.setWhOrderType(WarehouseOrderType_t::E_OUTBOUND_ORDER);
 
                 // TODO: Accumulate error from round
                 int32_t lineCount = std::round(normalDist(gen));
@@ -140,12 +140,38 @@ namespace whm
                     line.setArticle(lookupArticle(prob));
 
                     lines.emplace_back(std::move(line));
+
+                    whProductOccurances[line.getArticle()]++;
                 }
 
                 order.setWhOrderLines(lines);
                 layout.addWhOrder(order);
             }
 
+            auto& orders = const_cast<std::vector<WarehouseOrder_t>&>(layout.getWhOrders());
+
+            // Update quantities in generated order lines
+            for(auto& order : orders)
+            {
+                for(auto& line : order)
+                {
+                    auto article = line.getArticle();
+                    auto articleAdu = whProductsAdu[article];
+                    auto articleOcc = whProductOccurances[article];
+
+                    auto quantityMi = articleAdu / static_cast<double>(articleOcc);
+                    auto quantitySigma = cfg.getAs<int32_t>("sigmaQuantities");
+
+                    std::normal_distribution<> quantityDist{quantityMi, quantitySigma};
+
+                    auto quantity = quantityDist(gen);
+                    quantity = quantity < 1 ? 1 : quantity;
+
+                    line.setQuantity(quantity);
+                }
+            }
+
+            whProductOccurances.clear();
             std::string savePath = args.ordersPath;
             savePath.replace(savePath.find_last_of("."), 0, suffix);
             layout.exportCustomerOrders(savePath);

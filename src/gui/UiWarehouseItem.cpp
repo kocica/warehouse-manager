@@ -24,11 +24,12 @@ namespace whm
         std::map<WarehouseItemType_t, std::vector<WarehouseItemType_t>> allowedCombinations =
         {
             { WarehouseItemType_t::E_CONVEYOR,           { WarehouseItemType_t::E_CONVEYOR, WarehouseItemType_t::E_LOCATION_SHELF, WarehouseItemType_t::E_CONVEYOR_HUB,
-                                                           WarehouseItemType_t::E_WAREHOUSE_ENTRANCE, WarehouseItemType_t::E_WAREHOUSE_DISPATCH }},
+                                                           WarehouseItemType_t::E_WAREHOUSE_ENTRANCE, WarehouseItemType_t::E_WAREHOUSE_DISPATCH, WarehouseItemType_t::E_WAREHOUSE_BUFFER }},
             { WarehouseItemType_t::E_CONVEYOR_HUB,       { WarehouseItemType_t::E_CONVEYOR, WarehouseItemType_t::E_CONVEYOR_HUB, WarehouseItemType_t::E_LOCATION_SHELF }},
             { WarehouseItemType_t::E_LOCATION_SHELF,     { WarehouseItemType_t::E_CONVEYOR, WarehouseItemType_t::E_CONVEYOR_HUB }},
             { WarehouseItemType_t::E_WAREHOUSE_ENTRANCE, { WarehouseItemType_t::E_CONVEYOR }},
-            { WarehouseItemType_t::E_WAREHOUSE_DISPATCH, { WarehouseItemType_t::E_CONVEYOR }}
+            { WarehouseItemType_t::E_WAREHOUSE_DISPATCH, { WarehouseItemType_t::E_CONVEYOR }},
+            { WarehouseItemType_t::E_WAREHOUSE_BUFFER,   { WarehouseItemType_t::E_CONVEYOR }}
         };
 
         bool isWhItemCombinationAllowed(WarehouseItemType_t lhs, WarehouseItemType_t rhs)
@@ -97,7 +98,7 @@ namespace whm
 
             whPorts.clear();
 
-            info->hide();
+            delete heatRect;
             delete info;
         }
 
@@ -119,8 +120,6 @@ namespace whm
         void UiWarehouseItem_t::removeWhItem()
         {
             eraseFromLayout();
-            qApp->processEvents();
-            //scene->removeItem(this);
             delete this;
         }
 
@@ -200,12 +199,15 @@ namespace whm
                 case WarehouseItemType_t::E_WAREHOUSE_DISPATCH:
                         text += QString("<tr><td><b>Item Type:</b></td><td> Dispatch</td></tr>");
                         break;
+                case WarehouseItemType_t::E_WAREHOUSE_BUFFER:
+                        text += QString("<tr><td><b>Item Type:</b></td><td> Buffer</td></tr>");
+                        break;
             }
 
             text += QString("<tr><td><b>Coordinates: </b></td><td>(") + QString::number(getX()/r) + QString(",") + QString::number(getY()/r) + QString(")</td></tr>");
             text += QString("<tr><td><b>Dimensions: </b></td><td>") + QString::number(getW()/r) + QString("×") + QString::number(getH()/r) + QString("</td></tr>");
             text += QString("<tr><td><b>Orientation: </b></td><td>") + QString::number(getO()) + QString("°</td></tr>");
-            text += QString("<tr><td><b>Workload: </b></td><td>") + QString::number(workload) + QString("%</td></tr>");
+            text += QString("<tr><td><b>Workload: </b></td><td>") + QString::number(workload * 100) + QString("%</td></tr>");
 
             for(auto* whPort : whPorts)
             {
@@ -235,7 +237,7 @@ namespace whm
 
         void UiWarehouseItem_t::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
         {
-            infoTimeout.start(500);
+            info->hide(); //infoTimeout.start(500);
 
             QGraphicsItem::hoverLeaveEvent(event);
         }

@@ -113,14 +113,13 @@ namespace whm
 
     bool WarehouseLocationRack_t::containsArticle(const std::string& article, int32_t quantity, std::pair<size_t, size_t>& coords)
     {
-        (void)quantity;
-
         for (size_t i = 0; i < whSlots.size(); i++)
         {
             for (size_t j = 0; j < whSlots[i].size(); j++)
             {
-                if(whSlots[i][j].getArticle() == article && whSlots[i][j].getQuantity() >= 0 /*quantity*/)
+                if(whSlots[i][j].getArticle() == article && whSlots[i][j].getQuantity() >= quantity)
                 {
+                    whSlots[i][j] -= quantity;
                     coords = std::make_pair(j, i);
                     return true;
                 }
@@ -128,6 +127,21 @@ namespace whm
         }
 
         return false;
+    }
+
+    void WarehouseLocationRack_t::replenishArticle(const std::string& article, int32_t quantity, std::pair<size_t, size_t>& coords)
+    {
+        for (size_t i = 0; i < whSlots.size(); i++)
+        {
+            for (size_t j = 0; j < whSlots[i].size(); j++)
+            {
+                if(whSlots[i][j].getArticle() == article)
+                {
+                    whSlots[i][j] += quantity;
+                    coords = std::make_pair(j, i);
+                }
+            }
+        }
     }
 
     int32_t WarehouseLocationRack_t::getSlotCountY() const

@@ -29,6 +29,11 @@ namespace whm
             int32_t getQuantity() const;
             void setQuantity(const int32_t);
 
+            // Pick
+            void operator-=(const int32_t);
+            // Replenish
+            void operator+=(const int32_t);
+
             std::pair<size_t, size_t> getCoords() const;
             void setCoords(const std::pair<size_t, size_t>&);
 

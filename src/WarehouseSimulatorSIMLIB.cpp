@@ -77,6 +77,7 @@ namespace whm
             }
             else
             {
+                // TODO: Calculate capacity of conv, or set in GUI
                 whFacilities[whItemID] = new simlib3::Store(std::to_string(whItemID).c_str(), cfg.getAs<int32_t>("conveyorCapacity"));
             }
         }
@@ -118,6 +119,22 @@ namespace whm
 
             order.setWhOrderLines(newLines);
         }
+    }
+
+    void WarehouseSimulatorSIMLIB_t::passivateProcess(int32_t locID, simlib3::Process* proc)
+    {
+        passivatedProcesses[locID].push_back(proc);
+        proc->Passivate();
+    }
+
+    void WarehouseSimulatorSIMLIB_t::activateProcesses(int32_t locID)
+    {
+        for(simlib3::Process* proc : passivatedProcesses[locID])
+        {
+            proc->Activate();
+        }
+
+        passivatedProcesses[locID].clear();
     }
 
     double WarehouseSimulatorSIMLIB_t::runSimulation()
@@ -268,7 +285,7 @@ namespace whm
 
         if(!whPathInfo)
         {
-            throw std::runtime_error("Cannot pick article!");
+            throw std::runtime_error("Cannot reach target!");
         }
 
         return whPathInfo;
@@ -320,37 +337,57 @@ namespace whm
 
     // ================================================================================================================
 
-    OrderRequest_t::OrderRequest_t(WarehouseSimulatorSIMLIB_t& sim_)
-        : sim(sim_)
-        , it(sim.getWhOrders().begin())
+    OrderProcessor_t::OrderProcessor_t(WarehouseOrder_t order_, WarehouseSimulatorSIMLIB_t& sim_)
+        : order(order_)
+        , sim(sim_)
     {
 
     }
 
     void OrderProcessor_t::Behavior()
     {
-        int32_t locationID = 0;
-        int32_t totalDistance = 0;
-        double  totalDuration = 0.0;
-        double  waitDuration = 0.0;
-        double  processDuration = Time;
+        switch(order.getWhOrderType())
+        {
+            case whm::WarehouseOrderType_t::E_OUTBOUND_ORDER:
+            {
+                outboundProcessing();
+                break;
+            }
+            case whm::WarehouseOrderType_t::E_REPLENISHMENT_ORDER:
+            {
+                replenishmentProcessing();
+                break;
+            }
+        }
+    }
 
-        const auto& handleFacility = [&](int32_t itemID)
-                                        {
-                                            simlib3::Store* whFacility = sim.getWhItemFacility(itemID);
+    void OrderProcessor_t::handleFacility(int32_t itemID, double waitDuration)
+    {
+        simlib3::Store* whFacility = sim.getWhItemFacility(itemID);
 
-                                            Enter(*whFacility, 1);
-                                            Wait(waitDuration / sim.getConfig().getAs<double>("simSpeedup"));
-                                            Leave(*whFacility, 1);
-                                        };
+        Enter(*whFacility, 1);
+        Wait(waitDuration / sim.getConfig().getAs<double>("simSpeedup"));
+        Leave(*whFacility, 1);
+    }
 
+    void OrderProcessor_t::outboundProcessing()
+    {
+        auto locationID{ 0 };
+        auto totalDistance{ 0 };
+        auto waitDuration{ 0.0 };
+        auto totalDuration{ 0.0 };
+        auto processDuration{ Time };
+
+        // Simulate order start from entrance
         locationID = sim.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)->getWhItemID();
 
+        // Process all order lines
         for(const WarehouseOrderLine_t& orderLine : order)
         {
-            const std::vector<int32_t>& targetLocations = sim.lookupWhLocations(orderLine.getArticle(), orderLine.getQuantity());
+            const std::vector<int32_t>& targetLocations = sim.lookupWhLocations(orderLine.getArticle(), 0);
             const WarehousePathInfo_t* shortestPath = sim.lookupShortestPath(locationID, targetLocations);
 
+            // Reach target location using conveyor
             for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
             {
                 waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
@@ -358,22 +395,53 @@ namespace whm
                 totalDuration += waitDuration;
                 totalDistance += pathItem.second;
 
-                handleFacility(pathItem.first);
+                handleFacility(pathItem.first, waitDuration);
             }
 
             locationID = shortestPath->targetWhItemID;
 
             WarehouseItem_t* whLoc = sim.lookupWhLoc(locationID);
             std::pair<size_t, size_t> slotPos;
-            whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), 0, slotPos);
-            const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
-            waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
-                            (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getConfig().getAs<double>("workerSpeed");
+            bool containsProduct = whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), orderLine.getQuantity(), slotPos);
 
-            totalDuration += waitDuration;
-            handleFacility(locationID);
+            // Pick article(s) or wait for replenishment
+            if(!sim.getConfig().getAs<bool>("replenishment") || containsProduct)
+            {
+                const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
+                waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
+                                (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getConfig().getAs<double>("workerSpeed");
+
+                totalDuration += waitDuration;
+                handleFacility(locationID, waitDuration);
+            }
+            else
+            {
+                // Create replenishment order and push to buffer / wait for reple to be processed
+                WarehouseOrder_t replenishment;
+                replenishment.setWhOrderType(WarehouseOrderType_t::E_REPLENISHMENT_ORDER);
+
+                WarehouseOrderLine_t line(nullptr);
+                line.setArticle(orderLine.getArticle());
+                line.setQuantity(100);
+
+                replenishment.setWhOrderLines({ line });
+
+                // TODO: More articles (lines) to replenish; calculate quantity
+
+                (new OrderProcessor_t(replenishment, sim))->Activate();
+
+                // There might be multiple replenishmnent orders coming, so check if the product
+                // required by this order was replenished, and if not, deactivate the process again
+                while(!containsProduct)
+                {
+                    // Night night
+                    sim.passivateProcess(locationID, dynamic_cast<simlib3::Process*>(this));
+                    containsProduct = whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), orderLine.getQuantity(), slotPos);
+                }
+            }
         }
 
+        // Move the order/carton to shipping
         int32_t dispatchID = sim.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_DISPATCH)->getWhItemID();
 
         const WarehousePathInfo_t* shortestPath = sim.lookupShortestPath(locationID, std::vector<int32_t>{ dispatchID });
@@ -385,23 +453,65 @@ namespace whm
             totalDuration += waitDuration;
             totalDistance += pathItem.second;
 
-            handleFacility(pathItem.first);
+            handleFacility(pathItem.first, waitDuration);
         }
 
+        // Ship order/carton
         locationID = dispatchID;
 
         waitDuration = (60 / sim.getConfig().getAs<int32_t>("totesPerMin"));
 
         totalDuration += waitDuration;
 
-        handleFacility(locationID);
+        handleFacility(locationID, waitDuration);
 
+        // Trace finished order
         sim.orderFinished(Time - processDuration, totalDuration, totalDistance);
     }
 
-    OrderProcessor_t::OrderProcessor_t(WarehouseOrder_t order_, WarehouseSimulatorSIMLIB_t& sim_)
-        : order(order_)
-        , sim(sim_)
+    void OrderProcessor_t::replenishmentProcessing()
+    {
+        auto locationID{ 0 };
+
+        // Simulate replenishment order release from buffer
+        locationID = sim.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_BUFFER)->getWhItemID();
+
+        // Process all replenishment order lines
+        for(const WarehouseOrderLine_t& orderLine : order)
+        {
+            const std::vector<int32_t>& targetLocations = sim.lookupWhLocations(orderLine.getArticle(), 0);
+            const WarehousePathInfo_t* shortestPath = sim.lookupShortestPath(locationID, targetLocations);
+
+            // Reach target location using conveyor
+            for(const std::pair<int32_t, int32_t>& pathItem : shortestPath->pathToTarget)
+            {
+                handleFacility(pathItem.first, pathItem.second / sim.getConfig().getAs<double>("toteSpeed"));
+            }
+
+            locationID = shortestPath->targetWhItemID;
+
+            WarehouseItem_t* whLoc = sim.lookupWhLoc(locationID);
+
+            std::pair<size_t, size_t> slotPos;
+            whLoc->getWhLocationRack()->replenishArticle(orderLine.getArticle(), orderLine.getQuantity(), slotPos);
+
+            // Replenish article(s)
+            const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
+            const auto waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
+                                       (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getConfig().getAs<double>("workerSpeed");
+
+            handleFacility(locationID, waitDuration);
+        }
+
+        // Replenishment finished, wake up sleeping processes (orders at location waiting for replenishment)
+        sim.activateProcesses(locationID);
+    }
+
+    // ================================================================================================================
+
+    OrderRequest_t::OrderRequest_t(WarehouseSimulatorSIMLIB_t& sim_)
+        : sim(sim_)
+        , it(sim.getWhOrders().begin())
     {
 
     }
@@ -412,8 +522,7 @@ namespace whm
 
         if(++it != sim.getWhOrders().end())
         {
-            // TODO: Poisson distribution
-            Activate(Time + (sim.getConfig().getAs<double>("orderRequestInterval")));
+            Activate(Time + Exponential(sim.getConfig().getAs<double>("orderRequestInterval")));
         }
     }
 }

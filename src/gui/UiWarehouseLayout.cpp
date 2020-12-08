@@ -61,7 +61,8 @@ namespace whm
                     newItem = new UiWarehouseItemConveyor_t{ s, ui, *item };
                 }
                 else if (item->getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_ENTRANCE ||
-                         item->getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_DISPATCH)
+                         item->getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_DISPATCH ||
+                         item->getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_BUFFER)
                 {
                     newItem = new UiWarehouseItemGate_t{ s, ui, *item };
                 }

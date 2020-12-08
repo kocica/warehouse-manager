@@ -3,9 +3,11 @@
         mi ........................ Normal distribution mi parameter (for ADU)
         sigma ..................... Normal distribution sigma parameter (for ADU)
         sigmaLines ................ Normal distribution sigma parameter (for order line count)
+        sigmaQuantities ........... Normal distribution sigma parameter (for order line quantity)
   -->
 
 <configuration orderCount="1000"
                mi="100"
                sigma="40"
-               sigmaLines="10" />
+               sigmaLines="10"
+               sigmaQuantities="1" />

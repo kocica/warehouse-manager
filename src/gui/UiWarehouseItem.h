@@ -19,7 +19,7 @@
 #include "../Logger.h"
 #include "mainwindow.h"
 #include "BaseShapeGraphicItem.h"
-#include "../WarehouseItemType.h"
+#include "../WarehouseTypes.h"
 
 namespace whm
 {

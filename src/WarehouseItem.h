@@ -15,7 +15,7 @@
 
 // Local
 #include "tinyxml2.h"
-#include "WarehouseItemType.h"
+#include "WarehouseTypes.h"
 
 #ifdef WHM_GUI
 namespace whm

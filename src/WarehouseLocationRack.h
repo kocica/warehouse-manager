@@ -36,6 +36,8 @@ namespace whm
             bool containsArticle(const std::string&, int32_t);
             bool containsArticle(const std::string&, int32_t, std::pair<size_t, size_t>&);
 
+            void replenishArticle(const std::string&, int32_t, std::pair<size_t, size_t>&);
+
             void exportSlots(std::ostream&) const;
             void importSlots(std::istream&);
 

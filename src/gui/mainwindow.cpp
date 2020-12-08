@@ -209,7 +209,8 @@ namespace whm
             static std::map<UiCursorMode_t, WarehouseItemType_t> gateMap =
             {
                 { UiCursorMode_t::E_MODE_WH_ITEM_ENTRANCE, WarehouseItemType_t::E_WAREHOUSE_ENTRANCE },
-                { UiCursorMode_t::E_MODE_WH_ITEM_DISPATCH, WarehouseItemType_t::E_WAREHOUSE_DISPATCH }
+                { UiCursorMode_t::E_MODE_WH_ITEM_DISPATCH, WarehouseItemType_t::E_WAREHOUSE_DISPATCH },
+                { UiCursorMode_t::E_MODE_WH_ITEM_BUFFER,   WarehouseItemType_t::E_WAREHOUSE_BUFFER }
             };
 
             if (event->button() == Qt::LeftButton)
@@ -335,6 +336,14 @@ namespace whm
             if (enabled)
             {
                 UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_DISPATCH);
+            }
+        }
+
+        void MainWindow::on_whItemBuffer_toggled(bool enabled)
+        {
+            if (enabled)
+            {
+                UiCursor_t::getCursor().setMode(UiCursorMode_t::E_MODE_WH_ITEM_BUFFER);
             }
         }
 
@@ -984,8 +993,8 @@ namespace whm
                 ui->orderCount->setValue(cfg.getAs<int32_t>("orderCount"));
                 ui->aduMi->setValue(cfg.getAs<int32_t>("mi"));
                 ui->aduSigma->setValue(cfg.getAs<int32_t>("sigma"));
-                ui->orlCountMi->setValue(0);
                 ui->orlCountSigma->setValue(cfg.getAs<int32_t>("sigmaLines"));
+                ui->orlQtySigma->setValue(cfg.getAs<int32_t>("sigmaQuantities"));
             }
             catch(std::runtime_error&)
             {
@@ -1062,10 +1071,11 @@ namespace whm
 
         void MainWindow::exportGeneratorConfig(ConfigParser_t& cfg)
         {
-            cfg.set("orderCount",   std::to_string(ui->orderCount->value()));
-            cfg.set("mi",           std::to_string(ui->aduMi->value()));
-            cfg.set("sigma",        std::to_string(ui->aduSigma->value()));
-            cfg.set("sigmaLines",   std::to_string(ui->orlCountSigma->value()));
+            cfg.set("orderCount",        std::to_string(ui->orderCount->value()));
+            cfg.set("mi",                std::to_string(ui->aduMi->value()));
+            cfg.set("sigma",             std::to_string(ui->aduSigma->value()));
+            cfg.set("sigmaLines",        std::to_string(ui->orlCountSigma->value()));
+            cfg.set("sigmaQuantities",   std::to_string(ui->orlQtySigma->value()));
         }
 
         void MainWindow::on_configLoadSim_clicked()
@@ -1090,6 +1100,7 @@ namespace whm
                 ui->conveyorCapacity->setValue(cfg.getAs<int32_t>("conveyorCapacity"));
                 ui->simulationSpeedup->setValue(cfg.getAs<double>("simSpeedup") * 10);
                 ui->preprocessOrders->setCheckState(cfg.getAs<bool>("preprocess") ? Qt::Checked : Qt::Unchecked);
+                ui->replenishment->setCheckState(cfg.getAs<bool>("replenishment") ? Qt::Checked : Qt::Unchecked);
             }
             catch(std::runtime_error&)
             {
@@ -1176,6 +1187,7 @@ namespace whm
             cfg.set("conveyorCapacity",       std::to_string(ui->conveyorCapacity->value()));
             cfg.set("simSpeedup",             std::to_string(ui->simulationSpeedup->value() / 10.0));
             cfg.set("preprocess",             ui->preprocessOrders->checkState() == Qt::Checked ? "true" : "false");
+            cfg.set("replenishment",          ui->replenishment->checkState() == Qt::Checked ? "true" : "false");
         }
 
         void MainWindow::reset()
@@ -1209,7 +1221,7 @@ namespace whm
                 f = file.toUtf8().constData();
             }
 
-            QStringList labels = { "Order ID", "Line ID", "Product", "Quantity" };
+            QStringList labels = { "Order ID", "Order Type", "Line ID", "Product", "Quantity" };
 
             QStandardItemModel* m = train ? ordersTrainModel : ordersTestModel;
 
@@ -1226,14 +1238,16 @@ namespace whm
                 for(auto& line : order.getWhOrderLines())
                 {
                     auto* orderID   = new QStandardItem(QString::fromStdString(std::to_string(order.getWhOrderID())));
+                    auto* orderType = new QStandardItem(order.getWhOrderType() == whm::WarehouseOrderType_t::E_OUTBOUND_ORDER ? "Outbound" : "Replenishment");
                     auto* lineID    = new QStandardItem(QString::fromStdString(std::to_string(line.getWhLineID())));
                     auto* article   = new QStandardItem(QString::fromStdString(line.getArticle()));
                     auto* quantity  = new QStandardItem(QString::fromStdString(std::to_string(line.getQuantity())));
 
                     m->setItem(row, 0, orderID);
-                    m->setItem(row, 1, lineID);
-                    m->setItem(row, 2, article);
-                    m->setItem(row, 3, quantity);
+                    m->setItem(row, 1, orderType);
+                    m->setItem(row, 2, lineID);
+                    m->setItem(row, 3, article);
+                    m->setItem(row, 4, quantity);
 
                     ++row;
                 }
@@ -1540,9 +1554,9 @@ namespace whm
 
                 auto actID = m->data(m->index(r, 0)).toInt();
 
-                line.setWhLineID(m->data(m->index(r, 1)).toInt());
-                line.setArticle(m->data(m->index(r, 2)).toString().toUtf8().constData());
-                line.setQuantity(m->data(m->index(r, 3)).toInt());
+                line.setWhLineID(m->data(m->index(r, 2)).toInt());
+                line.setArticle(m->data(m->index(r, 3)).toString().toUtf8().constData());
+                line.setQuantity(m->data(m->index(r, 4)).toInt());
 
                 if(orderID != -1 && orderID != actID)
                 {
@@ -1550,6 +1564,7 @@ namespace whm
 
                     order.setWhOrderID(orderID);
                     order.setWhOrderLines(lines);
+                    order.setWhOrderType(WarehouseOrderType_t::E_OUTBOUND_ORDER);
 
                     ++orderCount;
                     WarehouseLayout_t::getWhLayout().addWhOrder(std::move(order));
@@ -1565,6 +1580,7 @@ namespace whm
 
             order.setWhOrderID(orderID);
             order.setWhOrderLines(lines);
+            order.setWhOrderType(WarehouseOrderType_t::E_OUTBOUND_ORDER);
 
             ++orderCount;
             WarehouseLayout_t::getWhLayout().addWhOrder(std::move(order));

@@ -9,7 +9,7 @@
 
 #pragma once
 
-#ifdef WHM_SIM_2
+#ifdef WHM_CPPSIM
 
 // Std
 #include <map>
@@ -31,7 +31,7 @@
 #include "WarehouseItem.h"
 #include "WarehouseOrder.h"
 #include "WarehouseLayout.h"
-#include "WarehouseItemType.h"
+#include "WarehouseTypes.h"
 #include "WarehousePathFinder.h"
 #include "WarehouseLocationRack.h"
 

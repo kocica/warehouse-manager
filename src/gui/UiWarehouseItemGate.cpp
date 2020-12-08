@@ -29,24 +29,43 @@ namespace whm
         {
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, i.getX() + i.getW() / 2 - (portSizeX/2), i.getY() + i.getH() / 2 - (portSizeY/2), portSizeX, portSizeY, WarehousePortType_t::E_PORT_MID));
 
-            this->setGraphicItemOrientation(i.getO()); // We have to rotate the object after its constructed
+            this->setGraphicItemOrientation(i.getO());
 
-            this->setBrush(Qt::darkYellow);
+            switch(i.getType())
+            {
+                case WarehouseItemType_t::E_WAREHOUSE_ENTRANCE:
+                    this->setBrush(Qt::darkGreen);
+                    break;
+                case WarehouseItemType_t::E_WAREHOUSE_DISPATCH:
+                    this->setBrush(Qt::darkRed);
+                    break;
+                case WarehouseItemType_t::E_WAREHOUSE_BUFFER:
+                    this->setBrush(Qt::darkGray);
+                    break;
+                default:
+                    break;
+            }
         }
 
         UiWarehouseItemGate_t::UiWarehouseItemGate_t(QGraphicsScene* s, MainWindow* ui, int32_t x, int32_t y, int32_t w, int32_t h, WarehouseItemType_t t)
             : UiWarehouseItem_t(s, ui, x, y, w, h, t)
         {
-            /*if (UiWarehouseLayout_t::getWhLayout().itemsIntersects(this))
-            {
-                std::cerr << "Collision detected - Item's cannot intersect." << std::endl;
-
-                // TODO: Remove from layout and deleteLater()?
-            }*/
-
             whPorts.emplace_back(new UiWarehousePort_t(s, this, ui, 0, x + w/2 - (portSizeX/2),  y + h/2 - (portSizeY/2), portSizeX, portSizeY, WarehousePortType_t::E_PORT_MID));
 
-            this->setBrush(Qt::darkYellow);
+            switch(t)
+            {
+                case WarehouseItemType_t::E_WAREHOUSE_ENTRANCE:
+                    this->setBrush(Qt::darkGreen);
+                    break;
+                case WarehouseItemType_t::E_WAREHOUSE_DISPATCH:
+                    this->setBrush(Qt::darkRed);
+                    break;
+                case WarehouseItemType_t::E_WAREHOUSE_BUFFER:
+                    this->setBrush(Qt::darkGray);
+                    break;
+                default:
+                    break;
+            }
         }
 
         void UiWarehouseItemGate_t::updateChildrenPositions(double dx, double dy)
@@ -55,7 +74,6 @@ namespace whm
 
             (void) dx;
             (void) dy;
-            //std::for_each(whPorts.begin(), whPorts.end(), [=](auto* p) { p->updatePort(dx/2.0, dy/2.0, portSizeX, portSizeY); });
 
             whPorts.at(0)->updatePort(mRect.topLeft().x() + getW() / 2 - (portSizeX/2), mRect.topLeft().y() + getH() / 2 - (portSizeY/2), portSizeX, portSizeY);
         }

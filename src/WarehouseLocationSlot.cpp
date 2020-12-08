@@ -51,6 +51,16 @@ namespace whm
         this->quantity = q;
     }
 
+    void WarehouseLocationSlot_t::operator-=(const int32_t q)
+    {
+        this->quantity -= q;
+    }
+
+    void WarehouseLocationSlot_t::operator+=(const int32_t q)
+    {
+        this->quantity += q;
+    }
+
     std::pair<size_t, size_t> WarehouseLocationSlot_t::getCoords() const
     {
         return std::make_pair(x, y);

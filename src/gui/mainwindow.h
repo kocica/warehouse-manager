@@ -95,6 +95,7 @@ namespace whm
                 void on_whItemConveyorHub_toggled(bool);
                 void on_whItemEntrance_toggled(bool);
                 void on_whItemExit_toggled(bool);
+                void on_whItemBuffer_toggled(bool);
 
                 // Optimizer
                 void on_weightsLoad_clicked();

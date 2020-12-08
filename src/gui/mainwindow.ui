@@ -1110,13 +1110,6 @@
                  <property name="bottomMargin">
                   <number>10</number>
                  </property>
-                 <item row="0" column="2">
-                  <widget class="QLabel" name="productCountLine">
-                   <property name="text">
-                    <string>Product count:</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="1" column="3">
                   <widget class="QSpinBox" name="aduSigma">
                    <property name="maximum">
@@ -1124,16 +1117,6 @@
                    </property>
                    <property name="singleStep">
                     <number>10</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="3">
-                  <widget class="QSpinBox" name="productCount">
-                   <property name="maximum">
-                    <number>10000</number>
-                   </property>
-                   <property name="singleStep">
-                    <number>100</number>
                    </property>
                   </widget>
                  </item>
@@ -1171,46 +1154,36 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="2">
-                  <widget class="QLabel" name="orlCountSigmaLine">
-                   <property name="text">
-                    <string>Order line count std. dev.:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="3">
-                  <widget class="QSpinBox" name="orlCountSigma">
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QSpinBox" name="orlCountMi">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="maximum">
-                    <number>1000</number>
-                   </property>
-                   <property name="singleStep">
-                    <number>10</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="orlCountMiLine">
-                   <property name="text">
-                    <string>Order line count mean:</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="1" column="2">
                   <widget class="QLabel" name="aduSigmaLine">
                    <property name="text">
                     <string>Average dailty units std. dev.:</string>
                    </property>
                   </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="orlCountSigmaLine">
+                   <property name="text">
+                    <string>Order line count std. dev.:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="orlCountSigma">
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QLabel" name="orlQtySigmaLine">
+                   <property name="text">
+                    <string>Order quantity std. dev:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="QSpinBox" name="orlQtySigma"/>
                  </item>
                 </layout>
                </item>
@@ -1405,23 +1378,10 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="1">
-                  <widget class="QSpinBox" name="locationCapacity">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="maximum">
-                    <number>1000</number>
-                   </property>
-                   <property name="singleStep">
-                    <number>1</number>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="locationCapacityLabel">
                    <property name="text">
-                    <string>Location capacity:</string>
+                    <string>Location pickers:</string>
                    </property>
                   </widget>
                  </item>
@@ -1439,17 +1399,16 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="2">
-                  <widget class="QLabel" name="conveyorCapacityLabel">
-                   <property name="text">
-                    <string>Conveyor capacity:</string>
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="locationCapacity">
+                   <property name="enabled">
+                    <bool>true</bool>
                    </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="toteSpeedLabel">
-                   <property name="text">
-                    <string>Tote speed:</string>
+                   <property name="maximum">
+                    <number>1000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>1</number>
                    </property>
                   </widget>
                  </item>
@@ -1457,6 +1416,13 @@
                   <widget class="QLabel" name="workerSpeedLabel">
                    <property name="text">
                     <string>Worker speed:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QLabel" name="conveyorCapacityLabel">
+                   <property name="text">
+                    <string>Conveyor capacity:</string>
                    </property>
                   </widget>
                  </item>
@@ -1477,6 +1443,13 @@
                    </property>
                    <property name="singleStep">
                     <double>0.100000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="toteSpeedLabel">
+                   <property name="text">
+                    <string>Tote speed:</string>
                    </property>
                   </widget>
                  </item>
@@ -1504,6 +1477,13 @@
                    </property>
                    <property name="checked">
                     <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="replenishment">
+                   <property name="text">
+                    <string>Replenishment</string>
                    </property>
                   </widget>
                  </item>
@@ -1753,6 +1733,7 @@
    <addaction name="whItemConveyorHub"/>
    <addaction name="whItemEntrance"/>
    <addaction name="whItemExit"/>
+   <addaction name="whItemBuffer"/>
    <addaction name="separator"/>
   </widget>
   <action name="newLayout">
@@ -2009,6 +1990,20 @@
     </property>
     <property name="toolTip">
      <string>Warehouse shipping area</string>
+    </property>
+    <property name="shortcut">
+     <string>2</string>
+    </property>
+   </action>
+   <action name="whItemBuffer">
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string>Warehouse buffer</string>
+    </property>
+    <property name="toolTip">
+     <string>Warehouse buffer area</string>
     </property>
     <property name="shortcut">
      <string>2</string>

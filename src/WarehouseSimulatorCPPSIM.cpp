@@ -7,7 +7,7 @@
  * @brief   Module responsible for simulation of the warehouse operations (using C++SIM)
  */
 
-#ifdef WHM_SIM_2
+#ifdef WHM_CPPSIM
 
 // Std
 #include <chrono>

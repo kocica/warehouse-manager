@@ -32,6 +32,16 @@ namespace whm
         return this->whOrderID;
     }
 
+    void WarehouseOrder_t::setWhOrderType(WarehouseOrderType_t whOrderType_)
+    {
+        this->whOrderType = whOrderType_;
+    }
+
+    WarehouseOrderType_t WarehouseOrder_t::getWhOrderType() const
+    {
+        return this->whOrderType;
+    }
+
     const std::vector<WarehouseOrderLine_t>& WarehouseOrder_t::getWhOrderLines() const
     {
         return this->whOrderLines;
@@ -45,7 +55,9 @@ namespace whm
     void WarehouseOrder_t::dump() const
     {
         std::cout << "---------------------------------" << std::endl;
-        std::cout << " OrderID <"   << this->getWhOrderID() << ">" << std::endl;
+        std::cout << "  OrderID <"   << getWhOrderID()
+                  << "> OrderType <" << to_underlying(getWhOrderType())
+                  << ">" << std::endl;
 
         std::for_each(this->whOrderLines.begin(), this->whOrderLines.end(),
                       [](const auto& whLine) -> void
@@ -57,6 +69,7 @@ namespace whm
     void WarehouseOrder_t::deserializeFromXml(tinyxml2::XMLElement* elem)
     {
         this->whOrderID = elem->IntAttribute("id");
+        this->whOrderType = static_cast<WarehouseOrderType_t>(elem->IntAttribute("type"));
 
         for (tinyxml2::XMLElement* whLineXml = elem->FirstChildElement("WarehouseOrderLine"); whLineXml; whLineXml = whLineXml->NextSiblingElement("WarehouseOrderLine"))
         {
@@ -71,6 +84,7 @@ namespace whm
         tinyxml2::XMLElement* whOrder = doc->NewElement( "WarehouseOrder" );
 
         whOrder->SetAttribute( "id", getWhOrderID() );
+        whOrder->SetAttribute( "type", to_underlying(getWhOrderType()) );
 
         // Add all lines
         std::for_each(whOrderLines.begin(), whOrderLines.end(),

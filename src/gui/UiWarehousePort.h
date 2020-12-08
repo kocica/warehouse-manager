@@ -16,7 +16,7 @@
 #include "../Logger.h"
 #include "mainwindow.h"
 #include "UiWarehouseItem.h"
-#include "../WarehouseItemType.h"
+#include "../WarehouseTypes.h"
 #include "UiWarehouseConnection.h"
 
 namespace whm

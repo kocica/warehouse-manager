@@ -24,12 +24,14 @@
 #include "WarehouseItem.h"
 #include "WarehouseOrder.h"
 #include "WarehouseLayout.h"
-#include "WarehouseItemType.h"
+#include "WarehouseTypes.h"
 #include "WarehousePathFinder.h"
 #include "WarehouseLocationRack.h"
 
 namespace whm
 {
+    using PassivatedProcesses_t = std::map<int32_t, std::vector<simlib3::Process*>>;
+
     class WarehouseSimulatorSIMLIB_t
     {
         public:
@@ -62,6 +64,9 @@ namespace whm
             std::vector<int32_t> lookupWhLocations(const std::string&, int32_t);
             WarehousePathInfo_t* lookupShortestPath(int32_t, const std::vector<int32_t>&);
 
+            void passivateProcess(int32_t, simlib3::Process*);
+            void activateProcesses(int32_t);
+
         protected:
             void clearSimulation();
             void preprocessOrders();
@@ -77,6 +82,9 @@ namespace whm
 #           ifdef WHM_GUI
             UiCallback_t uiCallback;
 #           endif
+
+            // Processes waiting for replenishment
+            PassivatedProcesses_t passivatedProcesses;
 
             ConfigParser_t cfg;
             utils::WhmArgs_t args;
@@ -94,7 +102,11 @@ namespace whm
             OrderProcessor_t(WarehouseOrder_t, WarehouseSimulatorSIMLIB_t&);
 
         protected:
-            void Behavior();
+            void Behavior() override;
+            void outboundProcessing();
+            void replenishmentProcessing();
+
+            void handleFacility(int32_t, double);
 
         private:
             WarehouseOrder_t order;
@@ -108,7 +120,7 @@ namespace whm
             OrderRequest_t(WarehouseSimulatorSIMLIB_t&);
 
         protected:
-            void Behavior();
+            void Behavior() override;
 
         private:
             WarehouseSimulatorSIMLIB_t& sim;

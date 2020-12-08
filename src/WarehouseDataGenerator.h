@@ -53,6 +53,7 @@ namespace whm
             ConfigParser_t cfg;
             utils::WhmArgs_t args;
             std::map<WarehouseProduct_t, double> whProductsProb;
+            std::map<WarehouseProduct_t, int32_t> whProductsAdu;
 
 #           ifdef WHM_GUI
             UiCallback_t uiCallback;
