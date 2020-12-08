@@ -522,7 +522,7 @@ namespace whm
 
         if(++it != sim.getWhOrders().end())
         {
-            Activate(Time + Exponential(sim.getConfig().getAs<double>("orderRequestInterval")));
+            Activate(Time + /*Exponential*/(sim.getConfig().getAs<double>("orderRequestInterval")));
         }
     }
 }
