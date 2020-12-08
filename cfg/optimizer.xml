@@ -94,7 +94,7 @@
                crossoverFunctorDE="crossoverOrdered"
 
 
-               balanceTheLoad="true"
+               balanceTheLoad="false"
 
 
                populationSizeRand="2000"
