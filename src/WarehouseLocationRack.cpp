@@ -144,6 +144,17 @@ namespace whm
         }
     }
 
+    void WarehouseLocationRack_t::resetRack()
+    {
+        for (size_t i = 0; i < whSlots.size(); i++)
+        {
+            for (size_t j = 0; j < whSlots[i].size(); j++)
+            {
+                whSlots[i][j].resetSlot();
+            }
+        }
+    }
+
     int32_t WarehouseLocationRack_t::getSlotCountY() const
     {
         return static_cast<int32_t>(whSlots.size());

@@ -61,6 +61,12 @@ namespace whm
         this->quantity += q;
     }
 
+    void WarehouseLocationSlot_t::resetSlot()
+    {
+        // TODO: Set initial qty
+        this->quantity = 0;
+    }
+
     std::pair<size_t, size_t> WarehouseLocationSlot_t::getCoords() const
     {
         return std::make_pair(x, y);

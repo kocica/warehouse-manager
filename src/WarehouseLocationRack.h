@@ -52,6 +52,7 @@ namespace whm
             int32_t getOccupationLevel() const;
             WarehouseLocationSlot_t* getFirstFreeSlot();
 
+            void resetRack();
             void dump() const;
 
         private:

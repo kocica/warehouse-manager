@@ -43,6 +43,7 @@ namespace whm
             void exportSlot(std::ostream&) const;
             void importSlot(std::istream&);
 
+            void resetSlot();
             void dump() const;
 
         private:

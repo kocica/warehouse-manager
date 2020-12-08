@@ -419,6 +419,15 @@ namespace whm
                 whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Write failed <%d>", errno);
                 throw std::runtime_error("Write failed");
             }
+
+            // Reset location racks in between runs to keep results consistent
+            for(auto* item : whm::WarehouseLayout_t::getWhLayout().getWhItems())
+            {
+                if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                {
+                    item->getWhLocationRack()->resetRack();
+                }
+            }
         }
     }
 }
