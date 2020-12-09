@@ -139,8 +139,21 @@ namespace whm
 
     double WarehouseSimulatorSIMLIB_t::runSimulation()
     {
+        if(cfg.getAs<bool>("replenishment"))
+        {
+            // Reset locations in between runs to keep results consistent
+            for(auto* item : whm::WarehouseLayout_t::getWhLayout().getWhItems())
+            {
+                if(item->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+                {
+                    item->getWhLocationRack()->resetRack(cfg.getAs<int32_t>("initialSlotQty"));
+                }
+            }
+        }
+
         if(!multipleExperiments)
         {
+            // Find all paths in the warehouse
             whPathFinder->precalculatePaths(whLayout.getWhItems());
 
             if(Logger_t::getLogger().isVerbose())
@@ -156,6 +169,7 @@ namespace whm
             }
         }
 
+        // Perform order preprocessing
         if(cfg.getAs<bool>("preprocess"))
         {
             preprocessOrders();

@@ -54,12 +54,11 @@ namespace whm
 
     void WarehouseDataGenerator_t::generateData()
     {
-        double mi = cfg.getAs<double>("mi");
-        double sigma = cfg.getAs<double>("sigma");
-
         std::random_device rd;   // Source of 'true' randomness for initializing random seed
         std::mt19937 gen(rd());  // Mersenne twister pseudo-random number generator
-        std::normal_distribution<> normalDist{mi, sigma}; // Normal (gauss) distribution setup
+         // Normal (gauss) distributions setup
+        std::normal_distribution<> normalDistAdu{cfg.getAs<double>("miAdu"), cfg.getAs<double>("sigmaAdu")};
+        std::normal_distribution<> normalDistAdq{cfg.getAs<double>("miAdq"), cfg.getAs<double>("sigmaAdq")};
 
         // Import products
         std::vector<WarehouseProduct_t> whProducts;
@@ -70,15 +69,18 @@ namespace whm
         std::for_each(whProducts.begin(), whProducts.end(),
                       [&](const WarehouseProduct_t& whProduct)
                       {
-                          whProductsAdu[whProduct] = std::round(normalDist(gen));
+                          whProductsAdu[whProduct] = std::round(normalDistAdu(gen));
+                          whProductsAdq[whProduct] = std::round(normalDistAdq(gen));
+
 #                         ifdef WHM_GUI
                           uiCallback(whProductsAdu[whProduct], 0);
 #                         endif
                       });
 
-        for(auto& whProdAdu : whProductsAdu)
+        for(auto& whProduct : whProducts)
         {
-            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "Product <%s> = ADU <%d>", whProdAdu.first.c_str(), whProdAdu.second);
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "Product <%s>: ADU <%d>, ADQ <%d>",
+                                        whProduct.c_str(), whProductsAdu[whProduct], whProductsAdq[whProduct]);
         }
 
         // Calculate probability of participation in order for each product
@@ -156,11 +158,11 @@ namespace whm
                 for(auto& line : order)
                 {
                     auto article = line.getArticle();
-                    auto articleAdu = whProductsAdu[article];
+                    auto articleAdq = whProductsAdq[article];
                     auto articleOcc = whProductOccurances[article];
 
-                    auto quantityMi = articleAdu / static_cast<double>(articleOcc);
-                    auto quantitySigma = cfg.getAs<int32_t>("sigmaQuantities");
+                    auto quantityMi = articleAdq / static_cast<double>(articleOcc);
+                    auto quantitySigma = 1.0;
 
                     std::normal_distribution<> quantityDist{quantityMi, quantitySigma};
 

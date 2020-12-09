@@ -710,9 +710,9 @@ namespace whm
             try
             {
                 ::whm::WarehouseLayout_t::getWhLayout().deserializeFromXml(file.toUtf8().constData());
-                ::whm::WarehouseLayout_t::getWhLayout().dump();
+                //::whm::WarehouseLayout_t::getWhLayout().dump();
                 UiWarehouseLayout_t::getWhLayout().initFromTui(this->scene, this, ::whm::WarehouseLayout_t::getWhLayout());
-                UiWarehouseLayout_t::getWhLayout().dump();
+                //UiWarehouseLayout_t::getWhLayout().dump();
             }
             catch(std::runtime_error& e)
             {
@@ -739,7 +739,7 @@ namespace whm
             }
 
             ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
-            ::whm::WarehouseLayout_t::getWhLayout().dump();
+            //::whm::WarehouseLayout_t::getWhLayout().dump();
             ::whm::WarehouseLayout_t::getWhLayout().serializeToXml(file.toUtf8().constData());
         }
 

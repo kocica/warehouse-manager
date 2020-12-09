@@ -144,13 +144,13 @@ namespace whm
         }
     }
 
-    void WarehouseLocationRack_t::resetRack()
+    void WarehouseLocationRack_t::resetRack(int32_t initQty)
     {
         for (size_t i = 0; i < whSlots.size(); i++)
         {
             for (size_t j = 0; j < whSlots[i].size(); j++)
             {
-                whSlots[i][j].resetSlot();
+                whSlots[i][j].resetSlot(initQty);
             }
         }
     }

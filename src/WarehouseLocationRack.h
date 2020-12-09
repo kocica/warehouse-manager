@@ -32,6 +32,7 @@ namespace whm
             void setAt(size_t, size_t, const WarehouseLocationSlot_t&);
 
             void init(size_t, size_t);
+            void resetRack(int32_t);
 
             bool containsArticle(const std::string&, int32_t);
             bool containsArticle(const std::string&, int32_t, std::pair<size_t, size_t>&);
@@ -52,7 +53,6 @@ namespace whm
             int32_t getOccupationLevel() const;
             WarehouseLocationSlot_t* getFirstFreeSlot();
 
-            void resetRack();
             void dump() const;
 
         private:

@@ -8,6 +8,7 @@
         orderRequestInterval ...... Interval in which new orders are started [secs]
         preprocess ................ Preprocess order lines to fasten up the picking process
         replenishment ............. Work with quantities and replenish depleted articles
+        initialSlotQuantity ....... How many products are stored within each slot
   -->
 
 <configuration toteSpeed="1.0"
@@ -18,4 +19,5 @@
                locationCapacity="1"
                conveyorCapacity="5"
                orderRequestInterval="1"
-               replenishment="true" />
+               replenishment="true"
+               initialSlotQty="0" />

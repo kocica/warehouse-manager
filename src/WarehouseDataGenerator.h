@@ -52,8 +52,10 @@ namespace whm
         private:
             ConfigParser_t cfg;
             utils::WhmArgs_t args;
-            std::map<WarehouseProduct_t, double> whProductsProb;
-            std::map<WarehouseProduct_t, int32_t> whProductsAdu;
+
+            std::map<WarehouseProduct_t, int32_t> whProductsAdu; // Average daily units
+            std::map<WarehouseProduct_t, int32_t> whProductsAdq; // Average daily quantity
+            std::map<WarehouseProduct_t, double> whProductsProb; // Product selection probability
 
 #           ifdef WHM_GUI
             UiCallback_t uiCallback;

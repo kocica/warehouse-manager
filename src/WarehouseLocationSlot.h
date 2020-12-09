@@ -22,6 +22,7 @@ namespace whm
             ~WarehouseLocationSlot_t();
 
             bool isOccupied() const;
+            void resetSlot(int32_t);
 
             std::string getArticle() const;
             void setArticle(const std::string&);
@@ -43,7 +44,6 @@ namespace whm
             void exportSlot(std::ostream&) const;
             void importSlot(std::istream&);
 
-            void resetSlot();
             void dump() const;
 
         private:
