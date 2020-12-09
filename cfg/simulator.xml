@@ -20,4 +20,4 @@
                conveyorCapacity="5"
                orderRequestInterval="1"
                replenishment="true"
-               initialSlotQty="0" />
+               initialSlotQty="100" />
