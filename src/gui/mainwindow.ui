@@ -1127,13 +1127,6 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="aduMiLine">
-                   <property name="text">
-                    <string>Average dailty units mean:</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="0" column="1">
                   <widget class="QSpinBox" name="orderCount">
                    <property name="maximum">
@@ -1154,36 +1147,67 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="aduSigmaLine">
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="aduMiLine">
                    <property name="text">
-                    <string>Average dailty units std. dev.:</string>
+                    <string>Average daily units mean:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="0">
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="aduSigmaLine">
+                   <property name="text">
+                    <string>Average daily units std. dev.:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QLabel" name="adqSigmaLine">
+                   <property name="text">
+                    <string>Average daily qty std. dev.:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="QSpinBox" name="adqSigma">
+                   <property name="maximum">
+                    <number>1000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>10</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
                   <widget class="QLabel" name="orlCountSigmaLine">
                    <property name="text">
                     <string>Order line count std. dev.:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="1">
+                 <item row="3" column="1">
                   <widget class="QSpinBox" name="orlCountSigma">
                    <property name="maximum">
                     <number>100</number>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="2">
-                  <widget class="QLabel" name="orlQtySigmaLine">
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="adqMiLine">
                    <property name="text">
-                    <string>Order quantity std. dev:</string>
+                    <string>Average daily qty mean:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="3">
-                  <widget class="QSpinBox" name="orlQtySigma"/>
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="adqMi">
+                   <property name="maximum">
+                    <number>10000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>100</number>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </item>
@@ -1371,10 +1395,10 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="customerReqIntervalLabel">
-                   <property name="text">
-                    <string>Order req. interval:</string>
+                 <item row="2" column="3">
+                  <widget class="QSpinBox" name="conveyorCapacity">
+                   <property name="maximum">
+                    <number>1000</number>
                    </property>
                   </widget>
                  </item>
@@ -1382,20 +1406,6 @@
                   <widget class="QLabel" name="locationCapacityLabel">
                    <property name="text">
                     <string>Location pickers:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="totesPerMinuteLabel">
-                   <property name="text">
-                    <string>Shipped per minute:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="3">
-                  <widget class="QSpinBox" name="conveyorCapacity">
-                   <property name="maximum">
-                    <number>1000</number>
                    </property>
                   </widget>
                  </item>
@@ -1412,10 +1422,27 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="2">
-                  <widget class="QLabel" name="workerSpeedLabel">
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="customerReqIntervalLabel">
                    <property name="text">
-                    <string>Worker speed:</string>
+                    <string>Order req. interval:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="totesPerMinuteLabel">
+                   <property name="text">
+                    <string>Shipped per minute:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="toteSpeed">
+                   <property name="maximum">
+                    <double>10.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
                    </property>
                   </widget>
                  </item>
@@ -1436,8 +1463,15 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
-                  <widget class="QDoubleSpinBox" name="toteSpeed">
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="workerSpeedLabel">
+                   <property name="text">
+                    <string>Worker speed:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QDoubleSpinBox" name="workerSpeed">
                    <property name="maximum">
                     <double>10.000000000000000</double>
                    </property>
@@ -1453,13 +1487,20 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="3">
-                  <widget class="QDoubleSpinBox" name="workerSpeed">
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="initSlotQtyLine">
+                   <property name="text">
+                    <string>Initial slot quantity:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QSpinBox" name="initSlotQty">
                    <property name="maximum">
-                    <double>10.000000000000000</double>
+                    <number>10000</number>
                    </property>
                    <property name="singleStep">
-                    <double>0.100000000000000</double>
+                    <number>10</number>
                    </property>
                   </widget>
                  </item>

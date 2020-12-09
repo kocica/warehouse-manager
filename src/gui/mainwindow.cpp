@@ -991,10 +991,11 @@ namespace whm
                 whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
 
                 ui->orderCount->setValue(cfg.getAs<int32_t>("orderCount"));
-                ui->aduMi->setValue(cfg.getAs<int32_t>("mi"));
-                ui->aduSigma->setValue(cfg.getAs<int32_t>("sigma"));
+                ui->aduMi->setValue(cfg.getAs<int32_t>("miAdu"));
+                ui->aduSigma->setValue(cfg.getAs<int32_t>("sigmaAdu"));
+                ui->adqMi->setValue(cfg.getAs<int32_t>("miAdq"));
+                ui->adqSigma->setValue(cfg.getAs<int32_t>("sigmaAdq"));
                 ui->orlCountSigma->setValue(cfg.getAs<int32_t>("sigmaLines"));
-                ui->orlQtySigma->setValue(cfg.getAs<int32_t>("sigmaQuantities"));
             }
             catch(std::runtime_error&)
             {
@@ -1072,10 +1073,11 @@ namespace whm
         void MainWindow::exportGeneratorConfig(ConfigParser_t& cfg)
         {
             cfg.set("orderCount",        std::to_string(ui->orderCount->value()));
-            cfg.set("mi",                std::to_string(ui->aduMi->value()));
-            cfg.set("sigma",             std::to_string(ui->aduSigma->value()));
+            cfg.set("miAdu",             std::to_string(ui->aduMi->value()));
+            cfg.set("sigmaAdu",          std::to_string(ui->aduSigma->value()));
+            cfg.set("miAdq",             std::to_string(ui->adqMi->value()));
+            cfg.set("sigmaAdq",          std::to_string(ui->adqSigma->value()));
             cfg.set("sigmaLines",        std::to_string(ui->orlCountSigma->value()));
-            cfg.set("sigmaQuantities",   std::to_string(ui->orlQtySigma->value()));
         }
 
         void MainWindow::on_configLoadSim_clicked()
@@ -1101,6 +1103,7 @@ namespace whm
                 ui->simulationSpeedup->setValue(cfg.getAs<double>("simSpeedup") * 10);
                 ui->preprocessOrders->setCheckState(cfg.getAs<bool>("preprocess") ? Qt::Checked : Qt::Unchecked);
                 ui->replenishment->setCheckState(cfg.getAs<bool>("replenishment") ? Qt::Checked : Qt::Unchecked);
+                ui->initSlotQty->setValue(cfg.getAs<int32_t>("initialSlotQty"));
             }
             catch(std::runtime_error&)
             {
@@ -1188,6 +1191,7 @@ namespace whm
             cfg.set("simSpeedup",             std::to_string(ui->simulationSpeedup->value() / 10.0));
             cfg.set("preprocess",             ui->preprocessOrders->checkState() == Qt::Checked ? "true" : "false");
             cfg.set("replenishment",          ui->replenishment->checkState() == Qt::Checked ? "true" : "false");
+            cfg.set("initialSlotQty",         std::to_string(ui->initSlotQty->value()));
         }
 
         void MainWindow::reset()
