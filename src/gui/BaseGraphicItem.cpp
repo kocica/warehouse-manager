@@ -573,6 +573,7 @@ namespace whm
                             {
                                 if(whPort != scenePort && !whPort->isConnected() && !scenePort->isConnected())
                                 {
+                                    scenePort->expand(1);
                                     if(whPort->collidesWithItem(scenePort))
                                     {
                                         whPort->select();
@@ -580,6 +581,7 @@ namespace whm
                                         e->setButton(Qt::LeftButton);
                                         scenePort->mousePressEvent(e);
                                     }
+                                    scenePort->shrink(1);
                                 }
                             }
                         }

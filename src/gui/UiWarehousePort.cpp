@@ -634,5 +634,19 @@ namespace whm
                     break;
             }
         }
+
+        void UiWarehousePort_t::expand(int32_t s)
+        {
+            mRect.setTopLeft(QPointF(mRect.topLeft().x() - s, mRect.topLeft().y() - s));
+            mRect.setBottomRight(QPointF(mRect.bottomRight().x() + s, mRect.bottomRight().y() + s));
+            this->setRect(mRect);
+        }
+
+        void UiWarehousePort_t::shrink(int32_t s)
+        {
+            mRect.setTopLeft(QPointF(mRect.topLeft().x() + s, mRect.topLeft().y() + s));
+            mRect.setBottomRight(QPointF(mRect.bottomRight().x() - s, mRect.bottomRight().y() - s));
+            this->setRect(mRect);
+        }
     }
 }

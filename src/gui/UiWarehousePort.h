@@ -46,6 +46,9 @@ namespace whm
                 WarehousePortType_t getType() const;
                 UiWarehouseItem_t* getWhItem() const;
 
+                void expand(int32_t);
+                void shrink(int32_t);
+
                 void dump() const;
 
             public slots:
