@@ -1823,12 +1823,12 @@ namespace whm
                         }
                     }
 
-                    QTimer::singleShot(100, [&]() { foreach(QGraphicsItem* i, selectedUiItems)
+                    QTimer::singleShot(100, [&]() { foreach(QGraphicsItem* i, items())
                                                     {
-                                                        if(auto* selectedWhItem = dynamic_cast<UiWarehouseItem_t*>(i))
-                                                        {
-                                                            selectedWhItem->mouseReleaseEvent(new QGraphicsSceneMouseEvent());
-                                                        }
+                                                       if(auto* selectedWhItem = dynamic_cast<UiWarehouseItem_t*>(i))
+                                                       {
+                                                           selectedWhItem->mouseReleaseEvent(new QGraphicsSceneMouseEvent());
+                                                       }
                                                     }
                                                   });
                 }
