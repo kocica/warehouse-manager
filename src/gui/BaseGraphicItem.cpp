@@ -569,14 +569,17 @@ namespace whm
                     {
                         if(auto* scenePort = dynamic_cast<UiWarehousePort_t*>(i))
                         {
-                            if(whPort != scenePort && !whPort->isConnected() && !scenePort->isConnected())
+                            if(scenePort->getWhItem() != whPort->getWhItem())
                             {
-                                if(whPort->collidesWithItem(scenePort))
+                                if(whPort != scenePort && !whPort->isConnected() && !scenePort->isConnected())
                                 {
-                                    whPort->select();
-                                    auto* e = new QGraphicsSceneMouseEvent();
-                                    e->setButton(Qt::LeftButton);
-                                    scenePort->mousePressEvent(e);
+                                    if(whPort->collidesWithItem(scenePort))
+                                    {
+                                        whPort->select();
+                                        auto* e = new QGraphicsSceneMouseEvent();
+                                        e->setButton(Qt::LeftButton);
+                                        scenePort->mousePressEvent(e);
+                                    }
                                 }
                             }
                         }
@@ -623,17 +626,20 @@ namespace whm
                         {
                             if(auto* scenePort = dynamic_cast<UiWarehousePort_t*>(i))
                             {
-                                if(whPort != scenePort && !whPort->isConnected() && !scenePort->isConnected())
+                                if(scenePort->getWhItem() != whPort->getWhItem())
                                 {
-                                    if(whPort->collidesWithItem(scenePort))
+                                    if(whPort != scenePort && !whPort->isConnected() && !scenePort->isConnected())
                                     {
-                                        selectedPorts.push_back(whPort);
-                                        selectedPorts.push_back(scenePort);
-                                    }
-                                    else
-                                    {
-                                        whPort->unmark();
-                                        scenePort->unmark();
+                                        if(whPort->collidesWithItem(scenePort))
+                                        {
+                                            selectedPorts.push_back(whPort);
+                                            selectedPorts.push_back(scenePort);
+                                        }
+                                        else
+                                        {
+                                            whPort->unmark();
+                                            scenePort->unmark();
+                                        }
                                     }
                                 }
                             }

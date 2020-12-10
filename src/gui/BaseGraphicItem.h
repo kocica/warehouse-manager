@@ -42,6 +42,7 @@ namespace whm
                 QRectF getRect();
 
                 virtual void updateChildrenPositions(double, double);
+                void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
                 void showHandles(bool enabled);
                 void updateChildren(double, double);
                 void shiftGraphicItem(int dx, int dy);
@@ -55,7 +56,6 @@ namespace whm
             protected:
                 QVariant itemChange(GraphicsItemChange change, const QVariant &value);
                 void mousePressEvent(QGraphicsSceneMouseEvent *event);
-                void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
                 void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
                 void setDrawBoundingRect(bool draw);
                 void createHandles();

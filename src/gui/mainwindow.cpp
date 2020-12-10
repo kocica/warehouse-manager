@@ -1728,41 +1728,110 @@ namespace whm
 
             UiWarehouseItem_t* whItem{ nullptr };
 
-            if(!item)
-            {
-                QGraphicsScene::contextMenuEvent(event);
-                return;
-            }
+            static QPointF selectedUiPos;
+            static QList<QGraphicsItem*>* selectedUiItems = nullptr;
 
             auto* menu = new QMenu(event->widget());
 
-            if((whItem = dynamic_cast<UiWarehouseItem_t*>(item)))
+            if(item)
             {
-                if(whItem->isConnected())
+                if((whItem = dynamic_cast<UiWarehouseItem_t*>(item)))
                 {
-                    QAction* disconnect = new QAction("Disconnect", this);
-                    connect(disconnect, &QAction::triggered, [&whItem](){ whItem->disconnect(); });
-                    menu->addAction(disconnect);
+                    if(whItem->isConnected())
+                    {
+                        QAction* disconnect = new QAction("Disconnect", this);
+                        connect(disconnect, &QAction::triggered, [&whItem](){ whItem->disconnect(); });
+                        menu->addAction(disconnect);
+                    }
+                }
+                else if(auto* whSlot = dynamic_cast<UiWarehouseSlot_t*>(item))
+                {
+                    whItem = dynamic_cast<UiWarehouseItem_t*>(whSlot->getParent());
+
+                    if(whItem->isConnected())
+                    {
+                        QAction* disconnect = new QAction("Disconnect", this);
+                        connect(disconnect, &QAction::triggered, [&whItem](){ whItem->disconnect(); });
+                        menu->addAction(disconnect);
+                    }
+                }
+
+                menu->addAction("Copy");
+            }
+
+            if(selectedUiItems)
+            {
+                menu->addAction("Paste");
+            }
+
+            auto* a = menu->exec(event->screenPos());
+
+            if(a != nullptr)
+            {
+                if(a->text() == "Copy")
+                {
+                    if(selectedUiItems)
+                    {
+                        delete selectedUiItems;
+                    }
+
+                    selectedUiPos = event->scenePos();
+                    selectedUiItems = new QList<QGraphicsItem*>(selectedItems());
+                }
+                else if(a->text() == "Paste")
+                {
+                    foreach(auto* selectedItem, *selectedUiItems)
+                    {
+                        if(auto* selectedWhItem = dynamic_cast<UiWarehouseItem_t*>(selectedItem))
+                        {
+                            UiWarehouseItem_t* uiItem{ nullptr };
+                            whm::WarehouseItem_t item{ *selectedWhItem };
+
+                            if (item.getType() == ::whm::WarehouseItemType_t::E_LOCATION_SHELF)
+                            {
+                                uiItem = new UiWarehouseItemLocation_t{ this, selectedWhItem->getUi(), item };
+                            }
+                            else if (item.getType() == ::whm::WarehouseItemType_t::E_CONVEYOR ||
+                                     item.getType() == ::whm::WarehouseItemType_t::E_CONVEYOR_HUB)
+                            {
+                                uiItem = new UiWarehouseItemConveyor_t{ this, selectedWhItem->getUi(), item };
+                            }
+                            else if (item.getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_ENTRANCE ||
+                                     item.getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_DISPATCH ||
+                                     item.getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_BUFFER)
+                            {
+                                uiItem = new UiWarehouseItemGate_t{ this, selectedWhItem->getUi(), item };
+                            }
+
+                            UiWarehouseLayout_t::getWhLayout().addWhItem(uiItem);
+
+                            if (item.getType() == ::whm::WarehouseItemType_t::E_LOCATION_SHELF)
+                            {
+                                ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+
+                                selectedWhItem->getUi()->importLocations();
+                            }
+
+                            int32_t o = uiItem->getO();
+                            uiItem->setGraphicItemOrientation(0);
+                            int32_t x = event->scenePos().x() - selectedUiPos.x();
+                            int32_t y = event->scenePos().y() - selectedUiPos.y();
+                            x -= x % UiWarehouseLayout_t::getWhLayout().getRatio();
+                            y -= y % UiWarehouseLayout_t::getWhLayout().getRatio();
+                            uiItem->moveBy(x, y);
+                            uiItem->setGraphicItemOrientation(o);
+                        }
+                    }
+
+                    foreach(auto* selectedItem, *selectedUiItems)
+                    {
+                        if(auto* selectedWhItem = dynamic_cast<UiWarehouseItem_t*>(selectedItem))
+                        {
+                            selectedWhItem->mouseReleaseEvent(new QGraphicsSceneMouseEvent());
+                        }
+                    }
                 }
             }
-            else if(auto* whSlot = dynamic_cast<UiWarehouseSlot_t*>(item))
-            {
-                whItem = dynamic_cast<UiWarehouseItem_t*>(whSlot->getParent());
-
-                if(whItem->isConnected())
-                {
-                    QAction* disconnect = new QAction("Disconnect", this);
-                    connect(disconnect, &QAction::triggered, [&whItem](){ whItem->disconnect(); });
-                    menu->addAction(disconnect);
-                }
-            }
-            else
-            {
-                QGraphicsScene::contextMenuEvent(event);
-                return;
-            }
-
-            menu->exec(event->screenPos());
 
             QGraphicsScene::contextMenuEvent(event);
         }

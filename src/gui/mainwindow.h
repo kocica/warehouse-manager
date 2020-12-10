@@ -57,6 +57,7 @@ namespace whm
                 QPoint getWidgetPosition(QPoint);
 
                 void resetCursor();
+                void importLocations();
                 void showWhItemsWorkload();
 
                 bool& isOptimizationActive();
@@ -140,7 +141,6 @@ namespace whm
                 std::string exportLocations();
                 std::string exportOrders(bool, std::string f = "");
 
-                void importLocations();
                 void importOrders(bool, std::string f = "");
 
                 void stylePlot(QCustomPlot*);
