@@ -1722,6 +1722,39 @@ namespace whm
             }
         }
 
+        void CustomizedGraphicsScene_t::keyPressEvent(QKeyEvent* event)
+        {
+            int32_t dx{ 0 };
+            int32_t dy{ 0 };
+            int32_t ratio{ UiWarehouseLayout_t::getWhLayout().getRatio() };
+
+            switch(event->key())
+            {
+                case Qt::Key_Up:
+                    dy = -ratio;
+                    break;
+                case Qt::Key_Down:
+                    dy = ratio;
+                    break;
+                case Qt::Key_Left:
+                    dx = -ratio;
+                    break;
+                case Qt::Key_Right:
+                    dx = ratio;
+                    break;
+                default:
+                    return;
+            }
+
+            foreach(auto* selectedItem, selectedItems())
+            {
+                if(auto* selectedWhItem = dynamic_cast<UiWarehouseItem_t*>(selectedItem))
+                {
+                    selectedWhItem->moveBy(dx, dy);
+                }
+            }
+        }
+
         void CustomizedGraphicsScene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         {
             auto* item = itemAt(event->scenePos().toPoint(), QTransform());

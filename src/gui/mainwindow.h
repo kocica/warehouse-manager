@@ -37,6 +37,7 @@ namespace whm
     {
         class CustomizedGraphicsScene_t : public QGraphicsScene
         {
+            void keyPressEvent(QKeyEvent*);
             void contextMenuEvent(QGraphicsSceneContextMenuEvent*);
         };
 
