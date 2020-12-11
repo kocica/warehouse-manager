@@ -83,7 +83,9 @@ namespace whm
 
             // Create scene
             scene = new CustomizedGraphicsScene_t();
+            scene->setUi(this);
             scene->setSceneRect(0, 0, whX, whY);
+            ui->view->setDragMode(QGraphicsView::RubberBandDrag);
             ui->view->setScene(scene);
             createSceneBorders();
 
@@ -189,114 +191,6 @@ namespace whm
 
             ui->ratioIndicator->setFixedWidth(ui->view->width()/5);
             ui->ratioText->setText(QString::number(((ui->view->width()/double(whX)) * (whX/whR))/5));
-        }
-
-        void MainWindow::mousePressEvent(QMouseEvent *event)
-        {
-            if(isOptimizationActive())
-            {
-                QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
-                return;
-            }
-
-            static std::map<UiCursorMode_t, WarehouseItemType_t> convMap =
-            {
-                { UiCursorMode_t::E_MODE_WH_ITEM_CONV,     WarehouseItemType_t::E_CONVEYOR },
-                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_HUB, WarehouseItemType_t::E_CONVEYOR_HUB }
-            };
-
-            static std::map<UiCursorMode_t, WarehouseItemType_t> gateMap =
-            {
-                { UiCursorMode_t::E_MODE_WH_ITEM_ENTRANCE, WarehouseItemType_t::E_WAREHOUSE_ENTRANCE },
-                { UiCursorMode_t::E_MODE_WH_ITEM_DISPATCH, WarehouseItemType_t::E_WAREHOUSE_DISPATCH },
-                { UiCursorMode_t::E_MODE_WH_ITEM_BUFFER,   WarehouseItemType_t::E_WAREHOUSE_BUFFER }
-            };
-
-            if (event->button() == Qt::LeftButton)
-            {
-                if (! UiCursor_t::getCursor().isItemSelected())
-                {
-                    return;
-                }
-
-                UiWarehouseItem_t* whItem{ nullptr };
-                auto cursorMode = UiCursor_t::getCursor().getMode();
-
-                QPointF loc = QCursor::pos();
-                loc = ui->view->mapToScene(loc.x() - ui->dataBrowserTab->size().width() - ui->frame->window()->pos().x(),
-                                           loc.y() - ui->layoutManagement->size().height() - ui->frame->window()->pos().y());
-
-                if (loc.x() < 0 || loc.x() > whX ||
-                    loc.y() < 0 || loc.y() > whY)
-                {
-                    QMessageBox::warning(nullptr, "Warning", "Outside of scene bounds!");
-                    Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Outside of scene bounds!");
-                    return;
-                }
-
-                auto dialog = new QDialog(this);
-                auto form   = new QFormLayout(dialog);
-                auto width  = new QLineEdit(dialog);
-                auto height = new QLineEdit(dialog);
-
-                form->addRow(QString("Enter item width: "), width);
-                form->addRow(QString("Enter item height: "), height);
-
-                QDialogButtonBox buttons(QDialogButtonBox::Ok, Qt::Horizontal, dialog);
-                QObject::connect(&buttons, SIGNAL(accepted()), dialog, SLOT(accept()));
-                QObject::connect(&buttons, SIGNAL(rejected()), dialog, SLOT(reject()));
-                form->addRow(&buttons);
-
-                int32_t w{ 0 };
-                int32_t h{ 0 };
-
-                if (dialog->exec() == QDialog::Accepted)
-                {
-                    w = width->text().toInt() * whR;
-                    h = height->text().toInt() * whR;
-                }
-                else
-                {
-                    return;
-                }
-
-                if(w == 0 || h == 0)
-                {
-                    QMessageBox::critical(nullptr, "Error", "Invalid dimenstions entered!");
-                    return;
-                }
-
-                int32_t x = loc.x();
-                int32_t y = loc.y();
-
-                x -= x % whR;
-                y -= y % whR;
-
-                if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
-                {
-                    whItem = new UiWarehouseItemLocation_t(scene, this, x, y, w, h, WarehouseItemType_t::E_LOCATION_SHELF);
-                }
-                else if (gateMap.find(cursorMode) != gateMap.end())
-                {
-                    whItem = new UiWarehouseItemGate_t(scene, this, x, y, w, h, gateMap[cursorMode]);
-                }
-                else if (convMap.find(cursorMode) != convMap.end())
-                {
-                    whItem = new UiWarehouseItemConveyor_t(scene, this, x, y, w, h, convMap[cursorMode]);
-                }
-
-                resetCursor();
-
-                UiWarehouseLayout_t::getWhLayout().addWhItem(whItem);
-
-                if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
-                {
-                    ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
-
-                    importLocations();
-                }
-            }
         }
 
         void MainWindow::on_deletionMode_toggled(bool enabled)
@@ -1755,6 +1649,121 @@ namespace whm
             }
         }
 
+        void CustomizedGraphicsScene_t::mousePressEvent(QGraphicsSceneMouseEvent* event)
+        {
+            if(ui->isOptimizationActive())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Cannot modify layout while simulation/optimization is running!");
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Cannot modify layout while simulation/optimization is running!");
+                return;
+            }
+
+            static std::map<UiCursorMode_t, WarehouseItemType_t> convMap =
+            {
+                { UiCursorMode_t::E_MODE_WH_ITEM_CONV,     WarehouseItemType_t::E_CONVEYOR },
+                { UiCursorMode_t::E_MODE_WH_ITEM_CONV_HUB, WarehouseItemType_t::E_CONVEYOR_HUB }
+            };
+
+            static std::map<UiCursorMode_t, WarehouseItemType_t> gateMap =
+            {
+                { UiCursorMode_t::E_MODE_WH_ITEM_ENTRANCE, WarehouseItemType_t::E_WAREHOUSE_ENTRANCE },
+                { UiCursorMode_t::E_MODE_WH_ITEM_DISPATCH, WarehouseItemType_t::E_WAREHOUSE_DISPATCH },
+                { UiCursorMode_t::E_MODE_WH_ITEM_BUFFER,   WarehouseItemType_t::E_WAREHOUSE_BUFFER }
+            };
+
+            if (event->button() == Qt::LeftButton)
+            {
+                if (!UiCursor_t::getCursor().isItemSelected())
+                {
+                    QGraphicsScene::mousePressEvent(event);
+                    return;
+                }
+
+                auto whR = UiWarehouseLayout_t::getWhLayout().getRatio();
+                auto whX = UiWarehouseLayout_t::getWhLayout().getDimensions().first;
+                auto whY = UiWarehouseLayout_t::getWhLayout().getDimensions().second;
+
+                UiWarehouseItem_t* whItem{ nullptr };
+                auto cursorMode = UiCursor_t::getCursor().getMode();
+
+                QPointF loc = QCursor::pos();
+                loc = ui->getUi()->view->mapToScene(loc.x() - ui->getUi()->dataBrowserTab->size().width() - ui->getUi()->frame->window()->pos().x(),
+                                                    loc.y() - ui->getUi()->layoutManagement->size().height() - ui->getUi()->frame->window()->pos().y());
+
+                if (loc.x() < 0 || loc.x() > (whX*whR) ||
+                    loc.y() < 0 || loc.y() > (whY*whR) )
+                {
+                    QMessageBox::warning(nullptr, "Warning", "Outside of scene bounds!");
+                    Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "Outside of scene bounds!");
+                    return;
+                }
+
+                auto dialog = new QDialog(ui);
+                auto form   = new QFormLayout(dialog);
+                auto width  = new QLineEdit(dialog);
+                auto height = new QLineEdit(dialog);
+
+                form->addRow(QString("Enter item width: "), width);
+                form->addRow(QString("Enter item height: "), height);
+
+                QDialogButtonBox buttons(QDialogButtonBox::Ok, Qt::Horizontal, dialog);
+                QObject::connect(&buttons, SIGNAL(accepted()), dialog, SLOT(accept()));
+                QObject::connect(&buttons, SIGNAL(rejected()), dialog, SLOT(reject()));
+                form->addRow(&buttons);
+
+                int32_t w{ 0 };
+                int32_t h{ 0 };
+
+                if (dialog->exec() == QDialog::Accepted)
+                {
+                    w = width->text().toInt() * whR;
+                    h = height->text().toInt() * whR;
+                }
+                else
+                {
+                    return;
+                }
+
+                if(w == 0 || h == 0)
+                {
+                    QMessageBox::critical(nullptr, "Error", "Invalid dimenstions entered!");
+                    return;
+                }
+
+                int32_t x = loc.x();
+                int32_t y = loc.y();
+
+                x -= x % whR;
+                y -= y % whR;
+
+                if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
+                {
+                    whItem = new UiWarehouseItemLocation_t(this, ui, x, y, w, h, WarehouseItemType_t::E_LOCATION_SHELF);
+                }
+                else if (gateMap.find(cursorMode) != gateMap.end())
+                {
+                    whItem = new UiWarehouseItemGate_t(this, ui, x, y, w, h, gateMap[cursorMode]);
+                }
+                else if (convMap.find(cursorMode) != convMap.end())
+                {
+                    whItem = new UiWarehouseItemConveyor_t(this, ui, x, y, w, h, convMap[cursorMode]);
+                }
+
+                ui->resetCursor();
+
+                UiWarehouseLayout_t::getWhLayout().addWhItem(whItem);
+
+                if (cursorMode == UiCursorMode_t::E_MODE_WH_ITEM_LOC)
+                {
+                    ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+
+                    ui->importLocations();
+                }
+            }
+
+            QGraphicsScene::mousePressEvent(event);
+        }
+
         void CustomizedGraphicsScene_t::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
         {
             auto* item = itemAt(event->scenePos().toPoint(), QTransform());
@@ -1822,18 +1831,18 @@ namespace whm
 
                             if (item.getType() == ::whm::WarehouseItemType_t::E_LOCATION_SHELF)
                             {
-                                uiItem = new UiWarehouseItemLocation_t{ this, selectedWhItem->getUi(), item };
+                                uiItem = new UiWarehouseItemLocation_t{ this, ui, item };
                             }
                             else if (item.getType() == ::whm::WarehouseItemType_t::E_CONVEYOR ||
                                      item.getType() == ::whm::WarehouseItemType_t::E_CONVEYOR_HUB)
                             {
-                                uiItem = new UiWarehouseItemConveyor_t{ this, selectedWhItem->getUi(), item };
+                                uiItem = new UiWarehouseItemConveyor_t{ this, ui, item };
                             }
                             else if (item.getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_ENTRANCE ||
                                      item.getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_DISPATCH ||
                                      item.getType() == ::whm::WarehouseItemType_t::E_WAREHOUSE_BUFFER)
                             {
-                                uiItem = new UiWarehouseItemGate_t{ this, selectedWhItem->getUi(), item };
+                                uiItem = new UiWarehouseItemGate_t{ this, ui, item };
                             }
 
                             UiWarehouseLayout_t::getWhLayout().addWhItem(uiItem);
@@ -1842,7 +1851,7 @@ namespace whm
                             {
                                 ::whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
 
-                                selectedWhItem->getUi()->importLocations();
+                                ui->importLocations();
                             }
 
                             int32_t o = uiItem->getO();

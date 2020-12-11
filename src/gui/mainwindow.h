@@ -35,10 +35,18 @@ namespace whm
 
     namespace gui
     {
+        class MainWindow;
+
         class CustomizedGraphicsScene_t : public QGraphicsScene
         {
-            void keyPressEvent(QKeyEvent*);
-            void contextMenuEvent(QGraphicsSceneContextMenuEvent*);
+            public:
+                void setUi(MainWindow* ui_) { ui = ui_; }
+            protected:
+                void keyPressEvent(QKeyEvent*);
+                void mousePressEvent(QGraphicsSceneMouseEvent*);
+                void contextMenuEvent(QGraphicsSceneContextMenuEvent*);
+            private:
+                MainWindow* ui;
         };
 
         class MainWindow : public QMainWindow
@@ -77,8 +85,6 @@ namespace whm
                 void orderSimulationFinished(double);
 
             private slots:
-                void mousePressEvent(QMouseEvent *);
-
                 void on_simulationSpeedup_valueChanged();
                 void on_optimizersConfigsTab_currentChanged();
                 void on_optimizerSelectionBox_currentIndexChanged();

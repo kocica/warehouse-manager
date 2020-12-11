@@ -102,11 +102,6 @@ namespace whm
             delete info;
         }
 
-        MainWindow* UiWarehouseItem_t::getUi() const
-        {
-            return ui;
-        }
-
         WarehouseItemType_t UiWarehouseItem_t::getWhItemType() const
         {
             return whItemType;

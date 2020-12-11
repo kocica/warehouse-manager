@@ -60,7 +60,6 @@ namespace whm
 
                 void moveItem(qreal, qreal);
 
-                MainWindow* getUi() const;
                 WarehouseItemType_t getWhItemType() const;
                 UiWarehousePortContainer_t getWhPorts() const;
 
