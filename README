@@ -37,3 +37,4 @@ Optimizer (train on train set of orders):
  - Komplexnejsi staty - kolik najely metru krabice, nachodili pickeri, apod.
  - Adaptovat gen UI - nove parametry, 3 grafy - adu,adq,lines, ..., histogram!!!
  - UI - kopirovani itemu, tvorba rovnou celych konstrukci
+ - Do textu DP - ADQ; Kopirovani itemu, Hromadna selekce itemu

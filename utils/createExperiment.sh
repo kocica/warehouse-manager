@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Simple script to nackup actual working directory for an future experiment
+# Simple script to backup actual working directory for an future experiment
 # Note: Call from project root directory
 #
 

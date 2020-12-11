@@ -35,6 +35,7 @@ namespace whm
             , mDrawHandles(true)
             , mLocationSlot(false)
             , mAllowChange(false)
+            , mCheckPorts(false)
             , mParentItem(parent)
             , ui(ui)
             , mCurrentHandle(0)
@@ -431,6 +432,7 @@ namespace whm
             else
             {
                 mAllowChange = true;
+                mCheckPorts  = true;
 
                 if(auto* whItem = dynamic_cast<UiWarehouseItem_t*>(this))
                 {
@@ -499,6 +501,7 @@ namespace whm
 
         void BaseGraphicItem_t::setGraphicItemOrientation(int o)
         {
+            o = o % 360;
             int32_t angle = o - this->mOrientation;
 
             this->mOrientation = o;
@@ -573,7 +576,7 @@ namespace whm
                             {
                                 if(whPort != scenePort && !whPort->isConnected() && !scenePort->isConnected())
                                 {
-                                    scenePort->expand(1);
+                                    scenePort->expand(10);
                                     if(whPort->collidesWithItem(scenePort))
                                     {
                                         whPort->select();
@@ -581,7 +584,7 @@ namespace whm
                                         e->setButton(Qt::LeftButton);
                                         scenePort->mousePressEvent(e);
                                     }
-                                    scenePort->shrink(1);
+                                    scenePort->shrink(10);
                                 }
                             }
                         }
@@ -616,7 +619,7 @@ namespace whm
 
                 return newPos;
             }
-            else if(change == ItemPositionHasChanged && scene())
+            else if(change == ItemPositionHasChanged && scene() && mCheckPorts)
             {
                 if(auto* whItem = dynamic_cast<UiWarehouseItem_t*>(this))
                 {
@@ -650,6 +653,8 @@ namespace whm
 
                     std::for_each(selectedPorts.begin(), selectedPorts.end(), [](auto* p){ p->mark(); });
                 }
+
+                mCheckPorts = !mCheckPorts;
             }
 
             return QGraphicsRectItem::itemChange(change, value);

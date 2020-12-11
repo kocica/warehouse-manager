@@ -84,6 +84,8 @@ namespace whm
             // Create scene
             scene = new CustomizedGraphicsScene_t();
             scene->setUi(this);
+            // Read the related docs
+            scene->setItemIndexMethod(QGraphicsScene::NoIndex);
             scene->setSceneRect(0, 0, whX, whY);
             ui->view->setDragMode(QGraphicsView::RubberBandDrag);
             ui->view->setScene(scene);

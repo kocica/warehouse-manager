@@ -70,6 +70,7 @@ namespace whm
                 bool mDrawHandles;
                 bool mLocationSlot;
                 bool mAllowChange;
+                bool mCheckPorts;
 
                 int32_t mOrientation{ 0 };
                 int32_t mLineWidth{ 2 };

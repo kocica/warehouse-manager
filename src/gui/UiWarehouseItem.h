@@ -34,6 +34,8 @@ namespace whm
         {
             using UiWarehousePortContainer_t = std::vector<UiWarehousePort_t*>;
 
+            friend class UiWarehousePort_t;
+
             public:
                 UiWarehouseItem_t(QGraphicsScene*, MainWindow*, int32_t, int32_t, int32_t, int32_t, WarehouseItemType_t);
                 virtual ~UiWarehouseItem_t();

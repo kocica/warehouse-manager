@@ -52,10 +52,21 @@ namespace whm
             {
                 delete whConn;
             }
+
+            if(selectedPort == this)
+            {
+                selectedPort = nullptr;
+            }
         }
 
         void UiWarehousePort_t::mousePressEvent(QGraphicsSceneMouseEvent* event)
         {
+            if (this->isConnected())
+            {
+                whItem->mousePressEvent(event);
+                return;
+            }
+
             if (event->button() == Qt::LeftButton)
             {
                 if (UiCursor_t::getCursor().getMode() == UiCursorMode_t::E_MODE_DELETE)

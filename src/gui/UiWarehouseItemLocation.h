@@ -41,6 +41,8 @@ namespace whm
                 virtual void updateChildrenPositions(double, double) override;
 
             private:
+                friend class UiWarehouseSlot_t;
+
                 int32_t slotsX{ 0 };
                 int32_t slotsY{ 0 };
 
