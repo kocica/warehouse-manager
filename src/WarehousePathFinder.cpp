@@ -112,6 +112,10 @@ namespace whm
         {
             pathInfo.targetWhItemID = whItemID;
             whPaths[sourceWhItemID].push_back(pathInfo);
+            if(sourceWhItemID != whItemID)
+            {
+                return;
+            }
         }
 
         // Update path info attributes
