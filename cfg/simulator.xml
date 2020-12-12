@@ -9,6 +9,8 @@
         preprocess ................ Preprocess order lines to fasten up the picking process
         replenishment ............. Work with quantities and replenish depleted articles
         initialSlotQuantity ....... How many products are stored within each slot
+        replenishmentQuantity ..... How many products (minimum) will be replenished
+        replenishmentThreshold .... In case quantity is below this level, replenishment is initiated
   -->
 
 <configuration toteSpeed="1.0"
@@ -19,5 +21,8 @@
                locationCapacity="1"
                conveyorCapacity="5"
                orderRequestInterval="1"
+
                replenishment="true"
-               initialSlotQty="100" />
+               initialSlotQty="100"
+               replenishmentQuantity="80"
+               replenishmentThreshold="20" />

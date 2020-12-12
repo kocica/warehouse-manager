@@ -230,14 +230,21 @@ namespace whm
                 }*/
 
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed orders count:   [-] <%d>", ordersFinished);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in:   [s] <%f>", Time);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed outbound orders:        [-] <%d>", ordersFinished);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed replenishment orders:   [-] <%d>", replenishmentsFinished);
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in:           [s] <%f>", Time);
                 Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
             }
 
             ordersFinished = 0;
+            replenishmentsFinished = 0;
             Stop();
         }
+    }
+
+    void WarehouseSimulatorSIMLIB_t::replenishmentFinished()
+    {
+        ++ replenishmentsFinished;
     }
 
     void WarehouseSimulatorSIMLIB_t::printStats(bool stats_)
@@ -419,15 +426,39 @@ namespace whm
             {
                 // Create replenishment order and push to buffer / wait for reple to be processed
                 WarehouseOrder_t replenishment;
+                std::vector<WarehouseOrderLine_t> replenishmentLines;
                 replenishment.setWhOrderType(WarehouseOrderType_t::E_REPLENISHMENT_ORDER);
 
-                WarehouseOrderLine_t line(nullptr);
-                line.setArticle(orderLine.getArticle());
-                line.setQuantity(100);
+                // Fill replenishment with products we currently need at this location
+                auto* whRack = whLoc->getWhLocationRack();
+                for(int32_t y = 0; y < whRack->getSlotCountY(); y++)
+                {
+                    for(int32_t x = 0; x < whRack->getSlotCountX(); x++)
+                    {
+                        if(whRack->at(x, y).getArticle() == orderLine.getArticle() ||
+                          (whRack->at(x, y).isOccupied() && whRack->at(x, y).getQuantity() <= sim.getConfig().getAs<int32_t>("replenishmentThreshold")))
+                        {
+                            WarehouseOrderLine_t line(nullptr);
+                            line.setArticle(whRack->at(x, y).getArticle());
 
-                replenishment.setWhOrderLines({ line });
+                            int32_t requestedQuantity{ 0 };
 
-                // TODO: More articles (lines) to replenish; calculate quantity
+                            if(whRack->at(x, y).getArticle() == orderLine.getArticle())
+                            {
+                                requestedQuantity = std::max(sim.getConfig().getAs<int32_t>("replenishmentQuantity"), orderLine.getQuantity());
+                            }
+                            else
+                            {
+                                requestedQuantity = sim.getConfig().getAs<int32_t>("replenishmentQuantity");
+                            }
+
+                            line.setQuantity(requestedQuantity);
+                            replenishmentLines.emplace_back(std::move(line));
+                        }
+                    }
+                }
+
+                replenishment.setWhOrderLines(replenishmentLines);
 
                 (new OrderProcessor_t(replenishment, sim))->Activate();
 
@@ -514,6 +545,7 @@ namespace whm
 
         // Replenishment finished, wake up sleeping processes (orders at location waiting for replenishment)
         sim.activateProcesses(locationID);
+        sim.replenishmentFinished();
     }
 
     // ================================================================================================================

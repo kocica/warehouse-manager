@@ -39,6 +39,7 @@ namespace whm
             ~WarehouseSimulatorSIMLIB_t();
 
             double runSimulation();
+            void replenishmentFinished();
             void orderFinished(double, double, int32_t);
 
             void printStats(bool);
@@ -78,6 +79,7 @@ namespace whm
             bool multipleExperiments;
 
             size_t ordersFinished{ 0 };
+            size_t replenishmentsFinished{ 0 };
 
 #           ifdef WHM_GUI
             UiCallback_t uiCallback;

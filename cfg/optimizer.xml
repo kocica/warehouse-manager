@@ -54,9 +54,9 @@
         =============================================================================================
   -->
 
-<configuration numberDimensions="150"
+<configuration numberDimensions="1000"
                problemMin="0"
-               problemMax="200"
+               problemMax="1400"
                maxIterations="1000"
                initialWeights=""
                saveWeightsPeriod="1"
