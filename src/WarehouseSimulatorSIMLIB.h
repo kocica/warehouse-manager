@@ -40,7 +40,7 @@ namespace whm
 
             double runSimulation();
             void replenishmentFinished();
-            void orderFinished(double, double, int32_t);
+            void orderFinished(double, int32_t, int32_t);
 
             void printStats(bool);
 
@@ -74,18 +74,15 @@ namespace whm
             void prepareWhSimulation();
 
         private:
-            bool stats;
+            bool showStats;
             bool optimizationMode;
             bool multipleExperiments;
-
-            size_t ordersFinished{ 0 };
-            size_t replenishmentsFinished{ 0 };
 
 #           ifdef WHM_GUI
             UiCallback_t uiCallback;
 #           endif
 
-            // Processes waiting for replenishment
+            // Processes (orders) waiting for replenishment
             PassivatedProcesses_t passivatedProcesses;
 
             ConfigParser_t cfg;
@@ -95,6 +92,21 @@ namespace whm
             WarehousePathFinder_t* whPathFinder;
             std::vector<WarehouseOrder_t> whOrders;
             std::map<int32_t, simlib3::Store*> whFacilities;
+
+            // Stats
+            struct SimulationStats_t
+            {
+                double processingTime{ 0.0 };
+                size_t outboundsFinished{ 0 };
+                size_t replenishmentsFinished{ 0 };
+                size_t distanceTraveledConv{ 0 };
+                size_t distanceTraveledWorker{ 0 };
+
+                void dump() const;
+                void reset();
+            };
+
+            SimulationStats_t stats;
     };
 
 

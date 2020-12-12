@@ -25,7 +25,7 @@
 namespace whm
 {
     WarehouseSimulatorSIMLIB_t::WarehouseSimulatorSIMLIB_t()
-        : stats{ true }
+        : showStats{ true }
         , optimizationMode{ false }
         , multipleExperiments{ false }
         , cfg{ ConfigParser_t{ "cfg/simulator.xml" } }
@@ -181,15 +181,15 @@ namespace whm
         return Time;
     }
 
-    void WarehouseSimulatorSIMLIB_t::orderFinished(double duration, double durationNonSim, int32_t distance)
+    void WarehouseSimulatorSIMLIB_t::orderFinished(double duration, int32_t distanceConv, int32_t distanceWorker)
     {
 #       ifndef WHM_GUI
         (void) duration;
 #       endif
-        (void) distance;
-        (void) durationNonSim;
 
-        ++ ordersFinished;
+        ++ stats.outboundsFinished;
+        stats.distanceTraveledConv += distanceConv;
+        stats.distanceTraveledWorker += distanceWorker;
 
 #       ifdef WHM_GUI
         if(uiCallback)
@@ -198,7 +198,7 @@ namespace whm
         }
 #       endif
 
-        if(ordersFinished == whLayout.getWhOrders().size())
+        if(stats.outboundsFinished == whLayout.getWhOrders().size())
         {
             for(auto& whFacility : whFacilities)
             {
@@ -212,7 +212,7 @@ namespace whm
             }
 #           endif
 
-            if(stats)
+            if(showStats)
             {
                 // Facility workload statistics dump
                 for(auto& whItem : whLayout.getWhItems())
@@ -229,27 +229,23 @@ namespace whm
                     }
                 }*/
 
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed outbound orders:        [-] <%d>", ordersFinished);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed replenishment orders:   [-] <%d>", replenishmentsFinished);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in:           [s] <%f>", Time);
-                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
+                stats.processingTime = Time;
+                stats.dump();
             }
 
-            ordersFinished = 0;
-            replenishmentsFinished = 0;
+            stats.reset();
             Stop();
         }
     }
 
     void WarehouseSimulatorSIMLIB_t::replenishmentFinished()
     {
-        ++ replenishmentsFinished;
+        ++ stats.replenishmentsFinished;
     }
 
-    void WarehouseSimulatorSIMLIB_t::printStats(bool stats_)
+    void WarehouseSimulatorSIMLIB_t::printStats(bool showStats_)
     {
-        stats = stats_;
+        showStats = showStats_;
     }
 
     bool& WarehouseSimulatorSIMLIB_t::optimizationModeActive()
@@ -335,7 +331,7 @@ namespace whm
             }
         }
 
-        std::cerr << "Warehouse layout has no entrance/exit (should be checked in UI)!" << std::endl;
+        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Warehouse layout has no entrance/exit (should be checked in UI)!");
         return nullptr;
     }
 
@@ -349,8 +345,28 @@ namespace whm
             }
         }
 
-        std::cerr << "Failed to find location!" << std::endl;
+        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Failed to find location!");
         return nullptr;
+    }
+
+    void WarehouseSimulatorSIMLIB_t::SimulationStats_t::dump() const
+    {
+        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
+        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed outbound orders:        [-] <%d>", this->outboundsFinished);
+        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Processed replenishment orders:   [-] <%d>", this->replenishmentsFinished);
+        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Distance traveled (conveyor):     [m] <%d>", this->distanceTraveledConv);
+        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Distance traveled (workes):       [m] <%d>", this->distanceTraveledWorker);
+        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, " Simulation finished in:           [s] <%f>", this->processingTime);
+        Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "=====================================================");
+    }
+
+    void WarehouseSimulatorSIMLIB_t::SimulationStats_t::reset()
+    {
+        this->processingTime            = 0;
+        this->outboundsFinished         = 0;
+        this->replenishmentsFinished    = 0;
+        this->distanceTraveledConv      = 0;
+        this->distanceTraveledWorker    = 0;
     }
 
     // ================================================================================================================
@@ -390,11 +406,11 @@ namespace whm
 
     void OrderProcessor_t::outboundProcessing()
     {
-        auto locationID{ 0 };
-        auto totalDistance{ 0 };
-        auto waitDuration{ 0.0 };
-        auto totalDuration{ 0.0 };
-        auto processDuration{ Time };
+        int32_t locationID{ 0 };
+        double waitDuration{ 0.0 };
+        double processDuration{ Time };
+        size_t totalDistanceConv{ 0 };
+        size_t totalDistanceWorker{ 0 };
 
         // Simulate order start from entrance
         locationID = sim.lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)->getWhItemID();
@@ -410,8 +426,7 @@ namespace whm
             {
                 waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
 
-                totalDuration += waitDuration;
-                totalDistance += pathItem.second;
+                totalDistanceConv += pathItem.second;
 
                 handleFacility(pathItem.first, waitDuration);
             }
@@ -474,10 +489,11 @@ namespace whm
 
             // Pick article(s)
             const auto ratio = WarehouseLayout_t::getWhLayout().getRatio();
-            waitDuration = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
-                            (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio)) / sim.getConfig().getAs<double>("workerSpeed");
+            const auto distance = ((slotPos.first  / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountX())) * (whLoc->getW() / ratio) +
+                                   (slotPos.second / static_cast<float>(whLoc->getWhLocationRack()->getSlotCountY())) * (whLoc->getH() / ratio));
+            totalDistanceWorker += distance;
+            waitDuration = distance / sim.getConfig().getAs<double>("workerSpeed");
 
-            totalDuration += waitDuration;
             handleFacility(locationID, waitDuration);
         }
 
@@ -490,8 +506,7 @@ namespace whm
         {
             waitDuration = pathItem.second / sim.getConfig().getAs<double>("toteSpeed");
 
-            totalDuration += waitDuration;
-            totalDistance += pathItem.second;
+            totalDistanceConv += pathItem.second;
 
             handleFacility(pathItem.first, waitDuration);
         }
@@ -501,12 +516,10 @@ namespace whm
 
         waitDuration = (60 / sim.getConfig().getAs<int32_t>("totesPerMin"));
 
-        totalDuration += waitDuration;
-
         handleFacility(locationID, waitDuration);
 
         // Trace finished order
-        sim.orderFinished(Time - processDuration, totalDuration, totalDistance);
+        sim.orderFinished(Time - processDuration, totalDistanceConv, totalDistanceWorker);
     }
 
     void OrderProcessor_t::replenishmentProcessing()
