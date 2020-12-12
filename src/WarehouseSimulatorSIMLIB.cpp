@@ -460,7 +460,7 @@ namespace whm
 
                             if(whRack->at(x, y).getArticle() == orderLine.getArticle())
                             {
-                                requestedQuantity = std::max(sim.getConfig().getAs<int32_t>("replenishmentQuantity"), orderLine.getQuantity());
+                                requestedQuantity = sim.getConfig().getAs<int32_t>("replenishmentQuantity") + orderLine.getQuantity();
                             }
                             else
                             {
