@@ -1385,54 +1385,10 @@
                  <property name="bottomMargin">
                   <number>10</number>
                  </property>
-                 <item row="1" column="3">
-                  <widget class="QSpinBox" name="customerReqInterval">
-                   <property name="maximum">
-                    <number>1000</number>
-                   </property>
-                   <property name="singleStep">
-                    <number>1</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="3">
-                  <widget class="QSpinBox" name="conveyorCapacity">
-                   <property name="maximum">
-                    <number>1000</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="locationCapacityLabel">
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="workerSpeedLabel">
                    <property name="text">
-                    <string>Location pickers:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QSpinBox" name="locationCapacity">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="maximum">
-                    <number>1000</number>
-                   </property>
-                   <property name="singleStep">
-                    <number>1</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="customerReqIntervalLabel">
-                   <property name="text">
-                    <string>Order req. interval:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="totesPerMinuteLabel">
-                   <property name="text">
-                    <string>Shipped per minute:</string>
+                    <string>Worker speed:</string>
                    </property>
                   </widget>
                  </item>
@@ -1463,13 +1419,6 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="2">
-                  <widget class="QLabel" name="workerSpeedLabel">
-                   <property name="text">
-                    <string>Worker speed:</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="0" column="3">
                   <widget class="QDoubleSpinBox" name="workerSpeed">
                    <property name="maximum">
@@ -1487,13 +1436,6 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="initSlotQtyLine">
-                   <property name="text">
-                    <string>Initial slot quantity:</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="3" column="1">
                   <widget class="QSpinBox" name="initSlotQty">
                    <property name="maximum">
@@ -1501,6 +1443,95 @@
                    </property>
                    <property name="singleStep">
                     <number>10</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="initSlotQtyLine">
+                   <property name="text">
+                    <string>Initial slot quantity:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="QSpinBox" name="conveyorCapacity">
+                   <property name="maximum">
+                    <number>1000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="3">
+                  <widget class="QSpinBox" name="customerReqInterval">
+                   <property name="maximum">
+                    <number>1000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>1</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="locationCapacityLabel">
+                   <property name="text">
+                    <string>Location pickers:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="customerReqIntervalLabel">
+                   <property name="text">
+                    <string>Order req. interval:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="totesPerMinuteLabel">
+                   <property name="text">
+                    <string>Shipped per minute:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="locationCapacity">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="maximum">
+                    <number>1000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>1</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="3">
+                  <widget class="QSpinBox" name="replenishmentQuantity">
+                   <property name="maximum">
+                    <number>10000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>10</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="2">
+                  <widget class="QLabel" name="replenishmentQuantityLine">
+                   <property name="text">
+                    <string>Replenishment quantity:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="2">
+                  <widget class="QLabel" name="replenishmentThresholdLine">
+                   <property name="text">
+                    <string>Replenishment threshold:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="3">
+                  <widget class="QSpinBox" name="replenishmentThreshold">
+                   <property name="maximum">
+                    <number>1000</number>
                    </property>
                   </widget>
                  </item>

@@ -1000,6 +1000,8 @@ namespace whm
                 ui->preprocessOrders->setCheckState(cfg.getAs<bool>("preprocess") ? Qt::Checked : Qt::Unchecked);
                 ui->replenishment->setCheckState(cfg.getAs<bool>("replenishment") ? Qt::Checked : Qt::Unchecked);
                 ui->initSlotQty->setValue(cfg.getAs<int32_t>("initialSlotQty"));
+                ui->replenishmentQuantity->setValue(cfg.getAs<int32_t>("replenishmentQuantity"));
+                ui->replenishmentThreshold->setValue(cfg.getAs<int32_t>("replenishmentThreshold"));
             }
             catch(std::runtime_error&)
             {
@@ -1088,6 +1090,8 @@ namespace whm
             cfg.set("preprocess",             ui->preprocessOrders->checkState() == Qt::Checked ? "true" : "false");
             cfg.set("replenishment",          ui->replenishment->checkState() == Qt::Checked ? "true" : "false");
             cfg.set("initialSlotQty",         std::to_string(ui->initSlotQty->value()));
+            cfg.set("replenishmentQuantity",  std::to_string(ui->replenishmentQuantity->value()));
+            cfg.set("replenishmentThreshold", std::to_string(ui->replenishmentThreshold->value()));
         }
 
         void MainWindow::reset()
