@@ -60,6 +60,35 @@ namespace whm
                             this->precalculatePaths(whItem->getWhItemID(), whItem, WarehousePathInfo_t{});
                           }
                       });
+
+        std::unordered_map<int32_t, std::vector<WarehousePathInfo_t>> whPathsFiltered;
+
+        for(auto* whItemLhs : whItems)
+        {
+            if(whItemLhs->getType() != WarehouseItemType_t::E_CONVEYOR &&
+               whItemLhs->getType() != WarehouseItemType_t::E_CONVEYOR_HUB)
+            {
+                for(auto* whItemRhs : whItems)
+                {
+                    if(whItemRhs->getType() != WarehouseItemType_t::E_CONVEYOR &&
+                       whItemRhs->getType() != WarehouseItemType_t::E_CONVEYOR_HUB)
+                    {
+                        auto* shortestPath = getShortestPath(whItemLhs->getWhItemID(), whItemRhs->getWhItemID());
+
+                        if(shortestPath)
+                        {
+                            whPathsFiltered[whItemLhs->getWhItemID()].push_back(*shortestPath);
+                        }
+                        else
+                        {
+                            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "Failed to filter paths");
+                        }
+                    }
+                }
+            }
+        }
+
+        whPaths = std::move(whPathsFiltered);
     }
 
     void WarehousePathFinder_t::precalculatePaths(int32_t sourceWhItemID, const WarehouseItem_t* whItem, WarehousePathInfo_t pathInfo)

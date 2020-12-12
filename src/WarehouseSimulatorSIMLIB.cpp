@@ -33,7 +33,12 @@ namespace whm
         , whPathFinder{ new WarehousePathFinder_t() }
         , whOrders{ whLayout.getWhOrders() }
     {
+        whPathFinder->precalculatePaths(whLayout.getWhItems());
 
+        if(Logger_t::getLogger().isVerbose())
+        {
+            whPathFinder->dump();
+        }
     }
 
 #   ifdef WHM_GUI
@@ -153,14 +158,6 @@ namespace whm
 
         if(!multipleExperiments)
         {
-            // Find all paths in the warehouse
-            whPathFinder->precalculatePaths(whLayout.getWhItems());
-
-            if(Logger_t::getLogger().isVerbose())
-            {
-                whPathFinder->dump();
-            }
-
             prepareWhSimulation();
 
             if(optimizationModeActive())
