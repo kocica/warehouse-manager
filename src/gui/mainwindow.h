@@ -28,6 +28,7 @@ namespace Ui
 }
 
 Q_DECLARE_METATYPE(std::string);
+Q_DECLARE_METATYPE(whm::gui::SimulationStats_t);
 
 namespace whm
 {
@@ -81,8 +82,8 @@ namespace whm
                 void newGeneratedValue(int, int);
 
                 // Simulator slots
-                void simulationFinished(double);
-                void orderSimulationFinished(double);
+                void simulationFinished(SimulationStats_t);
+                void orderSimulationFinished(SimulationStats_t);
 
             private slots:
                 void on_simulationSpeedup_valueChanged();
@@ -194,6 +195,8 @@ namespace whm
                 QVector<double> fitnesses;
 
                 QVector<double> orders;
+                QVector<double> distancesConvs;
+                QVector<double> distancesWorkers;
                 QVector<double> processingDurations;
 
                 const std::string tmpDir       = ".tmp";

@@ -38,6 +38,18 @@ namespace whm
             WarehouseSimulatorSIMLIB_t();
             ~WarehouseSimulatorSIMLIB_t();
 
+            struct SimulationStats_t
+            {
+                double processingTime{ 0.0 };
+                size_t outboundsFinished{ 0 };
+                size_t replenishmentsFinished{ 0 };
+                size_t distanceTraveledConv{ 0 };
+                size_t distanceTraveledWorker{ 0 };
+
+                void dump() const;
+                void reset();
+            };
+
             double runSimulation();
             void replenishmentFinished();
             void orderFinished(double, int32_t, int32_t);
@@ -53,7 +65,7 @@ namespace whm
             void setArguments(const utils::WhmArgs_t&);
 
 #           ifdef WHM_GUI
-            using UiCallback_t = std::function<void(double, bool)>;
+            using UiCallback_t = std::function<void(SimulationStats_t, bool)>;
             void setUiCallback(UiCallback_t);
 #           endif
 
@@ -92,19 +104,6 @@ namespace whm
             WarehousePathFinder_t* whPathFinder;
             std::vector<WarehouseOrder_t> whOrders;
             std::map<int32_t, simlib3::Store*> whFacilities;
-
-            // Stats
-            struct SimulationStats_t
-            {
-                double processingTime{ 0.0 };
-                size_t outboundsFinished{ 0 };
-                size_t replenishmentsFinished{ 0 };
-                size_t distanceTraveledConv{ 0 };
-                size_t distanceTraveledWorker{ 0 };
-
-                void dump() const;
-                void reset();
-            };
 
             SimulationStats_t stats;
     };

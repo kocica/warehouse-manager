@@ -183,23 +183,22 @@ namespace whm
 
     void WarehouseSimulatorSIMLIB_t::orderFinished(double duration, int32_t distanceConv, int32_t distanceWorker)
     {
-#       ifndef WHM_GUI
-        (void) duration;
-#       endif
-
-        ++ stats.outboundsFinished;
+        stats.outboundsFinished++;
+        stats.processingTime = duration;
         stats.distanceTraveledConv += distanceConv;
         stats.distanceTraveledWorker += distanceWorker;
 
 #       ifdef WHM_GUI
         if(uiCallback)
         {
-            uiCallback(duration, false);
+            uiCallback(stats, false);
         }
 #       endif
 
         if(stats.outboundsFinished == whLayout.getWhOrders().size())
         {
+            stats.processingTime = Time;
+
             for(auto& whFacility : whFacilities)
             {
                 lookupWhLoc(whFacility.first)->setWorkload(whFacility.second->tstat.MeanValue() / whFacility.second->Capacity());
@@ -208,28 +207,17 @@ namespace whm
 #           ifdef WHM_GUI
             if(uiCallback)
             {
-                uiCallback(Time, true);
+                uiCallback(stats, true);
             }
 #           endif
 
             if(showStats)
             {
-                // Facility workload statistics dump
                 for(auto& whItem : whLayout.getWhItems())
                 {
                     Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "Workload <%d>: <%f>", whItem->getWhItemID(), whItem->getWorkload());
                 }
 
-                /*for(auto& whFacility : whFacilities)
-                {
-                    if(lookupWhLoc(whFacility.first)->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
-                    {
-                        whFacility.second->SetName(std::to_string(lookupWhLoc(whFacility.first)->getWhItemID()).c_str());
-                        whFacility.second->Output();
-                    }
-                }*/
-
-                stats.processingTime = Time;
                 stats.dump();
             }
 

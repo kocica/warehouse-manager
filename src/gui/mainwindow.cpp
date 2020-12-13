@@ -76,6 +76,9 @@ namespace whm
             }
 
             qRegisterMetaType<std::string>();
+            qRegisterMetaType<SimulationStats_t>("SimulationStats_t"); // Need to specify all alliases
+            qRegisterMetaType<SimulationStats_t>("whm::gui::SimulationStats_t");
+            qRegisterMetaType<SimulationStats_t>("whm::WarehouseSimulatorSIMLIB_t::SimulationStats_t");
 
             fs::create_directory(tmpDir);
 
@@ -152,6 +155,23 @@ namespace whm
             ui->simulationPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
             ui->simulationPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssPlus);
 
+            ui->simulationPlotDist->legend->setVisible(true);
+            ui->simulationPlotDist->legend->setTextColor(QColor(255, 255, 255));
+            ui->simulationPlotDist->legend->setBrush(QBrush(QColor(25, 35, 45)));
+            ui->simulationPlotDist->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
+            ui->simulationPlotDist->xAxis->setLabel("Order number");
+            ui->simulationPlotDist->yAxis->setLabel("Traveled distance [m]");
+            ui->simulationPlotDist->addGraph();
+            ui->simulationPlotDist->graph(0)->setName("Traveled distance convs");
+            ui->simulationPlotDist->graph(0)->setPen(QPen(QColor(0, 255, 255)));
+            ui->simulationPlotDist->graph(0)->setLineStyle(QCPGraph::lsLine);
+            ui->simulationPlotDist->graph(0)->setScatterStyle(QCPScatterStyle::ssNone);
+            ui->simulationPlotDist->addGraph();
+            ui->simulationPlotDist->graph(1)->setName("Traveled distance workers");
+            ui->simulationPlotDist->graph(1)->setPen(QPen(QColor(255, 0, 255)));
+            ui->simulationPlotDist->graph(1)->setLineStyle(QCPGraph::lsLine);
+            ui->simulationPlotDist->graph(1)->setScatterStyle(QCPScatterStyle::ssNone);
+
             ui->generatorPlotAdu->addGraph();
             ui->generatorPlotAdu->xAxis->setLabel("Average daily units (ADU)");
             ui->generatorPlotAdu->yAxis->setLabel("Count");
@@ -161,22 +181,24 @@ namespace whm
             ui->generatorPlotAdq->addGraph();
             ui->generatorPlotAdq->xAxis->setLabel("Average daily quantity (ADQ)");
             ui->generatorPlotAdq->yAxis->setLabel("Count");
-            ui->generatorPlotAdq->graph(0)->setPen(QPen(QColor(255, 102, 0)));
+            ui->generatorPlotAdq->graph(0)->setPen(QPen(QColor(0, 255, 255)));
             ui->generatorPlotAdq->graph(0)->setScatterStyle(QCPScatterStyle::ssTriangle);
 
             ui->generatorPlotLines->addGraph();
             ui->generatorPlotLines->xAxis->setLabel("Order lines");
             ui->generatorPlotLines->yAxis->setLabel("Count");
-            ui->generatorPlotLines->graph(0)->setPen(QPen(QColor(255, 102, 0)));
+            ui->generatorPlotLines->graph(0)->setPen(QPen(QColor(255, 0, 255)));
             ui->generatorPlotLines->graph(0)->setScatterStyle(QCPScatterStyle::ssDiamond);
 
             stylePlot(ui->fitnessPlot);
             stylePlot(ui->simulationPlot);
+            stylePlot(ui->simulationPlotDist);
             stylePlot(ui->generatorPlotAdu);
             stylePlot(ui->generatorPlotAdq);
             stylePlot(ui->generatorPlotLines);
 
-            ui->scrollArea->setFixedHeight(500);
+            ui->scrollAreaGen->setFixedHeight(500);
+            ui->scrollAreaSim->setFixedHeight(500);
         }
 
         MainWindow::~MainWindow()
@@ -324,11 +346,11 @@ namespace whm
             }
         }
 
-        void MainWindow::simulationFinished(double time)
+        void MainWindow::simulationFinished(SimulationStats_t stats)
         {
             enableManager();
 
-            ui->simulationTime->setText(QString::number(time) + " [s]");
+            ui->simulationTime->setText(QString::number(stats.processingTime) + " [s]");
 
             showWhItemsWorkload();
 
@@ -597,20 +619,34 @@ namespace whm
             ui->progressBarGen->setValue(progress / 3.);
         }
 
-        void MainWindow::orderSimulationFinished(double duration)
+        void MainWindow::orderSimulationFinished(SimulationStats_t stats)
         {
             orders.append(orders.size() + 1);
-            processingDurations.append(duration);
+
+            processingDurations.append(stats.processingTime);
+            distancesConvs.append(stats.distanceTraveledConv);
+            distancesWorkers.append(stats.distanceTraveledWorker);
 
             ui->simulationPlot->graph(0)->setData(orders, processingDurations);
+            ui->simulationPlotDist->graph(0)->setData(orders, distancesConvs);
+            ui->simulationPlotDist->graph(1)->setData(orders, distancesWorkers);
+
             ui->simulationPlot->replot();
+            ui->simulationPlotDist->replot();
+
             ui->simulationPlot->graph(0)->rescaleAxes();
+            ui->simulationPlotDist->graph(0)->rescaleAxes();
+            ui->simulationPlotDist->graph(1)->rescaleAxes();
 
             double max = *std::max_element(processingDurations.begin(), processingDurations.end());
-
             ui->simulationPlot->yAxis->setRange(0, max * 1.1);
-
             ui->simulationPlot->update();
+
+            double maxDist = *std::max_element(distancesConvs.begin(), distancesConvs.end());
+            ui->simulationPlotDist->yAxis->setRange(0, maxDist * 1.1);
+            ui->simulationPlotDist->update();
+
+            ui->statsProcessedReple->setValue(stats.replenishmentsFinished);
 
             ui->simulationProgressBar->setValue(100 * orders.size() / orderCount);
         }
@@ -1094,11 +1130,11 @@ namespace whm
             connect(simulatorUi, SIGNAL(finished()),
                     simulatorUi, SLOT(deleteLater()));
 
-            connect(simulatorUi, SIGNAL(simulationFinished(double)),
-                    this,        SLOT(simulationFinished(double)));
+            connect(simulatorUi, SIGNAL(simulationFinished(SimulationStats_t)),
+                    this,        SLOT(simulationFinished(SimulationStats_t)));
 
-            connect(simulatorUi, SIGNAL(orderSimulationFinished(double)),
-                    this,        SLOT(orderSimulationFinished(double)));
+            connect(simulatorUi, SIGNAL(orderSimulationFinished(SimulationStats_t)),
+                    this,        SLOT(orderSimulationFinished(SimulationStats_t)));
 
             simulatorUi->start();
         }
@@ -1127,7 +1163,7 @@ namespace whm
                     }
                 }
                 simulatorUi = nullptr;
-                simulationFinished(0.0);
+                simulationFinished(SimulationStats_t{});
 
                 dialog->hide();
             }

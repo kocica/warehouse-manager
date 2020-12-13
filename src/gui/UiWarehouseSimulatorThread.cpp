@@ -13,7 +13,6 @@
 #include "../WarehouseOrder.h"
 #include "../WarehouseLayout.h"
 #include "../WarehouseOrderLine.h"
-#include "../WarehouseSimulatorSIMLIB.h"
 
 namespace whm
 {
@@ -55,12 +54,12 @@ namespace whm
 
             whm::WarehouseSimulatorSIMLIB_t sim;
 
-            sim.setUiCallback([&](double time, bool sim)
+            sim.setUiCallback([&](SimulationStats_t stats, bool sim)
                               {
                                   if(sim)
-                                      emit simulationFinished(time);
+                                      emit simulationFinished(stats);
                                   else
-                                      emit orderSimulationFinished(time);
+                                      emit orderSimulationFinished(stats);
                               });
 
             sim.setConfig(cfg);

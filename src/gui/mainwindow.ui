@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1153</width>
-    <height>906</height>
+    <height>950</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1221,7 +1221,7 @@
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_17">
                <item>
-                <widget class="QScrollArea" name="scrollArea">
+                <widget class="QScrollArea" name="scrollAreaGen">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -1231,12 +1231,12 @@
                  <property name="widgetResizable">
                   <bool>true</bool>
                  </property>
-                 <widget class="QWidget" name="scrollAreaWidgetContents">
+                 <widget class="QWidget" name="scrollAreaGenContents">
                   <property name="geometry">
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>533</width>
+                    <width>43</width>
                     <height>932</height>
                    </rect>
                   </property>
@@ -1672,13 +1672,72 @@
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_19">
                <item>
-                <widget class="QCustomPlot" name="simulationPlot" native="true">
+                <layout class="QHBoxLayout" name="statsRepleLayout">
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="statsRepleLabel">
+                   <property name="text">
+                    <string>Processed replenishments:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="statsProcessedReple">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="maximum">
+                    <number>100000</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QScrollArea" name="scrollAreaSim">
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
-                   <height>300</height>
+                   <height>500</height>
                   </size>
                  </property>
+                 <property name="widgetResizable">
+                  <bool>true</bool>
+                 </property>
+                 <widget class="QWidget" name="scrollAreaSimContents">
+                  <property name="geometry">
+                   <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>533</width>
+                    <height>624</height>
+                   </rect>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_5">
+                   <item>
+                    <widget class="QCustomPlot" name="simulationPlot" native="true">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>300</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCustomPlot" name="simulationPlotDist" native="true">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>300</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
                 </widget>
                </item>
                <item>
