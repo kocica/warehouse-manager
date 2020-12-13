@@ -187,6 +187,7 @@ namespace whm
                 bool optimizationActive{ false };
 
                 QVector<double> xadu;
+                QVector<double> xadq;
                 QVector<double> xorl;
 
                 QVector<double> steps;

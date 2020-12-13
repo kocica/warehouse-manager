@@ -74,6 +74,7 @@ namespace whm
 
 #                         ifdef WHM_GUI
                           uiCallback(whProductsAdu[whProduct], 0);
+                          uiCallback(whProductsAdq[whProduct], 1);
 #                         endif
                       });
 
@@ -129,7 +130,7 @@ namespace whm
                 int32_t lineCount = std::round(normalDist(gen));
 
 #               ifdef WHM_GUI
-                uiCallback(lineCount, 1);
+                uiCallback(lineCount, 2);
 #               endif
 
                 for(int32_t lineID = 0; lineID < std::max(1, lineCount); ++lineID)

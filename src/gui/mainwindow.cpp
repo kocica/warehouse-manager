@@ -152,21 +152,31 @@ namespace whm
             ui->simulationPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
             ui->simulationPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssPlus);
 
-            ui->generatorPlot->addGraph();
-            ui->generatorPlot->xAxis->setLabel("ADU");
-            ui->generatorPlot->yAxis->setLabel("Count");
-            ui->generatorPlot->graph(0)->setPen(QPen(QColor(255, 102, 0)));
-            ui->generatorPlot->graph(0)->setBrush(QBrush(QColor(255, 102, 0)));
-            ui->generatorPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
+            ui->generatorPlotAdu->addGraph();
+            ui->generatorPlotAdu->xAxis->setLabel("Average daily units (ADU)");
+            ui->generatorPlotAdu->yAxis->setLabel("Count");
+            ui->generatorPlotAdu->graph(0)->setPen(QPen(QColor(255, 102, 0)));
+            ui->generatorPlotAdu->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
 
-            ui->generatorPlot->addGraph();
-            ui->generatorPlot->graph(1)->setPen(QPen(QColor(255, 102, 0)));
-            ui->generatorPlot->graph(1)->setBrush(QBrush(QColor(255, 102, 0)));
-            ui->generatorPlot->graph(1)->setScatterStyle(QCPScatterStyle::ssDiamond);
+            ui->generatorPlotAdq->addGraph();
+            ui->generatorPlotAdq->xAxis->setLabel("Average daily quantity (ADQ)");
+            ui->generatorPlotAdq->yAxis->setLabel("Count");
+            ui->generatorPlotAdq->graph(0)->setPen(QPen(QColor(255, 102, 0)));
+            ui->generatorPlotAdq->graph(0)->setScatterStyle(QCPScatterStyle::ssTriangle);
+
+            ui->generatorPlotLines->addGraph();
+            ui->generatorPlotLines->xAxis->setLabel("Order lines");
+            ui->generatorPlotLines->yAxis->setLabel("Count");
+            ui->generatorPlotLines->graph(0)->setPen(QPen(QColor(255, 102, 0)));
+            ui->generatorPlotLines->graph(0)->setScatterStyle(QCPScatterStyle::ssDiamond);
 
             stylePlot(ui->fitnessPlot);
-            stylePlot(ui->generatorPlot);
             stylePlot(ui->simulationPlot);
+            stylePlot(ui->generatorPlotAdu);
+            stylePlot(ui->generatorPlotAdq);
+            stylePlot(ui->generatorPlotLines);
+
+            ui->scrollArea->setFixedHeight(500);
         }
 
         MainWindow::~MainWindow()
@@ -288,15 +298,17 @@ namespace whm
             enableManager();
 
             auto itadu = std::find_if(xadu.begin(), xadu.end(), [](auto v) { return v < 0; });
+            auto itadq = std::find_if(xadq.begin(), xadq.end(), [](auto v) { return v < 0; });
             auto itorl = std::find_if(xorl.begin(), xorl.end(), [](auto v) { return v < 0; });
 
-            if(itadu != xadu.end() || itorl != xorl.end())
+            if(itadu != xadu.end() || itadq != xadq.end() || itorl != xorl.end())
             {
-                QMessageBox::warning(nullptr, "Warning", "There have been some negative values generated, you can either proceed"
-                                                         " (but the results might be biased/misleading), or tune parameters and run again.");
+                //QMessageBox::warning(nullptr, "Warning", "There have been some negative values generated, you can either proceed "
+                //                                         "(but the results might be biased/misleading), or tune parameters and run again.");
             }
 
             xadu.clear();
+            xadq.clear();
             xorl.clear();
 
             if(!f.empty())
@@ -471,7 +483,7 @@ namespace whm
                 return;
             }
 
-            if(graph == 0)
+            if(graph == 0) // ADU
             {
                 xadu.append(value);
 
@@ -496,11 +508,50 @@ namespace whm
                     y_hist.push_back(c);
                 }
 
-                ui->generatorPlot->graph(0)->setData(x_hist, y_hist);
-                ui->generatorPlot->replot();
-                ui->generatorPlot->graph(0)->rescaleAxes();
+                ui->generatorPlotAdu->graph(0)->setData(x_hist, y_hist);
+                ui->generatorPlotAdu->replot();
+                ui->generatorPlotAdu->graph(0)->rescaleAxes();
+
+                auto [minadu, maxadu] = std::minmax_element(xadu.begin(), xadu.end());
+
+                ui->generatorPlotAdu->xAxis->setRange(*minadu - 10, *maxadu + 10);
+                ui->generatorPlotAdu->update();
             }
-            else
+            else if(graph == 1) // ADQ
+            {
+                xadq.append(value);
+
+                auto [min, max] = std::minmax_element(xadq.begin(), xadq.end());
+
+                double step = (*max - *min) / 10;
+
+                QVector<double> x_hist;
+                QVector<double> y_hist;
+
+                for(double x = *min; x < *max; x += step)
+                {
+                    double c{ 0 };
+                    for(auto v : xadq)
+                    {
+                        if(v >= x && v <= (x + step))
+                        {
+                            ++c;
+                        }
+                    }
+                    x_hist.push_back(x);
+                    y_hist.push_back(c);
+                }
+
+                ui->generatorPlotAdq->graph(0)->setData(x_hist, y_hist);
+                ui->generatorPlotAdq->replot();
+                ui->generatorPlotAdq->graph(0)->rescaleAxes();
+
+                auto [minadq, maxadq] = std::minmax_element(xadq.begin(), xadq.end());
+
+                ui->generatorPlotAdq->xAxis->setRange(*minadq - 10, *maxadq + 10);
+                ui->generatorPlotAdq->update();
+            }
+            else if(graph == 2) // Lines
             {
                 xorl.append(value);
 
@@ -525,21 +576,25 @@ namespace whm
                     y_hist.push_back(c);
                 }
 
-                ui->generatorPlot->graph(1)->setData(x_hist, y_hist);
-                ui->generatorPlot->replot();
-                ui->generatorPlot->graph(1)->rescaleAxes();
+                ui->generatorPlotLines->graph(0)->setData(x_hist, y_hist);
+                ui->generatorPlotLines->replot();
+                ui->generatorPlotLines->graph(0)->rescaleAxes();
+
+                auto [minorl, maxorl] = std::minmax_element(xorl.begin(), xorl.end());
+
+                ui->generatorPlotLines->xAxis->setRange(*minorl - 10, *maxorl + 10);
+                ui->generatorPlotLines->update();
             }
-
-            auto [minadu, maxadu] = std::minmax_element(xadu.begin(), xadu.end());
-            auto [minorl, maxorl] = std::minmax_element(xorl.begin(), xorl.end());
-
-            ui->generatorPlot->xAxis->setRange(std::min(*minadu, *minorl) - 10, std::max(*maxadu, *maxorl) + 10);
-
-            ui->generatorPlot->update();
 
             ui->elapsedTimeGen->setText(QString::number(generationElapsedTime.elapsed() / 1000.0) + " [s]");
 
-            ui->progressBarGen->setValue(100 * xorl.size() / static_cast<double>(ui->orderCount->value()));
+            double progress{ 0. };
+
+            progress += 100 * xadu.size() / static_cast<double>(articlesModel->rowCount());
+            progress += 100 * xadq.size() / static_cast<double>(articlesModel->rowCount());
+            progress += 100 * xorl.size() / static_cast<double>(ui->orderCount->value());
+
+            ui->progressBarGen->setValue(progress / 3.);
         }
 
         void MainWindow::orderSimulationFinished(double duration)
