@@ -37,7 +37,8 @@ namespace whm
     {
         public:
             WarehouseOptimizerBase_t() = delete;
-            WarehouseOptimizerBase_t(utils::WhmArgs_t);
+            WarehouseOptimizerBase_t(const utils::WhmArgs_t&);
+            WarehouseOptimizerBase_t(const utils::WhmArgs_t&, const ConfigParser_t&);
             virtual ~WarehouseOptimizerBase_t();
 
             // Entry point
@@ -72,6 +73,8 @@ namespace whm
             int32_t calculateDistanceToExits(int32_t);
             std::vector<int32_t> precalculateArticleWeights();
             std::vector<int32_t> sortLocationArticles(std::vector<int32_t>&);
+
+            void init();
 
         protected:
             std::mt19937 rand;

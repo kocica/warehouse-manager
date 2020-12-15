@@ -31,9 +31,21 @@
 
 namespace whm
 {
-    WarehouseOptimizerBase_t::WarehouseOptimizerBase_t(utils::WhmArgs_t args_)
+    WarehouseOptimizerBase_t::WarehouseOptimizerBase_t(const utils::WhmArgs_t& args_)
         : cfg{ ConfigParser_t{ "cfg/optimizer.xml" } }
         , args{ args_ }
+    {
+        init();
+    }
+
+    WarehouseOptimizerBase_t::WarehouseOptimizerBase_t(const utils::WhmArgs_t& args_, const ConfigParser_t& cfg_)
+        : cfg{ cfg_ }
+        , args{ args_ }
+    {
+        init();
+    }
+
+    void WarehouseOptimizerBase_t::init()
     {
         simulator.printStats(false);
         simulator.setArguments(args);

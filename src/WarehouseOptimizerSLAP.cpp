@@ -34,9 +34,8 @@ namespace whm
     }
 
     WarehouseOptimizerSLAP_t::WarehouseOptimizerSLAP_t(const utils::WhmArgs_t& args_, const ConfigParser_t& cfg_)
-        : WarehouseOptimizerBase_t{ args_ }
+        : WarehouseOptimizerBase_t{ args_, cfg_ }
     {
-        cfg = cfg_;
         init();
     }
 
