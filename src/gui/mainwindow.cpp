@@ -355,6 +355,8 @@ namespace whm
             showWhItemsWorkload();
 
             orders.clear();
+            distancesConvs.clear();
+            distancesWorkers.clear();
             processingDurations.clear();
 
             auto items = ::whm::WarehouseLayout_t::getWhLayout().getWhItems();

@@ -35,7 +35,7 @@ namespace whm
             void resetRack(int32_t);
 
             bool containsArticle(const std::string&, int32_t);
-            bool containsArticle(const std::string&, int32_t, std::pair<size_t, size_t>&);
+            bool containsArticle(const std::string&, int32_t, std::pair<size_t, size_t>&, bool);
 
             void replenishArticle(const std::string&, int32_t, std::pair<size_t, size_t>&);
 

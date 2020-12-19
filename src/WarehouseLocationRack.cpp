@@ -108,20 +108,31 @@ namespace whm
     bool WarehouseLocationRack_t::containsArticle(const std::string& article, int32_t quantity)
     {
         std::pair<size_t, size_t> c;
-        return containsArticle(article, quantity, c);
+        return containsArticle(article, quantity, c, false);
     }
 
-    bool WarehouseLocationRack_t::containsArticle(const std::string& article, int32_t quantity, std::pair<size_t, size_t>& coords)
+    bool WarehouseLocationRack_t::containsArticle(const std::string& article, int32_t quantity, std::pair<size_t, size_t>& coords, bool reple)
     {
         for (size_t i = 0; i < whSlots.size(); i++)
         {
             for (size_t j = 0; j < whSlots[i].size(); j++)
             {
-                if(whSlots[i][j].getArticle() == article && whSlots[i][j].getQuantity() >= quantity)
+                if(reple)
                 {
-                    whSlots[i][j] -= quantity;
-                    coords = std::make_pair(j, i);
-                    return true;
+                    if(whSlots[i][j].getArticle() == article && whSlots[i][j].getQuantity() >= quantity)
+                    {
+                        whSlots[i][j] -= quantity;
+                        coords = std::make_pair(j, i);
+                        return true;
+                    }
+                }
+                else
+                {
+                    if(whSlots[i][j].getArticle() == article)
+                    {
+                        coords = std::make_pair(j, i);
+                        return true;
+                    }
                 }
             }
         }

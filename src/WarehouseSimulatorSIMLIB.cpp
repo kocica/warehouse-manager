@@ -423,7 +423,8 @@ namespace whm
 
             WarehouseItem_t* whLoc = sim.lookupWhLoc(locationID);
             std::pair<size_t, size_t> slotPos;
-            bool containsProduct = whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), orderLine.getQuantity(), slotPos);
+            bool containsProduct = whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), orderLine.getQuantity(), slotPos,
+                                                                               sim.getConfig().getAs<bool>("replenishment"));
 
             if(sim.getConfig().getAs<bool>("replenishment") && !containsProduct)
             {
@@ -471,7 +472,7 @@ namespace whm
                 {
                     // Night night
                     sim.passivateProcess(locationID, dynamic_cast<simlib3::Process*>(this));
-                    containsProduct = whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), orderLine.getQuantity(), slotPos);
+                    containsProduct = whLoc->getWhLocationRack()->containsArticle(orderLine.getArticle(), orderLine.getQuantity(), slotPos, true);
                 }
             }
 

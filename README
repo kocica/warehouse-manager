@@ -30,3 +30,5 @@ Optimizer (train on train set of orders):
  - NN
  - CGP - Optimalizace layoutu
  - Pridat kazdemu conv rychlost / kapacitu pri vytvareni
+ - Pridat dalsi optimazator - pruchod vsech moznosti? Pro porovnani pro male sklady
+ - Item already added to the scene [UI]
