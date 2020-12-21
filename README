@@ -37,9 +37,10 @@ Optimizer (train on train set of orders):
     [x] Params (+ prob mutation)
     [x] Params 2 (++ prob mutation crossover)
     [x] Reorder
-    [ ] Picker vyssi vaha?
-    [x] No trial, trial = 10, trial = 30 ?
+    [ ] Picker vyssi vaha
+    [x] No trial, trial = 10, trial = 30
     [x] mutationInverse/mutationOrdered
     [x] crossoverOrdered/crossoverHeuristic/crossoverBinomical
     [x] selectTrunc/selectTournam/selectRoulette/selectRank
- - Potom muzu ukazat nejlepsi kombinaci trial/mutace/crossover/select/reorder/parametry/...
+    [ ] Tournam k = 1, 10, 30, ...
+    [x] Ukazat nejlepsi kombinaci trial/mutace/crossover/select/reorder/parametry/...
