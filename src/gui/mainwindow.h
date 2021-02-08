@@ -125,6 +125,10 @@ namespace whm
                 void on_startSimulation_clicked();
                 void on_stopSimulation_clicked();
 
+                // Path Finder
+                void on_startPathFinder_clicked();
+                void on_stopPathFinder_clicked();
+
                 // Data - test orders
                 void on_clearTestOrders_clicked();
                 void on_clearTrainOrders_clicked();

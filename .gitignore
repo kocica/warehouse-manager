@@ -3,6 +3,7 @@ whm_sim
 whm_gen
 whm_gui
 whm_opt
+whm_paf
 
 # Qt
 qrc*

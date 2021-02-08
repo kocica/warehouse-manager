@@ -33,6 +33,10 @@
 #  include "WarehouseOptimizerRAND.h"
 #endif
 
+#ifdef WHM_PAF
+#  include "WarehousePathFinderACO.h"
+#endif
+
 // Qt
 #ifdef WHM_GUI
 #  include <QApplication>
@@ -79,6 +83,11 @@ int main(int argc, char *argv[])
             optimizer->optimize();
 
             delete optimizer;
+#    endif
+
+#    ifdef WHM_PAF
+            whm::WarehousePathFinderACO_t pathFinder{args};
+            pathFinder.findPath();
 #    endif
 
 #    ifdef WHM_SIM

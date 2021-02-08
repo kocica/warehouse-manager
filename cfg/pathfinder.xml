@@ -1,0 +1,13 @@
+<!--
+        antCount ......................... Number of ants in a colony
+        rho .............................. Evaporation rate
+        beta .............................
+        probBest .........................
+        nearestNeighbours ................ How many nearest neighbours should be saved for each location
+  -->
+
+<configuration antCount="10"
+               rho="0.98"
+               beta="2"
+               probBest="0.05"
+               nearestNeighbours="3" />

@@ -110,6 +110,8 @@ namespace whm
             ui->stopGenerating->setIcon(QIcon(":/img/stop.png"));
             ui->startSimulation->setIcon(QIcon(":/img/start.png"));
             ui->stopSimulation->setIcon(QIcon(":/img/stop.png"));
+            ui->startPathFinder->setIcon(QIcon(":/img/start.png"));
+            ui->stopPathFinder->setIcon(QIcon(":/img/stop.png"));
 
             ui->newLayout->setIcon(QIcon(":/img/new.png"));
             ui->saveLayout->setIcon(QIcon(":/img/save.png"));
@@ -1171,6 +1173,16 @@ namespace whm
             }
         }
 
+        void MainWindow::on_startPathFinder_clicked()
+        {
+            std::cerr << "TODO: Start" << std::endl;
+        }
+
+        void MainWindow::on_stopPathFinder_clicked()
+        {
+            std::cerr << "TODO: Stop" << std::endl;
+        }
+
         void MainWindow::exportSimulatorConfig(ConfigParser_t& cfg)
         {
             cfg.set("toteSpeed",              std::to_string(ui->toteSpeed->value()));
@@ -1454,9 +1466,11 @@ namespace whm
             ui->startGenerating->setEnabled(true);
             ui->startSimulation->setEnabled(true);
             ui->startOptimization->setEnabled(true);
+            ui->startPathFinder->setEnabled(true);
             ui->stopGenerating->setEnabled(false);
             ui->stopSimulation->setEnabled(false);
             ui->stopOptimization->setEnabled(false);
+            ui->stopPathFinder->setEnabled(false);
         }
 
         void MainWindow::disableManager()
@@ -1483,9 +1497,11 @@ namespace whm
             ui->startGenerating->setEnabled(false);
             ui->startSimulation->setEnabled(false);
             ui->startOptimization->setEnabled(false);
+            ui->startPathFinder->setEnabled(false);
             ui->stopGenerating->setEnabled(true);
             ui->stopSimulation->setEnabled(true);
             ui->stopOptimization->setEnabled(true);
+            ui->stopPathFinder->setEnabled(true);
         }
 
         std::string MainWindow::exportArticles()

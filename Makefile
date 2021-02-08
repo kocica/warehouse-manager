@@ -11,6 +11,7 @@ BIN_NAME_SIM = whm_sim
 BIN_NAME_GEN = whm_gen
 BIN_NAME_GUI = whm_gui
 BIN_NAME_OPT = whm_opt
+BIN_NAME_PAF = whm_paf
 
 README     = README
 
@@ -42,6 +43,7 @@ all:
 	make whm_gen
 	make whm_sim
 	make whm_opt
+	make whm_paf
 	make whm_gui
 
 .PHONY: clean
@@ -49,6 +51,11 @@ all:
 $(BIN_NAME_OPT): CFLAGS += -DWHM_OPT -DWHM_SIM #-DWHM_PLOT
 $(BIN_NAME_OPT): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) $(PROFILE) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) $(LDFLAGS) -o $@
+	find . -type f -name "*.cpp" -exec touch --no-create {} +
+
+$(BIN_NAME_PAF): CFLAGS += -DWHM_PAF
+$(BIN_NAME_PAF): $(HEADERS) $(SOURCES) $(OBJS)
+	$(CC) $(CFLAGS) $(PROFILE) -fPIC $(OBJS) -o $@
 	find . -type f -name "*.cpp" -exec touch --no-create {} +
 
 $(BIN_NAME_GEN): CFLAGS += -DWHM_GEN

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1153</width>
-    <height>950</height>
+    <height>978</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1236,7 +1236,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>43</width>
+                    <width>533</width>
                     <height>932</height>
                    </rect>
                   </property>
@@ -1711,7 +1711,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>533</width>
+                    <width>98</width>
                     <height>624</height>
                    </rect>
                   </property>
@@ -1842,6 +1842,79 @@
             </item>
             <item>
              <spacer name="verticalSpacerSim">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="pathFinder">
+           <attribute name="title">
+            <string>Path Finder</string>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_9">
+            <item>
+             <widget class="QGroupBox" name="pathFinderParameters">
+              <property name="title">
+               <string>Parameters</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="pathFinderStatistics">
+              <property name="title">
+               <string>Statistics</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="pathFinderControls">
+              <property name="title">
+               <string>Controls</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_8">
+               <item>
+                <spacer name="pathFinderControlsSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="startPathFinder">
+                 <property name="text">
+                  <string>Start</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="stopPathFinder">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>Stop</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <spacer name="pathFinderSpacer">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>

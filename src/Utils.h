@@ -86,7 +86,7 @@ namespace whm
         }
 
         /**
-         * @brief Return true, if vectors intersects
+         * @brief Return true, if vectors intersects, false otherwise
          */
         template<typename T>
         bool intersects(const std::vector<T>& lhs, const std::vector<T>& rhs)
@@ -102,6 +102,15 @@ namespace whm
             }
 
             return false;
+        }
+
+        /**
+         * @brief Return true, if vector contains value, false otherwise
+         */
+        template<typename T>
+        bool contains(std::vector<T> const& vec, T val)
+        {
+            return std::count(std::begin(vec), std::end(vec), val) != 0;
         }
 
         /**
