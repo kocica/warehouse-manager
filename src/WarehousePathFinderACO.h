@@ -36,18 +36,28 @@ namespace whm
         private:
             class WarehouseAnt_t
             {
+                    friend class WarehousePathFinderACO_t;
+
                 public:
                     WarehouseAnt_t() = default;
                     void visit(int32_t);
+                    void setCost(int32_t);
                     bool visited(int32_t);
-                    int32_t getLastVisited() const;
+                    int32_t getCost() const;
+                    std::vector<int32_t> getVisited() const;
+
+                    bool operator<(const WarehouseAnt_t& rhs) const { return cost < rhs.cost; }
+                    bool operator>(const WarehouseAnt_t& rhs) const { return cost > rhs.cost; }
 
                 private:
+                    int32_t cost{ 0 };
                     std::vector<int32_t> visitedLocations;
             };
 
             class WarehousePheromones_t
             {
+                    friend class WarehousePathFinderACO_t;
+
                 public:
                     WarehousePheromones_t(int32_t, double);
                     void deposit(int32_t, int32_t, double, double);
@@ -69,6 +79,7 @@ namespace whm
             int32_t randomFromInterval(int32_t, int32_t);
 
             // Find
+            void lookupStartFinish();
             void findLocationsToVisit();
             std::vector<int32_t> findNearestNeighbours(int32_t);
 
@@ -76,11 +87,14 @@ namespace whm
             int32_t rouletteSelection(double, std::vector<double> const&);
 
             // Ant actions
-            void performNextAntStep(WarehouseAnt_t&);
+            bool performNextAntStep(WarehouseAnt_t&);
+
+            // Limits
+            void updatePheromoneMinMax(double);
 
             // Getters
-            double getPathDistance(std::vector<int32_t>&);
-            double getLocationsDistance(int32_t, int32_t);
+            int32_t getPathDistance(const std::vector<int32_t>&);
+            int32_t getLocationsDistance(int32_t, int32_t);
 
             // Debug
             void dump() const;
@@ -90,20 +104,30 @@ namespace whm
 
             // Run ACO
             void findPath();
+            std::vector<int32_t> constructGreedySolution();
 
         protected:
             std::mt19937 rand;
             ConfigParser_t cfg;
             utils::WhmArgs_t args;
 
+            int32_t whStart{ 0 };
+            int32_t whFinish{ 0 };
+
+            double probBest{ 0.0 };
+            double pheromoneMax{ 0. };
+            double pheromoneMin{ 0. };
+
             int32_t dimension{ 0 };
-            std::vector<double> distances;
             std::vector<double> heuristics;
+            std::vector<int32_t> distances;
             std::vector<int32_t> locations;
             std::vector<int32_t> locationsToVisit;
             std::vector<std::vector<int32_t>> nearestNeighbours;
 
-            WarehousePheromones_t* pheromones{ nullptr };
+            WarehouseAnt_t bestWhAnt;
+            std::vector<WarehouseAnt_t> whAnts;
+            WarehousePheromones_t* whPheromones{ nullptr };
     };
 }
 

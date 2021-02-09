@@ -39,7 +39,7 @@ namespace whm
 
     WarehousePathFinderACO_t::~WarehousePathFinderACO_t()
     {
-        delete pheromones;
+
     }
 
     void WarehousePathFinderACO_t::init()
@@ -50,6 +50,8 @@ namespace whm
         auto whItems = whm::WarehouseLayout_t::getWhLayout().getWhItems();
 
         precalculatePaths(whItems);
+
+        lookupStartFinish();
 
         for(auto* whItem : whItems)
         {
@@ -77,19 +79,19 @@ namespace whm
 
         findLocationsToVisit();
 
-        for(int32_t i = 0; i < dimension; ++i)
+        for(int32_t it = 0; it < dimension; ++it)
         {
-            nearestNeighbours.push_back(findNearestNeighbours(i));
+            nearestNeighbours.push_back(findNearestNeighbours(it));
         }
 
-        // TODO: Default pheromone value (cfg?)
-        pheromones = new WarehousePheromones_t(dimension, 1.5);
-
-        // TODO: Delete
         for(int32_t it = 0; it < dimension * dimension; ++it)
         {
-            heuristics.push_back(1.75);
+            heuristics.push_back(1.0 / std::pow(distances.at(it), cfg.getAs<double>("beta")));
         }
+
+        this->probBest = cfg.getAs<double>("probBest");
+
+        bestWhAnt.setCost(std::numeric_limits<int32_t>::max());
 
         if(Logger_t::getLogger().isVerbose())
         {
@@ -140,14 +142,36 @@ namespace whm
         }
     }
 
-    double WarehousePathFinderACO_t::getLocationsDistance(int32_t lhs, int32_t rhs)
+    void WarehousePathFinderACO_t::lookupStartFinish()
+    {
+        auto whItems = whm::WarehouseLayout_t::getWhLayout().getWhItems();
+        auto whOrders = whm::WarehouseLayout_t::getWhLayout().getWhOrders();
+
+        for(auto* whItem : whItems)
+        {
+            if(whItem->getType() == WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)
+            {
+                whStart = dimension++;
+                locations.push_back(whItem->getWhItemID());
+                locationsToVisit.push_back(whItem->getWhItemID());
+            }
+            if(whItem->getType() == WarehouseItemType_t::E_WAREHOUSE_DISPATCH)
+            {
+                whFinish = dimension++;
+                locations.push_back(whItem->getWhItemID());
+                locationsToVisit.push_back(whItem->getWhItemID());
+            }
+        }
+    }
+
+    int32_t WarehousePathFinderACO_t::getLocationsDistance(int32_t lhs, int32_t rhs)
     {
         return distances.at(lhs * dimension + rhs);
     }
 
-    double WarehousePathFinderACO_t::getPathDistance(std::vector<int32_t>& path)
+    int32_t WarehousePathFinderACO_t::getPathDistance(const std::vector<int32_t>& path)
     {
-        double d{ 0. };
+        int32_t d{ 0 };
 
         if(!path.empty())
         {
@@ -205,16 +229,16 @@ namespace whm
         return idx - 1;
     }
 
-    void WarehousePathFinderACO_t::performNextAntStep(WarehouseAnt_t& ant)
+    bool WarehousePathFinderACO_t::performNextAntStep(WarehouseAnt_t& whAnt)
     {
-        auto lastVisitedLoc = ant.getLastVisited();
+        auto lastVisitedLoc = whAnt.getVisited().back();
         auto lastVisitedLocNn = nearestNeighbours.at(lastVisitedLoc);
 
         std::vector<int32_t> candidates;
 
         for(auto loc : lastVisitedLocNn)
         {
-            if(!ant.visited(loc))
+            if(!whAnt.visited(loc))
             {
                 candidates.push_back(loc);
             }
@@ -222,7 +246,7 @@ namespace whm
 
         if(Logger_t::getLogger().isVerbose())
         {
-            std::cout << "Perform ant step: Candidates: ";
+            std::cout << "Perform WH ant step: Candidates: ";
             std::for_each(candidates.begin(), candidates.end(), [](auto c){ std::cout << c << ", "; });
             std::cout << std::endl;
         }
@@ -236,9 +260,9 @@ namespace whm
 
             for(auto c : candidates)
             {
-                if(!ant.visited(c))
+                if(!whAnt.visited(c))
                 {
-                    double candidatePheromone = pheromones->getEdgePheromones(lastVisitedLoc, c);
+                    double candidatePheromone = whPheromones->getEdgePheromones(lastVisitedLoc, c);
                     candidatePheromone *= heuristics.at(lastVisitedLoc * dimension + c);
 
                     pheromoneSum += candidatePheromone;
@@ -246,7 +270,7 @@ namespace whm
 
                     if(Logger_t::getLogger().isVerbose())
                     {
-                        std::cout << "Perform ant step: Candidate " << c << ": " << candidatePheromone << " (" << pheromoneSum << ")\n";
+                        std::cout << "Perform WH ant step: Candidate " << c << ": " << candidatePheromone << " (" << pheromoneSum << ")\n";
                     }
                 }
             }
@@ -261,9 +285,9 @@ namespace whm
 
             for(int32_t it = 0; it < dimension; ++it)
             {
-                if(!ant.visited(it))
+                if(!whAnt.visited(it))
                 {
-                    double candidatePheromone = pheromones->getEdgePheromones(lastVisitedLoc, it);
+                    double candidatePheromone = whPheromones->getEdgePheromones(lastVisitedLoc, it);
                     candidatePheromone *= heuristics.at(lastVisitedLoc * dimension + it);
 
                     if(candidatePheromone > maxPheromone)
@@ -274,7 +298,7 @@ namespace whm
 
                     if(Logger_t::getLogger().isVerbose())
                     {
-                        std::cout << "Perform ant step: Iteration " << it << ": " << candidatePheromone << " (" << maxPheromone << ")\n";
+                        std::cout << "Perform WH ant step: Iteration " << it << ": " << candidatePheromone << " (" << maxPheromone << ")\n";
                     }
                 }
             }
@@ -282,32 +306,100 @@ namespace whm
 
         if(Logger_t::getLogger().isVerbose())
         {
-            std::cout << "Perform ant step: Next location: " << nextLoc << std::endl;
+            std::cout << "Perform WH ant step: Next location: " << nextLoc << std::endl;
         }
 
-        ant.visit(nextLoc);
+        if(nextLoc == lastVisitedLoc)
+        {
+            // Ant already visited all locations
+            return false;
+        }
+
+        whAnt.visit(nextLoc);
+        return true;
+    }
+
+    std::vector<int32_t> WarehousePathFinderACO_t::constructGreedySolution()
+    {
+        WarehouseAnt_t whAnt;
+
+        whAnt.visit(whStart);
+
+        auto actualLoc = whStart;
+
+        // Skip first (start)
+        for(int32_t it = 1; it < dimension; ++it)
+        {
+            bool found{ false };
+            int32_t nextLoc{ -1 };
+            auto const& locNns = nearestNeighbours.at(actualLoc);
+
+            for(auto locNn : locNns)
+            {
+                if(!whAnt.visited(locNn))
+                {
+                    found = true;
+                    nextLoc = locNn;
+                    break;
+                }
+            }
+
+            if(!found)
+            {
+                int32_t minDistance = std::numeric_limits<int32_t>::max();
+
+                for(int32_t it2 = 0; it2 < dimension; ++it2)
+                {
+                    if(!whAnt.visited(it2))
+                    {
+                        auto d = this->getLocationsDistance(actualLoc, it2);
+
+                        if(d < minDistance && d > 0)
+                        {
+                            nextLoc = it2;
+                            minDistance = d;
+                        }
+                    }
+                }
+            }
+
+            whAnt.visit(nextLoc);
+            actualLoc = nextLoc;
+        }
+
+        return whAnt.getVisited();
+    }
+
+    void WarehousePathFinderACO_t::updatePheromoneMinMax(double c)
+    {
+        pheromoneMax = 1.0 / ((1.0 - cfg.getAs<double>("rho")) * c);
+        double pBest = std::pow(this->probBest, 1.0 / static_cast<double>(dimension));
+        pheromoneMin = std::min(pheromoneMax, pheromoneMax * (1 - pBest) / (((dimension / 2.0) - 1) * pBest));
     }
 
     void WarehousePathFinderACO_t::dump() const
     {
-        std::cout << std::setw(15) << "";
+        std::cout << "WH Start:  " << whStart  << std::endl
+                  << "WH Finish: " << whFinish << std::endl << std::endl;
+
+        std::cout << std::setw(20) << "";
 
         for(auto loc : locations)
         {
-            std::cout << std::setw(15) << loc;
+            std::cout << std::setw(20) << loc;
         }
 
         std::cout << std::endl;
 
         for(int32_t i = 0; i < dimension; ++i)
         {
-            std::cout << std::setw(15) << locations.at(i);
+            std::cout << std::setw(20) << locations.at(i);
 
             for(int32_t j = 0; j < dimension; ++j)
             {
-                std::cout << std::setw(5) << distances.at(i * dimension + j)
-                          << std::setw(5) << heuristics.at(i * dimension + j)
-                          << std::setw(5) << pheromones->getEdgePheromones(i, j);
+                std::cout << std::setw(4)  << distances.at(i * dimension + j)
+                          << std::setw(12) << heuristics.at(i * dimension + j)
+                          ; //<< std::setw(4)  << whPheromones ? whPheromones->getEdgePheromones(i, j) : 0;
             }
 
             std::cout << "     Nearest neighbours: ";
@@ -325,13 +417,56 @@ namespace whm
 
     void WarehousePathFinderACO_t::findPath()
     {
-        WarehouseAnt_t ant;
-        ant.visit(1);
-        ant.visit(5);
-        ant.visit(6);
-        ant.visit(0);
+        auto const& sol = this->constructGreedySolution();
+        double evalSol  = this->getPathDistance(sol);
 
-        performNextAntStep(ant);
+        updatePheromoneMinMax(evalSol);
+
+        whPheromones = new WarehousePheromones_t(dimension, pheromoneMax);
+
+        for(int32_t it = 0; it < cfg.getAs<int32_t>("maxIterations"); ++it)
+        {
+            for(int32_t it2 = 0; it2 < dimension; ++it2)
+            {
+                WarehouseAnt_t whAnt;
+                whAnt.visit(whStart);
+                while(performNextAntStep(whAnt));
+                whAnt.setCost(getPathDistance(whAnt.getVisited()));
+                whAnts.emplace_back(std::move(whAnt));
+            }
+
+            WarehouseAnt_t iterationBestWhAnt;
+            iterationBestWhAnt.setCost(std::numeric_limits<int32_t>::max());
+
+            for(WarehouseAnt_t& whAnt : whAnts)
+            {
+                if(whAnt < iterationBestWhAnt)
+                {
+                    iterationBestWhAnt = whAnt;
+                }
+                if(whAnt < bestWhAnt)
+                {
+                    bestWhAnt = whAnt;
+                    updatePheromoneMinMax(bestWhAnt.getCost());
+                }
+            }
+
+            // Evaporate from all edges
+            whPheromones->evaporation(1.0 - cfg.getAs<double>("rho"), pheromoneMin);
+
+            // Deposit pheromone on all edges that 'iteration best' ant visited
+            auto prevLocation = iterationBestWhAnt.getVisited().back();
+            for(auto location : iterationBestWhAnt.getVisited())
+            {
+                whPheromones->deposit(prevLocation, location, 1.0 / iterationBestWhAnt.getCost(), pheromoneMax);
+
+                prevLocation = location;
+            }
+
+            whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[ACO] [%3d] Best cost: %d", it, bestWhAnt.getCost());
+        }
+
+        delete whPheromones;
     }
 
     void WarehousePathFinderACO_t::WarehouseAnt_t::visit(int32_t loc)
@@ -347,9 +482,19 @@ namespace whm
         return utils::contains(visitedLocations, loc);
     }
 
-    int32_t WarehousePathFinderACO_t::WarehouseAnt_t::getLastVisited() const
+    std::vector<int32_t> WarehousePathFinderACO_t::WarehouseAnt_t::getVisited() const
     {
-        return visitedLocations.back();
+        return visitedLocations;
+    }
+
+    void WarehousePathFinderACO_t::WarehouseAnt_t::setCost(int32_t c)
+    {
+        this->cost = c;
+    }
+
+    int32_t WarehousePathFinderACO_t::WarehouseAnt_t::getCost() const
+    {
+        return this->cost;
     }
 
     WarehousePathFinderACO_t::WarehousePheromones_t::WarehousePheromones_t(int32_t d, double i)

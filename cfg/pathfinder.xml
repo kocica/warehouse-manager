@@ -10,4 +10,7 @@
                rho="0.98"
                beta="2"
                probBest="0.05"
-               nearestNeighbours="3" />
+               nearestNeighbours="3"
+               maxIterations="10000"
+               probUseGlobalBest="1.0"
+               probUseIterationBest="0.0" />
