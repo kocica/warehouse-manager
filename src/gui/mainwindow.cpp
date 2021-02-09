@@ -140,18 +140,20 @@ namespace whm
             ui->configSaveGen->setIcon(QIcon(":/img/config.png"));
             ui->configLoadSim->setIcon(QIcon(":/img/config.png"));
             ui->configSaveSim->setIcon(QIcon(":/img/config.png"));
+            ui->configLoadPaf->setIcon(QIcon(":/img/config.png"));
+            ui->configSavePaf->setIcon(QIcon(":/img/config.png"));
             ui->selectionMode->toggle();
 
             ui->mainToolBar->setStyleSheet("QToolButton { color: #FF6600; font-weight: bold; }");
 
             // Plots
             ui->fitnessPlot->addGraph();
-            ui->fitnessPlot->xAxis->setLabel("Steps");
+            ui->fitnessPlot->xAxis->setLabel("Algorithm steps");
             ui->fitnessPlot->yAxis->setLabel("Orders processing duration [s]");
             ui->fitnessPlot->graph(0)->setPen(QPen(QColor(255, 102, 0)));
 
             ui->simulationPlot->addGraph();
-            ui->simulationPlot->xAxis->setLabel("Order number");
+            ui->simulationPlot->xAxis->setLabel("Processed orders");
             ui->simulationPlot->yAxis->setLabel("Processing time [s]");
             ui->simulationPlot->graph(0)->setPen(QPen(QColor(255, 102, 0)));
             ui->simulationPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
@@ -161,7 +163,7 @@ namespace whm
             ui->simulationPlotDist->legend->setTextColor(QColor(255, 255, 255));
             ui->simulationPlotDist->legend->setBrush(QBrush(QColor(25, 35, 45)));
             ui->simulationPlotDist->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft | Qt::AlignTop);
-            ui->simulationPlotDist->xAxis->setLabel("Order number");
+            ui->simulationPlotDist->xAxis->setLabel("Processed orders");
             ui->simulationPlotDist->yAxis->setLabel("Traveled distance [m]");
             ui->simulationPlotDist->addGraph();
             ui->simulationPlotDist->graph(0)->setName("Traveled distance convs");
@@ -192,12 +194,18 @@ namespace whm
             ui->generatorPlotLines->graph(0)->setPen(QPen(QColor(255, 0, 255)));
             ui->generatorPlotLines->graph(0)->setScatterStyle(QCPScatterStyle::ssDiamond);
 
+            ui->pathFinderPlot->addGraph();
+            ui->pathFinderPlot->xAxis->setLabel("Algorithm steps");
+            ui->pathFinderPlot->yAxis->setLabel("Total distance traveled [m]");
+            ui->pathFinderPlot->graph(0)->setPen(QPen(QColor(255, 102, 0)));
+
             stylePlot(ui->fitnessPlot);
             stylePlot(ui->simulationPlot);
             stylePlot(ui->simulationPlotDist);
             stylePlot(ui->generatorPlotAdu);
             stylePlot(ui->generatorPlotAdq);
             stylePlot(ui->generatorPlotLines);
+            stylePlot(ui->pathFinderPlot);
 
             ui->scrollAreaGen->setFixedHeight(500);
             ui->scrollAreaSim->setFixedHeight(500);
@@ -1173,16 +1181,6 @@ namespace whm
             }
         }
 
-        void MainWindow::on_startPathFinder_clicked()
-        {
-            std::cerr << "TODO: Start" << std::endl;
-        }
-
-        void MainWindow::on_stopPathFinder_clicked()
-        {
-            std::cerr << "TODO: Stop" << std::endl;
-        }
-
         void MainWindow::exportSimulatorConfig(ConfigParser_t& cfg)
         {
             cfg.set("toteSpeed",              std::to_string(ui->toteSpeed->value()));
@@ -1197,6 +1195,55 @@ namespace whm
             cfg.set("initialSlotQty",         std::to_string(ui->initSlotQty->value()));
             cfg.set("replenishmentQuantity",  std::to_string(ui->replenishmentQuantity->value()));
             cfg.set("replenishmentThreshold", std::to_string(ui->replenishmentThreshold->value()));
+        }
+
+        void MainWindow::on_startPathFinder_clicked()
+        {
+            std::cerr << "TODO: Start" << std::endl;
+        }
+
+        void MainWindow::on_stopPathFinder_clicked()
+        {
+            std::cerr << "TODO: Stop" << std::endl;
+        }
+
+        void MainWindow::on_configLoadPaf_clicked()
+        {
+            QString file = QFileDialog::getOpenFileName(this, tr("Path finder configuration"), "", tr("Path finder configuration (*.xml)"));
+            if (file.cbegin() == file.cend())
+            {
+                return;
+            }
+
+            ui->configLinePaf->setText(file);
+
+            try
+            {
+                whm::ConfigParser_t cfg(file.toUtf8().constData(), true);
+
+                ui->antCount->setValue(cfg.getAs<int32_t>("antCount"));
+                ui->rho->setValue(cfg.getAs<double>("rho"));
+                ui->beta->setValue(cfg.getAs<double>("beta"));
+                ui->probBest->setValue(cfg.getAs<double>("probBest"));
+                ui->nearestNeighbours->setValue(cfg.getAs<int32_t>("nearestNeighbours"));
+                ui->maxIterations->setValue(cfg.getAs<int32_t>("maxIterations"));
+                ui->probUseIterationBest->setValue(cfg.getAs<double>("probUseIterationBest"));
+            }
+            catch(std::runtime_error&)
+            {
+                QMessageBox::critical(nullptr, "Error", "Invalid configuration selected.");
+            }
+        }
+
+        void MainWindow::exportPathfinderConfig(ConfigParser_t& cfg)
+        {
+            cfg.set("antCount",               std::to_string(ui->antCount->value()));
+            cfg.set("rho",                    std::to_string(ui->rho->value()));
+            cfg.set("beta",                   std::to_string(ui->beta->value()));
+            cfg.set("probBest",               std::to_string(ui->probBest->value()));
+            cfg.set("nearestNeighbours",      std::to_string(ui->nearestNeighbours->value()));
+            cfg.set("maxIterations",          std::to_string(ui->maxIterations->value()));
+            cfg.set("probUseIterationBest",   std::to_string(ui->probUseIterationBest->value()));
         }
 
         void MainWindow::reset()
@@ -1463,6 +1510,7 @@ namespace whm
             ui->configLoadOpt->setEnabled(true);
             ui->configLoadGen->setEnabled(true);
             ui->configLoadSim->setEnabled(true);
+            ui->configLoadPaf->setEnabled(true);
             ui->startGenerating->setEnabled(true);
             ui->startSimulation->setEnabled(true);
             ui->startOptimization->setEnabled(true);
@@ -1494,6 +1542,7 @@ namespace whm
             ui->configLoadOpt->setEnabled(false);
             ui->configLoadGen->setEnabled(false);
             ui->configLoadSim->setEnabled(false);
+            ui->configLoadPaf->setEnabled(false);
             ui->startGenerating->setEnabled(false);
             ui->startSimulation->setEnabled(false);
             ui->startOptimization->setEnabled(false);
@@ -1696,6 +1745,11 @@ namespace whm
         void MainWindow::on_configSaveSim_clicked()
         {
             exportConfig(std::bind(&MainWindow::exportSimulatorConfig, this, std::placeholders::_1));
+        }
+
+        void MainWindow::on_configSavePaf_clicked()
+        {
+            exportConfig(std::bind(&MainWindow::exportPathfinderConfig, this, std::placeholders::_1));
         }
 
         void MainWindow::exportConfig(std::function<void(ConfigParser_t&)> exportFunctor)

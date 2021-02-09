@@ -126,6 +126,8 @@ namespace whm
                 void on_stopSimulation_clicked();
 
                 // Path Finder
+                void on_configLoadPaf_clicked();
+                void on_configSavePaf_clicked();
                 void on_startPathFinder_clicked();
                 void on_stopPathFinder_clicked();
 
@@ -167,6 +169,7 @@ namespace whm
                 void exportOptimizerConfig(ConfigParser_t&);
                 void exportGeneratorConfig(ConfigParser_t&);
                 void exportSimulatorConfig(ConfigParser_t&);
+                void exportPathfinderConfig(ConfigParser_t&);
 
             private:
                 int32_t whR{ 0 };
