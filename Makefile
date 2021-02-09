@@ -40,11 +40,11 @@ GUI_HEADERS = $(wildcard $(GUI)/*.h)
 GUI_OBJS    = $(patsubst %.cpp, %.o, $(GUI_SOURCES))
 
 all:
-	make whm_gen
-	make whm_sim
-	make whm_opt
-	make whm_paf
-	make whm_gui
+	make $(BIN_NAME_GEN)
+	make $(BIN_NAME_SIM)
+	make $(BIN_NAME_OPT)
+	make $(BIN_NAME_PAF)
+	make $(BIN_NAME_GUI)
 
 .PHONY: clean
 
@@ -78,4 +78,4 @@ $(BIN_NAME_GUI): $(SOURCES) $(HEADERS) $(GUI_SOURCES) $(GUI_HEADERS)
 
 clean:
 	-@cd $(GUI) && make clean && rm -f moc_* .qmake.stash
-	rm -f $(BIN_NAME_SIM) $(BIN_NAME_GEN) $(BIN_NAME_GUI) $(BIN_NAME_OPT) $(GUI)/$(BIN_NAME_GUI) $(GUI)/Makefile $(SRC)/*.o
+	rm -f $(BIN_NAME_SIM) $(BIN_NAME_GEN) $(BIN_NAME_GUI) $(BIN_NAME_OPT) $(BIN_NAME_PAF) $(GUI)/$(BIN_NAME_GUI) $(GUI)/Makefile $(SRC)/*.o

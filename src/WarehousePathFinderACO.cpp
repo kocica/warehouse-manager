@@ -4,7 +4,7 @@
  * @file    WarehousePathFinderACO.cpp
  * @date    02/07/2020
  * @author  Filip Kocica
- * @brief   Module used to find shortest path for order picking using ant system
+ * @brief   Module used to find the shortest path for order picking using ant colony system
  */
 
 #ifdef WHM_PAF
@@ -426,7 +426,7 @@ namespace whm
 
         for(int32_t it = 0; it < cfg.getAs<int32_t>("maxIterations"); ++it)
         {
-            for(int32_t it2 = 0; it2 < dimension; ++it2)
+            for(int32_t a = 0; a < cfg.getAs<int32_t>("antCount"); ++a)
             {
                 WarehouseAnt_t whAnt;
                 whAnt.visit(whStart);
@@ -447,7 +447,15 @@ namespace whm
                 if(whAnt < bestWhAnt)
                 {
                     bestWhAnt = whAnt;
-                    updatePheromoneMinMax(bestWhAnt.getCost());
+
+                    if(randomFromInterval(0.0, 1.0) < cfg.getAs<double>("probUseIterationBest"))
+                    {
+                        updatePheromoneMinMax(iterationBestWhAnt.getCost());
+                    }
+                    else
+                    {
+                        updatePheromoneMinMax(bestWhAnt.getCost());
+                    }
                 }
             }
 

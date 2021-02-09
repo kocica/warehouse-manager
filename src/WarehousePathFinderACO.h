@@ -4,7 +4,7 @@
  * @file    WarehousePathFinderACO.h
  * @date    02/07/2020
  * @author  Filip Kocica
- * @brief   Module used to find shortest path for order picking using ant system
+ * @brief   Module used to find the shortest path for order picking using ant colony system
  */
 
 #ifdef WHM_PAF
