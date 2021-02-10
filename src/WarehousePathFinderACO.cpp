@@ -157,6 +157,7 @@ namespace whm
             }
             if(whItem->getType() == WarehouseItemType_t::E_WAREHOUSE_DISPATCH)
             {
+                // Don't add to vector, or make sure to visit it as a last location
                 whFinish = dimension++;
                 locations.push_back(whItem->getWhItemID());
                 locationsToVisit.push_back(whItem->getWhItemID());
@@ -326,6 +327,18 @@ namespace whm
     }
 #   endif
 
+    std::vector<int32_t> WarehousePathFinderACO_t::decodePath(const std::vector<int32_t>& path)
+    {
+        std::vector<int32_t> decodedPath;
+
+        for(int32_t p : path)
+        {
+            decodedPath.push_back(locations.at(p)); // locationsToVisit?
+        }
+
+        return std::move(decodedPath);
+    }
+
     std::vector<int32_t> WarehousePathFinderACO_t::constructGreedySolution()
     {
         WarehouseAnt_t whAnt;
@@ -467,7 +480,7 @@ namespace whm
             }
 
 #           ifdef WHM_GUI
-                this->uiCallback(bestWhAnt.getCost(), bestWhAnt.getVisited());
+                this->uiCallback(bestWhAnt.getCost(), decodePath(bestWhAnt.getVisited()));
 #           endif
 
             // Evaporate from all edges

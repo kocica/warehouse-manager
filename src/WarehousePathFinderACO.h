@@ -95,6 +95,9 @@ namespace whm
             void setUiCallback(UiCallback_t);
 #           endif
 
+            // Decode
+            std::vector<int32_t> decodePath(const std::vector<int32_t>&);
+
             // Limits
             void updatePheromoneMinMax(double);
 

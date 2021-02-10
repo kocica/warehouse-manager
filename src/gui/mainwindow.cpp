@@ -702,6 +702,13 @@ namespace whm
             ui->elapsedTimePaf->setText(QString::number(pathFindingElapsedTime.elapsed() / 1000.0) + " [s]");
 
             ui->pathfinderProgressBar->setValue(100 * stepCount / static_cast<double>(ui->maxIterations->value()));
+
+            std::cout << "Path: ";
+            for(auto v : path)
+            {
+                std::cout << v << ",";
+            }
+            std::cout << std::endl;
         }
 
         void MainWindow::on_newLayout_triggered()
