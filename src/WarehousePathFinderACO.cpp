@@ -121,21 +121,28 @@ namespace whm
         auto whItems = whm::WarehouseLayout_t::getWhLayout().getWhItems();
         auto whOrders = whm::WarehouseLayout_t::getWhLayout().getWhOrders();
 
-        for(auto& whOrder : whOrders)
-        {
-            for(auto& whLine : whOrder.getWhOrderLines())
-            {
-                auto article = whLine.getArticle();
+        auto selectedOrderID = cfg.getAs<int32_t>("selectedOrderID");
 
-                for(auto* whItem : whItems)
+        if(selectedOrderID < 0 || selectedOrderID >= static_cast<int32_t>(whOrders.size()))
+        {
+            Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_ERROR, "PathFinder: selectedOrderID out of range!");
+            throw std::runtime_error("PathFinder: selectedOrderID out of range!");
+        }
+
+        auto& whOrder = whOrders.at(selectedOrderID);
+
+        for(auto& whLine : whOrder.getWhOrderLines())
+        {
+            auto article = whLine.getArticle();
+
+            for(auto* whItem : whItems)
+            {
+                if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF &&
+                    whItem->getWhLocationRack()->containsArticle(article, 0))
                 {
-                    if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF &&
-                       whItem->getWhLocationRack()->containsArticle(article, 0))
+                    if(!utils::contains(locationsToVisit, whItem->getWhItemID()))
                     {
-                        if(!utils::contains(locationsToVisit, whItem->getWhItemID()))
-                        {
-                            locationsToVisit.push_back(whItem->getWhItemID());
-                        }
+                        locationsToVisit.push_back(whItem->getWhItemID());
                     }
                 }
             }

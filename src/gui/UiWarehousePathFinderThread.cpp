@@ -34,15 +34,22 @@ namespace whm
             whm::WarehouseLayout_t::getWhLayout().importLocationSlots(args.locationsPath);
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
-            whm::WarehousePathFinderACO_t pathFinder{args, cfg};
+            try
+            {
+                whm::WarehousePathFinderACO_t pathFinder{args, cfg};
 
-            pathFinder.setUiCallback([this](int32_t cost, const std::vector<int32_t>& path)
-                                     -> void
-                                     {
-                                        emit pathFindingStep(cost, path);
-                                     });
+                pathFinder.setUiCallback([this](int32_t cost, const std::vector<int32_t>& path)
+                                        -> void
+                                        {
+                                            emit pathFindingStep(cost, path);
+                                        });
 
-            pathFinder.findPath();
+                pathFinder.findPath();
+            }
+            catch(const std::runtime_error& e)
+            {
+                emit pathFinderError(e.what());
+            }
 
             emit pathFindingFinished();
         }

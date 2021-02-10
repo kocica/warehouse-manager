@@ -89,6 +89,7 @@ namespace whm
 
                 // PathFinder slots
                 void pathFindingFinished();
+                void pathFinderError(const std::string&);
                 void pathFindingStep(int, const std::vector<int>&);
 
             private slots:

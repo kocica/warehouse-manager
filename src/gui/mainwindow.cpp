@@ -675,6 +675,11 @@ namespace whm
             ui->pathfinderProgressBar->setValue(0);
         }
 
+        void MainWindow::pathFinderError(const std::string& e)
+        {
+            QMessageBox::critical(nullptr, "Error", e.c_str());
+        }
+
         void MainWindow::pathFindingStep(int cost, const std::vector<int>& path)
         {
             if(!pathFinderUi)
@@ -1282,6 +1287,9 @@ namespace whm
             connect(pathFinderUi, SIGNAL(pathFindingFinished()),
                     this,         SLOT(pathFindingFinished()));
 
+            connect(pathFinderUi, SIGNAL(pathFinderError(const std::string&)),
+                    this,         SLOT(pathFinderError(const std::string&)));
+
             connect(pathFinderUi, SIGNAL(pathFindingStep(int, const std::vector<int>&)),
                     this,         SLOT(pathFindingStep(int, const std::vector<int>&)));
 
@@ -1339,6 +1347,7 @@ namespace whm
                 ui->nearestNeighbours->setValue(cfg.getAs<int32_t>("nearestNeighbours"));
                 ui->maxIterations->setValue(cfg.getAs<int32_t>("maxIterations"));
                 ui->probUseIterationBest->setValue(cfg.getAs<double>("probUseIterationBest"));
+                ui->selectedOrderID->setValue(cfg.getAs<int32_t>("selectedOrderID"));
             }
             catch(std::runtime_error&)
             {
@@ -1355,6 +1364,7 @@ namespace whm
             cfg.set("nearestNeighbours",      std::to_string(ui->nearestNeighbours->value()));
             cfg.set("maxIterations",          std::to_string(ui->maxIterations->value()));
             cfg.set("probUseIterationBest",   std::to_string(ui->probUseIterationBest->value()));
+            cfg.set("selectedOrderID",        std::to_string(ui->selectedOrderID->value()));
         }
 
         void MainWindow::reset()

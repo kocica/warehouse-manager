@@ -1236,7 +1236,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>98</width>
+                    <width>43</width>
                     <height>932</height>
                    </rect>
                   </property>
@@ -1711,7 +1711,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>533</width>
+                    <width>43</width>
                     <height>624</height>
                    </rect>
                   </property>
@@ -1902,42 +1902,8 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="3">
-                  <widget class="QDoubleSpinBox" name="rho">
-                   <property name="maximum">
-                    <double>1.000000000000000</double>
-                   </property>
-                   <property name="singleStep">
-                    <double>0.100000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="rhoLabel">
-                   <property name="text">
-                    <string>Rho</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="2" column="1">
                   <widget class="QDoubleSpinBox" name="beta"/>
-                 </item>
-                 <item row="2" column="2">
-                  <widget class="QLabel" name="probBestLabel">
-                   <property name="text">
-                    <string>Probability best:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="3">
-                  <widget class="QDoubleSpinBox" name="probBest">
-                   <property name="maximum">
-                    <double>1.000000000000000</double>
-                   </property>
-                   <property name="singleStep">
-                    <double>0.100000000000000</double>
-                   </property>
-                  </widget>
                  </item>
                  <item row="0" column="0">
                   <widget class="QLabel" name="antCountLabel">
@@ -1995,6 +1961,54 @@
                    </property>
                    <property name="singleStep">
                     <double>0.100000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="2">
+                  <widget class="QLabel" name="probBestLabel">
+                   <property name="text">
+                    <string>Probability best:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="3">
+                  <widget class="QDoubleSpinBox" name="probBest">
+                   <property name="maximum">
+                    <double>1.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="QDoubleSpinBox" name="rho">
+                   <property name="maximum">
+                    <double>1.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QLabel" name="rhoLabel">
+                   <property name="text">
+                    <string>Rho</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="selectedOrderIDLabel">
+                   <property name="text">
+                    <string>Selected order ID:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="3">
+                  <widget class="QSpinBox" name="selectedOrderID">
+                   <property name="maximum">
+                    <number>100000</number>
                    </property>
                   </widget>
                  </item>

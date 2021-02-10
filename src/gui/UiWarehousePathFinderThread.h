@@ -28,6 +28,7 @@ namespace whm
                 void run() override;
 
             signals:
+                void pathFinderError(const std::string&);
                 void pathFindingFinished();
                 void pathFindingStep(int, const std::vector<int>&);
 

@@ -7,6 +7,7 @@
         maxIterations .................... How many iterations of algorithm should be executed
         probUseIterationBest ............. How often (probability 0.0-1.0) should be used iteration best for limits calculation
                                            otherwise global best will be used
+        selectedOrderID .................. OrderID which picking path through warehouse should be optimized
   -->
 
 <configuration antCount="10000"
@@ -15,4 +16,5 @@
                probBest="0.05"
                nearestNeighbours="5"
                maxIterations="1000"
-               probUseIterationBest="0.1" />
+               probUseIterationBest="0.1"
+               selectedOrderID="10" />
