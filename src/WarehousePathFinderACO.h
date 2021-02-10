@@ -89,6 +89,12 @@ namespace whm
             // Ant actions
             bool performNextAntStep(WarehouseAnt_t&);
 
+            // Callbacks
+#           ifdef WHM_GUI
+            using UiCallback_t = std::function<void(int32_t, const std::vector<int32_t>&)>;
+            void setUiCallback(UiCallback_t);
+#           endif
+
             // Limits
             void updatePheromoneMinMax(double);
 
@@ -124,6 +130,10 @@ namespace whm
             std::vector<int32_t> locations;
             std::vector<int32_t> locationsToVisit;
             std::vector<std::vector<int32_t>> nearestNeighbours;
+
+#           ifdef WHM_GUI
+            UiCallback_t uiCallback;
+#           endif
 
             WarehouseAnt_t bestWhAnt;
             std::vector<WarehouseAnt_t> whAnts;

@@ -4,7 +4,7 @@ QMAKE_CXX         = g++-8
 QT               += core gui widgets
 QMAKE_CXXFLAGS   += -std=c++17
 DEFINES          += QT_DEPRECATED_WARNINGS
-DEFINES          += "WHM_GUI" "WHM_SIM" "WHM_OPT" "WHM_GEN"
+DEFINES          += "WHM_GUI" "WHM_SIM" "WHM_OPT" "WHM_GEN" "WHM_PAF"
 LIBS             += -lsimlib -lm -lstdc++fs
 
 OBJECTS += ../tinyxml2.o
@@ -29,6 +29,7 @@ SOURCES +=  ../main.cpp \
             ../WarehouseOptimizerPSO.cpp \
             ../WarehouseOptimizerSLAP.cpp \
             ../WarehouseOptimizerRAND.cpp \
+            ../WarehousePathFinderACO.cpp \
             ../WarehouseSimulatorSIMLIB.cpp \
             ../WarehouseSimulatorCPPSIM.cpp \
             ../WarehouseDataGenerator.cpp \
@@ -46,6 +47,7 @@ SOURCES +=  ../main.cpp \
             UiWarehouseOptimizerThread.cpp \
             UiWarehouseGeneratorThread.cpp \
             UiWarehouseSimulatorThread.cpp \
+            UiWarehousePathFinderThread.cpp \
             BaseGraphicItem.cpp \
             BaseShapeGraphicItem.cpp \
             Handle.cpp \
@@ -70,6 +72,7 @@ HEADERS +=  ../Utils.h \
             ../WarehouseOptimizerPSO.h \
             ../WarehouseOptimizerSLAP.h \
             ../WarehouseOptimizerRAND.h \
+            ../WarehousePathFinderACO.h \
             ../WarehouseSimulatorSIMLIB.h \
             ../WarehouseSimulatorCPPSIM.h \
             ../WarehouseDataGenerator.h \
@@ -87,6 +90,7 @@ HEADERS +=  ../Utils.h \
             UiWarehouseOptimizerThread.h \
             UiWarehouseGeneratorThread.h \
             UiWarehouseSimulatorThread.h \
+            UiWarehousePathFinderThread.h \
             BaseGraphicItem.h \
             BaseShapeGraphicItem.h \
             Handle.h \

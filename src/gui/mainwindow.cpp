@@ -1199,7 +1199,45 @@ namespace whm
 
         void MainWindow::on_startPathFinder_clicked()
         {
-            std::cerr << "TODO: Start" << std::endl;
+            std::string a = exportArticles();
+            std::string l = exportLocations();
+            std::string o = exportOrders(false);
+
+            if(o.empty() || a.empty() || l.empty())
+            {
+                QMessageBox::warning(nullptr, "Warning", "Load all required data first!");
+                return;
+            }
+
+            disableManager();
+
+            whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
+            whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+
+            whm::ConfigParser_t cfg;
+            exportPathfinderConfig(cfg);
+
+            // Paths
+            cfg.set("articlesPath", a);
+            cfg.set("locationsPath", l);
+            cfg.set("ordersPath", o);
+
+            cfg.dump();
+
+            pathFindingElapsedTime.start();
+
+            pathFinderUi = new UiWarehousePathFinderThread_t(cfg);
+
+            connect(pathFinderUi, SIGNAL(finished()),
+                    pathFinderUi, SLOT(deleteLater()));
+
+            //connect(pathFinderUi, SIGNAL(optimizationFinished()),
+            //        this,         SLOT(optimizationFinished()));
+
+            //connect(pathFinderUi, SIGNAL(optimizationStep(double)),
+            //        this,         SLOT(optimizationStep(double)));
+
+            pathFinderUi->start();
         }
 
         void MainWindow::on_stopPathFinder_clicked()

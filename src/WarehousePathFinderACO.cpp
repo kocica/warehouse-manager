@@ -319,6 +319,13 @@ namespace whm
         return true;
     }
 
+#   ifdef WHM_GUI
+    void WarehousePathFinderACO_t::setUiCallback(UiCallback_t c)
+    {
+        this->uiCallback = c;
+    }
+#   endif
+
     std::vector<int32_t> WarehousePathFinderACO_t::constructGreedySolution()
     {
         WarehouseAnt_t whAnt;
@@ -446,16 +453,23 @@ namespace whm
                 }
                 if(whAnt < bestWhAnt)
                 {
+                    int32_t cost{ 0 };
                     bestWhAnt = whAnt;
 
                     if(randomFromInterval(0.0, 1.0) < cfg.getAs<double>("probUseIterationBest"))
                     {
-                        updatePheromoneMinMax(iterationBestWhAnt.getCost());
+                        cost = iterationBestWhAnt.getCost();
+                        updatePheromoneMinMax(cost);
                     }
                     else
                     {
-                        updatePheromoneMinMax(bestWhAnt.getCost());
+                        cost = bestWhAnt.getCost();
+                        updatePheromoneMinMax(cost);
                     }
+
+#                   ifdef WHM_GUI
+                    this->uiCallback(cost, bestWhAnt.getVisited());
+#                   endif
                 }
             }
 

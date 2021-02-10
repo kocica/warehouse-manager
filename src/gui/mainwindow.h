@@ -14,6 +14,7 @@
 #include "UiWarehouseGeneratorThread.h"
 #include "UiWarehouseSimulatorThread.h"
 #include "UiWarehouseOptimizerThread.h"
+#include "UiWarehousePathFinderThread.h"
 
 // Qt
 #include <QMainWindow>
@@ -181,6 +182,7 @@ namespace whm
                 CustomizedGraphicsScene_t* scene;
 
                 QElapsedTimer generationElapsedTime;
+                QElapsedTimer pathFindingElapsedTime;
                 QElapsedTimer optimizationElapsedTime;
 
                 QStandardItemModel* articlesModel{ nullptr };
@@ -188,9 +190,10 @@ namespace whm
                 QStandardItemModel* ordersTestModel{ nullptr };
                 QStandardItemModel* ordersTrainModel{ nullptr };
 
-                UiWarehouseOptimizerThread_t* optimizerUi{ nullptr };
-                UiWarehouseGeneratorThread_t* generatorUi{ nullptr };
-                UiWarehouseSimulatorThread_t* simulatorUi{ nullptr };
+                UiWarehouseOptimizerThread_t*  optimizerUi{ nullptr };
+                UiWarehouseGeneratorThread_t*  generatorUi{ nullptr };
+                UiWarehouseSimulatorThread_t*  simulatorUi{ nullptr };
+                UiWarehousePathFinderThread_t* pathFinderUi{ nullptr };
 
                 bool optimizationActive{ false };
 
