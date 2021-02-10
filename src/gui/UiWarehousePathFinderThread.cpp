@@ -36,12 +36,15 @@ namespace whm
 
             whm::WarehousePathFinderACO_t pathFinder{args, cfg};
 
-            pathFinder.setUiCallback([](int32_t cost, const std::vector<int32_t>& path)
+            pathFinder.setUiCallback([this](int32_t cost, const std::vector<int32_t>& path)
+                                     -> void
                                      {
-                                        
+                                        emit pathFindingStep(cost, path);
                                      });
 
             pathFinder.findPath();
+
+            emit pathFindingFinished();
         }
     }
 }

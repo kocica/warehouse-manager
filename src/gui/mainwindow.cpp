@@ -76,6 +76,7 @@ namespace whm
             }
 
             qRegisterMetaType<std::string>();
+            qRegisterMetaType<std::vector<int>>();
             qRegisterMetaType<SimulationStats_t>("SimulationStats_t"); // Need to specify all alliases
             qRegisterMetaType<SimulationStats_t>("whm::gui::SimulationStats_t");
             qRegisterMetaType<SimulationStats_t>("whm::WarehouseSimulatorSIMLIB_t::SimulationStats_t");
@@ -663,6 +664,46 @@ namespace whm
             ui->simulationProgressBar->setValue(100 * orders.size() / orderCount);
         }
 
+        void MainWindow::pathFindingFinished()
+        {
+            enableManager();
+
+            pathFindingSteps.clear();
+            pathFindingCosts.clear();
+
+            ui->elapsedTimePaf->setText("0 [s]");
+            ui->pathfinderProgressBar->setValue(0);
+        }
+
+        void MainWindow::pathFindingStep(int cost, const std::vector<int>& path)
+        {
+            if(!pathFinderUi)
+            {
+                return;
+            }
+
+            // Stats update
+
+            auto stepCount = pathFindingSteps.size();
+
+            pathFindingSteps.append(stepCount++);
+            pathFindingCosts.append(cost);
+
+            ui->pathFinderPlot->graph(0)->setData(pathFindingSteps, pathFindingCosts);
+            ui->pathFinderPlot->replot();
+            ui->pathFinderPlot->graph(0)->rescaleAxes();
+
+            double max = *std::max_element(pathFindingCosts.begin(), pathFindingCosts.end());
+
+            ui->pathFinderPlot->yAxis->setRange(0, max * 1.1);
+
+            ui->pathFinderPlot->update();
+
+            ui->elapsedTimePaf->setText(QString::number(pathFindingElapsedTime.elapsed() / 1000.0) + " [s]");
+
+            ui->pathfinderProgressBar->setValue(100 * stepCount / static_cast<double>(ui->maxIterations->value()));
+        }
+
         void MainWindow::on_newLayout_triggered()
         {
             if(isOptimizationActive())
@@ -1231,18 +1272,43 @@ namespace whm
             connect(pathFinderUi, SIGNAL(finished()),
                     pathFinderUi, SLOT(deleteLater()));
 
-            //connect(pathFinderUi, SIGNAL(optimizationFinished()),
-            //        this,         SLOT(optimizationFinished()));
+            connect(pathFinderUi, SIGNAL(pathFindingFinished()),
+                    this,         SLOT(pathFindingFinished()));
 
-            //connect(pathFinderUi, SIGNAL(optimizationStep(double)),
-            //        this,         SLOT(optimizationStep(double)));
+            connect(pathFinderUi, SIGNAL(pathFindingStep(int, const std::vector<int>&)),
+                    this,         SLOT(pathFindingStep(int, const std::vector<int>&)));
 
             pathFinderUi->start();
         }
 
         void MainWindow::on_stopPathFinder_clicked()
         {
-            std::cerr << "TODO: Stop" << std::endl;
+            if(pathFinderUi)
+            {
+                auto dialog = new QProgressDialog();
+                dialog->setWindowTitle("Wait");
+                dialog->setRange(0, 0);
+                dialog->setLabelText("Aborting path finding");
+                dialog->setCancelButton(nullptr);
+                dialog->setModal(true);
+                dialog->resize(100, 30);
+                dialog->show();
+
+                pathFinderUi->terminate();
+                while (!pathFinderUi->wait(100))
+                {
+                    QApplication::processEvents();
+
+                    if(dialog)
+                    {
+                        dialog->setVisible(true);
+                    }
+                }
+                pathFinderUi = nullptr;
+                pathFindingFinished();
+
+                dialog->hide();
+            }
         }
 
         void MainWindow::on_configLoadPaf_clicked()

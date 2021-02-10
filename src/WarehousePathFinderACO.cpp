@@ -453,25 +453,22 @@ namespace whm
                 }
                 if(whAnt < bestWhAnt)
                 {
-                    int32_t cost{ 0 };
                     bestWhAnt = whAnt;
 
                     if(randomFromInterval(0.0, 1.0) < cfg.getAs<double>("probUseIterationBest"))
                     {
-                        cost = iterationBestWhAnt.getCost();
-                        updatePheromoneMinMax(cost);
+                        updatePheromoneMinMax(iterationBestWhAnt.getCost());
                     }
                     else
                     {
-                        cost = bestWhAnt.getCost();
-                        updatePheromoneMinMax(cost);
+                        updatePheromoneMinMax(bestWhAnt.getCost());
                     }
-
-#                   ifdef WHM_GUI
-                    this->uiCallback(cost, bestWhAnt.getVisited());
-#                   endif
                 }
             }
+
+#           ifdef WHM_GUI
+                this->uiCallback(bestWhAnt.getCost(), bestWhAnt.getVisited());
+#           endif
 
             // Evaporate from all edges
             whPheromones->evaporation(1.0 - cfg.getAs<double>("rho"), pheromoneMin);

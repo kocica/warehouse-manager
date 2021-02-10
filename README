@@ -31,3 +31,4 @@ PathFinder (evaluate for one order):
  - Item already added to the scene [UI]
  - PAF: Porovnani PafACO vs Paf (porovnani vzdalenosti pro 1 nebo 1000 objednavek; porovnani cele simulace)
  - PAF: UI ACO - cesta, feromony?
+ - PAF: OrderID / NULL (vsechny)

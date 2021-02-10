@@ -28,8 +28,8 @@ namespace whm
                 void run() override;
 
             signals:
-                //void pathFindingFinished();
-                //void pathFindingStep(int32_t, const std::vector<int32_t>&);
+                void pathFindingFinished();
+                void pathFindingStep(int, const std::vector<int>&);
 
             private:
                 whm::ConfigParser_t cfg;
