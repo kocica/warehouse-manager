@@ -30,5 +30,4 @@ PathFinder (evaluate for one order):
 
  - Item already added to the scene [UI]
  - PAF: Porovnani PafACO vs Paf (porovnani vzdalenosti pro 1 nebo 1000 objednavek; porovnani cele simulace)
- - PAF: UI ACO - cesta (pozadi co uz pouziva heat mapa + cisla lokaci, nebo jenom usecky?)
- - PAF: OrderID / NULL (vsechny)
+ - OPT: co trva opt. tak dlouho ? pridat debug vypisy atd.

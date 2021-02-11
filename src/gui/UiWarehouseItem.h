@@ -14,12 +14,13 @@
 #include <QAction>
 #include <QMouseEvent>
 #include <QPushButton>
+#include <QGraphicsTextItem>
 #include <QTapAndHoldGesture>
 
 #include "../Logger.h"
 #include "mainwindow.h"
-#include "BaseShapeGraphicItem.h"
 #include "../WarehouseTypes.h"
+#include "BaseShapeGraphicItem.h"
 
 namespace whm
 {
@@ -43,9 +44,14 @@ namespace whm
                 void dump() const;
                 void disconnect();
                 void removeWhItem();
+
                 bool isConnected() const;
+
                 void setItemHeat(double);
                 void removeItemHeat();
+
+                void setItemInfo(QString);
+                void removeItemInfo();
 
                 int32_t getWhItemID() const { return whItemID; }
                 int32_t getX() const { return this->scenePos().x() + this->mRect.topLeft().x(); }
@@ -76,11 +82,11 @@ namespace whm
                 MainWindow* ui{ nullptr };
                 QGraphicsScene* scene{ nullptr };
                 QGraphicsRectItem* heatRect{ nullptr };
-
-                int32_t portSizeX{ 0 };
-                int32_t portSizeY{ 0 };
+                QGraphicsTextItem* itemInfo{ nullptr };
 
                 double workload{ 0.0 };
+                int32_t portSizeX{ 0 };
+                int32_t portSizeY{ 0 };
 
                 int32_t whItemID{ 0 };
                 WarehouseItemType_t whItemType;

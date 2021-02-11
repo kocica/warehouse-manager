@@ -48,10 +48,12 @@ namespace whm
             , ui(ui)
             , scene(s)
             , heatRect(new QGraphicsRectItem())
+            , itemInfo(new QGraphicsTextItem())
             , whItemID(UiWarehouseLayout_t::getWhLayout().getNextWhItemID())
             , whItemType(type)
         {
             scene->addItem(heatRect);
+            scene->addItem(itemInfo);
 
             portSizeX = portSizeY = std::min(h, w) / 3;
 
@@ -99,6 +101,7 @@ namespace whm
             whPorts.clear();
 
             delete heatRect;
+            delete itemInfo;
             delete info;
         }
 
@@ -252,9 +255,17 @@ namespace whm
             double ratio = 2 * h;
             workload = h;
 
+            static const auto& oorc = [](int32_t v){ return v < 0 || v > 255; };
+
             int32_t b = std::max(0.0, 255 * (1 - ratio));
             int32_t r = std::max(0.0, 255 * (ratio - 1));
             int32_t g = 255 - b - r;
+
+            if(oorc(b) || oorc(r) || oorc(g))
+            {
+                Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_WARNING, "RGB value out of range!");
+                return;
+            }
 
             auto boundingRect = getRect();
             boundingRect.setTopLeft(QPointF(boundingRect.topLeft().x() - 10, boundingRect.topLeft().y() - 10));
@@ -263,6 +274,35 @@ namespace whm
             heatRect->setVisible(true);
             heatRect->setRect(boundingRect);
             heatRect->setBrush(QColor::fromRgb(r, g, b));
+        }
+
+        void UiWarehouseItem_t::removeItemInfo()
+        {
+            itemInfo->setVisible(false);
+        }
+
+        void UiWarehouseItem_t::setItemInfo(QString info)
+        {
+            QFont f;
+            f.setBold(true);
+            f.setPixelSize(60);
+
+            QString htmlInfo;
+            htmlInfo += "<p style='background-color:#BD1E51;color:#F1B814'>";
+            htmlInfo += info;
+            htmlInfo += "</p>";
+
+            itemInfo->setFont(f);
+            itemInfo->setZValue(1);
+            itemInfo->setVisible(true);
+            itemInfo->setHtml(htmlInfo);
+            itemInfo->setDefaultTextColor(Qt::red);
+
+            // Get rotation invariant position
+            auto o = getO();
+            setO(0);
+            itemInfo->setPos(QPointF(getX(), getY()));
+            setO(o);
         }
 
         void UiWarehouseItem_t::dump() const

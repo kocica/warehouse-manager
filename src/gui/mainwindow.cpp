@@ -740,14 +740,14 @@ namespace whm
                 if(startUiItem)
                 {
                     startUiItem->setItemHeat(1.0);
+                    startUiItem->setItemInfo(QString::number(i));
                 }
 
                 if(finishUiItem)
                 {
                     finishUiItem->setItemHeat(1.0);
+                    finishUiItem->setItemInfo(QString::number(i+1));
                 }
-
-                // TODO: Show also numbers (indicate order in which visit those locations)
             }
         }
 
