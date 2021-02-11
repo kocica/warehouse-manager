@@ -714,6 +714,7 @@ namespace whm
 
             for(auto* uiItem : uiLayout.getWhItems())
             {
+                uiItem->removeItemInfo();
                 uiItem->removeItemHeat();
             }
 
