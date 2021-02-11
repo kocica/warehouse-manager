@@ -708,12 +708,47 @@ namespace whm
 
             ui->pathfinderProgressBar->setValue(100 * stepCount / static_cast<double>(ui->maxIterations->value()));
 
-            std::cout << "Path: ";
-            for(auto v : path)
+            // ------------ Vizualization ------------
+
+            auto& uiLayout = UiWarehouseLayout_t::getWhLayout();
+
+            for(auto* uiItem : uiLayout.getWhItems())
             {
-                std::cout << v << ",";
+                uiItem->removeItemHeat();
             }
-            std::cout << std::endl;
+
+            for(size_t i = 1; i < path.size(); ++i)
+            {
+                auto* shortestPath = pathFinder.getShortestPath(path.at(i-1), path.at(i));
+
+                if(shortestPath)
+                {
+                    for(const auto& p : shortestPath->pathToTarget)
+                    {
+                        auto* uiItem = uiLayout.findWhItemByID(p.first);
+
+                        if(uiItem)
+                        {
+                            uiItem->setItemHeat(1.0);
+                        }
+                    }
+                }
+
+                auto* startUiItem  = uiLayout.findWhItemByID(path.at(i-1));
+                auto* finishUiItem = uiLayout.findWhItemByID(path.at(i));
+
+                if(startUiItem)
+                {
+                    startUiItem->setItemHeat(1.0);
+                }
+
+                if(finishUiItem)
+                {
+                    finishUiItem->setItemHeat(1.0);
+                }
+
+                // TODO: Show also numbers (indicate order in which visit those locations)
+            }
         }
 
         void MainWindow::on_newLayout_triggered()
@@ -1266,6 +1301,9 @@ namespace whm
 
             whm::WarehouseLayout_t::getWhLayout().clearWhLayout();
             whm::WarehouseLayout_t::getWhLayout().initFromGui(UiWarehouseLayout_t::getWhLayout());
+
+            pathFinder.clearPrecalculatedPaths();
+            pathFinder.precalculatePaths(whm::WarehouseLayout_t::getWhLayout().getWhItems());
 
             whm::ConfigParser_t cfg;
             exportPathfinderConfig(cfg);

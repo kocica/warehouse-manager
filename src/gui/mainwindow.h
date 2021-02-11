@@ -201,6 +201,8 @@ namespace whm
                 UiWarehouseSimulatorThread_t*  simulatorUi{ nullptr };
                 UiWarehousePathFinderThread_t* pathFinderUi{ nullptr };
 
+                whm::WarehousePathFinder_t pathFinder;
+
                 bool optimizationActive{ false };
 
                 QVector<double> xadu;

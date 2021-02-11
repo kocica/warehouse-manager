@@ -226,5 +226,17 @@ namespace whm
         {
             this->whDims = d;
         }
+
+        UiWarehouseItem_t* UiWarehouseLayout_t::findWhItemByID(int32_t whItemID) const
+        {
+            auto it = std::find_if(whItems.begin(), whItems.end(),
+                                   [=](UiWarehouseItem_t* whItem)
+                                   -> bool
+                                   {
+                                       return whItem->getWhItemID() == whItemID;
+                                   });
+
+            return it == whItems.end() ? nullptr : *it;
+        }
     }
 }

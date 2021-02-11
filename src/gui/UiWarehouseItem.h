@@ -45,6 +45,7 @@ namespace whm
                 void removeWhItem();
                 bool isConnected() const;
                 void setItemHeat(double);
+                void removeItemHeat();
 
                 int32_t getWhItemID() const { return whItemID; }
                 int32_t getX() const { return this->scenePos().x() + this->mRect.topLeft().x(); }

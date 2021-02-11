@@ -242,6 +242,11 @@ namespace whm
             QGraphicsItem::hoverLeaveEvent(event);
         }
 
+        void UiWarehouseItem_t::removeItemHeat()
+        {
+            heatRect->setVisible(false);
+        }
+
         void UiWarehouseItem_t::setItemHeat(double h)
         {
             double ratio = 2 * h;
@@ -255,6 +260,7 @@ namespace whm
             boundingRect.setTopLeft(QPointF(boundingRect.topLeft().x() - 10, boundingRect.topLeft().y() - 10));
             boundingRect.setBottomRight(QPointF(boundingRect.bottomRight().x() + 10, boundingRect.bottomRight().y() + 10));
 
+            heatRect->setVisible(true);
             heatRect->setRect(boundingRect);
             heatRect->setBrush(QColor::fromRgb(r, g, b));
         }

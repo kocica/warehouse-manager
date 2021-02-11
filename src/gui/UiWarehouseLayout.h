@@ -34,6 +34,8 @@ namespace whm
                 UiWarehouseItemContainer_t getWhItems() const;
                 UiWarehouseConnContainer_t getWhConns() const;
 
+                UiWarehouseItem_t* findWhItemByID(int32_t) const;
+
                 void addWhItem(UiWarehouseItem_t*);
                 void eraseWhItem(UiWarehouseItem_t*);
 
