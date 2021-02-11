@@ -131,7 +131,6 @@ namespace whm
             std::vector<double> heuristics;
             std::vector<int32_t> distances;
             std::vector<int32_t> locations;
-            std::vector<int32_t> locationsToVisit;
             std::vector<std::vector<int32_t>> nearestNeighbours;
 
 #           ifdef WHM_GUI

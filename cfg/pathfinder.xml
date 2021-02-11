@@ -17,4 +17,4 @@
                nearestNeighbours="5"
                maxIterations="1000"
                probUseIterationBest="0.1"
-               selectedOrderID="10" />
+               selectedOrderID="0" />

@@ -53,14 +53,16 @@ namespace whm
 
         lookupStartFinish();
 
-        for(auto* whItem : whItems)
+        findLocationsToVisit();
+
+        /*for(auto* whItem : whItems)
         {
             if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
             {
                 ++dimension;
                 locations.push_back(whItem->getWhItemID());
             }
-        }
+        }*/
 
         distances.resize(dimension * dimension, 0);
 
@@ -76,8 +78,6 @@ namespace whm
                 }
             }
         }
-
-        findLocationsToVisit();
 
         for(int32_t it = 0; it < dimension; ++it)
         {
@@ -140,9 +140,10 @@ namespace whm
                 if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF &&
                     whItem->getWhLocationRack()->containsArticle(article, 0))
                 {
-                    if(!utils::contains(locationsToVisit, whItem->getWhItemID()))
+                    if(!utils::contains(locations, whItem->getWhItemID()))
                     {
-                        locationsToVisit.push_back(whItem->getWhItemID());
+                        ++ dimension;
+                        locations.push_back(whItem->getWhItemID());
                     }
                 }
             }
@@ -160,14 +161,12 @@ namespace whm
             {
                 whStart = dimension++;
                 locations.push_back(whItem->getWhItemID());
-                locationsToVisit.push_back(whItem->getWhItemID());
             }
             if(whItem->getType() == WarehouseItemType_t::E_WAREHOUSE_DISPATCH)
             {
                 // Don't add to vector, or make sure to visit it as a last location
                 whFinish = dimension++;
                 locations.push_back(whItem->getWhItemID());
-                locationsToVisit.push_back(whItem->getWhItemID());
             }
         }
     }
@@ -340,7 +339,7 @@ namespace whm
 
         for(int32_t p : path)
         {
-            decodedPath.push_back(locations.at(p)); // locationsToVisit?
+            decodedPath.push_back(locations.at(p));
         }
 
         return std::move(decodedPath);
@@ -436,10 +435,6 @@ namespace whm
             }
             std::cout << std::endl;
         }
-
-        std::cout << std::endl << std::endl << "To visit: ";
-        std::for_each(locationsToVisit.begin(), locationsToVisit.end(), [](auto l){ std::cout << l << ", "; });
-        std::cout << std::endl << std::endl;
     }
 
     void WarehousePathFinderACO_t::findPath()
