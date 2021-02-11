@@ -151,12 +151,12 @@ namespace whm
             ui->fitnessPlot->addGraph();
             ui->fitnessPlot->xAxis->setLabel("Algorithm steps");
             ui->fitnessPlot->yAxis->setLabel("Orders processing duration [s]");
-            ui->fitnessPlot->graph(0)->setPen(QPen(QColor(255, 102, 0)));
+            ui->fitnessPlot->graph(0)->setPen(QPen(QBrush(QColor(255, 102, 0)), 3));
 
             ui->simulationPlot->addGraph();
             ui->simulationPlot->xAxis->setLabel("Processed orders");
             ui->simulationPlot->yAxis->setLabel("Processing time [s]");
-            ui->simulationPlot->graph(0)->setPen(QPen(QColor(255, 102, 0)));
+            ui->simulationPlot->graph(0)->setPen(QPen(QBrush(QColor(255, 102, 0)), 2));
             ui->simulationPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
             ui->simulationPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssPlus);
 
@@ -168,37 +168,37 @@ namespace whm
             ui->simulationPlotDist->yAxis->setLabel("Traveled distance [m]");
             ui->simulationPlotDist->addGraph();
             ui->simulationPlotDist->graph(0)->setName("Traveled distance convs");
-            ui->simulationPlotDist->graph(0)->setPen(QPen(QColor(0, 255, 255)));
+            ui->simulationPlotDist->graph(0)->setPen(QPen(QBrush(QColor(0, 255, 255)), 3));
             ui->simulationPlotDist->graph(0)->setLineStyle(QCPGraph::lsLine);
             ui->simulationPlotDist->graph(0)->setScatterStyle(QCPScatterStyle::ssNone);
             ui->simulationPlotDist->addGraph();
             ui->simulationPlotDist->graph(1)->setName("Traveled distance workers");
-            ui->simulationPlotDist->graph(1)->setPen(QPen(QColor(255, 0, 255)));
+            ui->simulationPlotDist->graph(1)->setPen(QPen(QBrush(QColor(255, 0, 255)), 3));
             ui->simulationPlotDist->graph(1)->setLineStyle(QCPGraph::lsLine);
             ui->simulationPlotDist->graph(1)->setScatterStyle(QCPScatterStyle::ssNone);
 
             ui->generatorPlotAdu->addGraph();
             ui->generatorPlotAdu->xAxis->setLabel("Average daily units (ADU)");
             ui->generatorPlotAdu->yAxis->setLabel("Count");
-            ui->generatorPlotAdu->graph(0)->setPen(QPen(QColor(255, 102, 0)));
+            ui->generatorPlotAdu->graph(0)->setPen(QPen(QBrush(QColor(255, 102, 0)), 3));
             ui->generatorPlotAdu->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
 
             ui->generatorPlotAdq->addGraph();
             ui->generatorPlotAdq->xAxis->setLabel("Average daily quantity (ADQ)");
             ui->generatorPlotAdq->yAxis->setLabel("Count");
-            ui->generatorPlotAdq->graph(0)->setPen(QPen(QColor(0, 255, 255)));
+            ui->generatorPlotAdq->graph(0)->setPen(QPen(QBrush(QColor(0, 255, 255)), 3));
             ui->generatorPlotAdq->graph(0)->setScatterStyle(QCPScatterStyle::ssTriangle);
 
             ui->generatorPlotLines->addGraph();
             ui->generatorPlotLines->xAxis->setLabel("Order lines");
             ui->generatorPlotLines->yAxis->setLabel("Count");
-            ui->generatorPlotLines->graph(0)->setPen(QPen(QColor(255, 0, 255)));
+            ui->generatorPlotLines->graph(0)->setPen(QPen(QBrush(QColor(255, 0, 255)), 3));
             ui->generatorPlotLines->graph(0)->setScatterStyle(QCPScatterStyle::ssDiamond);
 
             ui->pathFinderPlot->addGraph();
             ui->pathFinderPlot->xAxis->setLabel("Algorithm steps");
             ui->pathFinderPlot->yAxis->setLabel("Total distance traveled [m]");
-            ui->pathFinderPlot->graph(0)->setPen(QPen(QColor(255, 102, 0)));
+            ui->pathFinderPlot->graph(0)->setPen(QPen(QBrush(QColor(255, 102, 0)), 3));
 
             stylePlot(ui->fitnessPlot);
             stylePlot(ui->simulationPlot);
