@@ -64,19 +64,21 @@ namespace whm
             }
         }*/
 
-        distances.resize(dimension * dimension, 0);
-
         for(int32_t i = 0; i < dimension; ++i)
         {
+            std::vector<int32_t> d;
+
             for(int32_t j = 0; j < dimension; ++j)
             {
                 auto* shortestPath = getShortestPath(locations.at(i), locations.at(j));
 
                 if(shortestPath)
                 {
-                    distances.at(i * dimension + j) = pathDistance(shortestPath->pathToTarget);
+                    d.push_back(pathDistance(shortestPath->pathToTarget));
                 }
             }
+
+            distances.emplace_back(std::move(d));
         }
 
         for(int32_t it = 0; it < dimension; ++it)
@@ -84,9 +86,16 @@ namespace whm
             nearestNeighbours.push_back(findNearestNeighbours(it));
         }
 
-        for(int32_t it = 0; it < dimension * dimension; ++it)
+        for(int32_t i = 0; i < dimension; ++i)
         {
-            heuristics.push_back(1.0 / std::pow(distances.at(it), cfg.getAs<double>("beta")));
+            std::vector<double> h;
+
+            for(int32_t j = 0; j < dimension; ++j)
+            {
+                h.push_back(1.0 / std::pow(distances.at(i).at(j), cfg.getAs<double>("beta")));
+            }
+
+            heuristics.emplace_back(std::move(h));
         }
 
         this->probBest = cfg.getAs<double>("probBest");
@@ -173,7 +182,7 @@ namespace whm
 
     int32_t WarehousePathFinderACO_t::getLocationsDistance(int32_t lhs, int32_t rhs)
     {
-        return distances.at(lhs * dimension + rhs);
+        return distances.at(lhs).at(rhs);
     }
 
     int32_t WarehousePathFinderACO_t::getPathDistance(const std::vector<int32_t>& path)
@@ -270,7 +279,7 @@ namespace whm
                 if(!whAnt.visited(c))
                 {
                     double candidatePheromone = whPheromones->getEdgePheromones(lastVisitedLoc, c);
-                    candidatePheromone *= heuristics.at(lastVisitedLoc * dimension + c);
+                    candidatePheromone *= heuristics.at(lastVisitedLoc).at(c);
 
                     pheromoneSum += candidatePheromone;
                     pheromoneValues.push_back(candidatePheromone);
@@ -295,7 +304,7 @@ namespace whm
                 if(!whAnt.visited(it))
                 {
                     double candidatePheromone = whPheromones->getEdgePheromones(lastVisitedLoc, it);
-                    candidatePheromone *= heuristics.at(lastVisitedLoc * dimension + it);
+                    candidatePheromone *= heuristics.at(lastVisitedLoc).at(it);
 
                     if(candidatePheromone > maxPheromone)
                     {
@@ -423,8 +432,8 @@ namespace whm
 
             for(int32_t j = 0; j < dimension; ++j)
             {
-                std::cout << std::setw(4)  << distances.at(i * dimension + j)
-                          << std::setw(12) << heuristics.at(i * dimension + j)
+                std::cout << std::setw(4)  << distances.at(i).at(j)
+                          << std::setw(12) << heuristics.at(i).at(j)
                           ; //<< std::setw(4)  << whPheromones ? whPheromones->getEdgePheromones(i, j) : 0;
             }
 

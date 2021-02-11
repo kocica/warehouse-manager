@@ -128,9 +128,9 @@ namespace whm
             double pheromoneMin{ 0. };
 
             int32_t dimension{ 0 };
-            std::vector<double> heuristics;
-            std::vector<int32_t> distances;
             std::vector<int32_t> locations;
+            std::vector<std::vector<double>> heuristics;
+            std::vector<std::vector<int32_t>> distances;
             std::vector<std::vector<int32_t>> nearestNeighbours;
 
 #           ifdef WHM_GUI
