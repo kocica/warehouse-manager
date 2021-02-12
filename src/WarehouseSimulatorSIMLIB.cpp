@@ -93,11 +93,15 @@ namespace whm
         whOrders.clear();
         whOrders = whLayout.getWhOrders();
 
+        using Loc_t = std::pair<int32_t, int32_t>;
+
+        int32_t whEntranceID = lookupWhGate(WarehouseItemType_t::E_WAREHOUSE_ENTRANCE)->getWhItemID();
+
         for(auto& order : whOrders)
         {
             std::vector<WarehouseOrderLine_t> newLines;
 
-            for(auto itLine = order.begin(); itLine != order.end(); ++itLine)
+            /*for(auto itLine = order.begin(); itLine != order.end(); ++itLine)
             {
                 auto itTargetLine = std::find_if(newLines.begin(), newLines.end(),
                                                  [&](const WarehouseOrderLine_t& line) -> bool
@@ -114,9 +118,49 @@ namespace whm
                 {
                     newLines.push_back(*itLine);
                 }
+            }*/
+
+            std::vector<Loc_t> locations;
+
+            for(const auto& line : order)
+            {
+                int32_t locationID = lookupWhLocations(line.getArticle(), 0).at(0);
+
+                auto it = std::find_if(locations.begin(), locations.end(),
+                                       [=](const Loc_t& loc) -> bool
+                                       {
+                                           return loc.first == locationID;
+                                       });
+
+                if(it == locations.end())
+                {
+                    auto* p = whPathFinder->getShortestPath(whEntranceID, locationID);
+
+                    if(p)
+                    {
+                        locations.emplace_back(std::make_pair(locationID, whPathFinder->pathDistance(p->pathToTarget)));
+                    }
+                }
             }
 
-            // Fix IDs broken by reordering
+            std::sort(locations.begin(), locations.end(),
+                      [=](const Loc_t& lhs, const Loc_t& rhs) -> bool
+                      {
+                          return lhs.second < rhs.second;
+                      });
+
+            for(const auto& loc : locations)
+            {
+                for(const auto& line : order)
+                {
+                    if(utils::contains(lookupWhLocations(line.getArticle(), 0), loc.first))
+                    {
+                        newLines.push_back(line);
+                    }
+                }
+            }
+
+            // Fix broken IDs
             for(auto itLine = newLines.begin(); itLine != newLines.end(); ++itLine)
             {
                 itLine->setWhLineID(itLine - newLines.begin() /*+ 1*/);
