@@ -48,12 +48,12 @@ namespace whm
         rand.seed(rd());
 
         precalculatePaths(whm::WarehouseLayout_t::getWhLayout().getWhItems());
-
-        lookupStartFinish();
     }
 
     void WarehousePathFinderACO_t::prepareOptimization()
     {
+        lookupStartFinish();
+
         findLocationsToVisit();
 
         for(int32_t i = 0; i < dimension; ++i)
@@ -434,6 +434,8 @@ namespace whm
     void WarehousePathFinderACO_t::clearPathFinder()
     {
         dimension = 0;
+
+        bestWhAnt = WarehouseAnt_t();
 
         whAnts.clear();
         locations.clear();
