@@ -31,3 +31,9 @@ PathFinder (evaluate for one order):
  - Item already added to the scene [UI]
  - PAF: Porovnani PafACO vs Paf (porovnani vzdalenosti pro 1 nebo 1000 objednavek; porovnani cele simulace)
  - OPT: co trva opt. tak dlouho ? pridat debug vypisy atd.
+ - SIM: Hledani cesty: serazeni lajn podle vzdalenosti lokaci...
+
+ - PAF: Pruchod sady 1000 obj. napr., a) pro kazdou najit optimalni cestu a secist
+                                      b) nehledat optimalni cestu, vzdit defaultni a secist
+        Potom porovnat tyto dve hodnoty, prumer, stredni hodnota apod...
+ - PAF: Hybridni optimalizace: 10 generaci GA, prepocitani opt. cest (opt. cesty mit ulozene v unordered_map[cislo_obj]), zase 10 gen, ...
