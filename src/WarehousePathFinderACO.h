@@ -28,6 +28,7 @@ namespace whm
     {
         public:
             virtual void findPath() = 0;
+            virtual void calcImprovementStats() = 0;
     };
 
     class WarehousePathFinderACO_t : public WarehousePathFinder_t,
@@ -87,6 +88,7 @@ namespace whm
             void updatePheromoneMinMax(double);
 
             // Getters
+            int32_t getBestPathCost() const;
             int32_t getPathDistance(const std::vector<int32_t>&);
             int32_t getLocationsDistance(int32_t, int32_t);
 
@@ -98,12 +100,19 @@ namespace whm
             void evaporation(double);
             void deposit(int32_t, int32_t, double);
 
+            // Clearing
+            void clearPathFinder();
+
             // Init
             void init();
+            void prepareOptimization();
 
             // ACO
-            void findPath();
+            void findPath() override;
             std::vector<int32_t> constructGreedySolution();
+
+            // Statistics
+            void calcImprovementStats() override;
 
         protected:
             std::mt19937 rand;

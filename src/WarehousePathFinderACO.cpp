@@ -47,22 +47,14 @@ namespace whm
         std::random_device rd;
         rand.seed(rd());
 
-        auto whItems = whm::WarehouseLayout_t::getWhLayout().getWhItems();
-
-        precalculatePaths(whItems);
+        precalculatePaths(whm::WarehouseLayout_t::getWhLayout().getWhItems());
 
         lookupStartFinish();
+    }
 
+    void WarehousePathFinderACO_t::prepareOptimization()
+    {
         findLocationsToVisit();
-
-        /*for(auto* whItem : whItems)
-        {
-            if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
-            {
-                ++dimension;
-                locations.push_back(whItem->getWhItemID());
-            }
-        }*/
 
         for(int32_t i = 0; i < dimension; ++i)
         {
@@ -129,8 +121,8 @@ namespace whm
 
     void WarehousePathFinderACO_t::findLocationsToVisit()
     {
-        auto whItems = whm::WarehouseLayout_t::getWhLayout().getWhItems();
-        auto whOrders = whm::WarehouseLayout_t::getWhLayout().getWhOrders();
+        auto& whItems = whm::WarehouseLayout_t::getWhLayout().getWhItems();
+        auto& whOrders = whm::WarehouseLayout_t::getWhLayout().getWhOrders();
 
         auto selectedOrderID = cfg.getAs<int32_t>("selectedOrderID");
 
@@ -163,8 +155,7 @@ namespace whm
 
     void WarehousePathFinderACO_t::lookupStartFinish()
     {
-        auto whItems = whm::WarehouseLayout_t::getWhLayout().getWhItems();
-        auto whOrders = whm::WarehouseLayout_t::getWhLayout().getWhOrders();
+        auto& whItems = whm::WarehouseLayout_t::getWhLayout().getWhItems();
 
         for(auto* whItem : whItems)
         {
@@ -180,6 +171,11 @@ namespace whm
                 locations.push_back(whItem->getWhItemID());
             }
         }
+    }
+
+    int32_t WarehousePathFinderACO_t::getBestPathCost() const
+    {
+        return bestWhAnt.getCost();
     }
 
     int32_t WarehousePathFinderACO_t::getLocationsDistance(int32_t y, int32_t x)
@@ -435,6 +431,18 @@ namespace whm
         pheromoneMin = std::min(pheromoneMax, pheromoneMax * (1 - pBest) / (((dimension / 2.0) - 1) * pBest));
     }
 
+    void WarehousePathFinderACO_t::clearPathFinder()
+    {
+        dimension = 0;
+
+        whAnts.clear();
+        locations.clear();
+        distances.clear();
+        heuristics.clear();
+        edgePheromones.clear();
+        nearestNeighbours.clear();
+    }
+
     void WarehousePathFinderACO_t::dump() const
     {
         std::cout << "WH Start:  " << whStart  << std::endl
@@ -469,8 +477,30 @@ namespace whm
         }
     }
 
+    void WarehousePathFinderACO_t::calcImprovementStats()
+    {
+        int32_t sumCost{ 0 };
+
+        const auto& whOrders = whm::WarehouseLayout_t::getWhLayout().getWhOrders();
+
+        for(size_t i = 0; i < whOrders.size(); ++i)
+        {
+            cfg.set("selectedOrderID", std::to_string(i));
+
+            findPath();
+
+            sumCost += getBestPathCost();
+
+            clearPathFinder();
+        }
+
+        whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[ACO] Best batch cost: %d", sumCost);
+    }
+
     void WarehousePathFinderACO_t::findPath()
     {
+        prepareOptimization();
+
         auto const& sol = this->constructGreedySolution();
         double evalSol  = this->getPathDistance(sol);
 
