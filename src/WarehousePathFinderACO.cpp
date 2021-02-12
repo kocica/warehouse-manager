@@ -114,6 +114,8 @@ namespace whm
 
         std::iota(nns.begin(), nns.end(), 0);
 
+        nns.erase(nns.begin() + whFinish);
+
         std::sort(nns.begin(), nns.end(),
                   [loc, this](int32_t l, int32_t r) -> bool
                   {
@@ -276,6 +278,11 @@ namespace whm
 
             for(auto c : candidates)
             {
+                if(c == whFinish)
+                {
+                    continue;
+                }
+
                 if(!whAnt.visited(c))
                 {
                     double candidatePheromone = whPheromones->getEdgePheromones(lastVisitedLoc, c);
@@ -291,7 +298,7 @@ namespace whm
                 }
             }
 
-            // Roulette wheel selection of candidates (not yet visited nearest neighbour)
+            // Roulette wheel selection of candidates (not yet visited nearest neighbours)
             nextLoc = candidates.at(rouletteSelection(pheromoneSum, pheromoneValues));
         }
         else
@@ -301,6 +308,11 @@ namespace whm
 
             for(int32_t it = 0; it < dimension; ++it)
             {
+                if(it == whFinish)
+                {
+                    continue;
+                }
+
                 if(!whAnt.visited(it))
                 {
                     double candidatePheromone = whPheromones->getEdgePheromones(lastVisitedLoc, it);
@@ -362,8 +374,7 @@ namespace whm
 
         auto actualLoc = whStart;
 
-        // Skip first (start)
-        for(int32_t it = 1; it < dimension; ++it)
+        for(int32_t it = 1; it < (dimension - 1); ++it)
         {
             bool found{ false };
             int32_t nextLoc{ -1 };
@@ -371,6 +382,11 @@ namespace whm
 
             for(auto locNn : locNns)
             {
+                if(locNn == whFinish)
+                {
+                    continue;
+                }
+
                 if(!whAnt.visited(locNn))
                 {
                     found = true;
@@ -385,6 +401,11 @@ namespace whm
 
                 for(int32_t it2 = 0; it2 < dimension; ++it2)
                 {
+                    if(it2 == whFinish)
+                    {
+                        continue;
+                    }
+
                     if(!whAnt.visited(it2))
                     {
                         auto d = this->getLocationsDistance(actualLoc, it2);
@@ -401,6 +422,8 @@ namespace whm
             whAnt.visit(nextLoc);
             actualLoc = nextLoc;
         }
+
+        whAnt.visit(whFinish);
 
         return whAnt.getVisited();
     }
@@ -462,6 +485,7 @@ namespace whm
                 WarehouseAnt_t whAnt;
                 whAnt.visit(whStart);
                 while(performNextAntStep(whAnt));
+                whAnt.visit(whFinish);
                 whAnt.setCost(getPathDistance(whAnt.getVisited()));
                 whAnts.emplace_back(std::move(whAnt));
             }
