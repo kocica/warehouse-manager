@@ -54,21 +54,6 @@ namespace whm
                     std::vector<int32_t> visitedLocations;
             };
 
-            class WarehousePheromones_t
-            {
-                    friend class WarehousePathFinderACO_t;
-
-                public:
-                    WarehousePheromones_t(int32_t, double);
-                    void deposit(int32_t, int32_t, double, double);
-                    void evaporation(double, double);
-                    double getEdgePheromones(int32_t, int32_t);
-
-                private:
-                    int32_t dimension;
-                    std::vector<double> edgePheromones;
-            };
-
         public:
             WarehousePathFinderACO_t(const utils::WhmArgs_t&);
             WarehousePathFinderACO_t(const utils::WhmArgs_t&, const ConfigParser_t&);
@@ -108,10 +93,15 @@ namespace whm
             // Debug
             void dump() const;
 
+            // Pheromones
+            void initPheromones();
+            void evaporation(double);
+            void deposit(int32_t, int32_t, double);
+
             // Init
             void init();
 
-            // Run ACO
+            // ACO
             void findPath();
             std::vector<int32_t> constructGreedySolution();
 
@@ -122,14 +112,17 @@ namespace whm
 
             int32_t whStart{ 0 };
             int32_t whFinish{ 0 };
+            int32_t dimension{ 0 };
 
-            double probBest{ 0.0 };
+            double probBest{ 0. };
             double pheromoneMax{ 0. };
             double pheromoneMin{ 0. };
 
-            int32_t dimension{ 0 };
             std::vector<int32_t> locations;
+
             std::vector<std::vector<double>> heuristics;
+            std::vector<std::vector<double>> edgePheromones;
+
             std::vector<std::vector<int32_t>> distances;
             std::vector<std::vector<int32_t>> nearestNeighbours;
 
@@ -139,7 +132,6 @@ namespace whm
 
             WarehouseAnt_t bestWhAnt;
             std::vector<WarehouseAnt_t> whAnts;
-            WarehousePheromones_t* whPheromones{ nullptr };
     };
 }
 
