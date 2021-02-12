@@ -28,7 +28,7 @@ namespace whm
     {
         public:
             virtual void findPath() = 0;
-            virtual void calcImprovementStats() = 0;
+            virtual void calcStats() = 0;
     };
 
     class WarehousePathFinderACO_t : public WarehousePathFinder_t,
@@ -112,7 +112,7 @@ namespace whm
             std::vector<int32_t> constructGreedySolution();
 
             // Statistics
-            void calcImprovementStats() override;
+            void calcStats() override;
 
         protected:
             std::mt19937 rand;

@@ -121,7 +121,8 @@ namespace whm
 
     void ConfigParser_t::set(const std::string& key, const std::string& value)
     {
-        parsedValues.insert(std::make_pair(key, value));
+        //parsedValues.insert(std::make_pair(key, value));
+        parsedValues[key] = value;
     }
 
     void ConfigParser_t::dump() const

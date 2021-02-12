@@ -32,6 +32,7 @@ namespace whm
          */
         struct WhmArgs_t
         {
+            bool stats{ false };         //< Path finder argument to invoke stats calculation
             int32_t optimizer{ 0 };      //< Optimizer to be used
             std::string ordersPath;      //< Path to a file with customer orders
             std::string articlesPath;    //< Path to a file with articles

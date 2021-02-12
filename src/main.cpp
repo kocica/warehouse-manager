@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
             whm::WarehouseLayout_t::getWhLayout().importCustomerOrders(args.ordersPath);
 
 #    ifdef WHM_OPT
-            whm::WarehouseOptimizerBase_t* optimizer{ nullptr };
+            whm::WarehouseOptimizerBase_t* optimizer{nullptr};
 
             switch(args.optimizer)
             {
@@ -87,7 +87,15 @@ int main(int argc, char *argv[])
 
 #    ifdef WHM_PAF
             whm::WarehousePathFinderACO_t pathFinder{args};
-            pathFinder.findPath();
+
+            if(args.stats)
+            {
+                pathFinder.calcStats();
+            }
+            else
+            {
+                pathFinder.findPath();
+            }
 #    endif
 
 #    ifdef WHM_SIM

@@ -23,6 +23,7 @@ namespace whm
                          "\t-a\tPath to a file with articles\n"
                          "\t-i\tPath to a file with article-slot allocation\n"
                          "\t-l\tPath to a file with warehouse layout description\n"
+                         "\t-s\tShow aggregated statistics for path finder\n"
                          "\t-O\tOptimizer to be used: [ 1: GA | 2: DE | 3: ABC | 4:PSO | 5:SLAP | 6:RAND ]\n"
                         ;
         }
@@ -32,7 +33,7 @@ namespace whm
             int c;
             WhmArgs_t args;
 
-            while ((c = getopt (argc, argv, "o:a:i:l:O:v")) != -1)
+            while ((c = getopt (argc, argv, "o:a:i:l:O:sv")) != -1)
             {
                 switch(c)
                 {
@@ -47,6 +48,9 @@ namespace whm
                         break;
                     case 'l':
                         args.layoutPath = optarg;
+                        break;
+                    case 's':
+                        args.stats = true;
                         break;
                     case 'O':
                         args.optimizer = std::stoi(optarg);

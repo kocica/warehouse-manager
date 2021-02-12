@@ -115,8 +115,9 @@ namespace whm
                              getLocationsDistance(loc, rhs) ;
                   });
 
-        return std::vector<int32_t>(nns.begin() + 1,
-                                    nns.begin() + 1 + cfg.getAs<int32_t>("nearestNeighbours"));
+        return std::vector<int32_t>( nns.begin() + 1,
+                                     nns.begin() + std::min(cfg.getAs<int32_t>("nearestNeighbours") + 1,
+                                                            static_cast<int32_t>(nns.size()) - 1));
     }
 
     void WarehousePathFinderACO_t::findLocationsToVisit()
@@ -166,7 +167,6 @@ namespace whm
             }
             if(whItem->getType() == WarehouseItemType_t::E_WAREHOUSE_DISPATCH)
             {
-                // Don't add to vector, or make sure to visit it as a last location
                 whFinish = dimension++;
                 locations.push_back(whItem->getWhItemID());
             }
@@ -466,7 +466,7 @@ namespace whm
             for(int32_t j = 0; j < dimension; ++j)
             {
                 std::cout << std::setw(4)  << distances.at(i).at(j)
-                          << std::setw(12) << heuristics.at(i).at(j)
+                          << std::setw(16) << heuristics.at(i).at(j)
                           ; //<< std::setw(4)  << edgePheromones.at(i).at(j)
             }
 
@@ -479,7 +479,7 @@ namespace whm
         }
     }
 
-    void WarehousePathFinderACO_t::calcImprovementStats()
+    void WarehousePathFinderACO_t::calcStats()
     {
         int32_t sumCost{ 0 };
 
@@ -496,7 +496,8 @@ namespace whm
             clearPathFinder();
         }
 
-        whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[ACO] Best batch cost: %d", sumCost);
+        whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[ACO] Summed best cost over %zu orders: %d [m]",
+                                         whOrders.size(), sumCost);
     }
 
     void WarehousePathFinderACO_t::findPath()
@@ -562,7 +563,10 @@ namespace whm
                 prevLocation = location;
             }
 
-            whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[ACO] [%3d] Best cost: %d", it, bestWhAnt.getCost());
+            if(!args.stats)
+            {
+                whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[ACO] [%3d] Best cost: %d", it, bestWhAnt.getCost());
+            }
         }
     }
 
