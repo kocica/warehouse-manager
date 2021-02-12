@@ -189,12 +189,9 @@ namespace whm
 
         if(!path.empty())
         {
-            int32_t prevLoc = path.back();
-
-            for(int32_t actLoc : path)
+            for(size_t i = 1; i < path.size(); ++i)
             {
-                d += getLocationsDistance(prevLoc, actLoc);
-                prevLoc = actLoc;
+                d += getLocationsDistance(path.at(i-1), path.at(i));
             }
         }
 
