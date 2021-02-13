@@ -442,7 +442,9 @@ namespace whm
 
             std::unordered_map<std::string, double> chromosomeMap;
 
-            for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSize"); ++p)
+            for(int32_t p = cfg.getAs<int32_t>("eliteSize");
+                        p < cfg.getAs<int32_t>("populationSize");
+                        p++)
             {
                 if(p >= cfg.getAs<int32_t>("eliteSize") && population[p].trialValue > cfg.getAs<int32_t>("maxTrialValue"))
                 {
@@ -476,7 +478,9 @@ namespace whm
                 }
             }
 
-            for(int32_t p = 0; p < cfg.getAs<int32_t>("populationSize"); ++p)
+            for(int32_t p = cfg.getAs<int32_t>("eliteSize");
+                        p < cfg.getAs<int32_t>("populationSize");
+                        p++)
             {
                 double newFitness = chromosomeMap[population[p].stringGenes];
 
