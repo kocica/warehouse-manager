@@ -1236,7 +1236,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>43</width>
+                    <width>533</width>
                     <height>932</height>
                    </rect>
                   </property>
@@ -1587,6 +1587,32 @@
                    </property>
                   </widget>
                  </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="preprocessingLabel">
+                   <property name="text">
+                    <string>Preprocessing:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QComboBox" name="preprocessing">
+                   <item>
+                    <property name="text">
+                     <string>None</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Normal</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Optimized</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
                 </layout>
                </item>
                <item>
@@ -1594,16 +1620,6 @@
                  <property name="bottomMargin">
                   <number>0</number>
                  </property>
-                 <item>
-                  <widget class="QCheckBox" name="preprocessOrders">
-                   <property name="text">
-                    <string>Preprocess orders</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
                  <item>
                   <widget class="QCheckBox" name="replenishment">
                    <property name="text">
@@ -1711,7 +1727,7 @@
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>43</width>
+                    <width>533</width>
                     <height>624</height>
                    </rect>
                   </property>

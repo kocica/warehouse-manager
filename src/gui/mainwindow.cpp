@@ -1189,11 +1189,14 @@ namespace whm
                 ui->locationCapacity->setValue(cfg.getAs<int32_t>("locationCapacity"));
                 ui->conveyorCapacity->setValue(cfg.getAs<int32_t>("conveyorCapacity"));
                 ui->simulationSpeedup->setValue(cfg.getAs<double>("simSpeedup") * 10);
-                ui->preprocessOrders->setCheckState(cfg.getAs<bool>("preprocess") ? Qt::Checked : Qt::Unchecked);
                 ui->replenishment->setCheckState(cfg.getAs<bool>("replenishment") ? Qt::Checked : Qt::Unchecked);
                 ui->initSlotQty->setValue(cfg.getAs<int32_t>("initialSlotQty"));
                 ui->replenishmentQuantity->setValue(cfg.getAs<int32_t>("replenishmentQuantity"));
                 ui->replenishmentThreshold->setValue(cfg.getAs<int32_t>("replenishmentThreshold"));
+
+                if(cfg.getAs<std::string>("preprocessing")  == "none")      ui->preprocessing->setCurrentIndex(0);
+                if(cfg.getAs<std::string>("preprocessing")  == "normal")    ui->preprocessing->setCurrentIndex(1);
+                if(cfg.getAs<std::string>("preprocessing")  == "optimized") ui->preprocessing->setCurrentIndex(2);
             }
             catch(std::runtime_error&)
             {
@@ -1279,11 +1282,14 @@ namespace whm
             cfg.set("locationCapacity",       std::to_string(ui->locationCapacity->value()));
             cfg.set("conveyorCapacity",       std::to_string(ui->conveyorCapacity->value()));
             cfg.set("simSpeedup",             std::to_string(ui->simulationSpeedup->value() / 10.0));
-            cfg.set("preprocess",             ui->preprocessOrders->checkState() == Qt::Checked ? "true" : "false");
             cfg.set("replenishment",          ui->replenishment->checkState() == Qt::Checked ? "true" : "false");
             cfg.set("initialSlotQty",         std::to_string(ui->initSlotQty->value()));
             cfg.set("replenishmentQuantity",  std::to_string(ui->replenishmentQuantity->value()));
             cfg.set("replenishmentThreshold", std::to_string(ui->replenishmentThreshold->value()));
+
+            if(ui->preprocessing->currentIndex() == 0) cfg.set("preprocessing", "none");
+            if(ui->preprocessing->currentIndex() == 1) cfg.set("preprocessing", "normal");
+            if(ui->preprocessing->currentIndex() == 2) cfg.set("preprocessing", "optimized");
         }
 
         void MainWindow::on_startPathFinder_clicked()

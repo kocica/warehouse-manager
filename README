@@ -33,3 +33,5 @@ PathFinder (evaluate for one order):
  - OPT: co trva opt. tak dlouho ? pridat debug vypisy atd.
 
  - PAF: Hybridni optimalizace: 10 generaci GA, prepocitani opt. cest (opt. cesty mit ulozene v unordered_map[cislo_obj]), zase 10 gen, ...
+
+ - Nejlepsimu jedinci v opt. uz neprepocitavat optimalni cesty?

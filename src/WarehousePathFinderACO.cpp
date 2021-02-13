@@ -563,7 +563,11 @@ namespace whm
             }
 
 #           ifdef WHM_GUI
-                this->uiCallback(bestWhAnt.getCost(), decodePath(bestWhAnt.getVisited()));
+                // Can be also used within UI simulator (without callbacks)
+                if(this->uiCallback)
+                {
+                    this->uiCallback(bestWhAnt.getCost(), decodePath(bestWhAnt.getVisited()));
+                }
 #           endif
 
             // Evaporate from all edges
