@@ -6,19 +6,22 @@
         locationCapacity .......... How many totes can be processed at the same time
         conveyorCapacity .......... How many totes can be transported at the same time
         orderRequestInterval ...... Interval in which new orders are started [secs]
-        preprocess ................ Preprocess order lines to fasten up the picking process
-                                    (simple sorting rule based on manhattan distances)
+
         replenishment ............. Work with quantities and replenish depleted articles
         initialSlotQuantity ....... How many products are stored within each slot
         replenishmentQuantity ..... How many products (minimum) will be replenished
         replenishmentThreshold .... In case quantity is below this level, replenishment is initiated
+
+        preprocessing ............. Preprocess order lines to fasten up the picking process
+                                    "none"      - no preprocessing
+                                    "normal"    - simple sorting rule based on Manhattan distances
+                                    "optimized" - complex sorting based on ant colony optimization
   -->
 
 <configuration toteSpeed="1.0"
                workerSpeed="1.0"
                totesPerMin="120"
                simSpeedup="1.0"
-               preprocess="true"
                locationCapacity="1"
                conveyorCapacity="5"
                orderRequestInterval="1"
@@ -26,4 +29,6 @@
                replenishment="true"
                initialSlotQty="100"
                replenishmentQuantity="80"
-               replenishmentThreshold="20" />
+               replenishmentThreshold="20" 
+
+               preprocessing="normal"/>

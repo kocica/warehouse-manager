@@ -7,7 +7,7 @@
  * @brief   Module used to find the shortest path for order picking using ant colony system
  */
 
-#ifdef WHM_PAF
+#if defined(WHM_PAF) || defined(WHM_SIM)
 
 #include <iomanip>
 #include <numeric>
@@ -176,6 +176,11 @@ namespace whm
     int32_t WarehousePathFinderACO_t::getBestPathCost() const
     {
         return bestWhAnt.getCost();
+    }
+
+    std::vector<int32_t> WarehousePathFinderACO_t::getBestPath() const
+    {
+        return bestWhAnt.getVisited();
     }
 
     int32_t WarehousePathFinderACO_t::getLocationsDistance(int32_t y, int32_t x)
@@ -495,6 +500,19 @@ namespace whm
 
         whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[ACO] Summed best cost over %zu orders: %d [m]",
                                          whOrders.size(), sumCost);
+    }
+
+    std::vector<int32_t> WarehousePathFinderACO_t::findPath(int32_t selectedOrderID)
+    {
+        // Note: special function for simulator
+
+        clearPathFinder();
+
+        cfg.set("selectedOrderID", std::to_string(selectedOrderID));
+
+        findPath();
+
+        return decodePath(getBestPath());
     }
 
     void WarehousePathFinderACO_t::findPath()

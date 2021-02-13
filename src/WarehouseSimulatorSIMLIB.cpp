@@ -29,8 +29,8 @@ namespace whm
         , optimizationMode{ false }
         , multipleExperiments{ false }
         , cfg{ ConfigParser_t{ "cfg/simulator.xml" } }
-        , whLayout{ WarehouseLayout_t::getWhLayout() }
         , whPathFinder{ new WarehousePathFinder_t() }
+        , whLayout{ WarehouseLayout_t::getWhLayout() }
         , whOrders{ whLayout.getWhOrders() }
     {
         whPathFinder->precalculatePaths(whLayout.getWhItems());
@@ -39,6 +39,9 @@ namespace whm
         {
             whPathFinder->dump();
         }
+
+        args.stats = true;
+        whPathFinderAco = new WarehousePathFinderACO_t(args);
     }
 
 #   ifdef WHM_GUI
@@ -61,6 +64,7 @@ namespace whm
     WarehouseSimulatorSIMLIB_t::~WarehouseSimulatorSIMLIB_t()
     {
         delete whPathFinder;
+        delete whPathFinderAco;
 
         for(auto& whFacility : whFacilities)
         {
@@ -88,7 +92,7 @@ namespace whm
         }
     }
 
-    void WarehouseSimulatorSIMLIB_t::preprocessOrders()
+    void WarehouseSimulatorSIMLIB_t::normalPreprocessing()
     {
         whOrders.clear();
         whOrders = whLayout.getWhOrders();
@@ -170,6 +174,42 @@ namespace whm
         }
     }
 
+    void WarehouseSimulatorSIMLIB_t::optimizedPreprocessing()
+    {
+        whOrders.clear();
+        whOrders = whLayout.getWhOrders();
+
+        for(size_t i = 0; i < whOrders.size(); ++i)
+        {
+            auto& order = whOrders.at(i);
+
+            std::vector<WarehouseOrderLine_t> newLines;
+
+            const auto& bestPath = whPathFinderAco->findPath(static_cast<int32_t>(i));
+
+            // Erase first and last node from bestPath (entrance/exit)?
+
+            for(const auto& locID : bestPath)
+            {
+                for(const auto& line : order)
+                {
+                    if(utils::contains(lookupWhLocations(line.getArticle(), 0), locID))
+                    {
+                        newLines.push_back(line);
+                    }
+                }
+            }
+
+            // Fix broken IDs
+            for(auto itLine = newLines.begin(); itLine != newLines.end(); ++itLine)
+            {
+                itLine->setWhLineID(itLine - newLines.begin() /*+ 1*/);
+            }
+
+            order.setWhOrderLines(newLines);
+        }
+    }
+
     void WarehouseSimulatorSIMLIB_t::passivateProcess(int32_t locID, simlib3::Process* proc)
     {
         passivatedProcesses[locID].push_back(proc);
@@ -211,9 +251,15 @@ namespace whm
         }
 
         // Perform order preprocessing
-        if(cfg.getAs<bool>("preprocess"))
+        //    We need to do preprocessing in each simulation run, since optimizer moves products between
+        //    locations, so the previous calculated optimal path may no longer be optimal
+        if(cfg.getAs<std::string>("preprocessing") == "normal")
         {
-            preprocessOrders();
+            normalPreprocessing();
+        }
+        else if(cfg.getAs<std::string>("preprocessing") == "optimized")
+        {
+            optimizedPreprocessing();
         }
 
         //SetCalendar("cq");

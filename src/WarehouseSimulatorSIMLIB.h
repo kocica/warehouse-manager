@@ -27,6 +27,7 @@
 #include "WarehouseTypes.h"
 #include "WarehousePathFinder.h"
 #include "WarehouseLocationRack.h"
+#include "WarehousePathFinderACO.h"
 
 namespace whm
 {
@@ -82,8 +83,10 @@ namespace whm
 
         protected:
             void clearSimulation();
-            void preprocessOrders();
             void prepareWhSimulation();
+
+            void normalPreprocessing();
+            void optimizedPreprocessing();
 
         private:
             bool showStats;
@@ -94,14 +97,16 @@ namespace whm
             UiCallback_t uiCallback;
 #           endif
 
-            // Processes (orders) waiting for replenishment
+            // Processes (orders) waiting for replenishment @ location
             PassivatedProcesses_t passivatedProcesses;
 
             ConfigParser_t cfg;
             utils::WhmArgs_t args;
 
-            WarehouseLayout_t& whLayout;
             WarehousePathFinder_t* whPathFinder;
+            WarehousePathFinderACO_t* whPathFinderAco;
+
+            WarehouseLayout_t& whLayout;
             std::vector<WarehouseOrder_t> whOrders;
             std::map<int32_t, simlib3::Store*> whFacilities;
 
