@@ -23,15 +23,18 @@ Optimizer (train on train set of orders):
   ./whm_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv -O 1-6    (see help)
 
 PathFinder (evaluate for one order):
-  ./whm_paf -o data/order.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv [-s]             (see help)
+  ./whm_paf -o data/orders_test.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv [-s]       (see help)
 
 
 # TODO
 
  - Item already added to the scene [UI]
- - PAF: Porovnani PafACO vs Paf (porovnani vzdalenosti pro 1 nebo 1000 objednavek; porovnani cele simulace)
+
  - OPT: co trva opt. tak dlouho ? pridat debug vypisy atd.
 
- - PAF: Hybridni optimalizace: 10 generaci GA, prepocitani opt. cest (opt. cesty mit ulozene v unordered_map[cislo_obj]), zase 10 gen, ...
+ - Porovnani: Normal
+              Jenom path finder
+              Jenom optimizer
+              Kombinace path finder + optimizer
 
- - Nejlepsimu jedinci v opt. uz neprepocitavat optimalni cesty?
+ - Configy v DP do priloh
