@@ -47,7 +47,10 @@ namespace whm
             this->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemSendsGeometryChanges);
             if(scene)
             {
-                scene->addItem(this);
+                if(parent == nullptr)
+                {
+                    scene->addItem(this);
+                }
             }
 
             minWidth = w / 2;
