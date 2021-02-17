@@ -586,6 +586,8 @@ namespace whm
                 }
             }
 
+            results.push_back(bestWhAnt.getCost());
+
 #           ifdef WHM_GUI
                 // Can be also used within UI simulator (without callbacks)
                 if(this->uiCallback)
@@ -609,6 +611,9 @@ namespace whm
             if(!args.stats)
             {
                 whm::Logger_t::getLogger().print(LOG_LOC, LogLevel_t::E_DEBUG, "[ACO] [%3d] Best cost: %d", it, bestWhAnt.getCost());
+
+                std::for_each(results.begin(), results.end(), [](double v){ std::cout << v << ", "; });
+                std::cout << std::endl;
             }
         }
     }

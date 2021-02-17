@@ -130,6 +130,7 @@ namespace whm
             double pheromoneMax{ 0. };
             double pheromoneMin{ 0. };
 
+            std::vector<int32_t> results;
             std::vector<int32_t> locations;
 
             std::vector<std::vector<double>> heuristics;
