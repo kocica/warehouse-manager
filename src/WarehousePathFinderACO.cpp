@@ -133,6 +133,30 @@ namespace whm
             throw std::runtime_error("PathFinder: selectedOrderID out of range!");
         }
 
+        /*std::vector<int32_t> locationsShuffled;
+
+        for(auto* whItem : whItems)
+        {
+            if(whItem->getType() == WarehouseItemType_t::E_LOCATION_SHELF)
+            {
+                // if(randomFromInterval(0.0, 1.0) < 0.9)
+                if(!utils::contains(locationsShuffled, whItem->getWhItemID()))
+                {
+                    ++ dimension;
+                    locationsShuffled.push_back(whItem->getWhItemID());
+                }
+            }
+        }
+
+        auto rd = std::random_device{};
+        auto rng = std::default_random_engine{ rd() };
+        std::shuffle(locationsShuffled.begin(), locationsShuffled.end(), rng);
+
+        for(auto loc : locationsShuffled)
+        {
+            locations.push_back(loc);
+        }*/
+
         auto& whOrder = whOrders.at(selectedOrderID);
 
         for(auto& whLine : whOrder.getWhOrderLines())
