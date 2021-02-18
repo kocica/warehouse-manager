@@ -10,11 +10,11 @@
         selectedOrderID .................. OrderID which picking path through warehouse should be optimized
   -->
 
-<configuration antCount="100"
+<configuration antCount="5"
                rho="0.98"
                beta="2"
                probBest="0.05"
                nearestNeighbours="3"
-               maxIterations="100"
+               maxIterations="10"
                probUseIterationBest="0.0"
                selectedOrderID="0" />

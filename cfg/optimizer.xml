@@ -54,15 +54,15 @@
         =============================================================================================
   -->
 
-<configuration numberDimensions="200"
+<configuration numberDimensions="750"
                problemMin="0"
-               problemMax="400"
+               problemMax="1000"
                maxIterations="1000"
                initialWeights=""
                saveWeightsPeriod="1"
                maxTrialValue="10"
                plotPath=""
-               procCount="50"
+               procCount="35"
                slotHeatReorder="false"
 
 

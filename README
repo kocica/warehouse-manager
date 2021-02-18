@@ -36,3 +36,7 @@ PathFinder (evaluate for one order):
               Kombinace path finder + optimizer
 
  - Configy v DP do priloh
+
+ - Vyhodnoceni na 3 casti: optimalize cesty; optimalize rozlozeni; kombinace
+
+ - Cele trenovani odznova vsechno pro stejne skklady?
