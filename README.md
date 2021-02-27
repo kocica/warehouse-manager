@@ -39,10 +39,10 @@ For more detailed description see application help.
 
  - `./whm_sim -o data/orders_test.xml -i data/locations.csv -l data/layout.xml`
 
+**PathFinder**:
+
+ - `./whm_paf -o data/orders_test.xml -i data/locations.csv -l data/layout.xml [-s]`
+
 **Optimizer**:
 
  - `./whm_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv -O 1-6`
-
-**PathFinder**:
-
- - `./whm_paf -o data/orders_test.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv [-s]`
