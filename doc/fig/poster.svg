@@ -1064,9 +1064,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.125"
-     inkscape:cx="1569.8495"
-     inkscape:cy="2385.7362"
+     inkscape:zoom="0.25"
+     inkscape:cx="1524.2842"
+     inkscape:cy="1518.818"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -1119,25 +1119,14 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14.1111px;line-height:1.25;font-family:sans-serif;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="9.1397257"
-       y="57.702049"
+       x="9.5139027"
+       y="83.89447"
        id="text912"><tspan
          sodipodi:role="line"
-         x="9.1397257"
-         y="57.702049"
+         x="9.5139027"
+         y="83.89447"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:Montserrat;-inkscape-font-specification:Montserrat;fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
          id="tspan914">Nástroj pro pokročilou simulaci a optimalizaci skladových operací</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:31.75px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="10.476964"
-       y="34.05014"
-       id="text926"><tspan
-         sodipodi:role="line"
-         id="tspan924"
-         x="10.476964"
-         y="34.05014"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:31.75px;font-family:Montserrat;-inkscape-font-specification:Montserrat;fill:#ff6600;fill-opacity:1;stroke-width:0.264583">Warehouse Manager</tspan></text>
     <circle
        style="fill:#ff6600;fill-opacity:1;stroke-width:0.872;stroke-linejoin:round;stroke-dasharray:1.744, 0.872"
        id="path950"
@@ -1158,14 +1147,19 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:14.1111px;line-height:1.25;font-family:sans-serif;fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="9.7895832"
-       y="78.845825"
+       x="206.73526"
+       y="44.0895"
        id="text958"><tspan
          sodipodi:role="line"
          id="tspan956"
-         x="9.7895832"
-         y="78.845825"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:Montserrat;-inkscape-font-specification:Montserrat;fill:#ff6600;fill-opacity:1;stroke-width:0.264583">Autor: Bc. Filip Kočica, Vedoucí: Ing. Oldřich Kodym</tspan></text>
+         x="206.73526"
+         y="44.0895"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:Montserrat;-inkscape-font-specification:Montserrat;fill:#ff6600;fill-opacity:1;stroke-width:0.264583">Autor: Bc. Filip Kočica</tspan><tspan
+         sodipodi:role="line"
+         x="206.73526"
+         y="61.823811"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:Montserrat;-inkscape-font-specification:Montserrat;fill:#ff6600;fill-opacity:1;stroke-width:0.264583"
+         id="tspan1586">Vedoucí: Ing. Oldřich Kodym</tspan></text>
     <text
        xml:space="preserve"
        id="text988"
@@ -3284,6 +3278,41 @@
           </g>
         </g>
       </g>
+    </g>
+    <g
+       inkscape:label="Layer 1"
+       id="layer1-2"
+       transform="matrix(2.9984049,0,0,2.9984049,-175.75993,-245.59297)">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Ashby Light';-inkscape-font-specification:'Ashby Light, ';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="61.232143"
+         y="93.738091"
+         id="text835"><tspan
+           sodipodi:role="line"
+           x="61.232143"
+           y="93.738091"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ashby Light';-inkscape-font-specification:'Ashby Light, ';stroke-width:0.264583"
+           id="tspan837"><tspan
+             style="font-size:12.7px;fill:#ff6600"
+             id="tspan845">W</tspan><tspan
+             style="fill:#000080"
+             id="tspan849">arehouse</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="61.073826"
+         y="101.78182"
+         id="text843"><tspan
+           sodipodi:role="line"
+           id="tspan841"
+           x="61.073826"
+           y="101.78182"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ashby Light';-inkscape-font-specification:'Ashby Light, ';stroke-width:0.264583"><tspan
+             style="font-size:12.7px;fill:#ff6600"
+             id="tspan847">M</tspan><tspan
+             style="fill:#000080"
+             id="tspan851">anager</tspan></tspan></text>
     </g>
   </g>
 </svg>

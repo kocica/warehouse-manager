@@ -25,10 +25,6 @@
 #include "WarehouseOptimizerBase.h"
 #include "WarehouseSimulatorSIMLIB.h"
 
-#ifdef WHM_PLOT
-#include "matplotlibcpp.h"
-#endif
-
 namespace whm
 {
     WarehouseOptimizerBase_t::WarehouseOptimizerBase_t(const utils::WhmArgs_t& args_)
@@ -231,19 +227,9 @@ namespace whm
 
     void WarehouseOptimizerBase_t::saveFitnessPlot() const
     {
-        // Plot fitness convergence or just dump to output
-        if(cfg.isSet("plotPath"))
-        {
-#           ifdef WHM_PLOT
-            matplotlibcpp::plot(histFitness);
-            matplotlibcpp::save(cfg.getAs<std::string>("plotPath"));
-#           endif
-        }
-        else
-        {
-            std::for_each(histFitness.begin(), histFitness.end(), [](double v){ std::cout << v << ", "; });
-            std::cout << std::endl;
-        }
+        // Plot fitness dump to output
+        std::for_each(histFitness.begin(), histFitness.end(), [](double v){ std::cout << v << ", "; });
+        std::cout << std::endl;
     }
 
     void WarehouseOptimizerBase_t::saveBestSolution(std::vector<int32_t>& chromosome) const

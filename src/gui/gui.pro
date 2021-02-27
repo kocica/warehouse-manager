@@ -31,7 +31,6 @@ SOURCES +=  ../main.cpp \
             ../WarehouseOptimizerRAND.cpp \
             ../WarehousePathFinderACO.cpp \
             ../WarehouseSimulatorSIMLIB.cpp \
-            ../WarehouseSimulatorCPPSIM.cpp \
             ../WarehouseDataGenerator.cpp \
             UiCursor.cpp \
             MainWindow.cpp \
@@ -74,7 +73,6 @@ HEADERS +=  ../Utils.h \
             ../WarehouseOptimizerRAND.h \
             ../WarehousePathFinderACO.h \
             ../WarehouseSimulatorSIMLIB.h \
-            ../WarehouseSimulatorCPPSIM.h \
             ../WarehouseDataGenerator.h \
             MainWindow.h \
             UiCursor.h \

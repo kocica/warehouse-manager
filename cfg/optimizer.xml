@@ -8,7 +8,6 @@
         initialWeights ................... Allocations to start evolution from
         saveWeightsPeriod ................ Save weights and plot after N iterations
         maxTrialValue .................... When exceeded, individual is replaced with random one
-        plotPath ......................... Where fitness plot should be saved
         slotHeatReorder .................. Reorder articles in slots based on heat and weight
 
         ===================================== Genetic algorithm =====================================
@@ -61,7 +60,6 @@
                initialWeights=""
                saveWeightsPeriod="1"
                maxTrialValue="10"
-               plotPath=""
                procCount="35"
                slotHeatReorder="false"
 

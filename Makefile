@@ -23,9 +23,9 @@ CFLAGS     = -std=c++17 -pedantic -Wall -Wextra -O3 #-fopenmp
 
 PROFILE    = #-pg
 
-LDFLAGS    = -lsimlib -lm #-lpython2.7 # -l:libC++SIM.a -l:libCommon.a -l:libEvent.a -l:libSimSet.a -l:libStat.a -pthread
+LDFLAGS    = -lsimlib -lm
 LDLIBS     = 
-INCLUDE    = #-I/usr/include/python2.7
+INCLUDE    = 
 
 SRC        = src
 CFG        = cfg
@@ -48,7 +48,7 @@ all:
 
 .PHONY: clean
 
-$(BIN_NAME_OPT): CFLAGS += -DWHM_OPT -DWHM_SIM #-DWHM_PLOT
+$(BIN_NAME_OPT): CFLAGS += -DWHM_OPT -DWHM_SIM
 $(BIN_NAME_OPT): $(HEADERS) $(SOURCES) $(OBJS)
 	$(CC) $(CFLAGS) $(PROFILE) -L$(LDLIBS) -Wl,-rpath=$(LDLIBS) -fPIC $(OBJS) $(LDFLAGS) -o $@
 	find . -type f -name "*.cpp" -exec touch --no-create {} +

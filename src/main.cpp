@@ -21,7 +21,6 @@
 
 #ifdef WHM_SIM
 #  include "WarehouseSimulatorSIMLIB.h"
-#  include "WarehouseSimulatorCPPSIM.h"
 #endif
 
 #ifdef WHM_OPT
