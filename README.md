@@ -1,6 +1,7 @@
 # Warehouse Manager
 
 Tool for advanced simulation and optimization of warehouse.
+This software was developed as a part of diploma thesis and is not intended for commercial use.
 
 ---
 
@@ -26,26 +27,22 @@ Tool for advanced simulation and optimization of warehouse.
 
 For more detailed description see application help.
 
-**Warehouse Manager:**
+**Warehouse Manager**:
 
-  `./whm_gui`
----
+ - `./whm_gui`
 
-**Generator:**
+**Generator**:
 
-  `./whm_gen -o data/orders.xml -a data/articles.csv`
----
+ - `./whm_gen -o data/orders.xml -a data/articles.csv`
 
-**Simulator (evaluate on test set of orders):**
+**Simulator**:
 
-  `./whm_sim -o data/orders_test.xml -i data/locations.csv -l data/layout.xml`
----
+ - `./whm_sim -o data/orders_test.xml -i data/locations.csv -l data/layout.xml`
 
-**Optimizer (train on train set of orders):**
+**Optimizer**:
 
-  `./whm_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv -O 1-6`
----
+ - `./whm_opt -o data/orders_train.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv -O 1-6`
 
-**PathFinder (evaluate for one order):**
+**PathFinder**:
 
-  `./whm_paf -o data/orders_test.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv [-s]`
+ - `./whm_paf -o data/orders_test.xml -a data/articles.csv -l data/layout.xml -i data/locations.csv [-s]`
