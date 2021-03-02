@@ -34,13 +34,13 @@ namespace whm
             switch(i.getType())
             {
                 case WarehouseItemType_t::E_WAREHOUSE_ENTRANCE:
-                    this->setBrush(Qt::darkGreen);
+                    this->setPixmap(QPixmap(":/img/entrance.png"));
                     break;
                 case WarehouseItemType_t::E_WAREHOUSE_DISPATCH:
-                    this->setBrush(Qt::darkRed);
+                    this->setPixmap(QPixmap(":/img/dispatch.png"));
                     break;
                 case WarehouseItemType_t::E_WAREHOUSE_BUFFER:
-                    this->setBrush(Qt::darkGray);
+                    this->setPixmap(QPixmap(":/img/buffer.png"));
                     break;
                 default:
                     break;
@@ -55,13 +55,13 @@ namespace whm
             switch(t)
             {
                 case WarehouseItemType_t::E_WAREHOUSE_ENTRANCE:
-                    this->setBrush(Qt::darkGreen);
+                    this->setPixmap(QPixmap(":/img/entrance.png"));
                     break;
                 case WarehouseItemType_t::E_WAREHOUSE_DISPATCH:
-                    this->setBrush(Qt::darkRed);
+                    this->setPixmap(QPixmap(":/img/dispatch.png"));
                     break;
                 case WarehouseItemType_t::E_WAREHOUSE_BUFFER:
-                    this->setBrush(Qt::darkGray);
+                    this->setPixmap(QPixmap(":/img/buffer.png"));
                     break;
                 default:
                     break;

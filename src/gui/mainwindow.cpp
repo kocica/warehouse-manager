@@ -119,6 +119,13 @@ namespace whm
             ui->loadLayout->setIcon(QIcon(":/img/load.png"));
             ui->clearLayout->setIcon(QIcon(":/img/clear.png"));
 
+            ui->whItemLocation->setIcon(QIcon(":/img/location.png"));
+            ui->whItemConveyor->setIcon(QIcon(":/img/conv.png"));
+            ui->whItemConveyorHub->setIcon(QIcon(":/img/convhub.png"));
+            ui->whItemEntrance->setIcon(QIcon(":/img/entrance.png"));
+            ui->whItemExit->setIcon(QIcon(":/img/dispatch.png"));
+            ui->whItemBuffer->setIcon(QIcon(":/img/buffer.png"));
+
             ui->clearTestOrders->setIcon(QIcon(":/img/clear.png"));
             ui->importTestOrders->setIcon(QIcon(":/img/import.png"));
             ui->exportTestOrders->setIcon(QIcon(":/img/export.png"));

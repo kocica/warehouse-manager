@@ -8,6 +8,7 @@
         <file>img/select.png</file>
         <file>img/delete.png</file>
         <file>img/conv.png</file>
+        <file>img/convhub.png</file>
         <file>img/import.png</file>
         <file>img/export.png</file>
         <file>img/config.png</file>
@@ -15,5 +16,9 @@
         <file>img/plug_sel.png</file>
         <file>img/new.png</file>
         <file>img/weights.png</file>
+        <file>img/location.png</file>
+        <file>img/buffer.png</file>
+        <file>img/entrance.png</file>
+        <file>img/dispatch.png</file>
     </qresource>
 </RCC>
