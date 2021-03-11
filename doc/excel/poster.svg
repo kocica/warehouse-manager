@@ -871,7 +871,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2546,7 +2546,7 @@
          x="149.09518"
          y="680.10651"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;font-family:Montserrat;-inkscape-font-specification:Montserrat;text-align:center;text-anchor:middle;stroke-width:0.264583"
-         id="tspan1581">Proces optimalizace rozložení produktů pomocí čtyř evolučních</tspan><tspan
+         id="tspan1581">Graf optimalizace rozložení produktů pomocí čtyř evolučních</tspan><tspan
          sodipodi:role="line"
          x="149.09518"
          y="689.86041"
@@ -2622,7 +2622,7 @@
          x="298.10779"
          y="761.43744"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;font-family:Montserrat;-inkscape-font-specification:Montserrat;stroke-width:0.264583"
-         id="tspan2644">pomůže mu v plánovýní, identifikaci úzkých míst a ušetří zdroje. Dále tato práce přináší novou</tspan><tspan
+         id="tspan2644">pomůže mu v plánování, identifikaci úzkých míst a ušetří zdroje. Dále tato práce přináší novou</tspan><tspan
          sodipodi:role="line"
          x="298.10779"
          y="771.19135"
@@ -2648,7 +2648,7 @@
          id="tspan2390"
          x="26.886995"
          y="238.21875"
-         style="stroke-width:0.264583"></tspan></text>
+         style="stroke-width:0.264583" /></text>
     <path
        style="fill:none;stroke:#ff7802;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="m 131.15561,344.56224 c 0.26887,13.17463 99.08501,0.17198 109.83981,13.07774 8.87271,-13.17463 115.61982,-0.28334 115.35095,-12.92023"
