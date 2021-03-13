@@ -4,8 +4,9 @@
  * @file    UiGraphicsViewZoom.h
  * @date    09/30/2020
  * @brief   This module is used to enable zooming in & out in graphics scene and is based on an Stack overflow answer
- * @author  Pavel Strakhov, answered Oct 1 '13 at 11:02
- * @link    https://stackoverflow.com/a/19114517/8254699
+ * @author  Pavel Strakhov, answered Oct 1 '13 at 11:02 (https://stackoverflow.com/users/344347/pavel-strakhov)
+ * @link    Q https://stackoverflow.com/q/19113532/8254699
+ * @link    A https://stackoverflow.com/a/19114517/8254699
  */
 
 #pragma once

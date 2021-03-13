@@ -56,8 +56,9 @@ namespace whm
 
     ///
     /// @date Jul 4 '13 at 11:59
-    /// @author https://stackoverflow.com/users/939402/joel-sj%C3%B6gren Joel Sjögren
-    /// @link https://stackoverflow.com/a/17469726/8254699
+    /// @author https://stackoverflow.com/users/939402/joel-sj%C3%B6gren - Joel Sjögren
+    /// @link Q https://stackoverflow.com/q/2616906/8254699
+    /// @link A https://stackoverflow.com/a/17469726/8254699
     ///
     namespace Color
     {
