@@ -26,7 +26,13 @@ namespace whm
                 std::string getArticle() const;
                 void setArticle(const std::string&);
 
+                /**
+                 * @author  John1024 (https://stackoverflow.com/users/3030305/john1024)
+                 * @date    Dec 26 '13 at 23:18
+                 * @link    https://stackoverflow.com/a/20792531/8254699
+                 */
                 void setSlotHeat(int32_t, int32_t, int32_t);
+
                 void updateSlot(double, double, int32_t, int32_t);
 
             protected:

@@ -40,6 +40,11 @@ namespace whm
             return this->article;
         }
 
+        /**
+         * @author  John1024 (https://stackoverflow.com/users/3030305/john1024)
+         * @date    Dec 26 '13 at 23:18
+         * @link    https://stackoverflow.com/a/20792531/8254699
+         */
         void UiWarehouseSlot_t::setSlotHeat(int32_t max, int32_t min, int32_t val)
         {
             double ratio = 2 * double(val - min) / double(max - min);

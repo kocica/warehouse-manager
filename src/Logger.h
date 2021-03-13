@@ -55,7 +55,9 @@ namespace whm
     };
 
     ///
-    /// @link https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
+    /// @date Jul 4 '13 at 11:59
+    /// @author https://stackoverflow.com/users/939402/joel-sj%C3%B6gren Joel Sjögren
+    /// @link https://stackoverflow.com/a/17469726/8254699
     ///
     namespace Color
     {

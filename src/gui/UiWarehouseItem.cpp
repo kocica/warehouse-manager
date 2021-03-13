@@ -250,6 +250,11 @@ namespace whm
             heatRect->setVisible(false);
         }
 
+        /**
+         * @author  John1024 (https://stackoverflow.com/users/3030305/john1024)
+         * @date    Dec 26 '13 at 23:18
+         * @link    https://stackoverflow.com/a/20792531/8254699
+         */
         void UiWarehouseItem_t::setItemHeat(double h)
         {
             double ratio = 2 * h;
