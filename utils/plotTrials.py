@@ -5,6 +5,9 @@ plt.style.use('seaborn')
 plt.rcParams['font.serif'] = 'Ubuntu'
 plt.rcParams['font.monospace'] = 'Ubuntu Mono'
 plt.rcParams['axes.labelweight'] = 'bold'
+plt.rc('xtick', labelsize=13)
+plt.rc('ytick', labelsize=13)
+plt.rc('legend', fontsize=15)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(right=1, top=1, wspace=0, hspace=0)
@@ -21,12 +24,12 @@ trial_30 = [109207, 105899, 105899, 105613, 104863, 104863, 104706, 104706, 1046
 trial_30_r = range(0, 700)
 ax.plot(trial_30_r, trial_30, label='Trial = 30')
 
-legend = ax.legend(loc='upper right', fontsize='large')
+legend = ax.legend(loc='upper right')
 
 plt.xlabel('Iterace')
 plt.ylabel('Čas [s]')
 
 plt.title('')
 
-plt.savefig('plotComparisonTrials.png')
+plt.savefig('plotComparisonTrials.pdf', format="pdf")
 plt.show()

@@ -7,10 +7,13 @@ plt.style.use('seaborn')
 plt.rcParams['font.serif'] = 'Ubuntu'
 plt.rcParams['font.monospace'] = 'Ubuntu Mono'
 plt.rcParams['axes.labelweight'] = 'bold'
+plt.rc('xtick', labelsize=13)
+plt.rc('ytick', labelsize=13)
+plt.rc('legend', fontsize=15)
 
 plt.subplots_adjust(right=1, top=1, wspace=0, hspace=0)
 
-algs = ('GA', 'ABC', 'DE', 'Battista a spol', 'PSO', 'RAND', 'Před optimalizací')
+algs = ('GA', 'ABC', 'DE', "Battista" + "\n" + "a spol", 'PSO', 'RAND', "Před" + "\n" + "optimalizací")
 
 alg_ids = np.arange(len(algs))
 performance = [9247, 11060, 11264, 11749, 12076, 16903, 18000]
@@ -30,5 +33,5 @@ plt.ylabel('Čas [s]')
 
 plt.title('')
 
-plt.savefig('plotComparisonTest.png')
+plt.savefig('plotComparisonTest.pdf', format="pdf")
 plt.show()

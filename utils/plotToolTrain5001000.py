@@ -5,6 +5,9 @@ plt.style.use('seaborn')
 plt.rcParams['font.serif'] = 'Ubuntu'
 plt.rcParams['font.monospace'] = 'Ubuntu Mono'
 plt.rcParams['axes.labelweight'] = 'bold'
+plt.rc('xtick', labelsize=13)
+plt.rc('ytick', labelsize=13)
+plt.rc('legend', fontsize=15)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(right=1, top=1, wspace=0, hspace=0)
@@ -13,12 +16,12 @@ ga = [109564, 106395, 105964, 105584, 105370, 105335, 105135, 105094, 104865, 10
 ga_r = range(0, 1000)
 ax.plot(ga_r, ga, label='GA')
 
-legend = ax.legend(loc='upper right', fontsize='large')
+legend = ax.legend(loc='upper right')
 
 plt.xlabel('Iterace')
 plt.ylabel('Čas [s]')
 
 plt.title('')
 
-plt.savefig('plotTrain5001000.png')
+plt.savefig('plotTrain5001000.pdf', format="pdf")
 plt.show()

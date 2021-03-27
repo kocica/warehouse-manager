@@ -5,6 +5,9 @@ plt.style.use('seaborn')
 plt.rcParams['font.serif'] = 'Ubuntu'
 plt.rcParams['font.monospace'] = 'Ubuntu Mono'
 plt.rcParams['axes.labelweight'] = 'bold'
+plt.rc('xtick', labelsize=13)
+plt.rc('ytick', labelsize=13)
+plt.rc('legend', fontsize=15)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(right=1, top=1, wspace=0, hspace=0)
@@ -17,12 +20,12 @@ reorder = [106258, 106258, 105866, 105351, 105090, 105090, 104788, 104573, 10457
 reorder_r = range(0, 100)
 ax.plot(reorder_r, reorder, label='Reordering')
 
-legend = ax.legend(loc='upper right', fontsize='large')
+legend = ax.legend(loc='upper right')
 
 plt.xlabel('Iterace')
 plt.ylabel('Čas [s]')
 
 plt.title('')
 
-plt.savefig('plotComparisonReordering.png')
+plt.savefig('plotComparisonReordering.pdf', format="pdf")
 plt.show()

@@ -5,6 +5,9 @@ plt.style.use('seaborn')
 plt.rcParams['font.serif'] = 'Ubuntu'
 plt.rcParams['font.monospace'] = 'Ubuntu Mono'
 plt.rcParams['axes.labelweight'] = 'bold'
+plt.rc('xtick', labelsize=13)
+plt.rc('ytick', labelsize=13)
+plt.rc('legend', fontsize=15)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(right=1, top=1, wspace=0, hspace=0)
@@ -25,12 +28,12 @@ rank = [108945, 107657, 106163, 106160, 106160, 106160, 106160, 106160, 105889, 
 rank_r = range(0, 250)
 ax.plot(rank_r, rank, label='Rank')
 
-legend = ax.legend(loc='upper right', fontsize='large')
+legend = ax.legend(loc='upper right')
 
 plt.xlabel('Iterace')
 plt.ylabel('Čas [s]')
 
 plt.title('')
 
-plt.savefig('plotComparisonSelections.png')
+plt.savefig('plotComparisonSelections.pdf', format="pdf")
 plt.show()

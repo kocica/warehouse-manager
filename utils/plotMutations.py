@@ -5,6 +5,9 @@ plt.style.use('seaborn')
 plt.rcParams['font.serif'] = 'Ubuntu'
 plt.rcParams['font.monospace'] = 'Ubuntu Mono'
 plt.rcParams['axes.labelweight'] = 'bold'
+plt.rc('xtick', labelsize=13)
+plt.rc('ytick', labelsize=13)
+plt.rc('legend', fontsize=15)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(right=1, top=1, wspace=0, hspace=0)
@@ -17,12 +20,12 @@ ordered = [109247, 106531, 106131, 105534, 105534, 105534, 105351, 105060, 10506
 ordered_r = range(0, 345)
 ax.plot(ordered_r, ordered, label='Ordered')
 
-legend = ax.legend(loc='upper right', fontsize='large')
+legend = ax.legend(loc='upper right')
 
 plt.xlabel('Iterace')
 plt.ylabel('Čas [s]')
 
 plt.title('')
 
-plt.savefig('plotComparisonMutations.png')
+plt.savefig('plotComparisonMutations.pdf', format="pdf")
 plt.show()

@@ -5,6 +5,9 @@ plt.style.use('seaborn')
 plt.rcParams['font.serif'] = 'Ubuntu'
 plt.rcParams['font.monospace'] = 'Ubuntu Mono'
 plt.rcParams['axes.labelweight'] = 'bold'
+plt.rc('xtick', labelsize=13)
+plt.rc('ytick', labelsize=13)
+plt.rc('legend', fontsize=15)
 
 fig, ax = plt.subplots()
 plt.subplots_adjust(right=1, top=1, wspace=0, hspace=0)
@@ -21,12 +24,12 @@ params_2 = [106536, 105991, 105931, 105781, 105670, 105553, 103954, 103954, 1039
 params_2_r = range(0, 400)
 ax.plot(params_2_r, params_2, label='Probabilities 0.7, 0.6, 0.4')
 
-legend = ax.legend(loc='upper right', fontsize='large')
+legend = ax.legend(loc='upper right')
 
 plt.xlabel('Iterace')
 plt.ylabel('Čas [s]')
 
 plt.title('')
 
-plt.savefig('plotComparisonParams.png')
+plt.savefig('plotComparisonParams.pdf', format="pdf")
 plt.show()
