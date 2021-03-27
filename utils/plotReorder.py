@@ -2,19 +2,12 @@ import matplotlib.pyplot as plt
 
 plt.style.use('seaborn')
 
-plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = 'Ubuntu'
 plt.rcParams['font.monospace'] = 'Ubuntu Mono'
-plt.rcParams['font.size'] = 10
-plt.rcParams['axes.labelsize'] = 10
 plt.rcParams['axes.labelweight'] = 'bold'
-plt.rcParams['axes.titlesize'] = 10
-plt.rcParams['xtick.labelsize'] = 8
-plt.rcParams['ytick.labelsize'] = 8
-plt.rcParams['legend.fontsize'] = 10
-plt.rcParams['figure.titlesize'] = 12
 
 fig, ax = plt.subplots()
+plt.subplots_adjust(right=1, top=1, wspace=0, hspace=0)
 
 no_reorder = [109494, 109081, 108986, 108986, 108280, 108280, 108083, 107859, 107547, 107536, 107228, 107228, 107228, 106855, 106855, 106855, 106855, 106289, 106289, 106289, 106046, 106046, 105978, 105978, 105978, 105978, 105384, 105384, 104794, 104794, 104794, 104794, 104794, 104794, 104538, 104538, 104374, 104374, 104333, 104333, 104235, 104223, 104223, 104223, 103806, 103806, 103806, 103479, 103479, 103479, 103479, 103479, 103479, 103479, 103479, 103479, 103479, 103479, 103479, 103479, 103479, 103080, 102404, 102404, 102404, 102404, 102404, 102404, 102404, 102404, 102404, 102169, 102169, 101907, 101907, 101907, 101907, 101185, 101185, 101185, 101185, 101185, 101185, 101185, 101185, 101185, 101185, 101114, 101114, 100945, 100945, 100819, 100670, 100670, 100037, 100037, 100037, 100037, 100037, 100037]
 no_reorder_r = range(0, 100)

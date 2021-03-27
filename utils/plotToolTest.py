@@ -4,17 +4,11 @@ import matplotlib.pyplot as plt
 
 plt.style.use('seaborn')
 
-plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = 'Ubuntu'
 plt.rcParams['font.monospace'] = 'Ubuntu Mono'
-plt.rcParams['font.size'] = 10
-plt.rcParams['axes.labelsize'] = 10
 plt.rcParams['axes.labelweight'] = 'bold'
-plt.rcParams['axes.titlesize'] = 10
-plt.rcParams['xtick.labelsize'] = 8
-plt.rcParams['ytick.labelsize'] = 8
-plt.rcParams['legend.fontsize'] = 10
-plt.rcParams['figure.titlesize'] = 12
+
+plt.subplots_adjust(right=1, top=1, wspace=0, hspace=0)
 
 algs = ('GA', 'ABC', 'DE', 'Battista a spol', 'PSO', 'RAND', 'Před optimalizací')
 

@@ -4,17 +4,11 @@ import matplotlib.pyplot as plt
 
 plt.style.use('seaborn')
 
-plt.rcParams['font.family'] = 'serif'
 plt.rcParams['font.serif'] = 'Ubuntu'
 plt.rcParams['font.monospace'] = 'Ubuntu Mono'
-plt.rcParams['font.size'] = 10
-plt.rcParams['axes.labelsize'] = 10
 plt.rcParams['axes.labelweight'] = 'bold'
-plt.rcParams['axes.titlesize'] = 10
-plt.rcParams['xtick.labelsize'] = 8
-plt.rcParams['ytick.labelsize'] = 8
-plt.rcParams['legend.fontsize'] = 10
-plt.rcParams['figure.titlesize'] = 12
+
+plt.subplots_adjust(right=1, top=1, wspace=0, hspace=0)
 
 algs = (r"Bez optimalizace", r"Optimalizace cesty" + "\n" +"(MMAS, 66.11%) ", r"Optimalizace rozložení" + "\n" + "(GA, 67.26%)", r"Kombinace optimalizací" + "\n" + "(MMAS+GA, 54.8%)")
 
