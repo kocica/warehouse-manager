@@ -1124,8 +1124,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.34791667"
-     inkscape:cx="888.59357"
-     inkscape:cy="1180.276"
+     inkscape:cx="1647.1602"
+     inkscape:cy="975.15129"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -2758,41 +2758,6 @@
        id="image1574"
        x="39.810986"
        y="75.242889" />
-    <g
-       inkscape:label="Layer 1"
-       id="layer1-8"
-       transform="matrix(2.9160254,0,0,2.9160254,-166.28618,-241.46395)">
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:11.0717px;line-height:1.25;font-family:'Ashby Light';-inkscape-font-specification:'Ashby Light, ';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.276794;"
-         x="61.947742"
-         y="94.521858"
-         id="text835"><tspan
-           sodipodi:role="line"
-           x="61.947742"
-           y="94.521858"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ashby Light';-inkscape-font-specification:'Ashby Light, ';stroke-width:0.276794;"
-           id="tspan837"><tspan
-             style="font-size:13.2861px;fill:#ff6600;stroke-width:0.276794;"
-             id="tspan845">W</tspan><tspan
-             style="fill:#000080;fill-opacity:1;stroke-width:0.276794;"
-             id="tspan849">arehouse</tspan></tspan></text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:11.0717px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.276794;"
-         x="61.78212"
-         y="102.93683"
-         id="text843"><tspan
-           sodipodi:role="line"
-           id="tspan841"
-           x="61.78212"
-           y="102.93683"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ashby Light';-inkscape-font-specification:'Ashby Light, ';stroke-width:0.276794;"><tspan
-             style="font-size:13.2861px;fill:#ff6600;stroke-width:0.276794;"
-             id="tspan847">M</tspan><tspan
-             style="fill:#000080;stroke-width:0.276794;"
-             id="tspan851">anager</tspan></tspan></text>
-    </g>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111px;line-height:1.25;font-family:'Century Gothic';-inkscape-font-specification:'Century Gothic';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
@@ -3968,5 +3933,38 @@
          y="752.85327"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.7611px;font-family:'Century Gothic';-inkscape-font-specification:'Century Gothic';stroke-width:0.264583"
          id="tspan2656-3">Nespočet parametrů pro experimentování, včetně pěti implementovaných evolučních algoritmů.</tspan></text>
+    <g
+       inkscape:label="Layer 1"
+       id="layer1-7"
+       transform="matrix(3.2434757,0,0,3.2434757,-192.28157,-269.94391)">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'Ashby Light';-inkscape-font-specification:'Ashby Light, ';fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="61.232143"
+         y="93.738091"
+         id="text835"><tspan
+           sodipodi:role="line"
+           x="61.232143"
+           y="93.738091"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ashby Light';-inkscape-font-specification:'Ashby Light, ';stroke-width:0.264583"
+           id="tspan837"><tspan
+             style="font-size:12.7px;fill:#ff6600"
+             id="tspan845">W</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.93919px;font-family:'Century Gothic';-inkscape-font-specification:'Century Gothic';fill:#000080"
+             id="tspan849">arehouse</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="61.073826"
+         y="101.78182"
+         id="text843"><tspan
+           sodipodi:role="line"
+           id="tspan841"
+           x="61.073826"
+           y="101.78182"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.7px;font-family:'Ashby Light';-inkscape-font-specification:'Ashby Light, ';fill:#ff6600;stroke-width:0.264583">M<tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.93919px;font-family:'Century Gothic';-inkscape-font-specification:'Century Gothic';fill:#000080"
+   id="tspan976">anager</tspan></tspan></text>
+    </g>
   </g>
 </svg>
