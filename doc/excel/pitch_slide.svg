@@ -13,7 +13,7 @@
    viewBox="0 0 508 317.5"
    version="1.1"
    id="svg8"
-   inkscape:export-filename="C:\Users\filip.kocica\Downloads\intro_video.png"
+   inkscape:export-filename="C:\Users\filip.kocica\Desktop\FIT\warehouse-manager\doc\excel\ExcelFIT_2021_pitch_slide_1.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    sodipodi:docname="pitch_slide.svg"
@@ -1058,7 +1058,7 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.5"
+     inkscape:zoom="0.35355339"
      inkscape:cx="1028.3461"
      inkscape:cy="486.16225"
      inkscape:document-units="mm"
@@ -3089,12 +3089,12 @@
          x="33.113811"
          y="197.43436"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.87777px;font-family:'Century Gothic';-inkscape-font-specification:'Century Gothic';fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
-         id="tspan1605">Optimalizace skladu pomocí čtyř genetických algoritmů</tspan><tspan
+         id="tspan1605">Optimalizace skladu pomocí čtyř evolučních algoritmů</tspan><tspan
          sodipodi:role="line"
          x="33.113811"
          y="209.78157"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.87777px;font-family:'Century Gothic';-inkscape-font-specification:'Century Gothic';fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
-         id="tspan1611">(poskytuje téměř dvojnásobný nárůst propustnosti skladu)</tspan></text>
+         id="tspan1611">GA, DE, ABC, PSO (téměř dvojnásobný nárůst propustnosti skladu)</tspan></text>
     <circle
        style="fill:#ff6600;fill-opacity:1;stroke-width:1.14176;stroke-linejoin:round;stroke-dasharray:2.28352, 1.14176"
        id="path1028-4"
