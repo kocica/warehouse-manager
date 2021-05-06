@@ -88,7 +88,7 @@ Tool is able to find the optimal path for given order or all orders in a given d
 **Optimizer**:
 Tool which can optimize warehouse operations through finding the most fitting product allocation.
 There are 6 optimizers in total, which one of them is providing random searching and one of them implements
-Battista et al [1] approach. Others are implementations of evolutionary algorithms GA, DE, ABD and PSO redefined
+Battista et al [1] approach. Others are implementations of evolutionary algorithms GA, DE, ABC and PSO redefined
 to discrete space to solve SLAP (storage location assignment problem).
 
  - `./whm_opt -o data/150_200/orders_train.xml -a data/150_200/articles.csv -l data/150_200/layout.xml -i data/150_200/locations.csv -O 1-6`
