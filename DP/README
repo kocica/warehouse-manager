@@ -5,7 +5,12 @@ Tool for advanced simulation and optimization of warehouse operations.
 This software was developed as a part of diploma thesis and is not intended for commercial use.
 
 Tool is provided with all required dependencies in the `src` directory, so it should be sufficient to only
-change permissions (chmod +x whm_*) and execute binaries.
+run the following commands:
+
+    1. chmod +x whm_*
+    2. export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+
+and execute binaries (whm_*).
 
 ---
 
