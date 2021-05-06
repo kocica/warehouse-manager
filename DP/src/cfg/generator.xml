@@ -1,0 +1,15 @@
+<!--
+        orderCount ................ How many orders we want to generate
+        miAdu ..................... Normal distribution mi parameter (for ADU)
+        sigmaAdu .................. Normal distribution sigma parameter (for ADU)
+        miAdq ..................... Normal distribution mi parameter (for ADQ)
+        sigmaAdq .................. Normal distribution sigma parameter (for ADQ)
+        sigmaLines ................ Normal distribution sigma parameter (for order line count)
+  -->
+
+<configuration orderCount="1000"
+               miAdu="100"
+               sigmaAdu="40"
+               miAdq="500"
+               sigmaAdq="100"
+               sigmaLines="10" />

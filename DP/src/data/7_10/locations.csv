@@ -1,0 +1,11 @@
+Warehouse location ID;Slot X;Slot Y;Article;Quantity
+10;0;0;SKU1;0
+10;1;0;SKU2;0
+10;0;1;;0
+10;1;1;;0
+16;0;0;SKU3;0
+16;1;0;SKU4;0
+16;2;0;SKU5;0
+16;0;1;;0
+16;1;1;;0
+16;2;1;;0
